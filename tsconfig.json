@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"module": "system",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"outFile": "www/bin/app.js",
+		"sourceMap": true,
+	},
+	"include": [
+		"www/src/**/*.ts",
+		"www/lib/types/phaser.comments.d.ts"
+	]
+}
