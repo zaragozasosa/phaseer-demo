@@ -5,7 +5,7 @@
 		"removeComments": true,
 		"preserveConstEnums": true,
 		"outFile": "www/bin/app.js",
-		"sourceMap": true,
+		"sourceMap": true,	
 	},
 	"include": [
 		"www/src/**/*.ts",

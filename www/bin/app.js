@@ -23,10 +23,9 @@ var MyGame;
                 this.scale.pageAlignHorizontally = true;
             }
             else {
-                this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-                this.scale.setMinMax(480, 260, 1024, 768);
-                this.scale.forceLandscape = true;
+                this.scale.forcePortrait = true;
                 this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
             }
         };
         Boot.prototype.preload = function () {
@@ -44,11 +43,51 @@ var MyGame;
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game() {
-            var _this = _super.call(this, 800, 600, Phaser.AUTO, 'content', null) || this;
+            var _this = this;
+            var paddingX = 0;
+            var paddingY = 0;
+            var safeWidth = 0;
+            var safeHeight = 0;
+            var baseWidth = 320;
+            var baseHeight = 480;
+            var maxPixelRatio = 3;
+            var baseProportion = baseHeight / baseWidth;
+            var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio ? window.devicePixelRatio : maxPixelRatio;
+            var screenWidth = window.visualViewport.width * screenPixelRatio;
+            screenWidth = screenPixelRatio == 1 && screenWidth > 1080 ? 1080 : screenWidth;
+            var screenHeight = window.visualViewport.height * screenPixelRatio;
+            screenHeight = screenPixelRatio == 1 && screenHeight > 940 ? 940 : screenHeight;
+            var screenProportion = screenHeight / screenWidth;
+            var widthProportion = window.visualViewport.width / baseWidth;
+            _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content') || this;
+            if (screenProportion > baseProportion) {
+                safeWidth = screenWidth;
+                safeHeight = safeWidth * baseProportion;
+                paddingY = (screenHeight - safeHeight) / 2;
+                _this.scaleFactor = (screenPixelRatio / 3) * widthProportion;
+            }
+            else if (screenProportion < baseProportion) {
+                safeHeight = screenHeight;
+                safeWidth = safeHeight / baseProportion;
+                paddingX = (screenWidth - safeWidth) / 2;
+                _this.scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
+            }
+            _this.safeZone = {
+                safeWidth: safeWidth,
+                safeHeight: safeHeight,
+                paddingX: paddingX,
+                paddingY: paddingY
+            };
+            _this.tileSettings = {
+                tileSize: 240,
+                frameLineWidth: 4,
+                lineColor: 0x0000FF,
+                gridPaddingX: 0 * _this.scaleFactor,
+                gridPaddingY: 200 * _this.scaleFactor
+            };
             _this.state.add('Boot', MyGame.Boot, false);
             _this.state.add('Preloader', MyGame.Preloader, false);
             _this.state.add('MainMenu', MyGame.MainMenu, false);
-            _this.state.add('Level1', MyGame.Level1, false);
             _this.state.start('Boot');
             return _this;
         }
@@ -58,85 +97,93 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
-    var Level1 = (function (_super) {
-        __extends(Level1, _super);
-        function Level1() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Level1.prototype.create = function () {
-            this.background = this.add.sprite(0, 0, 'level1');
-            this.player = new MyGame.Player(this.game, 130, 284);
-        };
-        return Level1;
-    }(Phaser.State));
-    MyGame.Level1 = Level1;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
     var MainMenu = (function (_super) {
         __extends(MainMenu, _super);
         function MainMenu() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         MainMenu.prototype.create = function () {
-            this.music = this.add.audio('titleMusic');
-            this.music.play();
-            this.background = this.add.sprite(0, 0, 'titlepage');
-            this.background.alpha = 0;
-            this.logo = this.add.sprite(this.world.centerX, -300, 'logo');
-            this.logo.anchor.setTo(0.5, 0.5);
-            this.add.tween(this.background).to({ alpha: 1 }, 2000, Phaser.Easing.Bounce.InOut, true);
-            this.add.tween(this.logo).to({ y: 220 }, 2000, Phaser.Easing.Elastic.Out, true, 2000);
-            this.input.onDown.addOnce(this.fadeOut, this);
+            var x = this.game.tileSettings.tileSize * this.game.scaleFactor;
+            this.addWhiteBackground();
+            this.addFrameBackground();
+            this.addScore();
+            this.addPuzzleTile(0, 0, 'cirno', 2);
+            this.addPuzzleTile(0, 1, 'genji', 4);
+            this.addPuzzleTile(1, 0, 'ozaki', 8);
+            this.addPuzzleTile(1, 1, 'choco', 16);
+            this.addPuzzleTile(2, 0, 'rosa', 32);
+            this.addPuzzleTile(2, 1, 'genji', 64);
+            this.addPuzzleTile(3, 0, 'cirno', 128);
+            this.addPuzzleTile(3, 1, 'ozaki', 256);
+            this.addPuzzleTile(0, 2, 'choco', 512);
+            this.addPuzzleTile(1, 2, 'ozaki', 1024);
+            this.addPuzzleTile(2, 2, 'genji', 2048);
+            this.addPuzzleTile(3, 2, 'rosa', 2);
+            this.addPuzzleTile(0, 3, 'ozaki', 2);
+            this.addPuzzleTile(1, 3, 'rosa', 2);
+            this.addPuzzleTile(2, 3, 'cirno', 2);
+            this.addPuzzleTile(3, 3, 'choco', 2);
         };
-        MainMenu.prototype.fadeOut = function () {
-            this.add.tween(this.background).to({ alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
-            var tween = this.add.tween(this.logo).to({ y: 800 }, 2000, Phaser.Easing.Linear.None, true);
-            tween.onComplete.add(this.startGame, this);
+        MainMenu.prototype.addPuzzleTile = function (posX, posY, id, number) {
+            var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
+            var textX = (posX) * scale;
+            var textY = (posY) * scale;
+            this.addSprite(posX * scale, posY * scale, id);
+            this.addTileFrame(posX * scale, posY * scale);
+            this.addStrokedText(textX, textY, number.toString());
         };
-        MainMenu.prototype.startGame = function () {
-            this.music.stop();
-            this.game.state.start('Level1', true, false);
+        MainMenu.prototype.addTileFrame = function (posX, posY) {
+            var graphics = this.game.add.graphics(0, 0);
+            var lineWidth = this.game.tileSettings.frameLineWidth;
+            var frameSize = this.game.tileSettings.tileSize - (lineWidth / 2);
+            var color = this.game.tileSettings.lineColor;
+            var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
+            var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
+            graphics.lineStyle(lineWidth, color, 1);
+            graphics.drawRect(posX + xPad, posY + yPad, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
+        };
+        MainMenu.prototype.addSprite = function (posX, posY, id) {
+            var game = this.game;
+            var xPad = game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
+            var yPad = game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
+            var sprite = this.add.sprite(posX + xPad, posY + yPad, id);
+            sprite.scale.setTo(game.scaleFactor, game.scaleFactor);
+        };
+        MainMenu.prototype.addWhiteBackground = function () {
+            var game = this.game;
+            var xPad = game.safeZone.paddingX;
+            var yPad = game.safeZone.paddingY;
+            var graphics = this.game.add.graphics(0, 0);
+            graphics.lineStyle(0);
+            graphics.beginFill(0xffffff, 1);
+            graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
+            graphics.endFill();
+        };
+        MainMenu.prototype.addFrameBackground = function () {
+            var game = this.game;
+            var xPad = game.safeZone.paddingX + game.tileSettings.gridPaddingX;
+            var yPad = game.safeZone.paddingY + game.tileSettings.gridPaddingY;
+            var graphics = game.add.graphics(0, 0);
+            graphics.lineStyle(0);
+            graphics.beginFill(0xADD8E6, 1);
+            graphics.drawRect(xPad, yPad, game.tileSettings.tileSize * 4 * game.scaleFactor, game.tileSettings.tileSize * 4 * game.scaleFactor);
+            graphics.endFill();
+        };
+        MainMenu.prototype.addScore = function () {
+        };
+        MainMenu.prototype.addStrokedText = function (posX, posY, text) {
+            var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
+            var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
+            var textObj = this.game.add.text(posX + xPad, posY + yPad, text);
+            textObj.font = 'Arial Black';
+            textObj.fontSize = 40 * this.game.scaleFactor;
+            textObj.stroke = '#000000';
+            textObj.strokeThickness = 10 * this.game.scaleFactor;
+            textObj.addColor('#ffffff', 0);
         };
         return MainMenu;
     }(Phaser.State));
     MyGame.MainMenu = MainMenu;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
-    var Player = (function (_super) {
-        __extends(Player, _super);
-        function Player(game, x, y) {
-            var _this = _super.call(this, game, x, y, 'simon', 0) || this;
-            _this.game.physics.arcade.enableBody(_this);
-            _this.anchor.setTo(0.5, 0);
-            _this.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
-            game.add.existing(_this);
-            return _this;
-        }
-        Player.prototype.update = function () {
-            this.body.velocity.x = 0;
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-                this.body.velocity.x = -150;
-                this.animations.play('walk');
-                if (this.scale.x == 1) {
-                    this.scale.x = -1;
-                }
-            }
-            else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-                this.body.velocity.x = 150;
-                this.animations.play('walk');
-                if (this.scale.x == -1) {
-                    this.scale.x = 1;
-                }
-            }
-            else {
-                this.animations.frame = 0;
-            }
-        };
-        return Player;
-    }(Phaser.Sprite));
-    MyGame.Player = Player;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -148,13 +195,13 @@ var MyGame;
             return _this;
         }
         Preloader.prototype.preload = function () {
-            this.preloadBar = this.add.sprite(300, 400, 'preloadBar');
+            this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
-            this.load.image('titlepage', 'img/titlepage.jpg');
-            this.load.audio('titleMusic', 'audio/title.mp3', true);
-            this.load.image('logo', 'img/logo.png');
-            this.load.spritesheet('simon', 'img/simon.png', 58, 96, 5);
-            this.load.image('level1', 'img/level1.png');
+            this.load.image('cirno', 'img/cirnotest.png');
+            this.load.image('choco', 'img/chocotest.png');
+            this.load.image('ozaki', 'img/ozakitest.png');
+            this.load.image('rosa', 'img/rosatest.png');
+            this.load.image('genji', 'img/genjitest.png');
         };
         Preloader.prototype.create = function () {
             this.game.state.start('MainMenu');
