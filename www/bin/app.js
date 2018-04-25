@@ -81,7 +81,7 @@ var MyGame;
             _this.tileSettings = {
                 tileSize: 240,
                 frameLineWidth: 4,
-                lineColor: 0x0000FF,
+                lineColor: 0x003399,
                 gridPaddingX: 0 * _this.scaleFactor,
                 gridPaddingY: 200 * _this.scaleFactor
             };
@@ -123,6 +123,7 @@ var MyGame;
             this.addPuzzleTile(1, 3, 'rosa', 2);
             this.addPuzzleTile(2, 3, 'cirno', 2);
             this.addPuzzleTile(3, 3, 'choco', 2);
+            this.addPowerButton();
         };
         MainMenu.prototype.addPuzzleTile = function (posX, posY, id, number) {
             var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
@@ -130,7 +131,7 @@ var MyGame;
             var textY = (posY) * scale;
             this.addSprite(posX * scale, posY * scale, id);
             this.addTileFrame(posX * scale, posY * scale);
-            this.addStrokedText(textX, textY, number.toString());
+            this.addTileNumber(textX, textY, number.toString());
         };
         MainMenu.prototype.addTileFrame = function (posX, posY) {
             var graphics = this.game.add.graphics(0, 0);
@@ -155,7 +156,7 @@ var MyGame;
             var yPad = game.safeZone.paddingY;
             var graphics = this.game.add.graphics(0, 0);
             graphics.lineStyle(0);
-            graphics.beginFill(0xffffff, 1);
+            graphics.beginFill(0xCCFFCC, 1);
             graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
             graphics.endFill();
         };
@@ -165,21 +166,32 @@ var MyGame;
             var yPad = game.safeZone.paddingY + game.tileSettings.gridPaddingY;
             var graphics = game.add.graphics(0, 0);
             graphics.lineStyle(0);
-            graphics.beginFill(0xADD8E6, 1);
+            graphics.beginFill(0x66CCFF, 1);
             graphics.drawRect(xPad, yPad, game.tileSettings.tileSize * 4 * game.scaleFactor, game.tileSettings.tileSize * 4 * game.scaleFactor);
             graphics.endFill();
         };
         MainMenu.prototype.addScore = function () {
+            var posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
+            var posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
+            this.addStrokedText(posX, posY, "Score: 2048   Movements: 100", 50);
         };
-        MainMenu.prototype.addStrokedText = function (posX, posY, text) {
+        MainMenu.prototype.addTileNumber = function (posX, posY, text) {
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
             var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
-            var textObj = this.game.add.text(posX + xPad, posY + yPad, text);
+            this.addStrokedText(posX + xPad, posY + yPad, text, 40);
+        };
+        MainMenu.prototype.addStrokedText = function (posX, posY, text, textSize) {
+            var textObj = this.game.add.text(posX, posY, text);
             textObj.font = 'Arial Black';
-            textObj.fontSize = 40 * this.game.scaleFactor;
+            textObj.fontSize = textSize * this.game.scaleFactor;
             textObj.stroke = '#000000';
-            textObj.strokeThickness = 10 * this.game.scaleFactor;
+            textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
             textObj.addColor('#ffffff', 0);
+        };
+        MainMenu.prototype.addPowerButton = function () {
+            var posX = this.game.safeZone.paddingX + 200 * this.game.scaleFactor;
+            var posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
+            this.addStrokedText(posX, posY, "Button goes here", 50);
         };
         return MainMenu;
     }(Phaser.State));

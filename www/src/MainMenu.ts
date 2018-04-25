@@ -30,6 +30,8 @@ module MyGame {
       this.addPuzzleTile(2, 3, 'cirno', 2);
       this.addPuzzleTile(3, 3, 'choco', 2);
 
+      this.addPowerButton();
+
     }
 
 
@@ -40,7 +42,7 @@ module MyGame {
 
       this.addSprite(posX * scale, posY * scale, id);
       this.addTileFrame(posX * scale, posY * scale);
-      this.addStrokedText(textX, textY, number.toString());
+      this.addTileNumber(textX, textY, number.toString());
     }
 
     addTileFrame(posX: number, posY: number) {
@@ -73,7 +75,7 @@ module MyGame {
       var graphics = this.game.add.graphics(0, 0);
 
       graphics.lineStyle(0);
-      graphics.beginFill(0xffffff, 1);
+      graphics.beginFill(0xCCFFCC, 1);
       graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
       graphics.endFill();
     }
@@ -85,30 +87,47 @@ module MyGame {
       var graphics = game.add.graphics(0, 0);
 
       graphics.lineStyle(0);
-      graphics.beginFill(0xADD8E6, 1);
+      graphics.beginFill(0x66CCFF, 1);
       graphics.drawRect(xPad, yPad, game.tileSettings.tileSize * 4 * game.scaleFactor, game.tileSettings.tileSize * 4 * game.scaleFactor);
       graphics.endFill();
     }
 
     addScore() {
-        
+      let posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
+      let posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
+      this.addStrokedText(posX, posY, "Score: 2048   Movements: 100", 50);
     }
 
-    addStrokedText(posX: number, posY: number, text: string) {
+    addTileNumber(posX: number, posY: number, text: string) {
       let xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
       let yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
 
-      let textObj = this.game.add.text(posX + xPad, posY + yPad, text);
+
+      this.addStrokedText(posX + xPad, posY + yPad, text, 40);
+    }
+
+    addStrokedText(posX: number, posY: number, text: string, textSize: number) {
+
+      let textObj = this.game.add.text(posX, posY, text);
 
       //	Font style
       textObj.font = 'Arial Black';
-      textObj.fontSize = 40 * this.game.scaleFactor;
+      textObj.fontSize = textSize * this.game.scaleFactor;
 
       //	Stroke color and thickness
       textObj.stroke = '#000000';
-      textObj.strokeThickness = 10 * this.game.scaleFactor;
+      textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
       textObj.addColor('#ffffff', 0);
     }
+
+    addPowerButton() {
+      let posX = this.game.safeZone.paddingX + 200 * this.game.scaleFactor;
+      let posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
+
+
+      this.addStrokedText(posX, posY, "Button goes here", 50);
+    }
+
 
 
   }

@@ -49,7 +49,7 @@ module MyGame {
       this.tileSettings = {
         tileSize: 240,
         frameLineWidth: 4,
-        lineColor: 0x0000FF,
+        lineColor: 0x003399,
         gridPaddingX: 0 * this.scaleFactor,
         gridPaddingY: 200 * this.scaleFactor,
       }
