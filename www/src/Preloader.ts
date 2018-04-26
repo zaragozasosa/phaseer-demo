@@ -18,11 +18,34 @@ module MyGame {
 
 			//	Here we load the rest of the assets our game needs.
 			//	As this is just a Project Template I've not provided these assets, swap them for your own.
-			this.load.image('cirno', 'img/cirnotest.png');
-			this.load.image('choco', 'img/chocotest.png');
-			this.load.image('ozaki', 'img/ozakitest.png');
-			this.load.image('rosa', 'img/rosatest.png');
-			this.load.image('genji', 'img/genjitest.png');
+			this.load.image('rox', 'img/rox.png');
+			this.load.image('choco', 'img/choco.png');
+
+			this.load.image('mira', 'img/mira.png');
+			this.load.image('lord_fancy', 'img/lordfancy.png');
+
+			this.load.image('nacho', 'img/nacho.png');
+			this.load.image('chili', 'img/chili.png');
+
+			this.load.image('magil', 'img/magil.png');
+			this.load.image('jessy', 'img/jessy.png');
+
+			this.load.image('shy_senpai', 'img/shysenpai.png');
+			this.load.image('kinjo', 'img/kinjo.png');
+
+			this.load.image('lily', 'img/lily.png');
+			this.load.image('agent_smith', 'img/agentsmith.png');
+
+			this.load.image('astaroth', 'img/astaroth.png');
+			this.load.image('r1r1', 'img/r1r1.png');
+
+			this.game.tilesData = {
+				mainTile: 'nacho',
+				minimumValue: 1,
+				tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth']
+			}
+
+			this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
 
 		}
 

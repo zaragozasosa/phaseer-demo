@@ -5,8 +5,12 @@ module MyGame {
     scaleFactor: number;
     safeZone: any;
     tileSettings: any;
+    tilesData: any;
+    hasVisualViewport: true;
 
     constructor() {
+      var hasVisualViewport = window.visualViewport;
+
       let paddingX = 0;
       let paddingY = 0;
       let safeWidth = 0;
@@ -16,12 +20,12 @@ module MyGame {
       let maxPixelRatio = 3;
       let baseProportion = baseHeight / baseWidth;
       let screenPixelRatio = window.devicePixelRatio <= maxPixelRatio ? window.devicePixelRatio : maxPixelRatio;
-      let screenWidth = window.visualViewport.width * screenPixelRatio;
+      let screenWidth = hasVisualViewport ? window.visualViewport.width * screenPixelRatio : window.innerWidth * screenPixelRatio
       screenWidth = screenPixelRatio == 1 && screenWidth > 1080 ? 1080 : screenWidth;
-      let screenHeight = window.visualViewport.height * screenPixelRatio;
+      let screenHeight = hasVisualViewport ? window.visualViewport.height * screenPixelRatio : window.innerHeight * screenPixelRatio
       screenHeight = screenPixelRatio == 1 && screenHeight > 940 ? 940 : screenHeight;
       var screenProportion = screenHeight / screenWidth;
-      var widthProportion = window.visualViewport.width / baseWidth;
+      var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
 
       super(screenWidth, screenHeight, Phaser.CANVAS, 'content');
 
@@ -52,6 +56,7 @@ module MyGame {
         lineColor: 0x003399,
         gridPaddingX: 0 * this.scaleFactor,
         gridPaddingY: 200 * this.scaleFactor,
+        tileScale: 240/180
       }
 
       this.state.add('Boot', Boot, false);

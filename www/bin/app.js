@@ -19,6 +19,7 @@ var MyGame;
             this.input.maxPointers = 1;
             this.stage.disableVisibilityChange = true;
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            this.game.time.desiredFps = 30;
             if (this.game.device.desktop) {
                 this.scale.pageAlignHorizontally = true;
             }
@@ -44,6 +45,7 @@ var MyGame;
         __extends(Game, _super);
         function Game() {
             var _this = this;
+            var hasVisualViewport = window.visualViewport;
             var paddingX = 0;
             var paddingY = 0;
             var safeWidth = 0;
@@ -53,12 +55,12 @@ var MyGame;
             var maxPixelRatio = 3;
             var baseProportion = baseHeight / baseWidth;
             var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio ? window.devicePixelRatio : maxPixelRatio;
-            var screenWidth = window.visualViewport.width * screenPixelRatio;
+            var screenWidth = hasVisualViewport ? window.visualViewport.width * screenPixelRatio : window.innerWidth * screenPixelRatio;
             screenWidth = screenPixelRatio == 1 && screenWidth > 1080 ? 1080 : screenWidth;
-            var screenHeight = window.visualViewport.height * screenPixelRatio;
+            var screenHeight = hasVisualViewport ? window.visualViewport.height * screenPixelRatio : window.innerHeight * screenPixelRatio;
             screenHeight = screenPixelRatio == 1 && screenHeight > 940 ? 940 : screenHeight;
             var screenProportion = screenHeight / screenWidth;
-            var widthProportion = window.visualViewport.width / baseWidth;
+            var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
             _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content') || this;
             if (screenProportion > baseProportion) {
                 safeWidth = screenWidth;
@@ -83,7 +85,8 @@ var MyGame;
                 frameLineWidth: 4,
                 lineColor: 0x003399,
                 gridPaddingX: 0 * _this.scaleFactor,
-                gridPaddingY: 200 * _this.scaleFactor
+                gridPaddingY: 200 * _this.scaleFactor,
+                tileScale: 240 / 180
             };
             _this.state.add('Boot', MyGame.Boot, false);
             _this.state.add('Preloader', MyGame.Preloader, false);
@@ -103,35 +106,70 @@ var MyGame;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         MainMenu.prototype.create = function () {
-            var x = this.game.tileSettings.tileSize * this.game.scaleFactor;
             this.addWhiteBackground();
             this.addFrameBackground();
             this.addScore();
-            this.addPuzzleTile(0, 0, 'cirno', 2);
-            this.addPuzzleTile(0, 1, 'genji', 4);
-            this.addPuzzleTile(1, 0, 'ozaki', 8);
-            this.addPuzzleTile(1, 1, 'choco', 16);
-            this.addPuzzleTile(2, 0, 'rosa', 32);
-            this.addPuzzleTile(2, 1, 'genji', 64);
-            this.addPuzzleTile(3, 0, 'cirno', 128);
-            this.addPuzzleTile(3, 1, 'ozaki', 256);
-            this.addPuzzleTile(0, 2, 'choco', 512);
-            this.addPuzzleTile(1, 2, 'ozaki', 1024);
-            this.addPuzzleTile(2, 2, 'genji', 2048);
-            this.addPuzzleTile(3, 2, 'rosa', 2);
-            this.addPuzzleTile(0, 3, 'ozaki', 2);
-            this.addPuzzleTile(1, 3, 'rosa', 2);
-            this.addPuzzleTile(2, 3, 'cirno', 2);
-            this.addPuzzleTile(3, 3, 'choco', 2);
+            this.tiles = {
+                array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                sprites: this.game.add.group()
+            };
+            this.xSpeed = 0;
+            this.ySpeed = 0;
+            this.speed = 800;
+            this.animating = false;
+            var sprite = this.addPuzzleTile(this.game.rnd.integerInRange(0, 3), this.game.rnd.integerInRange(0, 3), this.game.tilesData.mainTile, this.game.tilesData.minimumValue);
+            this.tiles.sprites.add(sprite);
             this.addPowerButton();
+            this.cursors = this.game.input.keyboard.createCursorKeys();
+        };
+        MainMenu.prototype.update = function () {
+            if (!this.animating) {
+                if (this.cursors.left.isDown) {
+                    this.handleInput(Phaser.Keyboard.LEFT, -this.speed, 0);
+                }
+                else if (this.cursors.right.isDown) {
+                    this.handleInput(Phaser.Keyboard.RIGHT, this.speed, 0);
+                }
+                else if (this.cursors.up.isDown) {
+                    this.handleInput(Phaser.Keyboard.UP, 0, -this.speed);
+                }
+                else if (this.cursors.down.isDown) {
+                    this.handleInput(Phaser.Keyboard.DOWN, 0, this.speed);
+                }
+            }
+            else {
+                this.tiles.sprites.forEach(function (sprite) {
+                    sprite.setAll('body.velocity.x', this.xSpeed);
+                    sprite.setAll('body.velocity.y', this.ySpeed);
+                }.bind(this));
+                this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup, function (sprite, wall) {
+                    sprite.parent.setAll('body.velocity.x', 0);
+                    sprite.parent.setAll('body.velocity.y', 0);
+                    debugger;
+                    this.animating = false;
+                }, null, this);
+            }
+        };
+        MainMenu.prototype.handleInput = function (keyboardInput, xSpeed, ySpeed) {
+            this.animating = true;
+            this.xSpeed = xSpeed;
+            this.ySpeed = ySpeed;
         };
         MainMenu.prototype.addPuzzleTile = function (posX, posY, id, number) {
             var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
             var textX = (posX) * scale;
             var textY = (posY) * scale;
-            this.addSprite(posX * scale, posY * scale, id);
-            this.addTileFrame(posX * scale, posY * scale);
-            this.addTileNumber(textX, textY, number.toString());
+            var group = this.game.add.group();
+            this.tiles.array[this.getArrayIndex(posX, posY)] = number;
+            var sprite = this.addSprite(posX * scale, posY * scale, id, this.game.tileSettings.tileScale);
+            this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
+            sprite.body.bounce.y = 0.8;
+            sprite.body.bounce.x = 0.8;
+            sprite.body.collideWorldBounds = true;
+            var text = this.addTileNumber(textX, textY, number.toString());
+            group.add(sprite);
+            group.add(text);
+            return group;
         };
         MainMenu.prototype.addTileFrame = function (posX, posY) {
             var graphics = this.game.add.graphics(0, 0);
@@ -143,12 +181,14 @@ var MyGame;
             graphics.lineStyle(lineWidth, color, 1);
             graphics.drawRect(posX + xPad, posY + yPad, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
         };
-        MainMenu.prototype.addSprite = function (posX, posY, id) {
+        MainMenu.prototype.addSprite = function (posX, posY, id, spriteScale) {
+            if (spriteScale === void 0) { spriteScale = 1; }
             var game = this.game;
             var xPad = game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
             var yPad = game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
             var sprite = this.add.sprite(posX + xPad, posY + yPad, id);
-            sprite.scale.setTo(game.scaleFactor, game.scaleFactor);
+            sprite.scale.setTo(game.scaleFactor * spriteScale, game.scaleFactor * spriteScale);
+            return sprite;
         };
         MainMenu.prototype.addWhiteBackground = function () {
             var game = this.game;
@@ -165,10 +205,32 @@ var MyGame;
             var xPad = game.safeZone.paddingX + game.tileSettings.gridPaddingX;
             var yPad = game.safeZone.paddingY + game.tileSettings.gridPaddingY;
             var graphics = game.add.graphics(0, 0);
+            var wallLength = game.tileSettings.tileSize * 4 * game.scaleFactor;
             graphics.lineStyle(0);
             graphics.beginFill(0x66CCFF, 1);
-            graphics.drawRect(xPad, yPad, game.tileSettings.tileSize * 4 * game.scaleFactor, game.tileSettings.tileSize * 4 * game.scaleFactor);
+            graphics.drawRect(xPad, yPad, wallLength, wallLength);
             graphics.endFill();
+            var wall1 = this.add.sprite(xPad - 1, yPad - 1);
+            this.game.physics.enable(wall1, Phaser.Physics.ARCADE);
+            wall1.body.setSize(1, wallLength);
+            wall1.body.immovable = true;
+            var wall2 = this.add.sprite(xPad - 1, yPad - 1);
+            this.game.physics.enable(wall2, Phaser.Physics.ARCADE);
+            wall2.body.setSize(wallLength, 1);
+            wall2.body.immovable = true;
+            var wall3 = this.add.sprite(xPad - 1, yPad + wallLength + 1);
+            this.game.physics.enable(wall3, Phaser.Physics.ARCADE);
+            wall3.body.setSize(wallLength, 1);
+            wall3.body.immovable = true;
+            var wall4 = this.add.sprite(xPad + wallLength + 1, yPad - 1);
+            this.game.physics.enable(wall4, Phaser.Physics.ARCADE);
+            wall4.body.setSize(1, wallLength);
+            wall4.body.immovable = true;
+            this.wallsGroup = this.game.add.group();
+            this.wallsGroup.add(wall1);
+            this.wallsGroup.add(wall2);
+            this.wallsGroup.add(wall3);
+            this.wallsGroup.add(wall4);
         };
         MainMenu.prototype.addScore = function () {
             var posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
@@ -178,7 +240,7 @@ var MyGame;
         MainMenu.prototype.addTileNumber = function (posX, posY, text) {
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
             var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
-            this.addStrokedText(posX + xPad, posY + yPad, text, 40);
+            return this.addStrokedText(posX + xPad, posY + yPad, text, 40);
         };
         MainMenu.prototype.addStrokedText = function (posX, posY, text, textSize) {
             var textObj = this.game.add.text(posX, posY, text);
@@ -187,11 +249,17 @@ var MyGame;
             textObj.stroke = '#000000';
             textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
             textObj.addColor('#ffffff', 0);
+            this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
+            return textObj;
         };
         MainMenu.prototype.addPowerButton = function () {
-            var posX = this.game.safeZone.paddingX + 200 * this.game.scaleFactor;
+            var posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
             var posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
-            this.addStrokedText(posX, posY, "Button goes here", 50);
+            var button = this.game.add.button(posX, posY, 'button', null, this, 1, 0, 2);
+            button.scale.setTo(this.game.scaleFactor, this.game.scaleFactor);
+        };
+        MainMenu.prototype.getArrayIndex = function (x, y) {
+            return (y * 4) + x;
         };
         return MainMenu;
     }(Phaser.State));
@@ -209,11 +277,26 @@ var MyGame;
         Preloader.prototype.preload = function () {
             this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
-            this.load.image('cirno', 'img/cirnotest.png');
-            this.load.image('choco', 'img/chocotest.png');
-            this.load.image('ozaki', 'img/ozakitest.png');
-            this.load.image('rosa', 'img/rosatest.png');
-            this.load.image('genji', 'img/genjitest.png');
+            this.load.image('rox', 'img/rox.png');
+            this.load.image('choco', 'img/choco.png');
+            this.load.image('mira', 'img/mira.png');
+            this.load.image('lord_fancy', 'img/lordfancy.png');
+            this.load.image('nacho', 'img/nacho.png');
+            this.load.image('chili', 'img/chili.png');
+            this.load.image('magil', 'img/magil.png');
+            this.load.image('jessy', 'img/jessy.png');
+            this.load.image('shy_senpai', 'img/shysenpai.png');
+            this.load.image('kinjo', 'img/kinjo.png');
+            this.load.image('lily', 'img/lily.png');
+            this.load.image('agent_smith', 'img/agentsmith.png');
+            this.load.image('astaroth', 'img/astaroth.png');
+            this.load.image('r1r1', 'img/r1r1.png');
+            this.game.tilesData = {
+                mainTile: 'nacho',
+                minimumValue: 1,
+                tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth']
+            };
+            this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
         };
         Preloader.prototype.create = function () {
             this.game.state.start('MainMenu');
