@@ -152,6 +152,8 @@ module MyGame {
           this.setArray(newX, newY, tile);
           this.setArray(actualX, actualY, 0);
           this.isDirty = true;
+        } else {
+          break;
         }
 
         newX += pushX;
