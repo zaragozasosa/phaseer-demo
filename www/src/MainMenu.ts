@@ -339,7 +339,7 @@ module MyGame {
       do {
         var ranX = this.game.rnd.integerInRange(0, 3);
         var ranY = this.game.rnd.integerInRange(0, 3);
-      } while (this.getArray(ranX, ranY));
+      } while (this.getArray(ranX, ranY) !== 0);
 
       var chance = this.game.rnd.integerInRange(0, 99);
 
