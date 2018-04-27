@@ -356,6 +356,17 @@ module MyGame {
       return true;
     }
 
+    arrayEmptyTiles() {
+      let empty = 0;
+      for (let tile of this.tiles.array) {
+        if (tile === 0) {
+          empty++;
+        }
+      }
+
+      return empty;
+    }
+
     calculatePoints() {
       let points = 0;
       for (let tile of this.tiles.array) {
@@ -371,9 +382,10 @@ module MyGame {
         var ranY = this.game.rnd.integerInRange(0, 3);
       } while (this.getArray(ranX, ranY));
 
-      var chance = this.game.rnd.integerInRange(0, 99);
-
-      this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
+      if(this.arrayEmptyTiles() > 6) {
+        var chance = this.game.rnd.integerInRange(0, 99);
+        this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
+      }
     }
 
   }

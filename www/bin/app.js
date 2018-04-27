@@ -358,6 +358,16 @@ var MyGame;
             }
             return true;
         };
+        MainMenu.prototype.arrayEmptyTiles = function () {
+            var empty = 0;
+            for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                if (tile === 0) {
+                    empty++;
+                }
+            }
+            return empty;
+        };
         MainMenu.prototype.calculatePoints = function () {
             var points = 0;
             for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
@@ -371,8 +381,10 @@ var MyGame;
                 var ranX = this.game.rnd.integerInRange(0, 3);
                 var ranY = this.game.rnd.integerInRange(0, 3);
             } while (this.getArray(ranX, ranY));
-            var chance = this.game.rnd.integerInRange(0, 99);
-            this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
+            if (this.arrayEmptyTiles() > 6) {
+                var chance = this.game.rnd.integerInRange(0, 99);
+                this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
+            }
         };
         return MainMenu;
     }(Phaser.State));
