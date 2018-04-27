@@ -385,7 +385,10 @@ module MyGame {
       if(this.arrayEmptyTiles() > 6) {
         var chance = this.game.rnd.integerInRange(0, 99);
         this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
+      } else {
+        this.setArray(ranX, ranY, 1);
       }
+
     }
 
   }
