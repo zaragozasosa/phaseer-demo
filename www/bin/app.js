@@ -46,6 +46,7 @@ var MyGame;
         function Game() {
             var _this = this;
             var hasVisualViewport = window.visualViewport;
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             var paddingX = 0;
             var paddingY = 0;
             var safeWidth = 0;
@@ -56,11 +57,12 @@ var MyGame;
             var baseProportion = baseHeight / baseWidth;
             var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio ? window.devicePixelRatio : maxPixelRatio;
             var screenWidth = hasVisualViewport ? window.visualViewport.width * screenPixelRatio : window.innerWidth * screenPixelRatio;
-            screenWidth = screenPixelRatio == 1 && screenWidth > 1080 ? 1080 : screenWidth;
+            screenWidth = !isMobile && screenWidth > 1080 ? 1080 : screenWidth;
             var screenHeight = hasVisualViewport ? window.visualViewport.height * screenPixelRatio : window.innerHeight * screenPixelRatio;
-            screenHeight = screenPixelRatio == 1 && screenHeight > 940 ? 940 : screenHeight;
+            screenHeight = !isMobile ? (screenHeight / screenPixelRatio) - 20 : screenHeight > 940 ? 940 : screenHeight;
             var screenProportion = screenHeight / screenWidth;
             var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
+            debugger;
             _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content') || this;
             if (screenProportion > baseProportion) {
                 safeWidth = screenWidth;

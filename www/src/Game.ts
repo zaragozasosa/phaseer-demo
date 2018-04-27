@@ -10,7 +10,7 @@ module MyGame {
 
     constructor() {
       var hasVisualViewport = window.visualViewport;
-
+      let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       let paddingX = 0;
       let paddingY = 0;
       let safeWidth = 0;
@@ -21,12 +21,13 @@ module MyGame {
       let baseProportion = baseHeight / baseWidth;
       let screenPixelRatio = window.devicePixelRatio <= maxPixelRatio ? window.devicePixelRatio : maxPixelRatio;
       let screenWidth = hasVisualViewport ? window.visualViewport.width * screenPixelRatio : window.innerWidth * screenPixelRatio
-      screenWidth = screenPixelRatio == 1 && screenWidth > 1080 ? 1080 : screenWidth;
+      screenWidth = !isMobile && screenWidth > 1080 ? 1080 : screenWidth;
       let screenHeight = hasVisualViewport ? window.visualViewport.height * screenPixelRatio : window.innerHeight * screenPixelRatio
-      screenHeight = screenPixelRatio == 1 && screenHeight > 940 ? 940 : screenHeight;
+      screenHeight = !isMobile  ? (screenHeight / screenPixelRatio) - 20 : screenHeight > 940 ? 940 : screenHeight;
       var screenProportion = screenHeight / screenWidth;
       var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
 
+      debugger;
       super(screenWidth, screenHeight, Phaser.CANVAS, 'content');
 
       if (screenProportion > baseProportion) {
@@ -40,8 +41,6 @@ module MyGame {
         paddingX = (screenWidth - safeWidth) / 2;
         this.scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
       }
-
-
 
       this.safeZone = {
         safeWidth: safeWidth,
@@ -65,9 +64,6 @@ module MyGame {
       this.state.add('Preloader', Preloader, false);
       this.state.add('MainMenu', MainMenu, false);
       this.state.start('Boot');
-
     }
-
   }
-
 }
