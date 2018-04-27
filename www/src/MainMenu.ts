@@ -304,7 +304,7 @@ module MyGame {
 
     addDebuggingMatrix() {
       let posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
-      let posY = this.game.safeZone.paddingY + 1400 * this.game.scaleFactor;
+      let posY = this.game.safeZone.paddingY + 1300 * this.game.scaleFactor;
 
       this.debugArray = [];
 

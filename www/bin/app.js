@@ -321,7 +321,7 @@ var MyGame;
         };
         MainMenu.prototype.addDebuggingMatrix = function () {
             var posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
-            var posY = this.game.safeZone.paddingY + 1400 * this.game.scaleFactor;
+            var posY = this.game.safeZone.paddingY + 1300 * this.game.scaleFactor;
             this.debugArray = [];
             this.debugArray.push(this.addStrokedText(posX, posY, '', 30, true));
             this.debugArray.push(this.addStrokedText(posX + 150 * this.game.scaleFactor, posY, '', 30, true));
