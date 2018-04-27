@@ -171,7 +171,6 @@ var MyGame;
                 do {
                     startX += xIncrement;
                     var tile = this.getArray(startX, startY);
-                    debugger;
                     if (tile) {
                         this.pushTile(startX, startY, keyboardInput);
                     }
@@ -203,6 +202,7 @@ var MyGame;
                     this.setArray(newX, newY, tile);
                     this.setArray(actualX, actualY, 0);
                     this.isDirty = true;
+                    break;
                 }
                 else {
                     break;
@@ -299,13 +299,17 @@ var MyGame;
             var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
             return this.addStrokedText(posX + xPad, posY + yPad, text, 40);
         };
-        MainMenu.prototype.addStrokedText = function (posX, posY, text, textSize) {
+        MainMenu.prototype.addStrokedText = function (posX, posY, text, textSize, center) {
+            if (center === void 0) { center = false; }
             var textObj = this.game.add.text(posX, posY, text);
             textObj.font = 'Arial Black';
             textObj.fontSize = textSize * this.game.scaleFactor;
             textObj.stroke = '#000000';
             textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
             textObj.addColor('#ffffff', 0);
+            if (center) {
+                textObj.anchor.set(0.5);
+            }
             this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
             return textObj;
         };
@@ -316,17 +320,17 @@ var MyGame;
             button.scale.setTo(this.game.scaleFactor, this.game.scaleFactor);
         };
         MainMenu.prototype.addDebuggingMatrix = function () {
-            var posX = this.game.safeZone.paddingX + 350 * this.game.scaleFactor;
-            var posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
+            var posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
+            var posY = this.game.safeZone.paddingY + 1400 * this.game.scaleFactor;
             this.debugArray = [];
-            this.debugArray.push(this.addStrokedText(posX, posY, '', 30));
-            this.debugArray.push(this.addStrokedText(posX, posY + 50 * this.game.scaleFactor, '', 30));
-            this.debugArray.push(this.addStrokedText(posX, posY + 100 * this.game.scaleFactor, '', 30));
-            this.debugArray.push(this.addStrokedText(posX, posY + 150 * this.game.scaleFactor, '', 30));
+            this.debugArray.push(this.addStrokedText(posX, posY, '', 30, true));
+            this.debugArray.push(this.addStrokedText(posX + 150 * this.game.scaleFactor, posY, '', 30, true));
+            this.debugArray.push(this.addStrokedText(posX + 300 * this.game.scaleFactor, posY, '', 30, true));
+            this.debugArray.push(this.addStrokedText(posX + 450 * this.game.scaleFactor, posY, '', 30, true));
         };
         MainMenu.prototype.updateDebuggingMatrix = function () {
             this.debugArray.forEach(function (text, index) {
-                text.setText(this.getArray(0, index) + "        " + this.getArray(1, index) + "        " + this.getArray(2, index) + "        " + this.getArray(3, index));
+                text.setText(this.getArray(index, 0) + "\n" + this.getArray(index, 1) + "\n" + this.getArray(index, 2) + "\n" + this.getArray(index, 3));
             }.bind(this));
         };
         MainMenu.prototype.getArray = function (x, y) {
@@ -348,7 +352,7 @@ var MyGame;
             do {
                 var ranX = this.game.rnd.integerInRange(0, 3);
                 var ranY = this.game.rnd.integerInRange(0, 3);
-            } while (this.getArray(ranX, ranY) !== 0);
+            } while (this.getArray(ranX, ranY));
             var chance = this.game.rnd.integerInRange(0, 99);
             this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
         };

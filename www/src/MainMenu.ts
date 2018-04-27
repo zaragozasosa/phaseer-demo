@@ -114,7 +114,6 @@ module MyGame {
         do {
           startX += xIncrement;
           let tile = this.getArray(startX, startY);
-          debugger;
           if (tile) {
             this.pushTile(startX, startY, keyboardInput);
           }
@@ -152,6 +151,7 @@ module MyGame {
           this.setArray(newX, newY, tile);
           this.setArray(actualX, actualY, 0);
           this.isDirty = true;
+          break;
         } else {
           break;
         }
@@ -272,7 +272,7 @@ module MyGame {
       return this.addStrokedText(posX + xPad, posY + yPad, text, 40);
     }
 
-    addStrokedText(posX: number, posY: number, text: string, textSize: number) {
+    addStrokedText(posX: number, posY: number, text: string, textSize: number, center = false) {
 
       let textObj = this.game.add.text(posX, posY, text);
 
@@ -284,6 +284,10 @@ module MyGame {
       textObj.stroke = '#000000';
       textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
       textObj.addColor('#ffffff', 0);
+
+      if(center) {
+        textObj.anchor.set(0.5)
+      }
 
       this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
       return textObj;
@@ -299,23 +303,23 @@ module MyGame {
     }
 
     addDebuggingMatrix() {
-      let posX = this.game.safeZone.paddingX + 350 * this.game.scaleFactor;
-      let posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
+      let posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
+      let posY = this.game.safeZone.paddingY + 1400 * this.game.scaleFactor;
 
       this.debugArray = [];
 
-      this.debugArray.push(this.addStrokedText(posX, posY, '', 30));
+      this.debugArray.push(this.addStrokedText(posX, posY, '', 30, true));
 
-      this.debugArray.push(this.addStrokedText(posX, posY + 50 * this.game.scaleFactor, '', 30));
+      this.debugArray.push(this.addStrokedText(posX + 150 * this.game.scaleFactor, posY, '', 30, true));
 
-      this.debugArray.push(this.addStrokedText(posX, posY + 100 * this.game.scaleFactor, '', 30));
+      this.debugArray.push(this.addStrokedText(posX + 300 * this.game.scaleFactor, posY, '', 30, true));
 
-      this.debugArray.push(this.addStrokedText(posX, posY + 150 * this.game.scaleFactor, '', 30));
+      this.debugArray.push(this.addStrokedText(posX + 450 * this.game.scaleFactor, posY, '', 30, true));
     }
 
     updateDebuggingMatrix() {
       this.debugArray.forEach(function (text, index) {
-        text.setText(`${this.getArray(0, index)}        ${this.getArray(1, index)}        ${this.getArray(2, index)}        ${this.getArray(3, index)}`);
+        text.setText(`${this.getArray(index, 0)}\n${this.getArray(index, 1)}\n${this.getArray(index, 2)}\n${this.getArray(index, 3)}`);
       }.bind(this));
     }
 
@@ -341,7 +345,7 @@ module MyGame {
       do {
         var ranX = this.game.rnd.integerInRange(0, 3);
         var ranY = this.game.rnd.integerInRange(0, 3);
-      } while (this.getArray(ranX, ranY) !== 0);
+      } while (this.getArray(ranX, ranY));
 
       var chance = this.game.rnd.integerInRange(0, 99);
 
