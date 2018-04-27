@@ -86,7 +86,9 @@ var MyGame;
                 lineColor: 0x003399,
                 gridPaddingX: 0 * _this.scaleFactor,
                 gridPaddingY: 200 * _this.scaleFactor,
-                tileScale: 240 / 180
+                tileScale: 240 / 180,
+                arraySize: 3,
+                initialArray: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             };
             _this.state.add('Boot', MyGame.Boot, false);
             _this.state.add('Preloader', MyGame.Preloader, false);
@@ -110,65 +112,115 @@ var MyGame;
             this.addFrameBackground();
             this.addScore();
             this.tiles = {
-                array: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                array: this.game.tileSettings.initialArray,
                 sprites: this.game.add.group()
             };
             this.xSpeed = 0;
             this.ySpeed = 0;
             this.speed = 800;
             this.animating = false;
-            var sprite = this.addPuzzleTile(this.game.rnd.integerInRange(0, 3), this.game.rnd.integerInRange(0, 3), this.game.tilesData.mainTile, this.game.tilesData.minimumValue);
-            this.tiles.sprites.add(sprite);
-            this.addPowerButton();
+            this.arraySize = this.game.tileSettings.arraySize;
+            this.addNewTile();
+            this.addNewTile();
+            this.addDebuggingMatrix();
             this.cursors = this.game.input.keyboard.createCursorKeys();
         };
         MainMenu.prototype.update = function () {
+            this.updateDebuggingMatrix();
             if (!this.animating) {
-                if (this.cursors.left.isDown) {
+                if (this.cursors.left.justDown) {
                     this.handleInput(Phaser.Keyboard.LEFT, -this.speed, 0);
                 }
-                else if (this.cursors.right.isDown) {
+                else if (this.cursors.right.justDown) {
                     this.handleInput(Phaser.Keyboard.RIGHT, this.speed, 0);
                 }
-                else if (this.cursors.up.isDown) {
+                else if (this.cursors.up.justDown) {
                     this.handleInput(Phaser.Keyboard.UP, 0, -this.speed);
                 }
-                else if (this.cursors.down.isDown) {
+                else if (this.cursors.down.justDown) {
                     this.handleInput(Phaser.Keyboard.DOWN, 0, this.speed);
                 }
             }
             else {
-                this.tiles.sprites.forEach(function (sprite) {
-                    sprite.setAll('body.velocity.x', this.xSpeed);
-                    sprite.setAll('body.velocity.y', this.ySpeed);
-                }.bind(this));
-                this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup, function (sprite, wall) {
-                    sprite.parent.setAll('body.velocity.x', 0);
-                    sprite.parent.setAll('body.velocity.y', 0);
-                    debugger;
-                    this.animating = false;
-                }, null, this);
             }
         };
         MainMenu.prototype.handleInput = function (keyboardInput, xSpeed, ySpeed) {
             this.animating = true;
             this.xSpeed = xSpeed;
             this.ySpeed = ySpeed;
+            this.updateArray(keyboardInput);
+            this.animating = false;
+        };
+        MainMenu.prototype.updateArray = function (keyboardInput) {
+            this.isDirty = false;
+            var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
+            var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
+            var maxX = keyboardInput === Phaser.KeyCode.RIGHT ? this.arraySize - 1 : this.arraySize;
+            var maxY = keyboardInput === Phaser.KeyCode.DOWN ? this.arraySize - 1 : this.arraySize;
+            var startY = keyboardInput === Phaser.KeyCode.DOWN ? maxY : minY;
+            var stopY = keyboardInput === Phaser.KeyCode.DOWN ? minY : maxY;
+            var yIncrement = keyboardInput === Phaser.KeyCode.DOWN ? -1 : 1;
+            var startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
+            var stopX = keyboardInput === Phaser.KeyCode.RIGHT ? minX : maxX;
+            var xIncrement = keyboardInput === Phaser.KeyCode.RIGHT ? -1 : 1;
+            startY -= yIncrement;
+            do {
+                startY += yIncrement;
+                startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
+                startX -= xIncrement;
+                do {
+                    startX += xIncrement;
+                    var tile = this.getArray(startX, startY);
+                    debugger;
+                    if (tile) {
+                        this.pushTile(startX, startY, keyboardInput);
+                    }
+                } while (startX !== stopX);
+            } while (startY !== stopY);
+            if (this.isDirty && !this.isArrayFull()) {
+                this.addNewTile();
+            }
+        };
+        MainMenu.prototype.pushTile = function (x, y, keyboardInput) {
+            var tile = this.getArray(x, y);
+            var pushX = keyboardInput === Phaser.KeyCode.RIGHT ? 1 : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
+            var pushY = keyboardInput === Phaser.KeyCode.DOWN ? 1 : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
+            var actualX = x;
+            var actualY = y;
+            var newX = actualX + pushX;
+            var newY = actualY + pushY;
+            while (newX >= 0 && newX <= this.arraySize && newY >= 0 && newY <= this.arraySize) {
+                var nextTile = this.getArray(newX, newY);
+                if (nextTile === 0) {
+                    this.setArray(newX, newY, tile);
+                    this.setArray(actualX, actualY, 0);
+                    actualX = newX;
+                    actualY = newY;
+                    this.isDirty = true;
+                }
+                else if (nextTile === tile) {
+                    tile *= 2;
+                    this.setArray(newX, newY, tile);
+                    this.setArray(actualX, actualY, 0);
+                    this.isDirty = true;
+                }
+                newX += pushX;
+                newY += pushY;
+            }
         };
         MainMenu.prototype.addPuzzleTile = function (posX, posY, id, number) {
             var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
             var textX = (posX) * scale;
             var textY = (posY) * scale;
             var group = this.game.add.group();
-            this.tiles.array[this.getArrayIndex(posX, posY)] = number;
+            this.setArray(posX, posY, number);
+            var tileFrame = this.addTileFrame(posX * scale, posY * scale);
             var sprite = this.addSprite(posX * scale, posY * scale, id, this.game.tileSettings.tileScale);
             this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
-            sprite.body.bounce.y = 0.8;
-            sprite.body.bounce.x = 0.8;
-            sprite.body.collideWorldBounds = true;
             var text = this.addTileNumber(textX, textY, number.toString());
             group.add(sprite);
             group.add(text);
+            group.add(tileFrame);
             return group;
         };
         MainMenu.prototype.addTileFrame = function (posX, posY) {
@@ -179,7 +231,9 @@ var MyGame;
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
             var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
             graphics.lineStyle(lineWidth, color, 1);
-            graphics.drawRect(posX + xPad, posY + yPad, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
+            var rect = graphics.drawRect(posX + xPad, posY + yPad, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
+            this.game.physics.enable(rect, Phaser.Physics.ARCADE);
+            return rect;
         };
         MainMenu.prototype.addSprite = function (posX, posY, id, spriteScale) {
             if (spriteScale === void 0) { spriteScale = 1; }
@@ -258,8 +312,42 @@ var MyGame;
             var button = this.game.add.button(posX, posY, 'button', null, this, 1, 0, 2);
             button.scale.setTo(this.game.scaleFactor, this.game.scaleFactor);
         };
-        MainMenu.prototype.getArrayIndex = function (x, y) {
-            return (y * 4) + x;
+        MainMenu.prototype.addDebuggingMatrix = function () {
+            var posX = this.game.safeZone.paddingX + 350 * this.game.scaleFactor;
+            var posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
+            this.debugArray = [];
+            this.debugArray.push(this.addStrokedText(posX, posY, '', 30));
+            this.debugArray.push(this.addStrokedText(posX, posY + 50 * this.game.scaleFactor, '', 30));
+            this.debugArray.push(this.addStrokedText(posX, posY + 100 * this.game.scaleFactor, '', 30));
+            this.debugArray.push(this.addStrokedText(posX, posY + 150 * this.game.scaleFactor, '', 30));
+        };
+        MainMenu.prototype.updateDebuggingMatrix = function () {
+            this.debugArray.forEach(function (text, index) {
+                text.setText(this.getArray(0, index) + "        " + this.getArray(1, index) + "        " + this.getArray(2, index) + "        " + this.getArray(3, index));
+            }.bind(this));
+        };
+        MainMenu.prototype.getArray = function (x, y) {
+            return this.tiles.array[y * (this.arraySize + 1) + x];
+        };
+        MainMenu.prototype.setArray = function (x, y, value) {
+            this.tiles.array[y * (this.arraySize + 1) + x] = value;
+        };
+        MainMenu.prototype.isArrayFull = function () {
+            for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                if (tile === 0) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        MainMenu.prototype.addNewTile = function () {
+            do {
+                var ranX = this.game.rnd.integerInRange(0, 3);
+                var ranY = this.game.rnd.integerInRange(0, 3);
+            } while (this.getArray(ranX, ranY));
+            var chance = this.game.rnd.integerInRange(0, 99);
+            this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
         };
         return MainMenu;
     }(Phaser.State));

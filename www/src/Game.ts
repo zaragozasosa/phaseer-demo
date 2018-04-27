@@ -56,7 +56,9 @@ module MyGame {
         lineColor: 0x003399,
         gridPaddingX: 0 * this.scaleFactor,
         gridPaddingY: 200 * this.scaleFactor,
-        tileScale: 240/180
+        tileScale: 240/180,
+        arraySize: 3,
+        initialArray: [0, 0, 0, 0 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       }
 
       this.state.add('Boot', Boot, false);
