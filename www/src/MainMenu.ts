@@ -11,12 +11,15 @@ module MyGame {
     wallsGroup: Phaser.Group;
     arraySize: number;
     debugArray: Array<Phaser.Text>;
+    header: Phaser.Text;
     isDirty: boolean;
+    points: number;
+    movements: number;
 
     create() {
       this.addWhiteBackground();
       this.addFrameBackground();
-      this.addScore();
+      this.addHeader();
 
       this.tiles = {
         array: this.game.tileSettings.initialArray,
@@ -30,6 +33,7 @@ module MyGame {
       this.arraySize = this.game.tileSettings.arraySize;
 
 
+
       this.addNewTile();
       this.addNewTile();
       // let sprite =
@@ -41,7 +45,11 @@ module MyGame {
 
       // this.tiles.sprites.add(sprite);
 
+      this.movements = 0;
+      this.points = this.calculatePoints();
+      this.updateHeader();
       this.addDebuggingMatrix();
+      this.updateDebuggingMatrix();
       //this.addPowerButton();
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -49,7 +57,6 @@ module MyGame {
     }
 
     update() {
-      this.updateDebuggingMatrix();
       if (!this.animating) {
         if (this.cursors.left.justDown) {
           this.handleInput(Phaser.Keyboard.LEFT, -this.speed, 0);
@@ -122,6 +129,10 @@ module MyGame {
 
       if (this.isDirty && !this.isArrayFull()) {
         this.addNewTile();
+        this.movements++;
+        this.points = this.calculatePoints();
+        this.updateDebuggingMatrix();
+        this.updateHeader();
       }
 
     }
@@ -258,10 +269,10 @@ module MyGame {
       this.wallsGroup.add(wall4);
     }
 
-    addScore() {
+    addHeader() {
       let posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
       let posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
-      this.addStrokedText(posX, posY, "Score: 2048   Movements: 100", 50);
+      this.header = this.addStrokedText(posX, posY, "", 50);
     }
 
     addTileNumber(posX: number, posY: number, text: string) {
@@ -323,6 +334,10 @@ module MyGame {
       }.bind(this));
     }
 
+    updateHeader() {
+      this.header.setText(`Score: ${this.points}     Movements: ${this.movements}`);
+    }
+
     getArray(x: number, y: number) {
       return this.tiles.array[y * (this.arraySize + 1) + x];
     }
@@ -339,6 +354,15 @@ module MyGame {
       }
 
       return true;
+    }
+
+    calculatePoints() {
+      let points = 0;
+      for (let tile of this.tiles.array) {
+        points += tile;
+      }
+
+      return points;
     }
 
     addNewTile() {

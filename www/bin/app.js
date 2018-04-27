@@ -110,7 +110,7 @@ var MyGame;
         MainMenu.prototype.create = function () {
             this.addWhiteBackground();
             this.addFrameBackground();
-            this.addScore();
+            this.addHeader();
             this.tiles = {
                 array: this.game.tileSettings.initialArray,
                 sprites: this.game.add.group()
@@ -122,11 +122,14 @@ var MyGame;
             this.arraySize = this.game.tileSettings.arraySize;
             this.addNewTile();
             this.addNewTile();
+            this.movements = 0;
+            this.points = this.calculatePoints();
+            this.updateHeader();
             this.addDebuggingMatrix();
+            this.updateDebuggingMatrix();
             this.cursors = this.game.input.keyboard.createCursorKeys();
         };
         MainMenu.prototype.update = function () {
-            this.updateDebuggingMatrix();
             if (!this.animating) {
                 if (this.cursors.left.justDown) {
                     this.handleInput(Phaser.Keyboard.LEFT, -this.speed, 0);
@@ -178,6 +181,10 @@ var MyGame;
             } while (startY !== stopY);
             if (this.isDirty && !this.isArrayFull()) {
                 this.addNewTile();
+                this.movements++;
+                this.points = this.calculatePoints();
+                this.updateDebuggingMatrix();
+                this.updateHeader();
             }
         };
         MainMenu.prototype.pushTile = function (x, y, keyboardInput) {
@@ -289,10 +296,10 @@ var MyGame;
             this.wallsGroup.add(wall3);
             this.wallsGroup.add(wall4);
         };
-        MainMenu.prototype.addScore = function () {
+        MainMenu.prototype.addHeader = function () {
             var posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
             var posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
-            this.addStrokedText(posX, posY, "Score: 2048   Movements: 100", 50);
+            this.header = this.addStrokedText(posX, posY, "", 50);
         };
         MainMenu.prototype.addTileNumber = function (posX, posY, text) {
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
@@ -333,6 +340,9 @@ var MyGame;
                 text.setText(this.getArray(index, 0) + "\n" + this.getArray(index, 1) + "\n" + this.getArray(index, 2) + "\n" + this.getArray(index, 3));
             }.bind(this));
         };
+        MainMenu.prototype.updateHeader = function () {
+            this.header.setText("Score: " + this.points + "     Movements: " + this.movements);
+        };
         MainMenu.prototype.getArray = function (x, y) {
             return this.tiles.array[y * (this.arraySize + 1) + x];
         };
@@ -347,6 +357,14 @@ var MyGame;
                 }
             }
             return true;
+        };
+        MainMenu.prototype.calculatePoints = function () {
+            var points = 0;
+            for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                points += tile;
+            }
+            return points;
         };
         MainMenu.prototype.addNewTile = function () {
             do {
