@@ -28,7 +28,7 @@ module MyGame {
       var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
 
       debugger;
-      super(screenWidth, screenHeight, Phaser.CANVAS, 'content');
+      super(screenWidth, screenHeight, Phaser.CANVAS, 'content', null, true);
 
       if (screenProportion > baseProportion) {
         safeWidth = screenWidth;

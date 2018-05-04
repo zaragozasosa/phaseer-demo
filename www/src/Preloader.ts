@@ -39,11 +39,17 @@ module MyGame {
 			this.load.image('astaroth', 'img/astaroth.png');
 			this.load.image('r1r1', 'img/r1r1.png');
 
+			this.load.image('joji', 'img/joji.png');
+			this.load.image('bren', 'img/bren.png');
+
+
 			this.game.tilesData = {
-				mainTile: 'nacho',
 				minimumValue: 1,
-				tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth']
+				tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji']
 			}
+
+			this.game.tilesData.mainTile = this.game.tilesData.tilesOrder[this.game.rnd.integerInRange(0, 15)];
+
 
 			this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
 

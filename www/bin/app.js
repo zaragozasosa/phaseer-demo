@@ -63,7 +63,7 @@ var MyGame;
             var screenProportion = screenHeight / screenWidth;
             var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
             debugger;
-            _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content') || this;
+            _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content', null, true) || this;
             if (screenProportion > baseProportion) {
                 safeWidth = screenWidth;
                 safeHeight = safeWidth * baseProportion;
@@ -262,7 +262,7 @@ var MyGame;
             var yPad = game.safeZone.paddingY;
             var graphics = this.game.add.graphics(0, 0);
             graphics.lineStyle(0);
-            graphics.beginFill(0xCCFFCC, 1);
+            graphics.beginFill(0xE7E5DF, 1);
             graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
             graphics.endFill();
         };
@@ -421,11 +421,13 @@ var MyGame;
             this.load.image('agent_smith', 'img/agentsmith.png');
             this.load.image('astaroth', 'img/astaroth.png');
             this.load.image('r1r1', 'img/r1r1.png');
+            this.load.image('joji', 'img/joji.png');
+            this.load.image('bren', 'img/bren.png');
             this.game.tilesData = {
-                mainTile: 'nacho',
                 minimumValue: 1,
-                tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth']
+                tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji']
             };
+            this.game.tilesData.mainTile = this.game.tilesData.tilesOrder[this.game.rnd.integerInRange(0, 15)];
             this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
         };
         Preloader.prototype.create = function () {

@@ -224,7 +224,7 @@ module MyGame {
       var graphics = this.game.add.graphics(0, 0);
 
       graphics.lineStyle(0);
-      graphics.beginFill(0xCCFFCC, 1);
+      graphics.beginFill(0xE7E5DF, 1);
       graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
       graphics.endFill();
     }
