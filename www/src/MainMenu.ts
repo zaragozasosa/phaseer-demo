@@ -1,7 +1,6 @@
 module MyGame {
 
   export class MainMenu extends Phaser.State {
-
     tiles: any;
     animating: boolean;
     xSpeed: number;
@@ -15,45 +14,35 @@ module MyGame {
     isDirty: boolean;
     points: number;
     movements: number;
+    framesGroup: Phaser.Group;
 
     create() {
-      this.addWhiteBackground();
+      this.movements = 0;
+      this.xSpeed = 0;
+      this.ySpeed = 0;
+      this.speed = 800;
+      this.animating = false;
+      this.arraySize = this.game.tileSettings.arraySize;
+      this.wallsGroup = this.game.add.group();
+
+      this.addBackground();
       this.addFrameBackground();
-      this.addHeader();
 
       this.tiles = {
         array: this.game.tileSettings.initialArray,
         sprites: this.game.add.group()
       };
 
-      this.xSpeed = 0;
-      this.ySpeed = 0;
-      this.speed = 800;
-      this.animating = false;
-      this.arraySize = this.game.tileSettings.arraySize;
-
-
+      this.framesGroup = this.game.add.group();
+      this.addFrames();
 
       this.addNewTile();
       this.addNewTile();
-      // let sprite =
-      //   this.addPuzzleTile(
-      //     this.game.rnd.integerInRange(0, 3),
-      //     this.game.rnd.integerInRange(0, 3),
-      //     this.game.tilesData.mainTile,
-      //     this.game.tilesData.minimumValue);
 
-      // this.tiles.sprites.add(sprite);
-
-      this.movements = 0;
       this.points = this.calculatePoints();
-      this.updateHeader();
+      this.addHeader();
       this.addDebuggingMatrix();
-      this.updateDebuggingMatrix();
-      //this.addPowerButton();
-
       this.cursors = this.game.input.keyboard.createCursorKeys();
-
     }
 
     update() {
@@ -71,21 +60,20 @@ module MyGame {
           this.handleInput(Phaser.Keyboard.DOWN, 0, this.speed);
         }
       } else {
-        // this.tiles.sprites.forEach(function (sprite: Phaser.Group) {
-        //   sprite.setAll('body.velocity.x', this.xSpeed);
-        //   sprite.setAll('body.velocity.y', this.ySpeed);
-        // }.bind(this));
+        this.tiles.sprites.forEach(function (sprite: Phaser.Group) {
+          debugger;
+          sprite.setAll('body.velocity.x', this.xSpeed);
+          sprite.setAll('body.velocity.y', this.ySpeed);
+        }.bind(this));
 
-        // this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup,
-        //   function (sprite: any, wall: any) {
-        //     sprite.parent.setAll('body.velocity.x', 0);
-        //     sprite.parent.setAll('body.velocity.y', 0);
-        //     this.animating = false;
-        //   }, null, this);
-
+        this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup,
+          function (sprite: any, wall: any) {
+            debugger;
+            sprite.parent.setAll('body.velocity.x', 0);
+            sprite.parent.setAll('body.velocity.y', 0);
+            this.animating = false;
+          }, null, this);
       }
-
-
     }
 
     handleInput(keyboardInput: number, xSpeed: number, ySpeed: number) {
@@ -94,8 +82,6 @@ module MyGame {
       this.ySpeed = ySpeed;
 
       this.updateArray(keyboardInput);
-
-      this.animating = false;
     }
 
     updateArray(keyboardInput: number) {
@@ -176,20 +162,28 @@ module MyGame {
       let scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
       let textX = (posX) * scale;
       let textY = (posY) * scale;
-      let group = this.game.add.group();
+      let spriteGroup = this.game.add.group();
 
       this.setArray(posX, posY, number);
 
-      let tileFrame = this.addTileFrame(posX * scale, posY * scale);
+      // let tileFrame = this.addTileFrame(posX * scale, posY * scale);
       let sprite = this.addSprite(posX * scale, posY * scale, id, this.game.tileSettings.tileScale);
       this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
       let text = this.addTileNumber(textX, textY, number.toString());
-      group.add(sprite);
-      group.add(text);
-      group.add(tileFrame);
+      spriteGroup.add(sprite);
+      spriteGroup.add(text);
+      // group.add(tileFrame);
 
-      return group;
+      return spriteGroup;
+    }
+
+    addFrames() {
+      for (let x = 0; x <= this.arraySize; x++) {
+        for (let y = 0; y <= this.arraySize; y++) {
+          this.framesGroup.add(this.addTileFrame(x, y));
+        }
+      }
     }
 
     addTileFrame(posX: number, posY: number) {
@@ -200,8 +194,11 @@ module MyGame {
       let xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
       let yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
 
+      let x = posX * this.game.tileSettings.tileSize * this.game.scaleFactor + xPad;
+      let y = posY * this.game.tileSettings.tileSize * this.game.scaleFactor + yPad;
+
       graphics.lineStyle(lineWidth, color, 1);
-      let rect = graphics.drawRect(posX + xPad, posY + yPad, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
+      let rect = graphics.drawRect(x, y, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
       this.game.physics.enable(rect, Phaser.Physics.ARCADE);
 
       return rect;
@@ -217,7 +214,7 @@ module MyGame {
       return sprite;
     }
 
-    addWhiteBackground() {
+    addBackground() {
       let game = this.game;
       let xPad = game.safeZone.paddingX;
       let yPad = game.safeZone.paddingY;
@@ -261,8 +258,6 @@ module MyGame {
       wall4.body.setSize(1, wallLength);
       wall4.body.immovable = true;
 
-      this.wallsGroup = this.game.add.group();
-
       this.wallsGroup.add(wall1);
       this.wallsGroup.add(wall2);
       this.wallsGroup.add(wall3);
@@ -273,18 +268,18 @@ module MyGame {
       let posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
       let posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
       this.header = this.addStrokedText(posX, posY, "", 50);
+
+      this.updateHeader();
     }
 
     addTileNumber(posX: number, posY: number, text: string) {
       let xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
       let yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
 
-
       return this.addStrokedText(posX + xPad, posY + yPad, text, 40);
     }
 
     addStrokedText(posX: number, posY: number, text: string, textSize: number, center = false) {
-
       let textObj = this.game.add.text(posX, posY, text);
 
       //	Font style
@@ -296,7 +291,7 @@ module MyGame {
       textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
       textObj.addColor('#ffffff', 0);
 
-      if(center) {
+      if (center) {
         textObj.anchor.set(0.5)
       }
 
@@ -307,7 +302,6 @@ module MyGame {
     addPowerButton() {
       let posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
       let posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
-
 
       let button = this.game.add.button(posX, posY, 'button', null, this, 1, 0, 2);
       button.scale.setTo(this.game.scaleFactor, this.game.scaleFactor);
@@ -320,12 +314,11 @@ module MyGame {
       this.debugArray = [];
 
       this.debugArray.push(this.addStrokedText(posX, posY, '', 30, true));
-
       this.debugArray.push(this.addStrokedText(posX + 150 * this.game.scaleFactor, posY, '', 30, true));
-
       this.debugArray.push(this.addStrokedText(posX + 300 * this.game.scaleFactor, posY, '', 30, true));
-
       this.debugArray.push(this.addStrokedText(posX + 450 * this.game.scaleFactor, posY, '', 30, true));
+
+      this.updateDebuggingMatrix();
     }
 
     updateDebuggingMatrix() {
@@ -352,7 +345,6 @@ module MyGame {
           return false;
         }
       }
-
       return true;
     }
 
@@ -363,7 +355,6 @@ module MyGame {
           empty++;
         }
       }
-
       return empty;
     }
 
@@ -372,7 +363,6 @@ module MyGame {
       for (let tile of this.tiles.array) {
         points += tile;
       }
-
       return points;
     }
 
@@ -382,13 +372,15 @@ module MyGame {
         var ranY = this.game.rnd.integerInRange(0, 3);
       } while (this.getArray(ranX, ranY));
 
-      if(this.arrayEmptyTiles() > 6) {
+      if (this.arrayEmptyTiles() > 6) {
         var chance = this.game.rnd.integerInRange(0, 99);
         this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
       } else {
         this.setArray(ranX, ranY, 1);
       }
 
+      this.addPuzzleTile(ranX, ranY, this.game.tilesData.mainTile, this.getArray(ranX, ranY));
+      this.game.world.bringToTop(this.framesGroup);
     }
 
   }

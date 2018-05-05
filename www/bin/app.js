@@ -110,25 +110,26 @@ var MyGame;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         MainMenu.prototype.create = function () {
-            this.addWhiteBackground();
-            this.addFrameBackground();
-            this.addHeader();
-            this.tiles = {
-                array: this.game.tileSettings.initialArray,
-                sprites: this.game.add.group()
-            };
+            this.movements = 0;
             this.xSpeed = 0;
             this.ySpeed = 0;
             this.speed = 800;
             this.animating = false;
             this.arraySize = this.game.tileSettings.arraySize;
+            this.wallsGroup = this.game.add.group();
+            this.addBackground();
+            this.addFrameBackground();
+            this.tiles = {
+                array: this.game.tileSettings.initialArray,
+                sprites: this.game.add.group()
+            };
+            this.framesGroup = this.game.add.group();
+            this.addFrames();
             this.addNewTile();
             this.addNewTile();
-            this.movements = 0;
             this.points = this.calculatePoints();
-            this.updateHeader();
+            this.addHeader();
             this.addDebuggingMatrix();
-            this.updateDebuggingMatrix();
             this.cursors = this.game.input.keyboard.createCursorKeys();
         };
         MainMenu.prototype.update = function () {
@@ -147,6 +148,17 @@ var MyGame;
                 }
             }
             else {
+                this.tiles.sprites.forEach(function (sprite) {
+                    debugger;
+                    sprite.setAll('body.velocity.x', this.xSpeed);
+                    sprite.setAll('body.velocity.y', this.ySpeed);
+                }.bind(this));
+                this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup, function (sprite, wall) {
+                    debugger;
+                    sprite.parent.setAll('body.velocity.x', 0);
+                    sprite.parent.setAll('body.velocity.y', 0);
+                    this.animating = false;
+                }, null, this);
             }
         };
         MainMenu.prototype.handleInput = function (keyboardInput, xSpeed, ySpeed) {
@@ -154,7 +166,9 @@ var MyGame;
             this.xSpeed = xSpeed;
             this.ySpeed = ySpeed;
             this.updateArray(keyboardInput);
-            this.animating = false;
+            this.game.time.events.add(1000, function () {
+                this.animating = false;
+            });
         };
         MainMenu.prototype.updateArray = function (keyboardInput) {
             this.isDirty = false;
@@ -224,16 +238,21 @@ var MyGame;
             var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
             var textX = (posX) * scale;
             var textY = (posY) * scale;
-            var group = this.game.add.group();
+            var spriteGroup = this.game.add.group();
             this.setArray(posX, posY, number);
-            var tileFrame = this.addTileFrame(posX * scale, posY * scale);
             var sprite = this.addSprite(posX * scale, posY * scale, id, this.game.tileSettings.tileScale);
             this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
             var text = this.addTileNumber(textX, textY, number.toString());
-            group.add(sprite);
-            group.add(text);
-            group.add(tileFrame);
-            return group;
+            spriteGroup.add(sprite);
+            spriteGroup.add(text);
+            return spriteGroup;
+        };
+        MainMenu.prototype.addFrames = function () {
+            for (var x = 0; x <= this.arraySize; x++) {
+                for (var y = 0; y <= this.arraySize; y++) {
+                    this.framesGroup.add(this.addTileFrame(x, y));
+                }
+            }
         };
         MainMenu.prototype.addTileFrame = function (posX, posY) {
             var graphics = this.game.add.graphics(0, 0);
@@ -242,8 +261,10 @@ var MyGame;
             var color = this.game.tileSettings.lineColor;
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
             var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
+            var x = posX * this.game.tileSettings.tileSize * this.game.scaleFactor + xPad;
+            var y = posY * this.game.tileSettings.tileSize * this.game.scaleFactor + yPad;
             graphics.lineStyle(lineWidth, color, 1);
-            var rect = graphics.drawRect(posX + xPad, posY + yPad, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
+            var rect = graphics.drawRect(x, y, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
             this.game.physics.enable(rect, Phaser.Physics.ARCADE);
             return rect;
         };
@@ -256,7 +277,7 @@ var MyGame;
             sprite.scale.setTo(game.scaleFactor * spriteScale, game.scaleFactor * spriteScale);
             return sprite;
         };
-        MainMenu.prototype.addWhiteBackground = function () {
+        MainMenu.prototype.addBackground = function () {
             var game = this.game;
             var xPad = game.safeZone.paddingX;
             var yPad = game.safeZone.paddingY;
@@ -292,7 +313,6 @@ var MyGame;
             this.game.physics.enable(wall4, Phaser.Physics.ARCADE);
             wall4.body.setSize(1, wallLength);
             wall4.body.immovable = true;
-            this.wallsGroup = this.game.add.group();
             this.wallsGroup.add(wall1);
             this.wallsGroup.add(wall2);
             this.wallsGroup.add(wall3);
@@ -302,6 +322,7 @@ var MyGame;
             var posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
             var posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
             this.header = this.addStrokedText(posX, posY, "", 50);
+            this.updateHeader();
         };
         MainMenu.prototype.addTileNumber = function (posX, posY, text) {
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
@@ -336,6 +357,7 @@ var MyGame;
             this.debugArray.push(this.addStrokedText(posX + 150 * this.game.scaleFactor, posY, '', 30, true));
             this.debugArray.push(this.addStrokedText(posX + 300 * this.game.scaleFactor, posY, '', 30, true));
             this.debugArray.push(this.addStrokedText(posX + 450 * this.game.scaleFactor, posY, '', 30, true));
+            this.updateDebuggingMatrix();
         };
         MainMenu.prototype.updateDebuggingMatrix = function () {
             this.debugArray.forEach(function (text, index) {
@@ -390,6 +412,8 @@ var MyGame;
             else {
                 this.setArray(ranX, ranY, 1);
             }
+            this.addPuzzleTile(ranX, ranY, this.game.tilesData.mainTile, this.getArray(ranX, ranY));
+            this.game.world.bringToTop(this.framesGroup);
         };
         return MainMenu;
     }(Phaser.State));
