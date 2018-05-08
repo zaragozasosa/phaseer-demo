@@ -8,6 +8,8 @@ module MyGame {
 
 		preload() {
 
+			let config = Singleton.getInstance().config;
+			let tileData = new TileData();
 			//	These are the assets we loaded in Boot.js
 			this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
 
@@ -15,6 +17,8 @@ module MyGame {
 			//	What that does is automatically crop the sprite from 0 to full-width
 			//	as the files below are loaded in.
 			this.load.setPreloadSprite(this.preloadBar);
+
+			this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
 
 			//	Here we load the rest of the assets our game needs.
 			//	As this is just a Project Template I've not provided these assets, swap them for your own.
@@ -42,17 +46,12 @@ module MyGame {
 			this.load.image('joji', 'img/joji.png');
 			this.load.image('bren', 'img/bren.png');
 
+			tileData.minimumValue = 1;
+			tileData.tilesOrder = ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji']
+			tileData.mainTile = tileData.tilesOrder[this.game.rnd.integerInRange(0, 15)];
 
-			this.game.tilesData = {
-				minimumValue: 1,
-				tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji']
-			}
-
-			this.game.tilesData.mainTile = this.game.tilesData.tilesOrder[this.game.rnd.integerInRange(0, 15)];
-
-
-			this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
-
+			config.tilesData = tileData;
+			Singleton.getInstance().config = config;
 		}
 
 		create() {

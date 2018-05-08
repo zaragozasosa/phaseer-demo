@@ -10,10 +10,69 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var MyGame;
 (function (MyGame) {
+    var Config = (function () {
+        function Config() {
+        }
+        return Config;
+    }());
+    MyGame.Config = Config;
+    var SafeZone = (function () {
+        function SafeZone(safeWidth, safeHeight, paddingX, paddingY) {
+            this.safeWidth = safeWidth;
+            this.safeHeight = safeHeight;
+            this.paddingX = paddingX;
+            this.paddingY = paddingY;
+        }
+        return SafeZone;
+    }());
+    MyGame.SafeZone = SafeZone;
+    var TileSettings = (function () {
+        function TileSettings() {
+        }
+        return TileSettings;
+    }());
+    MyGame.TileSettings = TileSettings;
+    var TileData = (function () {
+        function TileData() {
+        }
+        return TileData;
+    }());
+    MyGame.TileData = TileData;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Singleton = (function () {
+        function Singleton() {
+        }
+        Singleton.getInstance = function () {
+            if (!Singleton.instance) {
+                Singleton.instance = new Singleton();
+                Singleton.instance._config = new MyGame.Config();
+            }
+            return Singleton.instance;
+        };
+        Object.defineProperty(Singleton.prototype, "config", {
+            get: function () {
+                return this._config;
+            },
+            set: function (config) {
+                this._config = config;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Singleton;
+    }());
+    MyGame.Singleton = Singleton;
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game() {
             var _this = this;
+            var scaleFactor;
+            var safeZone;
+            var tileSettings;
+            var tilesData;
+            var config = Singleton.getInstance().config;
             var hasVisualViewport = window.visualViewport;
             var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             var paddingX = 0;
@@ -36,30 +95,28 @@ var MyGame;
                 safeWidth = screenWidth;
                 safeHeight = safeWidth * baseProportion;
                 paddingY = (screenHeight - safeHeight) / 2;
-                _this.scaleFactor = (screenPixelRatio / 3) * widthProportion;
+                scaleFactor = (screenPixelRatio / 3) * widthProportion;
             }
             else if (screenProportion < baseProportion) {
                 safeHeight = screenHeight;
                 safeWidth = safeHeight / baseProportion;
                 paddingX = (screenWidth - safeWidth) / 2;
-                _this.scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
+                scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
             }
-            _this.safeZone = {
-                safeWidth: safeWidth,
-                safeHeight: safeHeight,
-                paddingX: paddingX,
-                paddingY: paddingY
-            };
-            _this.tileSettings = {
-                tileSize: 240,
-                frameLineWidth: 4,
-                lineColor: 0x003399,
-                gridPaddingX: 0 * _this.scaleFactor,
-                gridPaddingY: 200 * _this.scaleFactor,
-                tileScale: 240 / 180,
-                arraySize: 3,
-                initialArray: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            };
+            safeZone = new MyGame.SafeZone(safeWidth, safeHeight, paddingX, paddingY);
+            tileSettings = new MyGame.TileSettings();
+            tileSettings.tileSize = 240;
+            tileSettings.frameLineWidth = 4;
+            tileSettings.lineColor = 0x003399;
+            tileSettings.gridPaddingX = 0 * scaleFactor;
+            tileSettings.gridPaddingY = 200 * scaleFactor;
+            tileSettings.tileScale = 240 / 180;
+            tileSettings.arraySize = 3;
+            tileSettings.initialArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            config.scaleFactor = scaleFactor;
+            config.safeZone = safeZone;
+            config.tileSettings = tileSettings;
+            Singleton.getInstance().config = config;
             _this.state.add('Boot', MyGame.Boot, false);
             _this.state.add('Preloader', MyGame.Preloader, false);
             _this.state.add('MainMenu', MyGame.MainMenu, false);
@@ -69,6 +126,349 @@ var MyGame;
         return Game;
     }(Phaser.Game));
     MyGame.Game = Game;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Gameboard = (function () {
+        function Gameboard(game, config) {
+            this.game = game;
+            this.config = config;
+            this.movements = 0;
+            this.xSpeed = 0;
+            this.ySpeed = 0;
+            this.speed = 2000 * this.config.scaleFactor;
+            this.animating = false;
+            this.arraySize = this.config.tileSettings.arraySize;
+            this.wallsGroup = this.game.add.group();
+            this.addBackground();
+            this.addFrameBackground();
+            this.tilesArray = this.config.tileSettings.initialArray;
+            this.tilesSprites = this.game.add.group();
+            this.framesGroup = this.game.add.group();
+            this.addFrames();
+            this.addNewTile();
+            this.addNewTile();
+            this.points = this.calculatePoints();
+            this.addHeader();
+            this.addDebuggingMatrix();
+            this.cursors = this.game.input.keyboard.createCursorKeys();
+        }
+        Gameboard.prototype.update = function () {
+            if (!this.animating) {
+                if (this.cursors.left.justDown) {
+                    this.handleInput(Phaser.Keyboard.LEFT, -this.speed, 0);
+                }
+                else if (this.cursors.right.justDown) {
+                    this.handleInput(Phaser.Keyboard.RIGHT, this.speed, 0);
+                }
+                else if (this.cursors.up.justDown) {
+                    this.handleInput(Phaser.Keyboard.UP, 0, -this.speed);
+                }
+                else if (this.cursors.down.justDown) {
+                    this.handleInput(Phaser.Keyboard.DOWN, 0, this.speed);
+                }
+            }
+            else {
+                this.game.physics.arcade.overlap(this.tilesSprites, this.tilesSprites, null, function (a, b) {
+                    a.body.stop();
+                    b.body.stop();
+                    return true;
+                });
+                this.game.physics.arcade.collide(this.tilesSprites, this.wallsGroup);
+                var allStopped_1 = true;
+                this.tilesSprites.forEach(function (sprite) {
+                    if (sprite.body.velocity.x !== 0 || sprite.body.velocity.y !== 0) {
+                        allStopped_1 = false;
+                    }
+                }.bind(this));
+                if (allStopped_1) {
+                    debugger;
+                    this.animating = false;
+                    if (this.isDirty && !this.isArrayFull()) {
+                        this.addNewTile();
+                        this.movements++;
+                        this.points = this.calculatePoints();
+                        this.updateDebuggingMatrix();
+                        this.updateHeader();
+                    }
+                }
+            }
+        };
+        Gameboard.prototype.handleInput = function (keyboardInput, xSpeed, ySpeed) {
+            this.animating = true;
+            this.xSpeed = xSpeed;
+            this.ySpeed = ySpeed;
+            this.updateArray(keyboardInput);
+            this.tilesSprites.forEach(function (sprite) {
+                sprite.body.velocity.x = this.xSpeed;
+                sprite.body.velocity.y = this.ySpeed;
+            }.bind(this));
+        };
+        Gameboard.prototype.updateArray = function (keyboardInput) {
+            this.isDirty = false;
+            var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
+            var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
+            var maxX = keyboardInput === Phaser.KeyCode.RIGHT
+                ? this.arraySize - 1
+                : this.arraySize;
+            var maxY = keyboardInput === Phaser.KeyCode.DOWN
+                ? this.arraySize - 1
+                : this.arraySize;
+            var startY = keyboardInput === Phaser.KeyCode.DOWN ? maxY : minY;
+            var stopY = keyboardInput === Phaser.KeyCode.DOWN ? minY : maxY;
+            var yIncrement = keyboardInput === Phaser.KeyCode.DOWN ? -1 : 1;
+            var startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
+            var stopX = keyboardInput === Phaser.KeyCode.RIGHT ? minX : maxX;
+            var xIncrement = keyboardInput === Phaser.KeyCode.RIGHT ? -1 : 1;
+            startY -= yIncrement;
+            do {
+                startY += yIncrement;
+                startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
+                startX -= xIncrement;
+                do {
+                    startX += xIncrement;
+                    var tile = this.getArray(startX, startY);
+                    if (tile) {
+                        this.pushTile(startX, startY, keyboardInput);
+                    }
+                } while (startX !== stopX);
+            } while (startY !== stopY);
+        };
+        Gameboard.prototype.pushTile = function (x, y, keyboardInput) {
+            var tile = this.getArray(x, y);
+            var pushX = keyboardInput === Phaser.KeyCode.RIGHT
+                ? 1
+                : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
+            var pushY = keyboardInput === Phaser.KeyCode.DOWN
+                ? 1
+                : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
+            var actualX = x;
+            var actualY = y;
+            var newX = actualX + pushX;
+            var newY = actualY + pushY;
+            while (newX >= 0 &&
+                newX <= this.arraySize &&
+                newY >= 0 &&
+                newY <= this.arraySize) {
+                var nextTile = this.getArray(newX, newY);
+                if (nextTile === 0) {
+                    this.setArray(newX, newY, tile);
+                    this.setArray(actualX, actualY, 0);
+                    actualX = newX;
+                    actualY = newY;
+                    this.isDirty = true;
+                }
+                else if (nextTile === tile) {
+                    tile *= 2;
+                    this.setArray(newX, newY, tile);
+                    this.setArray(actualX, actualY, 0);
+                    this.isDirty = true;
+                    break;
+                }
+                else {
+                    break;
+                }
+                newX += pushX;
+                newY += pushY;
+            }
+        };
+        Gameboard.prototype.addPuzzleTile = function (posX, posY, number) {
+            var scale = this.config.tileSettings.tileSize * this.config.scaleFactor;
+            var textX = posX * scale;
+            var textY = posY * scale;
+            var id = this.getTileSprite(number);
+            var sprite = this.addSprite(posX * scale, posY * scale, id, this.config.tileSettings.tileScale);
+            this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
+            sprite.body.collideWorldBounds = true;
+            return sprite;
+        };
+        Gameboard.prototype.addFrames = function () {
+            for (var x = 0; x <= this.arraySize; x++) {
+                for (var y = 0; y <= this.arraySize; y++) {
+                    this.framesGroup.add(this.addTileFrame(x, y));
+                }
+            }
+        };
+        Gameboard.prototype.addTileFrame = function (posX, posY) {
+            var graphics = this.game.add.graphics(0, 0);
+            var lineWidth = this.config.tileSettings.frameLineWidth;
+            var frameSize = this.config.tileSettings.tileSize - lineWidth / 2;
+            var color = this.config.tileSettings.lineColor;
+            var xPad = this.config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
+            var yPad = this.config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
+            var x = posX * this.config.tileSettings.tileSize * this.config.scaleFactor + xPad;
+            var y = posY * this.config.tileSettings.tileSize * this.config.scaleFactor + yPad;
+            graphics.lineStyle(lineWidth, color, 1);
+            var rect = graphics.drawRect(x, y, frameSize * this.config.scaleFactor, frameSize * this.config.scaleFactor);
+            this.game.physics.enable(rect, Phaser.Physics.ARCADE);
+            return rect;
+        };
+        Gameboard.prototype.addSprite = function (posX, posY, id, spriteScale) {
+            if (spriteScale === void 0) { spriteScale = 1; }
+            var config = this.config;
+            var xPad = config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
+            var yPad = config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
+            var sprite = this.game.add.sprite(posX + xPad, posY + yPad, id);
+            sprite.scale.setTo(config.scaleFactor * spriteScale, config.scaleFactor * spriteScale);
+            return sprite;
+        };
+        Gameboard.prototype.addBackground = function () {
+            var game = this.game;
+            var config = this.config;
+            var xPad = config.safeZone.paddingX;
+            var yPad = config.safeZone.paddingY;
+            var graphics = this.game.add.graphics(0, 0);
+            graphics.lineStyle(0);
+            graphics.beginFill(0xe7e5df, 1);
+            graphics.drawRect(xPad, yPad, config.safeZone.safeWidth, config.safeZone.safeHeight);
+            graphics.endFill();
+        };
+        Gameboard.prototype.addFrameBackground = function () {
+            var game = this.game;
+            var config = this.config;
+            var xPad = config.safeZone.paddingX + config.tileSettings.gridPaddingX;
+            var yPad = config.safeZone.paddingY + config.tileSettings.gridPaddingY;
+            var graphics = game.add.graphics(0, 0);
+            var wallLength = config.tileSettings.tileSize * 4 * config.scaleFactor;
+            graphics.lineStyle(0);
+            graphics.beginFill(0x66ccff, 1);
+            graphics.drawRect(xPad, yPad, wallLength, wallLength);
+            graphics.endFill();
+            var wall1 = this.game.add.sprite(xPad - 1, yPad - 1);
+            this.game.physics.enable(wall1, Phaser.Physics.ARCADE);
+            wall1.body.setSize(1, wallLength);
+            wall1.body.immovable = true;
+            var wall2 = this.game.add.sprite(xPad - 1, yPad - 1);
+            this.game.physics.enable(wall2, Phaser.Physics.ARCADE);
+            wall2.body.setSize(wallLength, 1);
+            wall2.body.immovable = true;
+            var wall3 = this.game.add.sprite(xPad - 1, yPad + wallLength + 1);
+            this.game.physics.enable(wall3, Phaser.Physics.ARCADE);
+            wall3.body.setSize(wallLength, 1);
+            wall3.body.immovable = true;
+            var wall4 = this.game.add.sprite(xPad + wallLength + 1, yPad - 1);
+            this.game.physics.enable(wall4, Phaser.Physics.ARCADE);
+            wall4.body.setSize(1, wallLength);
+            wall4.body.immovable = true;
+            this.wallsGroup.add(wall1);
+            this.wallsGroup.add(wall2);
+            this.wallsGroup.add(wall3);
+            this.wallsGroup.add(wall4);
+        };
+        Gameboard.prototype.addHeader = function () {
+            var posX = this.config.safeZone.paddingX + 20 * this.config.scaleFactor;
+            var posY = this.config.safeZone.paddingY + 80 * this.config.scaleFactor;
+            this.header = this.addStrokedText(posX, posY, '', 50);
+            this.updateHeader();
+        };
+        Gameboard.prototype.addTileNumber = function (posX, posY, text) {
+            var xPad = this.config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
+            var yPad = this.config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
+            return this.addStrokedText(posX + xPad, posY + yPad, text, 40);
+        };
+        Gameboard.prototype.addStrokedText = function (posX, posY, text, textSize, center) {
+            if (center === void 0) { center = false; }
+            var textObj = this.game.add.text(posX, posY, text);
+            textObj.font = 'Arial Black';
+            textObj.fontSize = textSize * this.config.scaleFactor;
+            textObj.stroke = '#000000';
+            textObj.strokeThickness = textSize / 4 * this.config.scaleFactor;
+            textObj.addColor('#ffffff', 0);
+            if (center) {
+                textObj.anchor.set(0.5);
+            }
+            this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
+            return textObj;
+        };
+        Gameboard.prototype.addPowerButton = function () {
+            var posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
+            var posY = this.config.safeZone.paddingY + 1200 * this.config.scaleFactor;
+            var button = this.game.add.button(posX, posY, 'button', null, this, 1, 0, 2);
+            button.scale.setTo(this.config.scaleFactor, this.config.scaleFactor);
+        };
+        Gameboard.prototype.addDebuggingMatrix = function () {
+            var posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
+            var posY = this.config.safeZone.paddingY + 1300 * this.config.scaleFactor;
+            this.debugArray = [];
+            this.debugArray.push(this.addStrokedText(posX, posY, '', 30, true));
+            this.debugArray.push(this.addStrokedText(posX + 150 * this.config.scaleFactor, posY, '', 30, true));
+            this.debugArray.push(this.addStrokedText(posX + 300 * this.config.scaleFactor, posY, '', 30, true));
+            this.debugArray.push(this.addStrokedText(posX + 450 * this.config.scaleFactor, posY, '', 30, true));
+            this.updateDebuggingMatrix();
+        };
+        Gameboard.prototype.updateDebuggingMatrix = function () {
+            this.debugArray.forEach(function (text, index) {
+                text.setText(this.getArray(index, 0) + "\n" + this.getArray(index, 1) + "\n" + this.getArray(index, 2) + "\n" + this.getArray(index, 3));
+            }.bind(this));
+        };
+        Gameboard.prototype.updateHeader = function () {
+            this.header.setText("Score: " + this.points + "     Movements: " + this.movements);
+        };
+        Gameboard.prototype.getArray = function (x, y) {
+            return this.tilesArray[y * (this.arraySize + 1) + x];
+        };
+        Gameboard.prototype.setArray = function (x, y, value) {
+            this.tilesArray[y * (this.arraySize + 1) + x] = value;
+        };
+        Gameboard.prototype.isArrayFull = function () {
+            for (var _i = 0, _a = this.tilesArray; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                if (tile === 0) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        Gameboard.prototype.arrayEmptyTiles = function () {
+            var empty = 0;
+            for (var _i = 0, _a = this.tilesArray; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                if (tile === 0) {
+                    empty++;
+                }
+            }
+            return empty;
+        };
+        Gameboard.prototype.calculatePoints = function () {
+            var points = 0;
+            for (var _i = 0, _a = this.tilesArray; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                points += tile;
+            }
+            return points;
+        };
+        Gameboard.prototype.addNewTile = function () {
+            do {
+                var ranX = this.game.rnd.integerInRange(0, 3);
+                var ranY = this.game.rnd.integerInRange(0, 3);
+            } while (this.getArray(ranX, ranY));
+            if (this.arrayEmptyTiles() > 6) {
+                var chance = this.game.rnd.integerInRange(0, 99);
+                this.setArray(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
+            }
+            else {
+                this.setArray(ranX, ranY, 1);
+            }
+            var tile = this.getArray(ranX, ranY);
+            var sprite = this.addPuzzleTile(ranX, ranY, tile);
+            this.tilesSprites.add(sprite);
+            this.game.world.bringToTop(this.framesGroup);
+        };
+        Gameboard.prototype.getTileSprite = function (tile) {
+            var list = this.config.tilesData.tilesOrder;
+            while (list[0] !== this.config.tilesData.mainTile) {
+                var last = list.pop();
+                list.unshift(last);
+            }
+            var index = Math.sqrt(tile) - 1;
+            if (index >= 0) {
+                return this.config.tilesData.tilesOrder[index];
+            }
+            return null;
+        };
+        return Gameboard;
+    }());
+    MyGame.Gameboard = Gameboard;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -109,338 +509,11 @@ var MyGame;
             return _super !== null && _super.apply(this, arguments) || this;
         }
         MainMenu.prototype.create = function () {
-            this.movements = 0;
-            this.xSpeed = 0;
-            this.ySpeed = 0;
-            this.speed = 2000 * this.game.scaleFactor;
-            this.animating = false;
-            this.arraySize = this.game.tileSettings.arraySize;
-            this.wallsGroup = this.game.add.group();
-            this.addBackground();
-            this.addFrameBackground();
-            this.tiles = {
-                array: this.game.tileSettings.initialArray,
-                sprites: this.game.add.group()
-            };
-            this.framesGroup = this.game.add.group();
-            this.addFrames();
-            this.addNewTile();
-            this.addNewTile();
-            this.points = this.calculatePoints();
-            this.addHeader();
-            this.addDebuggingMatrix();
-            this.cursors = this.game.input.keyboard.createCursorKeys();
+            this.config = MyGame.Singleton.getInstance().config;
+            this.gameboard = new MyGame.Gameboard(this.game, this.config);
         };
         MainMenu.prototype.update = function () {
-            if (!this.animating) {
-                if (this.cursors.left.justDown) {
-                    this.handleInput(Phaser.Keyboard.LEFT, -this.speed, 0);
-                }
-                else if (this.cursors.right.justDown) {
-                    this.handleInput(Phaser.Keyboard.RIGHT, this.speed, 0);
-                }
-                else if (this.cursors.up.justDown) {
-                    this.handleInput(Phaser.Keyboard.UP, 0, -this.speed);
-                }
-                else if (this.cursors.down.justDown) {
-                    this.handleInput(Phaser.Keyboard.DOWN, 0, this.speed);
-                }
-            }
-            else {
-                this.game.physics.arcade.overlap(this.tiles.sprites, this.tiles.sprites, null, function (a, b) {
-                    a.body.stop();
-                    b.body.stop();
-                    return true;
-                });
-                this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup);
-                var allStopped_1 = true;
-                this.tiles.sprites.forEach(function (sprite) {
-                    if (sprite.body.velocity.x !== 0 || sprite.body.velocity.y !== 0) {
-                        allStopped_1 = false;
-                    }
-                }.bind(this));
-                if (allStopped_1) {
-                    debugger;
-                    this.animating = false;
-                    if (this.isDirty && !this.isArrayFull()) {
-                        this.addNewTile();
-                        this.movements++;
-                        this.points = this.calculatePoints();
-                        this.updateDebuggingMatrix();
-                        this.updateHeader();
-                    }
-                }
-            }
-        };
-        MainMenu.prototype.handleInput = function (keyboardInput, xSpeed, ySpeed) {
-            this.animating = true;
-            this.xSpeed = xSpeed;
-            this.ySpeed = ySpeed;
-            this.updateArray(keyboardInput);
-            this.tiles.sprites.forEach(function (sprite) {
-                sprite.body.velocity.x = this.xSpeed;
-                sprite.body.velocity.y = this.ySpeed;
-            }.bind(this));
-        };
-        MainMenu.prototype.updateArray = function (keyboardInput) {
-            this.isDirty = false;
-            var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
-            var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
-            var maxX = keyboardInput === Phaser.KeyCode.RIGHT
-                ? this.arraySize - 1
-                : this.arraySize;
-            var maxY = keyboardInput === Phaser.KeyCode.DOWN
-                ? this.arraySize - 1
-                : this.arraySize;
-            var startY = keyboardInput === Phaser.KeyCode.DOWN ? maxY : minY;
-            var stopY = keyboardInput === Phaser.KeyCode.DOWN ? minY : maxY;
-            var yIncrement = keyboardInput === Phaser.KeyCode.DOWN ? -1 : 1;
-            var startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
-            var stopX = keyboardInput === Phaser.KeyCode.RIGHT ? minX : maxX;
-            var xIncrement = keyboardInput === Phaser.KeyCode.RIGHT ? -1 : 1;
-            startY -= yIncrement;
-            do {
-                startY += yIncrement;
-                startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
-                startX -= xIncrement;
-                do {
-                    startX += xIncrement;
-                    var tile = this.getArray(startX, startY);
-                    if (tile) {
-                        this.pushTile(startX, startY, keyboardInput);
-                    }
-                } while (startX !== stopX);
-            } while (startY !== stopY);
-        };
-        MainMenu.prototype.pushTile = function (x, y, keyboardInput) {
-            var tile = this.getArray(x, y);
-            var pushX = keyboardInput === Phaser.KeyCode.RIGHT
-                ? 1
-                : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
-            var pushY = keyboardInput === Phaser.KeyCode.DOWN
-                ? 1
-                : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
-            var actualX = x;
-            var actualY = y;
-            var newX = actualX + pushX;
-            var newY = actualY + pushY;
-            while (newX >= 0 &&
-                newX <= this.arraySize &&
-                newY >= 0 &&
-                newY <= this.arraySize) {
-                var nextTile = this.getArray(newX, newY);
-                if (nextTile === 0) {
-                    this.setArray(newX, newY, tile);
-                    this.setArray(actualX, actualY, 0);
-                    actualX = newX;
-                    actualY = newY;
-                    this.isDirty = true;
-                }
-                else if (nextTile === tile) {
-                    tile *= 2;
-                    this.setArray(newX, newY, tile);
-                    this.setArray(actualX, actualY, 0);
-                    this.isDirty = true;
-                    break;
-                }
-                else {
-                    break;
-                }
-                newX += pushX;
-                newY += pushY;
-            }
-        };
-        MainMenu.prototype.addPuzzleTile = function (posX, posY, number) {
-            var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
-            var textX = posX * scale;
-            var textY = posY * scale;
-            var id = this.getTileSprite(number);
-            var sprite = this.addSprite(posX * scale, posY * scale, id, this.game.tileSettings.tileScale);
-            this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
-            sprite.body.collideWorldBounds = true;
-            return sprite;
-        };
-        MainMenu.prototype.addFrames = function () {
-            for (var x = 0; x <= this.arraySize; x++) {
-                for (var y = 0; y <= this.arraySize; y++) {
-                    this.framesGroup.add(this.addTileFrame(x, y));
-                }
-            }
-        };
-        MainMenu.prototype.addTileFrame = function (posX, posY) {
-            var graphics = this.game.add.graphics(0, 0);
-            var lineWidth = this.game.tileSettings.frameLineWidth;
-            var frameSize = this.game.tileSettings.tileSize - lineWidth / 2;
-            var color = this.game.tileSettings.lineColor;
-            var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
-            var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
-            var x = posX * this.game.tileSettings.tileSize * this.game.scaleFactor + xPad;
-            var y = posY * this.game.tileSettings.tileSize * this.game.scaleFactor + yPad;
-            graphics.lineStyle(lineWidth, color, 1);
-            var rect = graphics.drawRect(x, y, frameSize * this.game.scaleFactor, frameSize * this.game.scaleFactor);
-            this.game.physics.enable(rect, Phaser.Physics.ARCADE);
-            return rect;
-        };
-        MainMenu.prototype.addSprite = function (posX, posY, id, spriteScale) {
-            if (spriteScale === void 0) { spriteScale = 1; }
-            var game = this.game;
-            var xPad = game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
-            var yPad = game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
-            var sprite = this.add.sprite(posX + xPad, posY + yPad, id);
-            sprite.scale.setTo(game.scaleFactor * spriteScale, game.scaleFactor * spriteScale);
-            return sprite;
-        };
-        MainMenu.prototype.addBackground = function () {
-            var game = this.game;
-            var xPad = game.safeZone.paddingX;
-            var yPad = game.safeZone.paddingY;
-            var graphics = this.game.add.graphics(0, 0);
-            graphics.lineStyle(0);
-            graphics.beginFill(0xe7e5df, 1);
-            graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
-            graphics.endFill();
-        };
-        MainMenu.prototype.addFrameBackground = function () {
-            var game = this.game;
-            var xPad = game.safeZone.paddingX + game.tileSettings.gridPaddingX;
-            var yPad = game.safeZone.paddingY + game.tileSettings.gridPaddingY;
-            var graphics = game.add.graphics(0, 0);
-            var wallLength = game.tileSettings.tileSize * 4 * game.scaleFactor;
-            graphics.lineStyle(0);
-            graphics.beginFill(0x66ccff, 1);
-            graphics.drawRect(xPad, yPad, wallLength, wallLength);
-            graphics.endFill();
-            var wall1 = this.add.sprite(xPad - 1, yPad - 1);
-            this.game.physics.enable(wall1, Phaser.Physics.ARCADE);
-            wall1.body.setSize(1, wallLength);
-            wall1.body.immovable = true;
-            var wall2 = this.add.sprite(xPad - 1, yPad - 1);
-            this.game.physics.enable(wall2, Phaser.Physics.ARCADE);
-            wall2.body.setSize(wallLength, 1);
-            wall2.body.immovable = true;
-            var wall3 = this.add.sprite(xPad - 1, yPad + wallLength + 1);
-            this.game.physics.enable(wall3, Phaser.Physics.ARCADE);
-            wall3.body.setSize(wallLength, 1);
-            wall3.body.immovable = true;
-            var wall4 = this.add.sprite(xPad + wallLength + 1, yPad - 1);
-            this.game.physics.enable(wall4, Phaser.Physics.ARCADE);
-            wall4.body.setSize(1, wallLength);
-            wall4.body.immovable = true;
-            this.wallsGroup.add(wall1);
-            this.wallsGroup.add(wall2);
-            this.wallsGroup.add(wall3);
-            this.wallsGroup.add(wall4);
-        };
-        MainMenu.prototype.addHeader = function () {
-            var posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
-            var posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
-            this.header = this.addStrokedText(posX, posY, '', 50);
-            this.updateHeader();
-        };
-        MainMenu.prototype.addTileNumber = function (posX, posY, text) {
-            var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
-            var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
-            return this.addStrokedText(posX + xPad, posY + yPad, text, 40);
-        };
-        MainMenu.prototype.addStrokedText = function (posX, posY, text, textSize, center) {
-            if (center === void 0) { center = false; }
-            var textObj = this.game.add.text(posX, posY, text);
-            textObj.font = 'Arial Black';
-            textObj.fontSize = textSize * this.game.scaleFactor;
-            textObj.stroke = '#000000';
-            textObj.strokeThickness = textSize / 4 * this.game.scaleFactor;
-            textObj.addColor('#ffffff', 0);
-            if (center) {
-                textObj.anchor.set(0.5);
-            }
-            this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
-            return textObj;
-        };
-        MainMenu.prototype.addPowerButton = function () {
-            var posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
-            var posY = this.game.safeZone.paddingY + 1200 * this.game.scaleFactor;
-            var button = this.game.add.button(posX, posY, 'button', null, this, 1, 0, 2);
-            button.scale.setTo(this.game.scaleFactor, this.game.scaleFactor);
-        };
-        MainMenu.prototype.addDebuggingMatrix = function () {
-            var posX = this.game.safeZone.paddingX + 250 * this.game.scaleFactor;
-            var posY = this.game.safeZone.paddingY + 1300 * this.game.scaleFactor;
-            this.debugArray = [];
-            this.debugArray.push(this.addStrokedText(posX, posY, '', 30, true));
-            this.debugArray.push(this.addStrokedText(posX + 150 * this.game.scaleFactor, posY, '', 30, true));
-            this.debugArray.push(this.addStrokedText(posX + 300 * this.game.scaleFactor, posY, '', 30, true));
-            this.debugArray.push(this.addStrokedText(posX + 450 * this.game.scaleFactor, posY, '', 30, true));
-            this.updateDebuggingMatrix();
-        };
-        MainMenu.prototype.updateDebuggingMatrix = function () {
-            this.debugArray.forEach(function (text, index) {
-                text.setText(this.getArray(index, 0) + "\n" + this.getArray(index, 1) + "\n" + this.getArray(index, 2) + "\n" + this.getArray(index, 3));
-            }.bind(this));
-        };
-        MainMenu.prototype.updateHeader = function () {
-            this.header.setText("Score: " + this.points + "     Movements: " + this.movements);
-        };
-        MainMenu.prototype.getArray = function (x, y) {
-            return this.tiles.array[y * (this.arraySize + 1) + x];
-        };
-        MainMenu.prototype.setArray = function (x, y, value) {
-            this.tiles.array[y * (this.arraySize + 1) + x] = value;
-        };
-        MainMenu.prototype.isArrayFull = function () {
-            for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
-                var tile = _a[_i];
-                if (tile === 0) {
-                    return false;
-                }
-            }
-            return true;
-        };
-        MainMenu.prototype.arrayEmptyTiles = function () {
-            var empty = 0;
-            for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
-                var tile = _a[_i];
-                if (tile === 0) {
-                    empty++;
-                }
-            }
-            return empty;
-        };
-        MainMenu.prototype.calculatePoints = function () {
-            var points = 0;
-            for (var _i = 0, _a = this.tiles.array; _i < _a.length; _i++) {
-                var tile = _a[_i];
-                points += tile;
-            }
-            return points;
-        };
-        MainMenu.prototype.addNewTile = function () {
-            do {
-                var ranX = this.game.rnd.integerInRange(0, 3);
-                var ranY = this.game.rnd.integerInRange(0, 3);
-            } while (this.getArray(ranX, ranY));
-            if (this.arrayEmptyTiles() > 6) {
-                var chance = this.game.rnd.integerInRange(0, 99);
-                this.setArray(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
-            }
-            else {
-                this.setArray(ranX, ranY, 1);
-            }
-            var tile = this.getArray(ranX, ranY);
-            var sprite = this.addPuzzleTile(ranX, ranY, tile);
-            this.tiles.sprites.add(sprite);
-            this.game.world.bringToTop(this.framesGroup);
-        };
-        MainMenu.prototype.getTileSprite = function (tile) {
-            var list = this.game.tilesData.tilesOrder;
-            while (list[0] !== this.game.tilesData.mainTile) {
-                var last = list.pop();
-                list.unshift(last);
-            }
-            var index = Math.sqrt(tile) - 1;
-            if (index >= 0) {
-                return this.game.tilesData.tilesOrder[index];
-            }
-            return null;
+            this.gameboard.update();
         };
         return MainMenu;
     }(Phaser.State));
@@ -456,8 +529,11 @@ var MyGame;
             return _this;
         }
         Preloader.prototype.preload = function () {
+            var config = MyGame.Singleton.getInstance().config;
+            var tileData = new MyGame.TileData();
             this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
+            this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
             this.load.image('rox', 'img/rox.png');
             this.load.image('choco', 'img/choco.png');
             this.load.image('mira', 'img/mira.png');
@@ -474,12 +550,11 @@ var MyGame;
             this.load.image('r1r1', 'img/r1r1.png');
             this.load.image('joji', 'img/joji.png');
             this.load.image('bren', 'img/bren.png');
-            this.game.tilesData = {
-                minimumValue: 1,
-                tilesOrder: ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji']
-            };
-            this.game.tilesData.mainTile = this.game.tilesData.tilesOrder[this.game.rnd.integerInRange(0, 15)];
-            this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
+            tileData.minimumValue = 1;
+            tileData.tilesOrder = ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji'];
+            tileData.mainTile = tileData.tilesOrder[this.game.rnd.integerInRange(0, 15)];
+            config.tilesData = tileData;
+            MyGame.Singleton.getInstance().config = config;
         };
         Preloader.prototype.create = function () {
             this.game.state.start('MainMenu');
