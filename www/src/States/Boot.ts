@@ -11,7 +11,7 @@ module MyGame {
 
 			// Enable physics
 			this.game.physics.startSystem(Phaser.Physics.ARCADE);
-			this.game.time.desiredFps = 30;
+			this.game.time.desiredFps = 60;
 
 			if (this.game.device.desktop) {
 				//  If you have any desktop specific settings, they can go in here

@@ -10,37 +10,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var MyGame;
 (function (MyGame) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Boot.prototype.init = function () {
-            this.input.maxPointers = 1;
-            this.stage.disableVisibilityChange = true;
-            this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            this.game.time.desiredFps = 30;
-            if (this.game.device.desktop) {
-                this.scale.pageAlignHorizontally = true;
-            }
-            else {
-                this.scale.forcePortrait = true;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-            }
-        };
-        Boot.prototype.preload = function () {
-            this.load.image('preloadBar', 'img/loader.png');
-        };
-        Boot.prototype.create = function () {
-            this.game.state.start('Preloader');
-        };
-        return Boot;
-    }(Phaser.State));
-    MyGame.Boot = Boot;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game() {
@@ -62,7 +31,6 @@ var MyGame;
             screenHeight = !isMobile ? (screenHeight / screenPixelRatio) - 20 : screenHeight > 940 ? 940 : screenHeight;
             var screenProportion = screenHeight / screenWidth;
             var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
-            debugger;
             _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content', null, true) || this;
             if (screenProportion > baseProportion) {
                 safeWidth = screenWidth;
@@ -104,6 +72,37 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Boot.prototype.init = function () {
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            this.game.time.desiredFps = 60;
+            if (this.game.device.desktop) {
+                this.scale.pageAlignHorizontally = true;
+            }
+            else {
+                this.scale.forcePortrait = true;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+        };
+        Boot.prototype.preload = function () {
+            this.load.image('preloadBar', 'img/loader.png');
+        };
+        Boot.prototype.create = function () {
+            this.game.state.start('Preloader');
+        };
+        return Boot;
+    }(Phaser.State));
+    MyGame.Boot = Boot;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
     var MainMenu = (function (_super) {
         __extends(MainMenu, _super);
         function MainMenu() {
@@ -113,7 +112,7 @@ var MyGame;
             this.movements = 0;
             this.xSpeed = 0;
             this.ySpeed = 0;
-            this.speed = 800;
+            this.speed = 2000 * this.game.scaleFactor;
             this.animating = false;
             this.arraySize = this.game.tileSettings.arraySize;
             this.wallsGroup = this.game.add.group();
@@ -148,17 +147,29 @@ var MyGame;
                 }
             }
             else {
+                this.game.physics.arcade.overlap(this.tiles.sprites, this.tiles.sprites, null, function (a, b) {
+                    a.body.stop();
+                    b.body.stop();
+                    return true;
+                });
+                this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup);
+                var allStopped_1 = true;
                 this.tiles.sprites.forEach(function (sprite) {
-                    debugger;
-                    sprite.setAll('body.velocity.x', this.xSpeed);
-                    sprite.setAll('body.velocity.y', this.ySpeed);
+                    if (sprite.body.velocity.x !== 0 || sprite.body.velocity.y !== 0) {
+                        allStopped_1 = false;
+                    }
                 }.bind(this));
-                this.game.physics.arcade.collide(this.tiles.sprites, this.wallsGroup, function (sprite, wall) {
+                if (allStopped_1) {
                     debugger;
-                    sprite.parent.setAll('body.velocity.x', 0);
-                    sprite.parent.setAll('body.velocity.y', 0);
                     this.animating = false;
-                }, null, this);
+                    if (this.isDirty && !this.isArrayFull()) {
+                        this.addNewTile();
+                        this.movements++;
+                        this.points = this.calculatePoints();
+                        this.updateDebuggingMatrix();
+                        this.updateHeader();
+                    }
+                }
             }
         };
         MainMenu.prototype.handleInput = function (keyboardInput, xSpeed, ySpeed) {
@@ -166,16 +177,21 @@ var MyGame;
             this.xSpeed = xSpeed;
             this.ySpeed = ySpeed;
             this.updateArray(keyboardInput);
-            this.game.time.events.add(1000, function () {
-                this.animating = false;
-            });
+            this.tiles.sprites.forEach(function (sprite) {
+                sprite.body.velocity.x = this.xSpeed;
+                sprite.body.velocity.y = this.ySpeed;
+            }.bind(this));
         };
         MainMenu.prototype.updateArray = function (keyboardInput) {
             this.isDirty = false;
             var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
             var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
-            var maxX = keyboardInput === Phaser.KeyCode.RIGHT ? this.arraySize - 1 : this.arraySize;
-            var maxY = keyboardInput === Phaser.KeyCode.DOWN ? this.arraySize - 1 : this.arraySize;
+            var maxX = keyboardInput === Phaser.KeyCode.RIGHT
+                ? this.arraySize - 1
+                : this.arraySize;
+            var maxY = keyboardInput === Phaser.KeyCode.DOWN
+                ? this.arraySize - 1
+                : this.arraySize;
             var startY = keyboardInput === Phaser.KeyCode.DOWN ? maxY : minY;
             var stopY = keyboardInput === Phaser.KeyCode.DOWN ? minY : maxY;
             var yIncrement = keyboardInput === Phaser.KeyCode.DOWN ? -1 : 1;
@@ -195,23 +211,23 @@ var MyGame;
                     }
                 } while (startX !== stopX);
             } while (startY !== stopY);
-            if (this.isDirty && !this.isArrayFull()) {
-                this.addNewTile();
-                this.movements++;
-                this.points = this.calculatePoints();
-                this.updateDebuggingMatrix();
-                this.updateHeader();
-            }
         };
         MainMenu.prototype.pushTile = function (x, y, keyboardInput) {
             var tile = this.getArray(x, y);
-            var pushX = keyboardInput === Phaser.KeyCode.RIGHT ? 1 : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
-            var pushY = keyboardInput === Phaser.KeyCode.DOWN ? 1 : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
+            var pushX = keyboardInput === Phaser.KeyCode.RIGHT
+                ? 1
+                : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
+            var pushY = keyboardInput === Phaser.KeyCode.DOWN
+                ? 1
+                : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
             var actualX = x;
             var actualY = y;
             var newX = actualX + pushX;
             var newY = actualY + pushY;
-            while (newX >= 0 && newX <= this.arraySize && newY >= 0 && newY <= this.arraySize) {
+            while (newX >= 0 &&
+                newX <= this.arraySize &&
+                newY >= 0 &&
+                newY <= this.arraySize) {
                 var nextTile = this.getArray(newX, newY);
                 if (nextTile === 0) {
                     this.setArray(newX, newY, tile);
@@ -234,18 +250,15 @@ var MyGame;
                 newY += pushY;
             }
         };
-        MainMenu.prototype.addPuzzleTile = function (posX, posY, id, number) {
+        MainMenu.prototype.addPuzzleTile = function (posX, posY, number) {
             var scale = this.game.tileSettings.tileSize * this.game.scaleFactor;
-            var textX = (posX) * scale;
-            var textY = (posY) * scale;
-            var spriteGroup = this.game.add.group();
-            this.setArray(posX, posY, number);
+            var textX = posX * scale;
+            var textY = posY * scale;
+            var id = this.getTileSprite(number);
             var sprite = this.addSprite(posX * scale, posY * scale, id, this.game.tileSettings.tileScale);
             this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
-            var text = this.addTileNumber(textX, textY, number.toString());
-            spriteGroup.add(sprite);
-            spriteGroup.add(text);
-            return spriteGroup;
+            sprite.body.collideWorldBounds = true;
+            return sprite;
         };
         MainMenu.prototype.addFrames = function () {
             for (var x = 0; x <= this.arraySize; x++) {
@@ -257,7 +270,7 @@ var MyGame;
         MainMenu.prototype.addTileFrame = function (posX, posY) {
             var graphics = this.game.add.graphics(0, 0);
             var lineWidth = this.game.tileSettings.frameLineWidth;
-            var frameSize = this.game.tileSettings.tileSize - (lineWidth / 2);
+            var frameSize = this.game.tileSettings.tileSize - lineWidth / 2;
             var color = this.game.tileSettings.lineColor;
             var xPad = this.game.safeZone.paddingX + this.game.tileSettings.gridPaddingX;
             var yPad = this.game.safeZone.paddingY + this.game.tileSettings.gridPaddingY;
@@ -283,7 +296,7 @@ var MyGame;
             var yPad = game.safeZone.paddingY;
             var graphics = this.game.add.graphics(0, 0);
             graphics.lineStyle(0);
-            graphics.beginFill(0xE7E5DF, 1);
+            graphics.beginFill(0xe7e5df, 1);
             graphics.drawRect(xPad, yPad, game.safeZone.safeWidth, game.safeZone.safeHeight);
             graphics.endFill();
         };
@@ -294,7 +307,7 @@ var MyGame;
             var graphics = game.add.graphics(0, 0);
             var wallLength = game.tileSettings.tileSize * 4 * game.scaleFactor;
             graphics.lineStyle(0);
-            graphics.beginFill(0x66CCFF, 1);
+            graphics.beginFill(0x66ccff, 1);
             graphics.drawRect(xPad, yPad, wallLength, wallLength);
             graphics.endFill();
             var wall1 = this.add.sprite(xPad - 1, yPad - 1);
@@ -321,7 +334,7 @@ var MyGame;
         MainMenu.prototype.addHeader = function () {
             var posX = this.game.safeZone.paddingX + 20 * this.game.scaleFactor;
             var posY = this.game.safeZone.paddingY + 80 * this.game.scaleFactor;
-            this.header = this.addStrokedText(posX, posY, "", 50);
+            this.header = this.addStrokedText(posX, posY, '', 50);
             this.updateHeader();
         };
         MainMenu.prototype.addTileNumber = function (posX, posY, text) {
@@ -335,7 +348,7 @@ var MyGame;
             textObj.font = 'Arial Black';
             textObj.fontSize = textSize * this.game.scaleFactor;
             textObj.stroke = '#000000';
-            textObj.strokeThickness = (textSize / 4) * this.game.scaleFactor;
+            textObj.strokeThickness = textSize / 4 * this.game.scaleFactor;
             textObj.addColor('#ffffff', 0);
             if (center) {
                 textObj.anchor.set(0.5);
@@ -407,13 +420,27 @@ var MyGame;
             } while (this.getArray(ranX, ranY));
             if (this.arrayEmptyTiles() > 6) {
                 var chance = this.game.rnd.integerInRange(0, 99);
-                this.setArray(ranX, ranY, chance === 99 ? 8 : chance > 96 ? 4 : chance > 89 ? 2 : 1);
+                this.setArray(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
             }
             else {
                 this.setArray(ranX, ranY, 1);
             }
-            this.addPuzzleTile(ranX, ranY, this.game.tilesData.mainTile, this.getArray(ranX, ranY));
+            var tile = this.getArray(ranX, ranY);
+            var sprite = this.addPuzzleTile(ranX, ranY, tile);
+            this.tiles.sprites.add(sprite);
             this.game.world.bringToTop(this.framesGroup);
+        };
+        MainMenu.prototype.getTileSprite = function (tile) {
+            var list = this.game.tilesData.tilesOrder;
+            while (list[0] !== this.game.tilesData.mainTile) {
+                var last = list.pop();
+                list.unshift(last);
+            }
+            var index = Math.sqrt(tile) - 1;
+            if (index >= 0) {
+                return this.game.tilesData.tilesOrder[index];
+            }
+            return null;
         };
         return MainMenu;
     }(Phaser.State));
