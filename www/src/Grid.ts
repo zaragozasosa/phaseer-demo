@@ -1,8 +1,10 @@
 namespace MyGame {
   export class Grid {
-    game: Phaser.Game;
-    config: Config;
-    textFactory: TextFactory;
+    private game: Phaser.Game;
+    private config: Config;
+    private textFactory: TextFactory;
+    private graphicsFactory: GraphicsFactory;
+    private spriteFactory: SpriteFactory;
 
     tiles: Array<Tile>;
     tilesArray: TilesArray;
@@ -26,6 +28,8 @@ namespace MyGame {
       this.game = singleton.game;
       this.config = singleton.config;
       this.textFactory = new TextFactory();
+      this.graphicsFactory = new GraphicsFactory();
+      this.spriteFactory = new SpriteFactory();
 
       this.gameboardCallback = gameboardCallback;
 
@@ -35,15 +39,13 @@ namespace MyGame {
       this.speed = 3000 * this.config.scaleFactor;
       this.animating = false;
       this.arraySize = this.config.tileSettings.arraySize;
-      this.wallsGroup = this.game.add.group();
-
-      this.createWalls();
+      this.wallsGroup = this.makeWalls();
 
       this.tilesArray = new TilesArray();
+      this.tiles = [];
       this.tilesGroup = this.game.add.group();
 
-      this.framesGroup = this.game.add.group();
-      this.addFrames();
+      this.framesGroup = this.makeTileFrames();
 
       this.addNewTile();
       this.addNewTile();
@@ -58,7 +60,11 @@ namespace MyGame {
 
       if (this.tilesArray.emptyTiles() > 6) {
         var chance = this.game.rnd.integerInRange(0, 99);
-        this.tilesArray.set(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
+        this.tilesArray.set(
+          ranX,
+          ranY,
+          chance === 98 ? 4 : chance >= 90 ? 2 : 1
+        );
       } else {
         this.tilesArray.set(ranX, ranY, 1);
       }
@@ -234,81 +240,36 @@ namespace MyGame {
       }
     }
 
-    addFrames() {
+    makeWalls(): Phaser.Group {
+      let config = this.config;
+      let wallLength = config.tileSettings.tileSize * 4;
+      this.graphicsFactory.drawGridRect();
+      let group = this.game.add.group();
+
+      let wall1 = this.graphicsFactory.makeWall(0, 0, 1, wallLength);
+
+      let wall2 = this.graphicsFactory.makeWall(0, 0, wallLength, 1);
+
+      let wall3 = this.graphicsFactory.makeWall(0, wallLength, wallLength, 1);
+
+      let wall4 = this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength);
+
+      group.add(wall1);
+      group.add(wall2);
+      group.add(wall3);
+      group.add(wall4);
+
+      return group;
+    }
+
+    makeTileFrames(): Phaser.Group {
+      let group = this.game.add.group();
       for (let x = 0; x <= this.arraySize; x++) {
         for (let y = 0; y <= this.arraySize; y++) {
-          this.framesGroup.add(this.addTileFrame(x, y));
+          group.add(this.spriteFactory.makeTileFrame(x, y));
         }
       }
+      return group;
     }
-
-    addTileFrame(posX: number, posY: number) {
-      let graphics = this.game.add.graphics(0, 0);
-      let lineWidth = this.config.tileSettings.frameLineWidth;
-      let frameSize = this.config.tileSettings.tileSize - lineWidth / 2;
-      let color = this.config.tileSettings.lineColor;
-      let xPad =
-        this.config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
-      let yPad =
-        this.config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
-
-      let x =
-        posX * this.config.tileSettings.tileSize * this.config.scaleFactor +
-        xPad;
-      let y =
-        posY * this.config.tileSettings.tileSize * this.config.scaleFactor +
-        yPad;
-
-      graphics.lineStyle(lineWidth, color, 1);
-      let rect = graphics.drawRect(
-        x,
-        y,
-        frameSize * this.config.scaleFactor,
-        frameSize * this.config.scaleFactor
-      );
-      this.game.physics.enable(rect, Phaser.Physics.ARCADE);
-
-      return rect;
-    }
-
-    createWalls() {
-      let game = this.game;
-      let config = this.config;
-      let xPad = config.safeZone.paddingX + config.tileSettings.gridPaddingX;
-      let yPad = config.safeZone.paddingY + config.tileSettings.gridPaddingY;
-      let graphics = game.add.graphics(0, 0);
-      let wallLength = config.tileSettings.tileSize * 4 * config.scaleFactor;
-
-      graphics.lineStyle(0);
-      graphics.beginFill(0x66ccff, 1);
-      graphics.drawRect(xPad, yPad, wallLength, wallLength);
-      graphics.endFill();
-
-      let wall1 = this.game.add.sprite(xPad - 1, yPad - 1);
-      this.game.physics.enable(wall1, Phaser.Physics.ARCADE);
-      wall1.body.setSize(1, wallLength);
-      wall1.body.immovable = true;
-
-      let wall2 = this.game.add.sprite(xPad - 1, yPad - 1);
-      this.game.physics.enable(wall2, Phaser.Physics.ARCADE);
-      wall2.body.setSize(wallLength, 1);
-      wall2.body.immovable = true;
-
-      let wall3 = this.game.add.sprite(xPad - 1, yPad + wallLength + 1);
-      this.game.physics.enable(wall3, Phaser.Physics.ARCADE);
-      wall3.body.setSize(wallLength, 1);
-      wall3.body.immovable = true;
-
-      let wall4 = this.game.add.sprite(xPad + wallLength + 1, yPad - 1);
-      this.game.physics.enable(wall4, Phaser.Physics.ARCADE);
-      wall4.body.setSize(1, wallLength);
-      wall4.body.immovable = true;
-
-      this.wallsGroup.add(wall1);
-      this.wallsGroup.add(wall2);
-      this.wallsGroup.add(wall3);
-      this.wallsGroup.add(wall4);
-    }
-
   }
 }

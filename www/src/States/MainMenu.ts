@@ -1,6 +1,6 @@
 namespace MyGame {
   export class MainMenu extends Phaser.State {
-    gameboard: Gameboard;
+    private gameboard: Gameboard;
 
     create() {
       this.gameboard = new Gameboard();

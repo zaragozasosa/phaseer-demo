@@ -124,6 +124,7 @@ var MyGame;
             config.safeZone = safeZone;
             config.tileSettings = tileSettings;
             MyGame.Singleton.getInstance().config = config;
+            MyGame.Singleton.getInstance().game = _this;
             _this.state.add('Boot', MyGame.Boot, false);
             _this.state.add('Preloader', MyGame.Preloader, false);
             _this.state.add('MainMenu', MyGame.MainMenu, false);
@@ -211,6 +212,8 @@ var MyGame;
             this.game = singleton.game;
             this.config = singleton.config;
             this.textFactory = new MyGame.TextFactory();
+            this.graphicsFactory = new MyGame.GraphicsFactory();
+            this.spriteFactory = new MyGame.SpriteFactory();
             this.gameboardCallback = gameboardCallback;
             this.tiles = new Array();
             this.xSpeed = 0;
@@ -218,12 +221,11 @@ var MyGame;
             this.speed = 3000 * this.config.scaleFactor;
             this.animating = false;
             this.arraySize = this.config.tileSettings.arraySize;
-            this.wallsGroup = this.game.add.group();
-            this.createWalls();
+            this.wallsGroup = this.makeWalls();
             this.tilesArray = new MyGame.TilesArray();
+            this.tiles = [];
             this.tilesGroup = this.game.add.group();
-            this.framesGroup = this.game.add.group();
-            this.addFrames();
+            this.framesGroup = this.makeTileFrames();
             this.addNewTile();
             this.addNewTile();
             this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -381,60 +383,29 @@ var MyGame;
                 newY += pushY;
             }
         };
-        Grid.prototype.addFrames = function () {
+        Grid.prototype.makeWalls = function () {
+            var config = this.config;
+            var wallLength = config.tileSettings.tileSize * 4;
+            this.graphicsFactory.drawGridRect();
+            var group = this.game.add.group();
+            var wall1 = this.graphicsFactory.makeWall(0, 0, 1, wallLength);
+            var wall2 = this.graphicsFactory.makeWall(0, 0, wallLength, 1);
+            var wall3 = this.graphicsFactory.makeWall(0, wallLength, wallLength, 1);
+            var wall4 = this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength);
+            group.add(wall1);
+            group.add(wall2);
+            group.add(wall3);
+            group.add(wall4);
+            return group;
+        };
+        Grid.prototype.makeTileFrames = function () {
+            var group = this.game.add.group();
             for (var x = 0; x <= this.arraySize; x++) {
                 for (var y = 0; y <= this.arraySize; y++) {
-                    this.framesGroup.add(this.addTileFrame(x, y));
+                    group.add(this.spriteFactory.makeTileFrame(x, y));
                 }
             }
-        };
-        Grid.prototype.addTileFrame = function (posX, posY) {
-            var graphics = this.game.add.graphics(0, 0);
-            var lineWidth = this.config.tileSettings.frameLineWidth;
-            var frameSize = this.config.tileSettings.tileSize - lineWidth / 2;
-            var color = this.config.tileSettings.lineColor;
-            var xPad = this.config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
-            var yPad = this.config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
-            var x = posX * this.config.tileSettings.tileSize * this.config.scaleFactor +
-                xPad;
-            var y = posY * this.config.tileSettings.tileSize * this.config.scaleFactor +
-                yPad;
-            graphics.lineStyle(lineWidth, color, 1);
-            var rect = graphics.drawRect(x, y, frameSize * this.config.scaleFactor, frameSize * this.config.scaleFactor);
-            this.game.physics.enable(rect, Phaser.Physics.ARCADE);
-            return rect;
-        };
-        Grid.prototype.createWalls = function () {
-            var game = this.game;
-            var config = this.config;
-            var xPad = config.safeZone.paddingX + config.tileSettings.gridPaddingX;
-            var yPad = config.safeZone.paddingY + config.tileSettings.gridPaddingY;
-            var graphics = game.add.graphics(0, 0);
-            var wallLength = config.tileSettings.tileSize * 4 * config.scaleFactor;
-            graphics.lineStyle(0);
-            graphics.beginFill(0x66ccff, 1);
-            graphics.drawRect(xPad, yPad, wallLength, wallLength);
-            graphics.endFill();
-            var wall1 = this.game.add.sprite(xPad - 1, yPad - 1);
-            this.game.physics.enable(wall1, Phaser.Physics.ARCADE);
-            wall1.body.setSize(1, wallLength);
-            wall1.body.immovable = true;
-            var wall2 = this.game.add.sprite(xPad - 1, yPad - 1);
-            this.game.physics.enable(wall2, Phaser.Physics.ARCADE);
-            wall2.body.setSize(wallLength, 1);
-            wall2.body.immovable = true;
-            var wall3 = this.game.add.sprite(xPad - 1, yPad + wallLength + 1);
-            this.game.physics.enable(wall3, Phaser.Physics.ARCADE);
-            wall3.body.setSize(wallLength, 1);
-            wall3.body.immovable = true;
-            var wall4 = this.game.add.sprite(xPad + wallLength + 1, yPad - 1);
-            this.game.physics.enable(wall4, Phaser.Physics.ARCADE);
-            wall4.body.setSize(1, wallLength);
-            wall4.body.immovable = true;
-            this.wallsGroup.add(wall1);
-            this.wallsGroup.add(wall2);
-            this.wallsGroup.add(wall3);
-            this.wallsGroup.add(wall4);
+            return group;
         };
         return Grid;
     }());
@@ -538,7 +509,6 @@ var MyGame;
         Preloader.prototype.preload = function () {
             var singleton = MyGame.Singleton.getInstance();
             var config = singleton.config;
-            singleton.game = this.game;
             this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
             this.game.load.spritesheet('button', 'img/button-mayo.png', 480, 180);
@@ -555,6 +525,45 @@ var MyGame;
         return Preloader;
     }(Phaser.State));
     MyGame.Preloader = Preloader;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var GraphicsFactory = (function () {
+        function GraphicsFactory() {
+            var singleton = MyGame.Singleton.getInstance();
+            this.game = singleton.game;
+            this.config = singleton.config;
+        }
+        GraphicsFactory.prototype.makeWall = function (x, y, long, tall) {
+            var game = this.game;
+            var config = this.config;
+            var scale = config.scaleFactor;
+            var xPad = x * config.scaleFactor +
+                config.safeZone.paddingX +
+                config.tileSettings.gridPaddingX;
+            var yPad = y * config.scaleFactor +
+                config.safeZone.paddingY +
+                config.tileSettings.gridPaddingY;
+            var wall = this.game.add.sprite(xPad, yPad);
+            this.game.physics.enable(wall, Phaser.Physics.ARCADE);
+            wall.body.setSize(long * config.scaleFactor, tall * config.scaleFactor);
+            wall.body.immovable = true;
+            return wall;
+        };
+        GraphicsFactory.prototype.drawGridRect = function () {
+            var config = this.config;
+            var xPad = config.safeZone.paddingX + config.tileSettings.gridPaddingX;
+            var yPad = config.safeZone.paddingY + config.tileSettings.gridPaddingY;
+            var graphics = this.game.add.graphics(0, 0);
+            var wallLength = config.tileSettings.tileSize * 4 * config.scaleFactor;
+            graphics.lineStyle(0);
+            graphics.beginFill(0x66ccff, 1);
+            graphics.drawRect(xPad, yPad, wallLength, wallLength);
+            graphics.endFill();
+        };
+        return GraphicsFactory;
+    }());
+    MyGame.GraphicsFactory = GraphicsFactory;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -579,6 +588,22 @@ var MyGame;
             var sprite = this.game.add.sprite(x + xPad, y + yPad, id);
             sprite.scale.setTo(config.scaleFactor * spriteScale, config.scaleFactor * spriteScale);
             return sprite;
+        };
+        SpriteFactory.prototype.makeTileFrame = function (posX, posY) {
+            var graphics = this.game.add.graphics(0, 0);
+            var lineWidth = this.config.tileSettings.frameLineWidth;
+            var frameSize = this.config.tileSettings.tileSize - lineWidth / 2;
+            var color = this.config.tileSettings.lineColor;
+            var xPad = this.config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
+            var yPad = this.config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
+            var x = posX * this.config.tileSettings.tileSize * this.config.scaleFactor +
+                xPad;
+            var y = posY * this.config.tileSettings.tileSize * this.config.scaleFactor +
+                yPad;
+            graphics.lineStyle(lineWidth, color, 1);
+            var rect = graphics.drawRect(x, y, frameSize * this.config.scaleFactor, frameSize * this.config.scaleFactor);
+            this.game.physics.enable(rect, Phaser.Physics.ARCADE);
+            return rect;
         };
         return SpriteFactory;
     }());

@@ -58,6 +58,7 @@ module MyGame {
       config.safeZone = safeZone;
       config.tileSettings = tileSettings;
       Singleton.getInstance().config = config;
+      Singleton.getInstance().game = this;
 
       this.state.add('Boot', Boot, false);
       this.state.add('Preloader', Preloader, false);

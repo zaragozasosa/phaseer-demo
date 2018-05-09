@@ -1,9 +1,9 @@
 namespace MyGame {
   export class Gameboard {
-    game: Phaser.Game;
-    config: Config;
-    grid: Grid;
-    textFactory: TextFactory;
+    private game: Phaser.Game;
+    private config: Config;
+    private grid: Grid;
+    private textFactory: TextFactory;
 
     debugArray: Array<Phaser.Text>;
     header: Phaser.Text;

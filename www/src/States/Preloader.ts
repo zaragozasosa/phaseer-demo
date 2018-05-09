@@ -6,7 +6,6 @@ module MyGame {
 		preload() {
 			let singleton = Singleton.getInstance();
 			let config = singleton.config;
-			singleton.game = this.game;
 			
 			this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
 			this.load.setPreloadSprite(this.preloadBar);
