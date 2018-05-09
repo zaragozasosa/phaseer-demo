@@ -1,29 +1,10 @@
 module MyGame {
-  export class Singleton {
-    private static instance: Singleton;
-    private _config: Config;
-    private constructor() { }
-    static getInstance() {
-      if (!Singleton.instance) {
-        Singleton.instance = new Singleton();
-        Singleton.instance._config = new Config();
-      }
-      return Singleton.instance;
-    }
-    get config(): Config {
-      return this._config;
-    }
-    set config(config: Config) {
-      this._config = config;
-    }
-  }
-
   export class Game extends Phaser.Game {
     constructor() {
       let scaleFactor;
       let safeZone;
       let tileSettings;
-      let tilesData;
+
       let config = Singleton.getInstance().config;
 
       var hasVisualViewport = window.visualViewport;
@@ -45,7 +26,6 @@ module MyGame {
       var widthProportion = hasVisualViewport ? window.visualViewport.width / baseWidth : window.innerWidth / baseWidth;
 
       super(screenWidth, screenHeight, Phaser.CANVAS, 'content', null, true);
-
       if (screenProportion > baseProportion) {
         safeWidth = screenWidth;
         safeHeight = safeWidth * baseProportion;
@@ -69,6 +49,10 @@ module MyGame {
       tileSettings.tileScale = 240 / 180;
       tileSettings.arraySize = 3;
       tileSettings.initialArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      tileSettings.minimumValue = 1;
+			tileSettings.tiles = ['nacho', 'chili', 'mira', 'lord_fancy', 'choco', 'rox', 'kinjo', 'shy_senpai', 'magil', 'jessy', 'agent_smith', 'lily', 'r1r1', 'astaroth', 'bren', 'joji']
+			tileSettings.mainTile = tileSettings.tiles[this.rnd.integerInRange(0, 15)];
 
       config.scaleFactor = scaleFactor;
       config.safeZone = safeZone;
