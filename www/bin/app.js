@@ -384,18 +384,13 @@ var MyGame;
             }
         };
         Grid.prototype.makeWalls = function () {
-            var config = this.config;
-            var wallLength = config.tileSettings.tileSize * 4;
-            this.graphicsFactory.drawGridRect();
+            var wallLength = this.config.tileSettings.tileSize * 4;
             var group = this.game.add.group();
-            var wall1 = this.graphicsFactory.makeWall(0, 0, 1, wallLength);
-            var wall2 = this.graphicsFactory.makeWall(0, 0, wallLength, 1);
-            var wall3 = this.graphicsFactory.makeWall(0, wallLength, wallLength, 1);
-            var wall4 = this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength);
-            group.add(wall1);
-            group.add(wall2);
-            group.add(wall3);
-            group.add(wall4);
+            this.graphicsFactory.drawGridRect();
+            group.add(this.graphicsFactory.makeWall(0, 0, 1, wallLength));
+            group.add(this.graphicsFactory.makeWall(0, 0, wallLength, 1));
+            group.add(this.graphicsFactory.makeWall(0, wallLength, wallLength, 1));
+            group.add(this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength));
             return group;
         };
         Grid.prototype.makeTileFrames = function () {

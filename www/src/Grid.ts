@@ -241,23 +241,14 @@ namespace MyGame {
     }
 
     makeWalls(): Phaser.Group {
-      let config = this.config;
-      let wallLength = config.tileSettings.tileSize * 4;
-      this.graphicsFactory.drawGridRect();
+      let wallLength = this.config.tileSettings.tileSize * 4;
       let group = this.game.add.group();
-
-      let wall1 = this.graphicsFactory.makeWall(0, 0, 1, wallLength);
-
-      let wall2 = this.graphicsFactory.makeWall(0, 0, wallLength, 1);
-
-      let wall3 = this.graphicsFactory.makeWall(0, wallLength, wallLength, 1);
-
-      let wall4 = this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength);
-
-      group.add(wall1);
-      group.add(wall2);
-      group.add(wall3);
-      group.add(wall4);
+      
+      this.graphicsFactory.drawGridRect();
+      group.add(this.graphicsFactory.makeWall(0, 0, 1, wallLength));
+      group.add(this.graphicsFactory.makeWall(0, 0, wallLength, 1));
+      group.add(this.graphicsFactory.makeWall(0, wallLength, wallLength, 1));
+      group.add(this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength));
 
       return group;
     }
