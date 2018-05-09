@@ -147,7 +147,7 @@ var MyGame;
                 this.updateScore();
             }.bind(this));
             this.movements = 0;
-            this.points = this.calculatePoints();
+            this.points = this.grid.tilesArray.calculateSum();
             this.addHeader();
             this.addDebuggingMatrix();
         }
@@ -187,25 +187,17 @@ var MyGame;
         };
         Gameboard.prototype.updateScore = function () {
             this.movements++;
-            this.points = this.calculatePoints();
+            this.points = this.grid.tilesArray.calculateSum();
             this.updateHeader();
             this.updateDebuggingMatrix();
         };
         Gameboard.prototype.updateDebuggingMatrix = function () {
             this.debugArray.forEach(function (text, index) {
-                text.setText(this.grid.getArray(index, 0) + "\n" + this.grid.getArray(index, 1) + "\n" + this.grid.getArray(index, 2) + "\n" + this.grid.getArray(index, 3));
+                text.setText(this.grid.tilesArray.get(index, 0) + "\n" + this.grid.tilesArray.get(index, 1) + "\n" + this.grid.tilesArray.get(index, 2) + "\n" + this.grid.tilesArray.get(index, 3));
             }.bind(this));
         };
         Gameboard.prototype.updateHeader = function () {
             this.header.setText("Score: " + this.points + "     Movements: " + this.movements);
-        };
-        Gameboard.prototype.calculatePoints = function () {
-            var points = 0;
-            for (var _i = 0, _a = this.grid.tilesArray; _i < _a.length; _i++) {
-                var tile = _a[_i];
-                points += tile;
-            }
-            return points;
         };
         return Gameboard;
     }());
@@ -228,11 +220,10 @@ var MyGame;
             this.arraySize = this.config.tileSettings.arraySize;
             this.wallsGroup = this.game.add.group();
             this.createWalls();
-            this.tilesArray = this.config.tileSettings.initialArray;
+            this.tilesArray = new MyGame.TilesArray();
             this.tilesGroup = this.game.add.group();
             this.framesGroup = this.game.add.group();
             this.addFrames();
-            debugger;
             this.addNewTile();
             this.addNewTile();
             this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -241,15 +232,15 @@ var MyGame;
             do {
                 var ranX = this.game.rnd.integerInRange(0, 3);
                 var ranY = this.game.rnd.integerInRange(0, 3);
-            } while (this.getArray(ranX, ranY));
-            if (this.arrayEmptyTiles() > 6) {
+            } while (this.tilesArray.get(ranX, ranY));
+            if (this.tilesArray.emptyTiles() > 6) {
                 var chance = this.game.rnd.integerInRange(0, 99);
-                this.setArray(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
+                this.tilesArray.set(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
             }
             else {
-                this.setArray(ranX, ranY, 1);
+                this.tilesArray.set(ranX, ranY, 1);
             }
-            var value = this.getArray(ranX, ranY);
+            var value = this.tilesArray.get(ranX, ranY);
             var tile = new MyGame.Tile(ranX, ranY, value, this.game, this.config);
             this.tilesGroup.add(tile.sprite);
             this.game.world.bringToTop(this.framesGroup);
@@ -300,7 +291,7 @@ var MyGame;
             this.tiles = [];
             for (var x = 0; x <= this.config.tileSettings.arraySize; x++) {
                 for (var y = 0; y <= this.config.tileSettings.arraySize; y++) {
-                    var value = this.getArray(x, y);
+                    var value = this.tilesArray.get(x, y);
                     if (value !== 0) {
                         var tile = new MyGame.Tile(x, y, value, this.game, this.config);
                         this.tiles.push(tile);
@@ -308,7 +299,7 @@ var MyGame;
                     }
                 }
             }
-            if (!this.isArrayFull()) {
+            if (!this.tilesArray.isFull()) {
                 this.addNewTile();
                 this.gameboardCallback();
             }
@@ -338,7 +329,7 @@ var MyGame;
                 startX -= xIncrement;
                 do {
                     startX += xIncrement;
-                    var tile = this.getArray(startX, startY);
+                    var tile = this.tilesArray.get(startX, startY);
                     if (tile) {
                         this.pushTile(startX, startY, keyboardInput);
                     }
@@ -353,7 +344,7 @@ var MyGame;
             }
         };
         Grid.prototype.pushTile = function (x, y, keyboardInput) {
-            var tile = this.getArray(x, y);
+            var tile = this.tilesArray.get(x, y);
             var pushX = keyboardInput === Phaser.KeyCode.RIGHT
                 ? 1
                 : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
@@ -368,18 +359,18 @@ var MyGame;
                 newX <= this.arraySize &&
                 newY >= 0 &&
                 newY <= this.arraySize) {
-                var nextTile = this.getArray(newX, newY);
+                var nextTile = this.tilesArray.get(newX, newY);
                 if (nextTile === 0) {
-                    this.setArray(newX, newY, tile);
-                    this.setArray(actualX, actualY, 0);
+                    this.tilesArray.set(newX, newY, tile);
+                    this.tilesArray.set(actualX, actualY, 0);
                     actualX = newX;
                     actualY = newY;
                     this.isDirty = true;
                 }
                 else if (nextTile === tile) {
                     tile *= 2;
-                    this.setArray(newX, newY, tile);
-                    this.setArray(actualX, actualY, 0);
+                    this.tilesArray.set(newX, newY, tile);
+                    this.tilesArray.set(actualX, actualY, 0);
                     this.isDirty = true;
                     break;
                 }
@@ -444,45 +435,6 @@ var MyGame;
             this.wallsGroup.add(wall2);
             this.wallsGroup.add(wall3);
             this.wallsGroup.add(wall4);
-        };
-        Grid.prototype.addStrokedText = function (posX, posY, text, textSize, center) {
-            if (center === void 0) { center = false; }
-            var textObj = this.game.add.text(posX, posY, text);
-            textObj.font = 'Arial Black';
-            textObj.fontSize = textSize * this.config.scaleFactor;
-            textObj.stroke = '#000000';
-            textObj.strokeThickness = textSize / 4 * this.config.scaleFactor;
-            textObj.addColor('#ffffff', 0);
-            if (center) {
-                textObj.anchor.set(0.5);
-            }
-            this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
-            return textObj;
-        };
-        Grid.prototype.getArray = function (x, y) {
-            return this.tilesArray[y * (this.arraySize + 1) + x];
-        };
-        Grid.prototype.setArray = function (x, y, value) {
-            this.tilesArray[y * (this.arraySize + 1) + x] = value;
-        };
-        Grid.prototype.isArrayFull = function () {
-            for (var _i = 0, _a = this.tilesArray; _i < _a.length; _i++) {
-                var tile = _a[_i];
-                if (tile === 0) {
-                    return false;
-                }
-            }
-            return true;
-        };
-        Grid.prototype.arrayEmptyTiles = function () {
-            var empty = 0;
-            for (var _i = 0, _a = this.tilesArray; _i < _a.length; _i++) {
-                var tile = _a[_i];
-                if (tile === 0) {
-                    empty++;
-                }
-            }
-            return empty;
         };
         return Grid;
     }());
@@ -613,8 +565,9 @@ var MyGame;
             this.config = singleton.config;
         }
         SpriteFactory.prototype.makeTile = function (x, y, id) {
-            var scale = this.config.tileSettings.tileSize;
-            return this.make(x * scale, y * scale, id, scale);
+            var size = this.config.tileSettings.tileSize;
+            var scale = this.config.tileSettings.tileScale;
+            return this.make(x * size, y * size, id, scale);
         };
         SpriteFactory.prototype.make = function (posX, posY, id, spriteScale) {
             if (spriteScale === void 0) { spriteScale = 1; }
@@ -665,5 +618,51 @@ var MyGame;
         return TextFactory;
     }());
     MyGame.TextFactory = TextFactory;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var TilesArray = (function () {
+        function TilesArray() {
+            var singleton = MyGame.Singleton.getInstance();
+            var config = singleton.config;
+            this.tiles = config.tileSettings.initialArray;
+            this.arraySize = config.tileSettings.arraySize;
+        }
+        TilesArray.prototype.get = function (x, y) {
+            return this.tiles[y * (this.arraySize + 1) + x];
+        };
+        TilesArray.prototype.set = function (x, y, value) {
+            this.tiles[y * (this.arraySize + 1) + x] = value;
+        };
+        TilesArray.prototype.isFull = function () {
+            for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                if (tile === 0) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        TilesArray.prototype.emptyTiles = function () {
+            var empty = 0;
+            for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                if (tile === 0) {
+                    empty++;
+                }
+            }
+            return empty;
+        };
+        TilesArray.prototype.calculateSum = function () {
+            var points = 0;
+            for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
+                var tile = _a[_i];
+                points += tile;
+            }
+            return points;
+        };
+        return TilesArray;
+    }());
+    MyGame.TilesArray = TilesArray;
 })(MyGame || (MyGame = {}));
 //# sourceMappingURL=app.js.map

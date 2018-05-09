@@ -5,7 +5,7 @@ namespace MyGame {
     textFactory: TextFactory;
 
     tiles: Array<Tile>;
-    tilesArray: Array<number>;
+    tilesArray: TilesArray;
     tilesGroup: Phaser.Group;
     wallsGroup: Phaser.Group;
     framesGroup: Phaser.Group;
@@ -39,13 +39,12 @@ namespace MyGame {
 
       this.createWalls();
 
-      this.tilesArray = this.config.tileSettings.initialArray;
+      this.tilesArray = new TilesArray();
       this.tilesGroup = this.game.add.group();
 
       this.framesGroup = this.game.add.group();
       this.addFrames();
 
-      debugger;
       this.addNewTile();
       this.addNewTile();
       this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -55,15 +54,15 @@ namespace MyGame {
       do {
         var ranX = this.game.rnd.integerInRange(0, 3);
         var ranY = this.game.rnd.integerInRange(0, 3);
-      } while (this.getArray(ranX, ranY));
+      } while (this.tilesArray.get(ranX, ranY));
 
-      if (this.arrayEmptyTiles() > 6) {
+      if (this.tilesArray.emptyTiles() > 6) {
         var chance = this.game.rnd.integerInRange(0, 99);
-        this.setArray(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
+        this.tilesArray.set(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
       } else {
-        this.setArray(ranX, ranY, 1);
+        this.tilesArray.set(ranX, ranY, 1);
       }
-      let value = this.getArray(ranX, ranY);
+      let value = this.tilesArray.get(ranX, ranY);
 
       let tile = new Tile(ranX, ranY, value, this.game, this.config);
       this.tilesGroup.add(tile.sprite);
@@ -125,7 +124,7 @@ namespace MyGame {
 
       for (let x = 0; x <= this.config.tileSettings.arraySize; x++) {
         for (let y = 0; y <= this.config.tileSettings.arraySize; y++) {
-          let value = this.getArray(x, y);
+          let value = this.tilesArray.get(x, y);
           if (value !== 0) {
             let tile = new Tile(x, y, value, this.game, this.config);
             this.tiles.push(tile);
@@ -134,7 +133,7 @@ namespace MyGame {
         }
       }
 
-      if (!this.isArrayFull()) {
+      if (!this.tilesArray.isFull()) {
         this.addNewTile();
         this.gameboardCallback();
       }
@@ -171,7 +170,7 @@ namespace MyGame {
         startX -= xIncrement;
         do {
           startX += xIncrement;
-          let tile = this.getArray(startX, startY);
+          let tile = this.tilesArray.get(startX, startY);
           if (tile) {
             this.pushTile(startX, startY, keyboardInput);
           }
@@ -190,7 +189,7 @@ namespace MyGame {
     }
 
     pushTile(x: number, y: number, keyboardInput: number) {
-      let tile = this.getArray(x, y);
+      let tile = this.tilesArray.get(x, y);
       let pushX =
         keyboardInput === Phaser.KeyCode.RIGHT
           ? 1
@@ -211,19 +210,19 @@ namespace MyGame {
         newY >= 0 &&
         newY <= this.arraySize
       ) {
-        let nextTile = this.getArray(newX, newY);
+        let nextTile = this.tilesArray.get(newX, newY);
         if (nextTile === 0) {
           //move the tile
-          this.setArray(newX, newY, tile);
-          this.setArray(actualX, actualY, 0);
+          this.tilesArray.set(newX, newY, tile);
+          this.tilesArray.set(actualX, actualY, 0);
           actualX = newX;
           actualY = newY;
           this.isDirty = true;
         } else if (nextTile === tile) {
           //merge tiles
           tile *= 2;
-          this.setArray(newX, newY, tile);
-          this.setArray(actualX, actualY, 0);
+          this.tilesArray.set(newX, newY, tile);
+          this.tilesArray.set(actualX, actualY, 0);
           this.isDirty = true;
           break;
         } else {
@@ -311,57 +310,5 @@ namespace MyGame {
       this.wallsGroup.add(wall4);
     }
 
-    addStrokedText(
-      posX: number,
-      posY: number,
-      text: string,
-      textSize: number,
-      center = false
-    ) {
-      let textObj = this.game.add.text(posX, posY, text);
-
-      //	Font style
-      textObj.font = 'Arial Black';
-      textObj.fontSize = textSize * this.config.scaleFactor;
-
-      //	Stroke color and thickness
-      textObj.stroke = '#000000';
-      textObj.strokeThickness = textSize / 4 * this.config.scaleFactor;
-      textObj.addColor('#ffffff', 0);
-
-      if (center) {
-        textObj.anchor.set(0.5);
-      }
-
-      this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
-      return textObj;
-    }
-
-    getArray(x: number, y: number) {
-      return this.tilesArray[y * (this.arraySize + 1) + x];
-    }
-
-    setArray(x: number, y: number, value: number) {
-      this.tilesArray[y * (this.arraySize + 1) + x] = value;
-    }
-
-    isArrayFull() {
-      for (let tile of this.tilesArray) {
-        if (tile === 0) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    arrayEmptyTiles() {
-      let empty = 0;
-      for (let tile of this.tilesArray) {
-        if (tile === 0) {
-          empty++;
-        }
-      }
-      return empty;
-    }
   }
 }

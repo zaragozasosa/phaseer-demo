@@ -25,7 +25,7 @@ namespace MyGame {
       );
 
       this.movements = 0;
-      this.points = this.calculatePoints();
+      this.points = this.grid.tilesArray.calculateSum();
       this.addHeader();
       this.addDebuggingMatrix();
     }
@@ -98,7 +98,7 @@ namespace MyGame {
 
     updateScore() {
       this.movements++;
-      this.points = this.calculatePoints();
+      this.points = this.grid.tilesArray.calculateSum();
       this.updateHeader();
       this.updateDebuggingMatrix();
     }
@@ -107,13 +107,13 @@ namespace MyGame {
       this.debugArray.forEach(
         function(text: any, index: number) {
           text.setText(
-            `${this.grid.getArray(index, 0)}\n${this.grid.getArray(
+            `${this.grid.tilesArray.get(index, 0)}\n${this.grid.tilesArray.get(
               index,
               1
-            )}\n${this.grid.getArray(index, 2)}\n${this.grid.getArray(
+            )}\n${this.grid.tilesArray.get(
               index,
-              3
-            )}`
+              2
+            )}\n${this.grid.tilesArray.get(index, 3)}`
           );
         }.bind(this)
       );
@@ -123,14 +123,6 @@ namespace MyGame {
       this.header.setText(
         `Score: ${this.points}     Movements: ${this.movements}`
       );
-    }
-
-    calculatePoints() {
-      let points = 0;
-      for (let tile of this.grid.tilesArray) {
-        points += tile;
-      }
-      return points;
     }
   }
 }

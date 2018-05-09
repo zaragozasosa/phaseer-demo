@@ -10,8 +10,9 @@ namespace MyGame {
     }
 
     makeTile(x: number, y: number, id: string) {
-			let scale = this.config.tileSettings.tileSize;
-      return this.make(x * scale, y * scale, id, scale);
+			let size = this.config.tileSettings.tileSize;
+			let scale = this.config.tileSettings.tileScale;
+      return this.make(x * size, y * size, id, scale);
     }
 
     make(posX: number, posY: number, id: string, spriteScale = 1) {
