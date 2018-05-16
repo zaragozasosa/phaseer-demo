@@ -63,6 +63,7 @@ var Grid = (function () {
             if (cursor === Phaser.Keyboard.DOWN) {
                 this.checkLogic(cursor, 0, this.speed);
             }
+            cursor = null;
         }
         else {
             this.checkCollisions();
@@ -109,6 +110,7 @@ var Grid = (function () {
         }
     };
     Grid.prototype.checkLogic = function (keyboardInput, xSpeed, ySpeed) {
+        console.log('logic');
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.isDirty = false;

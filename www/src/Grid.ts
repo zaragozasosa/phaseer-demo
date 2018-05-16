@@ -80,7 +80,6 @@ export default class Grid {
 
   update() {
     if (!this.animating) {
-      
       var cursor = this.input.checkCursor();
 
       if (cursor === Phaser.Keyboard.LEFT) {
@@ -92,6 +91,8 @@ export default class Grid {
       } if (cursor === Phaser.Keyboard.DOWN) {
         this.checkLogic(cursor, 0, this.speed);
       }
+
+      cursor = null;
     } else {
       this.checkCollisions();
     }
@@ -152,6 +153,9 @@ export default class Grid {
   }
 
   checkLogic(keyboardInput: number, xSpeed: number, ySpeed: number) {
+    console.log('logic');
+
+
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.isDirty = false;

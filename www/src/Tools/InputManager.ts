@@ -33,32 +33,36 @@ export default class InputManager {
   }
 
   checkCursor() {
-    var direction = this.swipe.check();
-    if (direction !== null) {
-      // direction= { x: x, y: y, direction: direction }
-      switch (direction.direction) {
-        case this.swipe.DIRECTION_LEFT:
-          return Phaser.Keyboard.LEFT;
-        case this.swipe.DIRECTION_RIGHT:
-          return Phaser.Keyboard.RIGHT;
-        case this.swipe.DIRECTION_UP:
-          return Phaser.Keyboard.UP;
-        case this.swipe.DIRECTION_DOWN:
-          return Phaser.Keyboard.DOWN;
-      }
-
+    if (this.game.device.desktop) {
       if (this.cursors.left.justDown) {
+        console.log(' left');
         return Phaser.Keyboard.LEFT;
       } else if (this.cursors.right.justDown) {
+        console.log(' right');
         return Phaser.Keyboard.RIGHT;
       } else if (this.cursors.up.justDown) {
+        console.log(' up');
         return Phaser.Keyboard.UP;
       } else if (this.cursors.down.justDown) {
+        console.log(' down');
         return Phaser.Keyboard.DOWN;
       }
-
-      return null;
+    } else {
+      var direction = this.swipe.check();
+      if (direction !== null) {
+        switch (direction.direction) {
+          case this.swipe.DIRECTION_LEFT:
+            return Phaser.Keyboard.LEFT;
+          case this.swipe.DIRECTION_RIGHT:
+            return Phaser.Keyboard.RIGHT;
+          case this.swipe.DIRECTION_UP:
+            return Phaser.Keyboard.UP;
+          case this.swipe.DIRECTION_DOWN:
+            return Phaser.Keyboard.DOWN;
+        }
+      }
     }
+    return null;
   }
 
   checkKeys() {

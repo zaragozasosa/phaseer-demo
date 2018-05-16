@@ -23,6 +23,7 @@ var InputManager = (function () {
     InputManager.prototype.checkCursor = function () {
         var direction = this.swipe.check();
         if (direction !== null) {
+            debugger;
             switch (direction.direction) {
                 case this.swipe.DIRECTION_LEFT:
                     return Phaser.Keyboard.LEFT;
@@ -33,20 +34,8 @@ var InputManager = (function () {
                 case this.swipe.DIRECTION_DOWN:
                     return Phaser.Keyboard.DOWN;
             }
-            if (this.cursors.left.justDown) {
-                return Phaser.Keyboard.LEFT;
-            }
-            else if (this.cursors.right.justDown) {
-                return Phaser.Keyboard.RIGHT;
-            }
-            else if (this.cursors.up.justDown) {
-                return Phaser.Keyboard.UP;
-            }
-            else if (this.cursors.down.justDown) {
-                return Phaser.Keyboard.DOWN;
-            }
-            return null;
         }
+        return null;
     };
     InputManager.prototype.checkKeys = function () {
         if (this.keyPressed) {
