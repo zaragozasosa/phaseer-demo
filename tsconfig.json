@@ -8,7 +8,8 @@
     "removeComments": true,
     "noLib": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "typeRoots" : ["./www/typings"]
   },
   "exclude": ["node_modules"]
 }

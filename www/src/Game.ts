@@ -1,9 +1,9 @@
 /// <reference path="../../node_modules/phaser-ce/typescript/phaser.d.ts"/>
 
 import { Config, SafeZone, TileSettings, Singleton } from './Config';
-import Boot  from './states/Boot';
-import Preloader  from './states/Preloader';
-import MainMenu  from './states/MainMenu';
+import Boot from './states/Boot';
+import Preloader from './states/Preloader';
+import MainMenu from './states/MainMenu';
 
 export default class Game extends Phaser.Game {
   constructor() {

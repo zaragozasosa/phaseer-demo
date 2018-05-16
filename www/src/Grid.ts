@@ -3,6 +3,7 @@ import SpriteFactory from './Tools/SpriteFactory';
 import TextFactory from './Tools/TextFactory';
 import GraphicsFactory from './Tools/GraphicsFactory';
 import TilesArray from './Tools/TilesArray';
+import InputManager from './Tools/InputManager';
 import Tile from './Tile';
 
 export default class Grid {
@@ -24,8 +25,7 @@ export default class Grid {
   speed: number;
   isDirty: boolean;
 
-  cursors: Phaser.CursorKeys;
-  // swipe: Swipe.Swipe;
+  input: InputManager;
   arraySize: number;
 
   gameboardCallback: any;
@@ -56,8 +56,7 @@ export default class Grid {
 
     this.addNewTile();
     this.addNewTile();
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-    // this.swipe = new Swipe.Swipe(this.game);
+    this.input = new InputManager();
   }
 
   addNewTile() {
@@ -81,28 +80,17 @@ export default class Grid {
 
   update() {
     if (!this.animating) {
-      // in update
-      // var directiom = this.swipe.check();
-      // if (directiom!==null) {
-      //   // direction= { x: x, y: y, direction: direction }
-      //   switch(directiom.direction) {
-      //      case this.swipe.DIRECTION_LEFT: // do something
-      //      case this.swipe.DIRECTION_RIGHT:
-      //      case this.swipe.DIRECTION_UP:
-      //      case this.swipe.DIRECTION_DOWN:
-      //       debugger;
-      //       break;
-      //   }
-      // }
+      
+      var cursor = this.input.checkCursor();
 
-      if (this.cursors.left.justDown) {
-        this.checkLogic(Phaser.Keyboard.LEFT, -this.speed, 0);
-      } else if (this.cursors.right.justDown) {
-        this.checkLogic(Phaser.Keyboard.RIGHT, this.speed, 0);
-      } else if (this.cursors.up.justDown) {
-        this.checkLogic(Phaser.Keyboard.UP, 0, -this.speed);
-      } else if (this.cursors.down.justDown) {
-        this.checkLogic(Phaser.Keyboard.DOWN, 0, this.speed);
+      if (cursor === Phaser.Keyboard.LEFT) {
+        this.checkLogic(cursor, -this.speed, 0);
+      } if (cursor === Phaser.Keyboard.RIGHT) {
+        this.checkLogic(cursor, this.speed, 0);
+      } if (cursor === Phaser.Keyboard.UP) {
+        this.checkLogic(cursor, 0, -this.speed);
+      } if (cursor === Phaser.Keyboard.DOWN) {
+        this.checkLogic(cursor, 0, this.speed);
       }
     } else {
       this.checkCollisions();
