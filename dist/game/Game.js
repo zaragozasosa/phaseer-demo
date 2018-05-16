@@ -11,9 +11,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("./Config");
-var Boot_1 = require("./states/Boot");
-var Preloader_1 = require("./states/Preloader");
-var MainMenu_1 = require("./states/MainMenu");
+var Boot_1 = require("./States/Boot");
+var Preloader_1 = require("./States/Preloader");
+var MainMenu_1 = require("./States/MainMenu");
 var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {

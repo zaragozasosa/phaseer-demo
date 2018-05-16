@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("./Config");
-var TextFactory_1 = require("./tools/TextFactory");
+var TextFactory_1 = require("./Tools/TextFactory");
 var Grid_1 = require("./Grid");
 var Gameboard = (function () {
     function Gameboard() {

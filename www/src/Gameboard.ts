@@ -1,8 +1,8 @@
 import { Config, Singleton } from './Config';
-import SpriteFactory from './tools/SpriteFactory';
-import TextFactory from './tools/TextFactory';
-import GraphicsFactory from './tools/GraphicsFactory';
-import TilesArray from './tools/TilesArray';
+import SpriteFactory from './Tools/SpriteFactory';
+import TextFactory from './Tools/TextFactory';
+import GraphicsFactory from './Tools/GraphicsFactory';
+import TilesArray from './Tools/TilesArray';
 import Grid from './Grid';
 
 export default class Gameboard {
