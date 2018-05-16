@@ -1,5 +1,5 @@
-namespace MyGame {
-  export class TextFactory {
+import { Singleton, Config } from '../Config';
+export default class TextFactory {
     game: Phaser.Game;
     config: Config;
 
@@ -49,4 +49,4 @@ namespace MyGame {
       return textObj;
     }
   }
-}
+

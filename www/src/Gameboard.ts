@@ -1,128 +1,133 @@
-namespace MyGame {
-  export class Gameboard {
-    private game: Phaser.Game;
-    private config: Config;
-    private grid: Grid;
-    private textFactory: TextFactory;
+import { Config, Singleton } from './Config';
+import SpriteFactory from './tools/SpriteFactory';
+import TextFactory from './tools/TextFactory';
+import GraphicsFactory from './tools/GraphicsFactory';
+import TilesArray from './tools/TilesArray';
+import Grid from './Grid';
 
-    debugArray: Array<Phaser.Text>;
-    header: Phaser.Text;
-    points: number;
-    movements: number;
+export default class Gameboard {
+  private game: Phaser.Game;
+  private config: Config;
+  private grid: Grid;
+  private textFactory: TextFactory;
 
-    constructor() {
-      let singleton = Singleton.getInstance();
-      this.game = singleton.game;
-      this.config = singleton.config;
-      this.textFactory = new TextFactory();
+  debugArray: Array<Phaser.Text>;
+  header: Phaser.Text;
+  points: number;
+  movements: number;
 
-      this.addBackground();
+  constructor() {
+    let singleton = Singleton.getInstance();
+    this.game = singleton.game;
+    this.config = singleton.config;
+    this.textFactory = new TextFactory();
 
-      this.grid = new Grid(
-        function() {
-          this.updateScore();
-        }.bind(this)
-      );
+    this.addBackground();
 
-      this.movements = 0;
-      this.points = this.grid.tilesArray.calculateSum();
-      this.addHeader();
-      this.addDebuggingMatrix();
-    }
+    this.grid = new Grid(
+      function() {
+        this.updateScore();
+      }.bind(this)
+    );
 
-    update() {
-      this.grid.update();
-    }
+    this.movements = 0;
+    this.points = this.grid.tilesArray.calculateSum();
+    this.addHeader();
+    this.addDebuggingMatrix();
+  }
 
-    addBackground() {
-      let game = this.game;
-      let config = this.config;
-      let xPad = config.safeZone.paddingX;
-      let yPad = config.safeZone.paddingY;
-      var graphics = this.game.add.graphics(0, 0);
+  update() {
+    this.grid.update();
+  }
 
-      graphics.lineStyle(0);
-      graphics.beginFill(0xe7e5df, 1);
-      graphics.drawRect(
-        xPad,
-        yPad,
-        config.safeZone.safeWidth,
-        config.safeZone.safeHeight
-      );
-      graphics.endFill();
-    }
+  addBackground() {
+    let game = this.game;
+    let config = this.config;
+    let xPad = config.safeZone.paddingX;
+    let yPad = config.safeZone.paddingY;
+    var graphics = this.game.add.graphics(0, 0);
 
-    addHeader() {
-      this.header = this.textFactory.makeStroked(20, 80, '', 50);
-      this.updateHeader();
-    }
+    graphics.lineStyle(0);
+    graphics.beginFill(0xe7e5df, 1);
+    graphics.drawRect(
+      xPad,
+      yPad,
+      config.safeZone.safeWidth,
+      config.safeZone.safeHeight
+    );
+    graphics.endFill();
+  }
 
-    addPowerButton() {
-      let posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
-      let posY = this.config.safeZone.paddingY + 1200 * this.config.scaleFactor;
+  addHeader() {
+    this.header = this.textFactory.makeStroked(20, 80, '', 50);
+    this.updateHeader();
+  }
 
-      let button = this.game.add.button(
-        posX,
-        posY,
-        'button',
-        null,
-        this,
-        1,
-        0,
-        2
-      );
-      button.scale.setTo(this.config.scaleFactor, this.config.scaleFactor);
-    }
+  addPowerButton() {
+    let posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
+    let posY = this.config.safeZone.paddingY + 1200 * this.config.scaleFactor;
 
-    addDebuggingMatrix() {
-      let posX = 250;
-      let posY = 1300;
+    let button = this.game.add.button(
+      posX,
+      posY,
+      'button',
+      null,
+      this,
+      1,
+      0,
+      2
+    );
+    button.scale.setTo(this.config.scaleFactor, this.config.scaleFactor);
+  }
 
-      this.debugArray = [];
+  addDebuggingMatrix() {
+    let posX = 250;
+    let posY = 1300;
 
-      this.debugArray.push(
-        this.textFactory.makeStroked(posX, posY, '', 30, true)
-      );
-      this.debugArray.push(
-        this.textFactory.makeStroked(posX + 150, posY, '', 30, true)
-      );
-      this.debugArray.push(
-        this.textFactory.makeStroked(posX + 300, posY, '', 30, true)
-      );
-      this.debugArray.push(
-        this.textFactory.makeStroked(posX + 450, posY, '', 30, true)
-      );
+    this.debugArray = [];
 
-      this.updateDebuggingMatrix();
-    }
+    this.debugArray.push(
+      this.textFactory.makeStroked(posX, posY, '', 30, true)
+    );
+    this.debugArray.push(
+      this.textFactory.makeStroked(posX + 150, posY, '', 30, true)
+    );
+    this.debugArray.push(
+      this.textFactory.makeStroked(posX + 300, posY, '', 30, true)
+    );
+    this.debugArray.push(
+      this.textFactory.makeStroked(posX + 450, posY, '', 30, true)
+    );
 
-    updateScore() {
-      this.movements++;
-      this.points = this.grid.tilesArray.calculateSum();
-      this.updateHeader();
-      this.updateDebuggingMatrix();
-    }
+    this.updateDebuggingMatrix();
+  }
 
-    updateDebuggingMatrix() {
-      this.debugArray.forEach(
-        function(text: any, index: number) {
-          text.setText(
-            `${this.grid.tilesArray.get(index, 0)}\n${this.grid.tilesArray.get(
-              index,
-              1
-            )}\n${this.grid.tilesArray.get(
-              index,
-              2
-            )}\n${this.grid.tilesArray.get(index, 3)}`
-          );
-        }.bind(this)
-      );
-    }
+  updateScore() {
+    this.movements++;
+    this.points = this.grid.tilesArray.calculateSum();
+    this.updateHeader();
+    this.updateDebuggingMatrix();
+  }
 
-    updateHeader() {
-      this.header.setText(
-        `Score: ${this.points}     Movements: ${this.movements}`
-      );
-    }
+  updateDebuggingMatrix() {
+    this.debugArray.forEach(
+      function(text: any, index: number) {
+        text.setText(
+          `${this.grid.tilesArray.get(index, 0)}\n${this.grid.tilesArray.get(
+            index,
+            1
+          )}\n${this.grid.tilesArray.get(index, 2)}\n${this.grid.tilesArray.get(
+            index,
+            3
+          )}`
+        );
+      }.bind(this)
+    );
+  }
+
+  updateHeader() {
+    this.header.setText(
+      `Score: ${this.points}     Movements: ${this.movements}`
+    );
   }
 }

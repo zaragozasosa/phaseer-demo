@@ -1,15 +1,14 @@
 {
-	"compilerOptions": {
-		"module": "system",
-		"noImplicitAny": true,
-		"removeComments": true,
-		"preserveConstEnums": true,
-		"outFile": "www/bin/app.js",
-		"sourceMap": true,
-		"target": "es5"
-	},
-	"include": [
-		"www/src/**/*.ts",
-		"www/lib/types/phaser.comments.d.ts"
-	]
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "exclude": ["node_modules"]
 }
