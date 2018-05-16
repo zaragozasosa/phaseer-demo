@@ -1,1 +1,40 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var SpriteFactory_1=require("./Tools/SpriteFactory"),Tile=function(){function t(t,i,e,r,s){this.x=t,this.y=i,this.value=e,this.game=r,this.config=s,this.spriteFactory=new SpriteFactory_1.default,this.createSprite()}return t.prototype.createSprite=function(){var t=this.getTileSprite(this.value),i=this.spriteFactory.makeTile(this.x,this.y,t);this.game.physics.enable(i,Phaser.Physics.ARCADE),i.body.collideWorldBounds=!0,this.sprite=i},t.prototype.getTileSprite=function(t){for(var i=this.config.tileSettings.tiles;i[0]!==this.config.tileSettings.mainTile;){var e=i.pop();i.unshift(e)}var r=this.getArrayPositionFromNumber(t);return 0<=r?this.config.tileSettings.tiles[r]:null},t.prototype.getArrayPositionFromNumber=function(t){return t===this.config.tileSettings.minimumValue?0:this.getArrayPositionFromNumber(t/2)+1},t}();exports.default=Tile;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var SpriteFactory_1 = require("./Tools/SpriteFactory");
+var Tile = (function () {
+    function Tile(x, y, value, game, config) {
+        this.x = x;
+        this.y = y;
+        this.value = value;
+        this.game = game;
+        this.config = config;
+        this.spriteFactory = new SpriteFactory_1.default();
+        this.createSprite();
+    }
+    Tile.prototype.createSprite = function () {
+        var id = this.getTileSprite(this.value);
+        var sprite = this.spriteFactory.makeTile(this.x, this.y, id);
+        this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
+        sprite.body.collideWorldBounds = true;
+        this.sprite = sprite;
+    };
+    Tile.prototype.getTileSprite = function (tile) {
+        var list = this.config.tileSettings.tiles;
+        while (list[0] !== this.config.tileSettings.mainTile) {
+            var last = list.pop();
+            list.unshift(last);
+        }
+        var index = this.getArrayPositionFromNumber(tile);
+        if (index >= 0) {
+            return this.config.tileSettings.tiles[index];
+        }
+        return null;
+    };
+    Tile.prototype.getArrayPositionFromNumber = function (tile) {
+        return tile === this.config.tileSettings.minimumValue
+            ? 0
+            : this.getArrayPositionFromNumber(tile / 2) + 1;
+    };
+    return Tile;
+}());
+exports.default = Tile;

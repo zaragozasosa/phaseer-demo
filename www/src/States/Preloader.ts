@@ -18,6 +18,8 @@ export default class Preloader extends Phaser.State {
       this.load.image(sprite, path);
       // this.load.image(`${sprite}_alt`, altPath);
     }
+
+    this.game.load.audio('bgm', ['assets/audio/Mellow-Puzzler.mp3']);
   }
 
   create() {

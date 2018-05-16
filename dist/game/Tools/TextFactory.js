@@ -1,1 +1,35 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var Config_1=require("../Config"),TextFactory=function(){function t(){var t=Config_1.Singleton.getInstance();this.game=t.game,this.config=t.config}return t.prototype.makeTileNumber=function(t,i,e,n){var o=t*this.config.tileSettings.tileSize+this.config.tileSettings.gridPaddingX,s=i*this.config.tileSettings.tileSize+this.config.tileSettings.gridPaddingY;return this.makeStroked(o,s,e.toString(),n)},t.prototype.makeStroked=function(t,i,e,n,o){void 0===o&&(o=!1);var s=this.config.safeZone.paddingX+t*this.config.scaleFactor,a=this.config.safeZone.paddingY+i*this.config.scaleFactor,r=this.game.add.text(s,a,e);return r.font="Arial Black",r.fontSize=n*this.config.scaleFactor,r.stroke="#000000",r.strokeThickness=n/4*this.config.scaleFactor,r.addColor("#ffffff",0),o&&r.anchor.set(.5),this.game.physics.enable(r,Phaser.Physics.ARCADE),r},t}();exports.default=TextFactory;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Config_1 = require("../Config");
+var TextFactory = (function () {
+    function TextFactory() {
+        var singleton = Config_1.Singleton.getInstance();
+        this.game = singleton.game;
+        this.config = singleton.config;
+    }
+    TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
+        var xPos = x * this.config.tileSettings.tileSize +
+            this.config.tileSettings.gridPaddingX;
+        var yPos = y * this.config.tileSettings.tileSize +
+            this.config.tileSettings.gridPaddingY;
+        return this.makeStroked(xPos, yPos, value.toString(), size);
+    };
+    TextFactory.prototype.makeStroked = function (posX, posY, text, textSize, center) {
+        if (center === void 0) { center = false; }
+        var x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
+        var y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
+        var textObj = this.game.add.text(x, y, text);
+        textObj.font = 'Arial Black';
+        textObj.fontSize = textSize * this.config.scaleFactor;
+        textObj.stroke = '#000000';
+        textObj.strokeThickness = textSize / 4 * this.config.scaleFactor;
+        textObj.addColor('#ffffff', 0);
+        if (center) {
+            textObj.anchor.set(0.5);
+        }
+        this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
+        return textObj;
+    };
+    return TextFactory;
+}());
+exports.default = TextFactory;

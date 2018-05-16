@@ -1,1 +1,119 @@
-"use strict";var __extends=this&&this.__extends||function(){var i=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n])};return function(e,t){function n(){this.constructor=e}i(e,t),e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)}}();Object.defineProperty(exports,"__esModule",{value:!0});var Config_1=require("./Config"),Boot_1=require("./states/Boot"),Preloader_1=require("./states/Preloader"),MainMenu_1=require("./states/MainMenu"),Game=function(P){function e(){var e,t,n,i=this,o=Config_1.Singleton.getInstance().config,r=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent),a=0,s=0,d=0,l=0,c=1.5,u=window.devicePixelRatio<=3?window.devicePixelRatio:3,_=window.innerWidth*u;_=!r&&1080<_?1080:_;var g=window.innerHeight*u,f=(g=r?940<g?940:g:g/u-20)/_,h=window.innerWidth/320;return i=P.call(this,_,g,Phaser.CANVAS,"content",null,!0)||this,c<f?(s=(g-(l=(d=_)*c))/2,e=u/3*h):f<c&&(a=(_-(d=(l=g)/c))/2,e=d/960),t=new Config_1.SafeZone(d,l,a,s),(n=new Config_1.TileSettings).tileSize=240,n.frameLineWidth=4,n.lineColor=13209,n.gridPaddingX=0*e,n.gridPaddingY=200*e,n.tileScale=240/180,n.arraySize=3,n.initialArray=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],n.minimumValue=1,n.tiles=["nacho","chili","mira","lord_fancy","choco","rox","kinjo","shy_senpai","magil","jessy","agent_smith","lily","r1r1","astaroth","bren","joji"],n.mainTile=n.tiles[i.rnd.integerInRange(0,15)],o.scaleFactor=e,o.safeZone=t,o.tileSettings=n,Config_1.Singleton.getInstance().config=o,(Config_1.Singleton.getInstance().game=i).state.add("Boot",Boot_1.default,!1),i.state.add("Preloader",Preloader_1.default,!1),i.state.add("MainMenu",MainMenu_1.default,!1),i.state.start("Boot"),i}return __extends(e,P),e}(Phaser.Game);new(exports.default=Game);
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Config_1 = require("./Config");
+var Boot_1 = require("./states/Boot");
+var Preloader_1 = require("./states/Preloader");
+var MainMenu_1 = require("./states/MainMenu");
+var Game = (function (_super) {
+    __extends(Game, _super);
+    function Game() {
+        var _this = this;
+        var scaleFactor;
+        var safeZone;
+        var tileSettings;
+        var config = Config_1.Singleton.getInstance().config;
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        var paddingX = 0;
+        var paddingY = 0;
+        var safeWidth = 0;
+        var safeHeight = 0;
+        var baseWidth = 320;
+        var baseHeight = 480;
+        var maxPixelRatio = 3;
+        var baseProportion = baseHeight / baseWidth;
+        var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio
+            ? window.devicePixelRatio
+            : maxPixelRatio;
+        var screenWidth = window.innerWidth * screenPixelRatio;
+        screenWidth = !isMobile && screenWidth > 1080 ? 1080 : screenWidth;
+        var screenHeight = window.innerHeight * screenPixelRatio;
+        screenHeight = !isMobile
+            ? screenHeight / screenPixelRatio - 20
+            : screenHeight > 940 ? 940 : screenHeight;
+        var screenProportion = screenHeight / screenWidth;
+        var widthProportion = window.innerWidth / baseWidth;
+        _this = _super.call(this, screenWidth, screenHeight, Phaser.CANVAS, 'content', null, true) || this;
+        if (screenProportion > baseProportion) {
+            safeWidth = screenWidth;
+            safeHeight = safeWidth * baseProportion;
+            paddingY = (screenHeight - safeHeight) / 2;
+            scaleFactor = screenPixelRatio / 3 * widthProportion;
+        }
+        else if (screenProportion < baseProportion) {
+            safeHeight = screenHeight;
+            safeWidth = safeHeight / baseProportion;
+            paddingX = (screenWidth - safeWidth) / 2;
+            scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
+        }
+        safeZone = new Config_1.SafeZone(safeWidth, safeHeight, paddingX, paddingY);
+        tileSettings = new Config_1.TileSettings();
+        tileSettings.tileSize = 240;
+        tileSettings.frameLineWidth = 4;
+        tileSettings.lineColor = 0x003399;
+        tileSettings.gridPaddingX = 0 * scaleFactor;
+        tileSettings.gridPaddingY = 200 * scaleFactor;
+        tileSettings.tileScale = 240 / 180;
+        tileSettings.arraySize = 3;
+        tileSettings.initialArray = [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ];
+        tileSettings.minimumValue = 1;
+        tileSettings.tiles = [
+            'nacho',
+            'chili',
+            'mira',
+            'lord_fancy',
+            'choco',
+            'rox',
+            'kinjo',
+            'shy_senpai',
+            'magil',
+            'jessy',
+            'agent_smith',
+            'lily',
+            'r1r1',
+            'astaroth',
+            'bren',
+            'joji'
+        ];
+        tileSettings.mainTile = tileSettings.tiles[_this.rnd.integerInRange(0, 15)];
+        config.scaleFactor = scaleFactor;
+        config.safeZone = safeZone;
+        config.tileSettings = tileSettings;
+        Config_1.Singleton.getInstance().config = config;
+        Config_1.Singleton.getInstance().game = _this;
+        _this.state.add('Boot', Boot_1.default, false);
+        _this.state.add('Preloader', Preloader_1.default, false);
+        _this.state.add('MainMenu', MainMenu_1.default, false);
+        _this.state.start('Boot');
+        return _this;
+    }
+    return Game;
+}(Phaser.Game));
+exports.default = Game;
+new Game();

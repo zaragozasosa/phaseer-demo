@@ -1,1 +1,40 @@
-"use strict";var __extends=this&&this.__extends||function(){var i=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var o in e)e.hasOwnProperty(o)&&(t[o]=e[o])};return function(t,e){function o(){this.constructor=t}i(t,e),t.prototype=null===e?Object.create(e):(o.prototype=e.prototype,new o)}}();Object.defineProperty(exports,"__esModule",{value:!0});var Boot=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return __extends(e,t),e.prototype.init=function(){this.input.maxPointers=1,this.stage.disableVisibilityChange=!0,this.game.physics.startSystem(Phaser.Physics.ARCADE),this.game.time.desiredFps=60,this.game.device.desktop?this.scale.pageAlignHorizontally=!0:(this.scale.forcePortrait=!0,this.scale.pageAlignHorizontally=!0,this.scale.pageAlignVertically=!0)},e.prototype.preload=function(){this.load.image("preloadBar","assets/images/loader.png")},e.prototype.create=function(){this.game.state.start("Preloader")},e}(Phaser.State);exports.default=Boot;
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Boot = (function (_super) {
+    __extends(Boot, _super);
+    function Boot() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Boot.prototype.init = function () {
+        this.input.maxPointers = 1;
+        this.stage.disableVisibilityChange = true;
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.game.time.desiredFps = 60;
+        if (this.game.device.desktop) {
+            this.scale.pageAlignHorizontally = true;
+        }
+        else {
+            this.scale.forcePortrait = true;
+            this.scale.pageAlignHorizontally = true;
+            this.scale.pageAlignVertically = true;
+        }
+    };
+    Boot.prototype.preload = function () {
+        this.load.image('preloadBar', 'assets/images/loader.png');
+    };
+    Boot.prototype.create = function () {
+        this.game.state.start('Preloader');
+    };
+    return Boot;
+}(Phaser.State));
+exports.default = Boot;

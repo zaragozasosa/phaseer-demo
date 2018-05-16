@@ -20,6 +20,9 @@ export default class Gameboard {
     let singleton = Singleton.getInstance();
     this.game = singleton.game;
     this.config = singleton.config;
+
+    // let music = this.game.add.audio('bgm');
+    // music.play();
     this.textFactory = new TextFactory();
 
     this.addBackground();

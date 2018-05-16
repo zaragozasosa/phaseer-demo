@@ -1,1 +1,207 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var Config_1=require("./Config"),SpriteFactory_1=require("./Tools/SpriteFactory"),TextFactory_1=require("./Tools/TextFactory"),GraphicsFactory_1=require("./Tools/GraphicsFactory"),TilesArray_1=require("./Tools/TilesArray"),Tile_1=require("./Tile"),Grid=function(){function e(e){var i=Config_1.Singleton.getInstance();this.game=i.game,this.config=i.config,this.textFactory=new TextFactory_1.default,this.graphicsFactory=new GraphicsFactory_1.default,this.spriteFactory=new SpriteFactory_1.default,this.gameboardCallback=e,this.tiles=new Array,this.xSpeed=0,this.ySpeed=0,this.speed=3e3*this.config.scaleFactor,this.animating=!1,this.arraySize=this.config.tileSettings.arraySize,this.wallsGroup=this.makeWalls(),this.tilesArray=new TilesArray_1.default,this.tiles=[],this.tilesGroup=this.game.add.group(),this.framesGroup=this.makeTileFrames(),this.addNewTile(),this.addNewTile(),this.cursors=this.game.input.keyboard.createCursorKeys()}return e.prototype.addNewTile=function(){do{var e=this.game.rnd.integerInRange(0,3),i=this.game.rnd.integerInRange(0,3)}while(this.tilesArray.get(e,i));if(6<this.tilesArray.emptyTiles()){var t=this.game.rnd.integerInRange(0,99);this.tilesArray.set(e,i,98===t?4:90<=t?2:1)}else this.tilesArray.set(e,i,1);var s=this.tilesArray.get(e,i),r=new Tile_1.default(e,i,s,this.game,this.config);this.tilesGroup.add(r.sprite),this.game.world.bringToTop(this.framesGroup)},e.prototype.update=function(){this.animating?this.checkCollisions():this.cursors.left.justDown?this.checkLogic(Phaser.Keyboard.LEFT,-this.speed,0):this.cursors.right.justDown?this.checkLogic(Phaser.Keyboard.RIGHT,this.speed,0):this.cursors.up.justDown?this.checkLogic(Phaser.Keyboard.UP,0,-this.speed):this.cursors.down.justDown&&this.checkLogic(Phaser.Keyboard.DOWN,0,this.speed)},e.prototype.checkCollisions=function(){this.game.physics.arcade.overlap(this.tilesGroup,this.tilesGroup,null,function(e,i){return e.key!==i.key&&(e.position=e.previousPosition,i.position=i.previousPosition,e.body.stop(),i.body.stop()),!0}),this.game.physics.arcade.collide(this.tilesGroup,this.wallsGroup);var i=!0;this.tilesGroup.forEach(function(e){0===e.body.velocity.x&&0===e.body.velocity.y||(i=!1)}.bind(this)),i&&(this.animating=!1,this.updateGameboard())},e.prototype.updateGameboard=function(){this.tilesGroup.removeAll(!0),this.tiles=[];for(var e=0;e<=this.config.tileSettings.arraySize;e++)for(var i=0;i<=this.config.tileSettings.arraySize;i++){var t=this.tilesArray.get(e,i);if(0!==t){var s=new Tile_1.default(e,i,t,this.game,this.config);this.tiles.push(s),this.tilesGroup.add(s.sprite)}}this.tilesArray.isFull()||(this.addNewTile(),this.gameboardCallback())},e.prototype.checkLogic=function(e,i,t){this.xSpeed=i,this.ySpeed=t,this.isDirty=!1;var s=e===Phaser.KeyCode.LEFT?1:0,r=e===Phaser.KeyCode.UP?1:0,a=e===Phaser.KeyCode.RIGHT?this.arraySize-1:this.arraySize,o=e===Phaser.KeyCode.DOWN?this.arraySize-1:this.arraySize,h=e===Phaser.KeyCode.DOWN?o:r,l=e===Phaser.KeyCode.DOWN?r:o,y=e===Phaser.KeyCode.DOWN?-1:1,d=e===Phaser.KeyCode.RIGHT?a:s,n=e===Phaser.KeyCode.RIGHT?s:a,c=e===Phaser.KeyCode.RIGHT?-1:1;h-=y;do{h+=y,d=e===Phaser.KeyCode.RIGHT?a:s,d-=c;do{d+=c,this.tilesArray.get(d,h)&&this.pushTile(d,h,e)}while(d!==n)}while(h!==l);this.isDirty&&(this.animating=!0,this.tilesGroup.forEach(function(e){e.body.velocity.x=this.xSpeed,e.body.velocity.y=this.ySpeed}.bind(this)))},e.prototype.pushTile=function(e,i,t){for(var s=this.tilesArray.get(e,i),r=t===Phaser.KeyCode.RIGHT?1:t===Phaser.KeyCode.LEFT?-1:0,a=t===Phaser.KeyCode.DOWN?1:t===Phaser.KeyCode.UP?-1:0,o=e,h=i,l=o+r,y=h+a;0<=l&&l<=this.arraySize&&0<=y&&y<=this.arraySize;){var d=this.tilesArray.get(l,y);if(0!==d){if(d===s){s*=2,this.tilesArray.set(l,y,s),this.tilesArray.set(o,h,0),this.isDirty=!0;break}break}this.tilesArray.set(l,y,s),this.tilesArray.set(o,h,0),o=l,h=y,this.isDirty=!0,l+=r,y+=a}},e.prototype.makeWalls=function(){var e=4*this.config.tileSettings.tileSize,i=this.game.add.group();return this.graphicsFactory.drawGridRect(),i.add(this.graphicsFactory.makeWall(0,0,1,e)),i.add(this.graphicsFactory.makeWall(0,0,e,1)),i.add(this.graphicsFactory.makeWall(0,e,e,1)),i.add(this.graphicsFactory.makeWall(e,0,1,e)),i},e.prototype.makeTileFrames=function(){for(var e=this.game.add.group(),i=0;i<=this.arraySize;i++)for(var t=0;t<=this.arraySize;t++)e.add(this.spriteFactory.makeTileFrame(i,t));return e},e}();exports.default=Grid;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Config_1 = require("./Config");
+var SpriteFactory_1 = require("./Tools/SpriteFactory");
+var TextFactory_1 = require("./Tools/TextFactory");
+var GraphicsFactory_1 = require("./Tools/GraphicsFactory");
+var TilesArray_1 = require("./Tools/TilesArray");
+var Tile_1 = require("./Tile");
+var Grid = (function () {
+    function Grid(gameboardCallback) {
+        var singleton = Config_1.Singleton.getInstance();
+        this.game = singleton.game;
+        this.config = singleton.config;
+        this.textFactory = new TextFactory_1.default();
+        this.graphicsFactory = new GraphicsFactory_1.default();
+        this.spriteFactory = new SpriteFactory_1.default();
+        this.gameboardCallback = gameboardCallback;
+        this.tiles = new Array();
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+        this.speed = 3000 * this.config.scaleFactor;
+        this.animating = false;
+        this.arraySize = this.config.tileSettings.arraySize;
+        this.wallsGroup = this.makeWalls();
+        this.tilesArray = new TilesArray_1.default();
+        this.tiles = [];
+        this.tilesGroup = this.game.add.group();
+        this.framesGroup = this.makeTileFrames();
+        this.addNewTile();
+        this.addNewTile();
+        this.cursors = this.game.input.keyboard.createCursorKeys();
+    }
+    Grid.prototype.addNewTile = function () {
+        do {
+            var ranX = this.game.rnd.integerInRange(0, 3);
+            var ranY = this.game.rnd.integerInRange(0, 3);
+        } while (this.tilesArray.get(ranX, ranY));
+        if (this.tilesArray.emptyTiles() > 6) {
+            var chance = this.game.rnd.integerInRange(0, 99);
+            this.tilesArray.set(ranX, ranY, chance === 98 ? 4 : chance >= 90 ? 2 : 1);
+        }
+        else {
+            this.tilesArray.set(ranX, ranY, 1);
+        }
+        var value = this.tilesArray.get(ranX, ranY);
+        var tile = new Tile_1.default(ranX, ranY, value, this.game, this.config);
+        this.tilesGroup.add(tile.sprite);
+        this.game.world.bringToTop(this.framesGroup);
+    };
+    Grid.prototype.update = function () {
+        if (!this.animating) {
+            if (this.cursors.left.justDown) {
+                this.checkLogic(Phaser.Keyboard.LEFT, -this.speed, 0);
+            }
+            else if (this.cursors.right.justDown) {
+                this.checkLogic(Phaser.Keyboard.RIGHT, this.speed, 0);
+            }
+            else if (this.cursors.up.justDown) {
+                this.checkLogic(Phaser.Keyboard.UP, 0, -this.speed);
+            }
+            else if (this.cursors.down.justDown) {
+                this.checkLogic(Phaser.Keyboard.DOWN, 0, this.speed);
+            }
+        }
+        else {
+            this.checkCollisions();
+        }
+    };
+    Grid.prototype.checkCollisions = function () {
+        this.game.physics.arcade.overlap(this.tilesGroup, this.tilesGroup, null, function (a, b) {
+            if (a.key !== b.key) {
+                a.position = a.previousPosition;
+                b.position = b.previousPosition;
+                a.body.stop();
+                b.body.stop();
+            }
+            return true;
+        });
+        this.game.physics.arcade.collide(this.tilesGroup, this.wallsGroup);
+        var allStopped = true;
+        this.tilesGroup.forEach(function (sprite) {
+            if (sprite.body.velocity.x !== 0 || sprite.body.velocity.y !== 0) {
+                allStopped = false;
+            }
+        }.bind(this));
+        if (allStopped) {
+            this.animating = false;
+            this.updateGameboard();
+        }
+    };
+    Grid.prototype.updateGameboard = function () {
+        this.tilesGroup.removeAll(true);
+        this.tiles = [];
+        for (var x = 0; x <= this.config.tileSettings.arraySize; x++) {
+            for (var y = 0; y <= this.config.tileSettings.arraySize; y++) {
+                var value = this.tilesArray.get(x, y);
+                if (value !== 0) {
+                    var tile = new Tile_1.default(x, y, value, this.game, this.config);
+                    this.tiles.push(tile);
+                    this.tilesGroup.add(tile.sprite);
+                }
+            }
+        }
+        if (!this.tilesArray.isFull()) {
+            this.addNewTile();
+            this.gameboardCallback();
+        }
+    };
+    Grid.prototype.checkLogic = function (keyboardInput, xSpeed, ySpeed) {
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.isDirty = false;
+        var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
+        var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
+        var maxX = keyboardInput === Phaser.KeyCode.RIGHT
+            ? this.arraySize - 1
+            : this.arraySize;
+        var maxY = keyboardInput === Phaser.KeyCode.DOWN
+            ? this.arraySize - 1
+            : this.arraySize;
+        var startY = keyboardInput === Phaser.KeyCode.DOWN ? maxY : minY;
+        var stopY = keyboardInput === Phaser.KeyCode.DOWN ? minY : maxY;
+        var yIncrement = keyboardInput === Phaser.KeyCode.DOWN ? -1 : 1;
+        var startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
+        var stopX = keyboardInput === Phaser.KeyCode.RIGHT ? minX : maxX;
+        var xIncrement = keyboardInput === Phaser.KeyCode.RIGHT ? -1 : 1;
+        startY -= yIncrement;
+        do {
+            startY += yIncrement;
+            startX = keyboardInput === Phaser.KeyCode.RIGHT ? maxX : minX;
+            startX -= xIncrement;
+            do {
+                startX += xIncrement;
+                var tile = this.tilesArray.get(startX, startY);
+                if (tile) {
+                    this.pushTile(startX, startY, keyboardInput);
+                }
+            } while (startX !== stopX);
+        } while (startY !== stopY);
+        if (this.isDirty) {
+            this.animating = true;
+            this.tilesGroup.forEach(function (sprite) {
+                sprite.body.velocity.x = this.xSpeed;
+                sprite.body.velocity.y = this.ySpeed;
+            }.bind(this));
+        }
+    };
+    Grid.prototype.pushTile = function (x, y, keyboardInput) {
+        var tile = this.tilesArray.get(x, y);
+        var pushX = keyboardInput === Phaser.KeyCode.RIGHT
+            ? 1
+            : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
+        var pushY = keyboardInput === Phaser.KeyCode.DOWN
+            ? 1
+            : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
+        var actualX = x;
+        var actualY = y;
+        var newX = actualX + pushX;
+        var newY = actualY + pushY;
+        while (newX >= 0 &&
+            newX <= this.arraySize &&
+            newY >= 0 &&
+            newY <= this.arraySize) {
+            var nextTile = this.tilesArray.get(newX, newY);
+            if (nextTile === 0) {
+                this.tilesArray.set(newX, newY, tile);
+                this.tilesArray.set(actualX, actualY, 0);
+                actualX = newX;
+                actualY = newY;
+                this.isDirty = true;
+            }
+            else if (nextTile === tile) {
+                tile *= 2;
+                this.tilesArray.set(newX, newY, tile);
+                this.tilesArray.set(actualX, actualY, 0);
+                this.isDirty = true;
+                break;
+            }
+            else {
+                break;
+            }
+            newX += pushX;
+            newY += pushY;
+        }
+    };
+    Grid.prototype.makeWalls = function () {
+        var wallLength = this.config.tileSettings.tileSize * 4;
+        var group = this.game.add.group();
+        this.graphicsFactory.drawGridRect();
+        group.add(this.graphicsFactory.makeWall(0, 0, 1, wallLength));
+        group.add(this.graphicsFactory.makeWall(0, 0, wallLength, 1));
+        group.add(this.graphicsFactory.makeWall(0, wallLength, wallLength, 1));
+        group.add(this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength));
+        return group;
+    };
+    Grid.prototype.makeTileFrames = function () {
+        var group = this.game.add.group();
+        for (var x = 0; x <= this.arraySize; x++) {
+            for (var y = 0; y <= this.arraySize; y++) {
+                group.add(this.spriteFactory.makeTileFrame(x, y));
+            }
+        }
+        return group;
+    };
+    return Grid;
+}());
+exports.default = Grid;

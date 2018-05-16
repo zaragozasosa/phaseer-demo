@@ -1,1 +1,42 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var Config_1=require("../Config"),SpriteFactory=function(){function i(){var i=Config_1.Singleton.getInstance();this.game=i.game,this.config=i.config}return i.prototype.makeTile=function(i,t,e){var n=this.config.tileSettings.tileSize,s=this.config.tileSettings.tileScale;return this.make(i*n,t*n,e,s)},i.prototype.make=function(i,t,e,n){void 0===n&&(n=1);var s=i*this.config.scaleFactor,o=t*this.config.scaleFactor,a=this.config,g=a.safeZone.paddingX+this.config.tileSettings.gridPaddingX,c=a.safeZone.paddingY+this.config.tileSettings.gridPaddingY,r=this.game.add.sprite(s+g,o+c,e);return r.scale.setTo(a.scaleFactor*n,a.scaleFactor*n),r},i.prototype.makeTileFrame=function(i,t){var e=this.game.add.graphics(0,0),n=this.config.tileSettings.frameLineWidth,s=this.config.tileSettings.tileSize-n/2,o=this.config.tileSettings.lineColor,a=this.config.safeZone.paddingX+this.config.tileSettings.gridPaddingX,g=this.config.safeZone.paddingY+this.config.tileSettings.gridPaddingY,c=i*this.config.tileSettings.tileSize*this.config.scaleFactor+a,r=t*this.config.tileSettings.tileSize*this.config.scaleFactor+g;e.lineStyle(n,o,1);var f=e.drawRect(c,r,s*this.config.scaleFactor,s*this.config.scaleFactor);return this.game.physics.enable(f,Phaser.Physics.ARCADE),f},i}();exports.default=SpriteFactory;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Config_1 = require("../Config");
+var SpriteFactory = (function () {
+    function SpriteFactory() {
+        var singleton = Config_1.Singleton.getInstance();
+        this.game = singleton.game;
+        this.config = singleton.config;
+    }
+    SpriteFactory.prototype.makeTile = function (x, y, id) {
+        var size = this.config.tileSettings.tileSize;
+        var scale = this.config.tileSettings.tileScale;
+        return this.make(x * size, y * size, id, scale);
+    };
+    SpriteFactory.prototype.make = function (posX, posY, id, spriteScale) {
+        if (spriteScale === void 0) { spriteScale = 1; }
+        var x = posX * this.config.scaleFactor;
+        var y = posY * this.config.scaleFactor;
+        var config = this.config;
+        var xPad = config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
+        var yPad = config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
+        var sprite = this.game.add.sprite(x + xPad, y + yPad, id);
+        sprite.scale.setTo(config.scaleFactor * spriteScale, config.scaleFactor * spriteScale);
+        return sprite;
+    };
+    SpriteFactory.prototype.makeTileFrame = function (posX, posY) {
+        var graphics = this.game.add.graphics(0, 0);
+        var lineWidth = this.config.tileSettings.frameLineWidth;
+        var frameSize = this.config.tileSettings.tileSize - lineWidth / 2;
+        var color = this.config.tileSettings.lineColor;
+        var xPad = this.config.safeZone.paddingX + this.config.tileSettings.gridPaddingX;
+        var yPad = this.config.safeZone.paddingY + this.config.tileSettings.gridPaddingY;
+        var x = posX * this.config.tileSettings.tileSize * this.config.scaleFactor + xPad;
+        var y = posY * this.config.tileSettings.tileSize * this.config.scaleFactor + yPad;
+        graphics.lineStyle(lineWidth, color, 1);
+        var rect = graphics.drawRect(x, y, frameSize * this.config.scaleFactor, frameSize * this.config.scaleFactor);
+        this.game.physics.enable(rect, Phaser.Physics.ARCADE);
+        return rect;
+    };
+    return SpriteFactory;
+}());
+exports.default = SpriteFactory;
