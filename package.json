@@ -10,6 +10,7 @@
     "url": "https://github.com/zaragozasosa/phaseer-demo.git"
   },
   "devDependencies": {
+    "clientconfig": "^1.1.1",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.1.0",

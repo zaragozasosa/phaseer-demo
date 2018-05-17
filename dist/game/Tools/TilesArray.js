@@ -5,8 +5,8 @@ var TilesArray = (function () {
     function TilesArray() {
         var singleton = Config_1.Singleton.getInstance();
         var config = singleton.config;
-        this.tiles = config.tileSettings.initialArray;
-        this.arraySize = config.tileSettings.arraySize;
+        this.tiles = config.gridSettings.initialArray;
+        this.arraySize = config.gridSettings.arraySize;
     }
     TilesArray.prototype.get = function (x, y) {
         return this.tiles[y * (this.arraySize + 1) + x];

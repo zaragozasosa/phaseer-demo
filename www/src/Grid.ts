@@ -4,7 +4,7 @@ import TextFactory from './Tools/TextFactory';
 import GraphicsFactory from './Tools/GraphicsFactory';
 import TilesArray from './Tools/TilesArray';
 import InputManager from './Tools/InputManager';
-import Tile from './Tile';
+import TileSprite from './TileSprite';
 
 export default class Grid {
   private game: Phaser.Game;
@@ -13,7 +13,7 @@ export default class Grid {
   private graphicsFactory: GraphicsFactory;
   private spriteFactory: SpriteFactory;
 
-  tiles: Array<Tile>;
+  tiles: Array<TileSprite>;
   tilesArray: TilesArray;
   tilesGroup: Phaser.Group;
   wallsGroup: Phaser.Group;
@@ -24,6 +24,7 @@ export default class Grid {
   ySpeed: number;
   speed: number;
   isDirty: boolean;
+  lastMergedTile: number;
 
   input: InputManager;
   arraySize: number;
@@ -40,20 +41,19 @@ export default class Grid {
 
     this.gameboardCallback = gameboardCallback;
 
-    this.tiles = new Array();
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.speed = 3000 * this.config.scaleFactor;
     this.animating = false;
-    this.arraySize = this.config.tileSettings.arraySize;
+    this.arraySize = this.config.gridSettings.arraySize;
     this.wallsGroup = this.makeWalls();
-
+    this.lastMergedTile = 0;
     this.tilesArray = new TilesArray();
     this.tiles = [];
     this.tilesGroup = this.game.add.group();
 
     this.framesGroup = this.makeTileFrames();
-
+    this.reorderTileList();
     this.addNewTile();
     this.addNewTile();
     this.input = new InputManager();
@@ -73,7 +73,7 @@ export default class Grid {
     }
     let value = this.tilesArray.get(ranX, ranY);
 
-    let tile = new Tile(ranX, ranY, value, this.game, this.config);
+    let tile = new TileSprite(ranX, ranY, value, this.game, this.config);
     this.tilesGroup.add(tile.sprite);
     this.game.world.bringToTop(this.framesGroup);
   }
@@ -84,11 +84,14 @@ export default class Grid {
 
       if (cursor === Phaser.Keyboard.LEFT) {
         this.checkLogic(cursor, -this.speed, 0);
-      } if (cursor === Phaser.Keyboard.RIGHT) {
+      }
+      if (cursor === Phaser.Keyboard.RIGHT) {
         this.checkLogic(cursor, this.speed, 0);
-      } if (cursor === Phaser.Keyboard.UP) {
+      }
+      if (cursor === Phaser.Keyboard.UP) {
         this.checkLogic(cursor, 0, -this.speed);
-      } if (cursor === Phaser.Keyboard.DOWN) {
+      }
+      if (cursor === Phaser.Keyboard.DOWN) {
         this.checkLogic(cursor, 0, this.speed);
       }
 
@@ -135,16 +138,27 @@ export default class Grid {
     this.tilesGroup.removeAll(true);
     this.tiles = [];
 
-    for (let x = 0; x <= this.config.tileSettings.arraySize; x++) {
-      for (let y = 0; y <= this.config.tileSettings.arraySize; y++) {
+    for (let x = 0; x <= this.config.gridSettings.arraySize; x++) {
+      for (let y = 0; y <= this.config.gridSettings.arraySize; y++) {
         let value = this.tilesArray.get(x, y);
         if (value !== 0) {
-          let tile = new Tile(x, y, value, this.game, this.config);
+          let tile = new TileSprite(x, y, value, this.game, this.config);
+          if (
+            this.lastMergedTile === tile.value &&
+            (tile.value !== this.config.gridSettings.minimumValue * 2 ||
+              this.game.rnd.integerInRange(0, 1) === 0) && 
+              (tile.value !== this.config.gridSettings.minimumValue * 4 ||
+                this.game.rnd.integerInRange(0, 2) !== 0)
+          ) {
+            this.game.sound.play(tile.sfxId, 2);
+          }
           this.tiles.push(tile);
           this.tilesGroup.add(tile.sprite);
         }
       }
     }
+
+    this.lastMergedTile = 0;
 
     if (!this.tilesArray.isFull()) {
       this.addNewTile();
@@ -153,9 +167,6 @@ export default class Grid {
   }
 
   checkLogic(keyboardInput: number, xSpeed: number, ySpeed: number) {
-    console.log('logic');
-
-
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.isDirty = false;
@@ -240,6 +251,8 @@ export default class Grid {
         this.tilesArray.set(newX, newY, tile);
         this.tilesArray.set(actualX, actualY, 0);
         this.isDirty = true;
+        this.lastMergedTile =
+          this.lastMergedTile < tile ? tile : this.lastMergedTile;
         break;
       } else {
         break;
@@ -251,7 +264,7 @@ export default class Grid {
   }
 
   makeWalls(): Phaser.Group {
-    let wallLength = this.config.tileSettings.tileSize * 4;
+    let wallLength = this.config.gridSettings.tileSize * 4;
     let group = this.game.add.group();
 
     this.graphicsFactory.drawGridRect();
@@ -271,5 +284,22 @@ export default class Grid {
       }
     }
     return group;
+  }
+
+  reorderTileList() {
+    let list = this.config.gridSettings.tiles;
+
+    while (list[0].id !== this.config.gridSettings.mainTile) {
+      let last = list.pop();
+      list.unshift(last);
+    }
+
+    if (list[0].friendId !== list[1].id) {
+      let secondArray = [];
+      secondArray.push(list[0]);
+      secondArray.push(list[list.length - 1]);
+      let thirdArray = list.splice(1, list.length - 2);
+      this.config.gridSettings.tiles = secondArray.concat(thirdArray);
+    }
   }
 }

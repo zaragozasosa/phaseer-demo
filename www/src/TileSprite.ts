@@ -1,10 +1,11 @@
 import { Config, Singleton } from './Config';
 import SpriteFactory from './Tools/SpriteFactory';
-export default class Tile {
+export default class TileSprite {
   x: number;
   y: number;
   value: number;
   sprite: Phaser.Sprite;
+  sfxId: string;
 
   game: Phaser.Game;
   config: Config;
@@ -29,6 +30,7 @@ export default class Tile {
   createSprite() {
     let id = this.getTileSprite(this.value);
     let sprite = this.spriteFactory.makeTile(this.x, this.y, id);
+    this.sfxId = id + '-sfx';
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
     sprite.body.collideWorldBounds = true;
 
@@ -36,20 +38,21 @@ export default class Tile {
   }
 
   getTileSprite(tile: number) {
-    let list = this.config.tileSettings.tiles;
-    while (list[0] !== this.config.tileSettings.mainTile) {
-      let last = list.pop();
-      list.unshift(last);
-    }
+    let list = this.config.gridSettings.tiles;
+
     let index = this.getArrayPositionFromNumber(tile);
     if (index >= 0) {
-      return this.config.tileSettings.tiles[index];
+      if(list[index]) {
+        return list[index].id;        
+      } else {
+        return null;
+      }
     }
     return null;
   }
 
   getArrayPositionFromNumber(tile: number): number {
-    return tile === this.config.tileSettings.minimumValue
+    return tile === this.config.gridSettings.minimumValue
       ? 0
       : this.getArrayPositionFromNumber(tile / 2) + 1;
   }

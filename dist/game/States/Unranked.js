@@ -11,17 +11,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("../Gameboard");
-var MainMenu = (function (_super) {
-    __extends(MainMenu, _super);
-    function MainMenu() {
+var Unranked = (function (_super) {
+    __extends(Unranked, _super);
+    function Unranked() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    MainMenu.prototype.create = function () {
+    Unranked.prototype.create = function () {
         this.gameboard = new Gameboard_1.default();
     };
-    MainMenu.prototype.update = function () {
+    Unranked.prototype.update = function () {
         this.gameboard.update();
     };
-    return MainMenu;
+    return Unranked;
 }(Phaser.State));
-exports.default = MainMenu;
+exports.default = Unranked;

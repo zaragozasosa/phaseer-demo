@@ -50,9 +50,23 @@ var SafeZone = (function () {
     return SafeZone;
 }());
 exports.SafeZone = SafeZone;
-var TileSettings = (function () {
-    function TileSettings() {
+var GridSettings = (function () {
+    function GridSettings() {
     }
-    return TileSettings;
+    return GridSettings;
 }());
-exports.TileSettings = TileSettings;
+exports.GridSettings = GridSettings;
+var Tile = (function () {
+    function Tile(id, name, fullName, friendId, sfxId, summary, playable) {
+        if (playable === void 0) { playable = true; }
+        this.id = id;
+        this.name = name;
+        this.fullName = fullName;
+        this.friendId = friendId;
+        this.sfxId = sfxId;
+        this.summary = summary;
+        this.playable = playable;
+    }
+    return Tile;
+}());
+exports.Tile = Tile;

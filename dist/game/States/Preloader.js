@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("../Config");
+var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var Preloader = (function (_super) {
     __extends(Preloader, _super);
     function Preloader() {
@@ -19,16 +20,18 @@ var Preloader = (function (_super) {
     Preloader.prototype.preload = function () {
         var singleton = Config_1.Singleton.getInstance();
         var config = singleton.config;
-        this.preloadBar = this.add.sprite(0, 0, 'preloadBar');
+        var spriteFactory = new SpriteFactory_1.default();
+        this.preloadBar = spriteFactory.makeCentered(300, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
-        this.game.load.spritesheet('button', 'assets/images/button-mayo.png', 480, 180);
-        for (var _i = 0, _a = config.tileSettings.tiles; _i < _a.length; _i++) {
+        for (var _i = 0, _a = config.gridSettings.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
-            var path = "assets/images/tiles/" + sprite + ".png";
-            var altPath = "assets/images/tiles/" + sprite + "_alt.png";
-            this.load.image(sprite, path);
+            var path = "assets/images/tiles/" + sprite.id + ".png";
+            var sfx = "assets/sfx/" + sprite.id + "-" + sprite.sfxId;
+            this.load.image(sprite.id, path);
+            this.load.audio(sprite.id + "-sfx", [sfx]);
         }
-        this.game.load.audio('bgm', ['assets/audio/Mellow-Puzzler.mp3']);
+        this.load.image('title', 'assets/images/concept.png');
+        this.game.load.audio('bgm', ['assets/audio/Puzzle-Action-2.mp3']);
     };
     Preloader.prototype.create = function () {
         this.game.state.start('MainMenu');

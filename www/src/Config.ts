@@ -28,7 +28,7 @@ export class Singleton {
 export class Config {
   scaleFactor: number;
   safeZone: SafeZone;
-  tileSettings: TileSettings;
+  gridSettings: GridSettings;
 }
 
 export class SafeZone {
@@ -49,7 +49,7 @@ export class SafeZone {
   paddingY: number;
 }
 
-export class TileSettings {
+export class GridSettings {
   tileSize: number;
   frameLineWidth: number;
   lineColor: any;
@@ -59,6 +59,37 @@ export class TileSettings {
   arraySize: number;
   initialArray: Array<number>;
   minimumValue: number;
-  tiles: Array<string>;
+  tiles: Array<Tile>;
   mainTile: string;
+}
+
+export class Tile {
+  id: string;
+  name: string;
+  fullName: string;
+  friendId: string;
+  sfxId: string;
+  summary: string;
+  playable: boolean;
+
+  powerId: string;
+  powerName: string;
+
+  constructor(
+    id: string,
+    name: string,
+    fullName: string,
+    friendId: string,
+    sfxId: string,
+    summary: string,
+    playable = true
+  ) {
+    this.id = id;
+    this.name = name;
+    this.fullName = fullName;
+    this.friendId = friendId;
+    this.sfxId = sfxId;
+    this.summary = summary;
+    this.playable = playable;
+  }
 }

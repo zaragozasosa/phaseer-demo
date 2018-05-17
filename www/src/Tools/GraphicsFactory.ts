@@ -17,11 +17,11 @@ export default class GraphicsFactory {
     let xPad =
       x * config.scaleFactor +
       config.safeZone.paddingX +
-      config.tileSettings.gridPaddingX;
+      config.gridSettings.gridPaddingX;
     let yPad =
       y * config.scaleFactor +
       config.safeZone.paddingY +
-      config.tileSettings.gridPaddingY;
+      config.gridSettings.gridPaddingY;
 
     let wall = this.game.add.sprite(xPad, yPad);
     this.game.physics.enable(wall, Phaser.Physics.ARCADE);
@@ -33,10 +33,10 @@ export default class GraphicsFactory {
 
   drawGridRect() {
     let config = this.config;
-    let xPad = config.safeZone.paddingX + config.tileSettings.gridPaddingX;
-    let yPad = config.safeZone.paddingY + config.tileSettings.gridPaddingY;
+    let xPad = config.safeZone.paddingX + config.gridSettings.gridPaddingX;
+    let yPad = config.safeZone.paddingY + config.gridSettings.gridPaddingY;
     let graphics = this.game.add.graphics(0, 0);
-    let wallLength = config.tileSettings.tileSize * 4 * config.scaleFactor;
+    let wallLength = config.gridSettings.tileSize * 4 * config.scaleFactor;
 
     graphics.lineStyle(0);
     graphics.beginFill(0x66ccff, 1);

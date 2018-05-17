@@ -6,8 +6,8 @@ export default class TilesArray {
   constructor() {
     let singleton = Singleton.getInstance();
     let config = singleton.config;
-    this.tiles = config.tileSettings.initialArray;
-    this.arraySize = config.tileSettings.arraySize;
+    this.tiles = config.gridSettings.initialArray;
+    this.arraySize = config.gridSettings.arraySize;
   }
 
   get(x: number, y: number): number {
