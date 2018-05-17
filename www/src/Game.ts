@@ -149,7 +149,7 @@ export default class Game extends Phaser.Game {
         'Lily Hast',
         'smith',
         'sweeping.wav',
-        'Waiting for Tah.'
+        'A clumsy maid devoted to her master. Cleaning is her passion and she likes to do her job thoroughly. Sometimes too thoroughly.'
       )
     );
 
@@ -193,7 +193,7 @@ export default class Game extends Phaser.Game {
         'Choco Jax',
         'rox',
         'pencil.mp3',
-        'Professional digital artist, no lewd commissions! Close friend of Rox, they met each other years ago through the popular online community "Neon Virtual Pets: Z".'
+        'Professional digital artist, no lewd commissions (only Patreon)! Close friend of Rox, they met each other years ago through the popular online community "Neon Virtual Pets: Z".'
       )
     );
 
