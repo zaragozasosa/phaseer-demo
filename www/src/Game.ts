@@ -70,7 +70,7 @@ export default class Game extends Phaser.Game {
     gridSettings = new GridSettings();
     gridSettings.tileSize = 240;
     gridSettings.frameLineWidth = 4;
-    gridSettings.lineColor = 0x003399;
+    gridSettings.lineColor = 0x99AAB5;
     gridSettings.gridPaddingX = 0 * scaleFactor;
     gridSettings.gridPaddingY = 200 * scaleFactor;
     gridSettings.tileScale = 240 / 180;

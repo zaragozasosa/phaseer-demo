@@ -104,10 +104,10 @@ var CharacterSelection = (function (_super) {
         this.ratio = ratio;
         this.displayArray = displayArray;
         this.setSelectedCharacter(displayArray[0]);
-        this.buttonFactory.make(635, 930, ['start-1', 'start-2', 'start-3'], function () {
+        this.buttonFactory.make(635, 935, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this));
-        this.selectedSprite = this.spriteFactory.createSprite(570, 530, this.selectedCharacter.id, 2.2);
+        this.selectedSprite = this.spriteFactory.createSprite(570, 530, this.selectedCharacter.id, 2.1);
     };
     CharacterSelection.prototype.gameStart = function () {
         if (this.selectedCharacter.id === 'random') {
@@ -125,25 +125,25 @@ var CharacterSelection = (function (_super) {
         }
         this.selectedFrame = this.spriteFactory.makeTileFrame(char.gridX, char.gridY, this.ratio, 0, this.yMenuPad);
         if (!this.selectedName) {
-            this.selectedName = this.textFactory.make(-633, -190, char.name, 50);
+            this.selectedName = this.textFactory.make(-633, -190, char.name, 50, false, '#ffffff');
         }
         else {
             this.selectedName.setText(char.name);
         }
         if (!this.selectedFullName) {
-            this.selectedFullName = this.textFactory.make(-630, -120, char.fullName, 35);
+            this.selectedFullName = this.textFactory.make(-630, -120, char.fullName, 35, false, '#ffffff');
         }
         else {
             this.selectedFullName.setText(char.fullName);
         }
         if (!this.selectedPower) {
-            this.selectedPower = this.textFactory.make(-630, -70, "Special ability: " + char.powerName, 35);
+            this.selectedPower = this.textFactory.make(-630, -70, "Special ability: " + char.powerName, 35, false, '#ffffff');
         }
         else {
             this.selectedPower.setText("Special ability: " + char.powerName);
         }
         if (!this.selectedSummary) {
-            this.selectedSummary = this.textFactory.makeYBounded(0, char.summary, 35, 'bottom', '353839');
+            this.selectedSummary = this.textFactory.makeYBounded(0, char.summary, 35, 'bottom');
             this.selectedSummary.addChild(this.selectedPower);
             this.selectedSummary.addChild(this.selectedFullName);
             this.selectedSummary.addChild(this.selectedName);

@@ -39,7 +39,7 @@ export default class GraphicsFactory {
     let wallLength = config.gridSettings.tileSize * 4 * config.scaleFactor;
 
     graphics.lineStyle(0);
-    graphics.beginFill(0x66ccff, 1);
+    graphics.beginFill(0x23272A, 1);
     graphics.drawRect(xPad, yPad, wallLength, wallLength);
     graphics.endFill();
   }

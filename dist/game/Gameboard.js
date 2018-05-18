@@ -29,7 +29,7 @@ var Gameboard = (function () {
         var yPad = config.safeZone.paddingY;
         var graphics = this.game.add.graphics(0, 0);
         graphics.lineStyle(0);
-        graphics.beginFill(0xe7e5df, 1);
+        graphics.beginFill(0x2f3136, 1);
         graphics.drawRect(xPad, yPad, config.safeZone.safeWidth, config.safeZone.safeHeight);
         graphics.endFill();
     };

@@ -66,7 +66,7 @@ export default class GameboardConfig {
         'Lord Fancy',
         'Sir Lord Fancypants',
         'lord-fancy',
-        'chuckle.mp3',
+        'hyehye.mp3',
         'blackMagic',
         'Black Magic',
         'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'

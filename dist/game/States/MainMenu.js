@@ -25,7 +25,6 @@ var MainMenu = (function (_super) {
         var music = this.game.add.audio('bgm');
         music.play('', 0, 0.5, true);
         this.spriteFactory.makeCentered(100, 'title', 0.8);
-        this.textFactory.makeHorizontalCentered(900, 'Click to start', 50);
     };
     MainMenu.prototype.update = function () {
         if (this.game.input.activePointer.isDown) {

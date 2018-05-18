@@ -138,7 +138,7 @@ export default class CharacterSelection extends Phaser.State {
 
     this.buttonFactory.make(
       635,
-      930,
+      935,
       ['start-1', 'start-2', 'start-3'],
       function() {
         this.gameStart();
@@ -149,7 +149,7 @@ export default class CharacterSelection extends Phaser.State {
       570,
       530,
       this.selectedCharacter.id,
-      2.2
+      2.1
     );
   }
 
@@ -180,7 +180,14 @@ export default class CharacterSelection extends Phaser.State {
     );
 
     if (!this.selectedName) {
-      this.selectedName = this.textFactory.make(-633, -190, char.name, 50);
+      this.selectedName = this.textFactory.make(
+        -633,
+        -190,
+        char.name,
+        50,
+        false,
+        '#ffffff'
+      );
     } else {
       this.selectedName.setText(char.name);
     }
@@ -190,7 +197,9 @@ export default class CharacterSelection extends Phaser.State {
         -630,
         -120,
         char.fullName,
-        35
+        35,
+        false,
+        '#ffffff'
       );
     } else {
       this.selectedFullName.setText(char.fullName);
@@ -201,7 +210,9 @@ export default class CharacterSelection extends Phaser.State {
         -630,
         -70,
         `Special ability: ${char.powerName}`,
-        35
+        35,
+        false,
+        '#ffffff'
       );
     } else {
       this.selectedPower.setText(`Special ability: ${char.powerName}`);
@@ -212,8 +223,7 @@ export default class CharacterSelection extends Phaser.State {
         0,
         char.summary,
         35,
-        'bottom',
-        '353839'
+        'bottom'
       );
 
       this.selectedSummary.addChild(this.selectedPower);

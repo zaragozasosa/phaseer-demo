@@ -15,7 +15,7 @@ export default class MainMenu extends Phaser.State {
     music.play('', 0, 0.5, true);
 
     this.spriteFactory.makeCentered(100, 'title', 0.8);
-    this.textFactory.makeHorizontalCentered(900, 'Click to start', 50);
+    // this.textFactory.makeHorizontalCentered(900, 'Click to start', 50);
   }
 
   update() {

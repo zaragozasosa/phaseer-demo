@@ -8,7 +8,7 @@ export default class TextFactory {
     let singleton = Singleton.getInstance();
     this.game = singleton.game;
     this.config = singleton.config;
-    this.font = 'Verdana';
+    this.font = 'Verdana,Geneva,sans-serif';
   }
 
   makeTileNumber(x: number, y: number, value: number, size: number) {
@@ -28,7 +28,6 @@ export default class TextFactory {
     text: string,
     textSize: number,
     center = false,
-    stroked = true,
     color = '#ffffff'
   ) {
     let x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
@@ -40,11 +39,6 @@ export default class TextFactory {
     textObj.fontSize = textSize * this.config.scaleFactor;
     textObj.addColor(color, 0);
 
-    if (stroked) {
-      textObj.stroke = '#000000';
-      textObj.strokeThickness = textSize / 4 * this.config.scaleFactor;
-    }
-
     if (center) {
       textObj.anchor.set(0.5);
     }
@@ -53,38 +47,15 @@ export default class TextFactory {
     return textObj;
   }
 
-  makeHorizontalCentered(posY: number, text: string, textSize: number) {
-    let y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
-    var style = { boundsAlignH: 'center' };
-    let textObj = this.game.add.text(0, y, text, style);
-
-    //	Font style
-    textObj.font = this.font;
-    textObj.fontSize = textSize * this.config.scaleFactor;
-
-    //	Stroke color and thickness
-    textObj.stroke = '#000000';
-    textObj.strokeThickness = textSize / 4 * this.config.scaleFactor;
-    textObj.addColor('#ffffff', 0);
-    textObj.setTextBounds(
-      this.config.safeZone.paddingX,
-      this.config.safeZone.paddingY,
-      this.config.safeZone.safeWidth,
-      this.config.safeZone.safeHeight
-    );
-
-    return textObj;
-  }
-
   makeYBounded(
     posX: number,
     text: string,
     textSize: number,
     align: string,
-    color = '#ffffff'
+    color = '#99AAB5'
   ) {
     let safeZone = this.config.safeZone;
-    let graphic = this.make(posX, 0, text, textSize, false, false, color);
+    let graphic = this.make(posX, 0, text, textSize, false, color);
     graphic.wordWrap = true;
     graphic.wordWrapWidth = safeZone.safeWidth;
     graphic.boundsAlignV = align;
@@ -103,11 +74,10 @@ export default class TextFactory {
     text: string,
     textSize: number,
     align: string,
-    color = '#ffffff',
-    stroked = false
+    color = '#99AAB5',
   ) {
     let safeZone = this.config.safeZone;
-    let graphic = this.make(0, posY, text, textSize, false, stroked, color);
+    let graphic = this.make(0, posY, text, textSize, false, color);
     graphic.wordWrap = true;
     graphic.wordWrapWidth = safeZone.safeWidth;
     graphic.boundsAlignH = align;
