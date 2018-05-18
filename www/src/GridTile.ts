@@ -1,28 +1,32 @@
 import { Config, Singleton } from './Config';
 import SpriteFactory from './Tools/SpriteFactory';
-export default class TileSprite {
+import GameboardConfig from './Object/GameboardConfig';
+
+export default class GridTile {
   x: number;
   y: number;
   value: number;
   sprite: Phaser.Sprite;
   sfxId: string;
 
-  game: Phaser.Game;
-  config: Config;
-  spriteFactory: SpriteFactory;
-
+  private game: Phaser.Game;
+  private config: Config;
+  private spriteFactory: SpriteFactory;
+  private gameboardConfig: GameboardConfig;
+  
   constructor(
     x: number,
     y: number,
     value: number,
-    game: Phaser.Game,
-    config: Config
+    gameboardConfig: GameboardConfig
   ) {
+    let singleton = Singleton.getInstance();
+    this.game = singleton.game;
+    this.config = singleton.config;
+    this.gameboardConfig = gameboardConfig;
     this.x = x;
     this.y = y;
     this.value = value;
-    this.game = game;
-    this.config = config;
     this.spriteFactory = new SpriteFactory();
     this.createSprite();
   }
@@ -38,7 +42,7 @@ export default class TileSprite {
   }
 
   getTileSprite(tile: number) {
-    let list = this.config.gridSettings.tiles;
+    let list = this.gameboardConfig.tiles;
 
     let index = this.getArrayPositionFromNumber(tile);
     if (index >= 0) {
@@ -52,7 +56,7 @@ export default class TileSprite {
   }
 
   getArrayPositionFromNumber(tile: number): number {
-    return tile === this.config.gridSettings.minimumValue
+    return tile === this.gameboardConfig.minimumValue
       ? 0
       : this.getArrayPositionFromNumber(tile / 2) + 1;
   }

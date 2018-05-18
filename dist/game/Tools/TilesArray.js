@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("../Config");
 var TilesArray = (function () {
-    function TilesArray() {
+    function TilesArray(gameboardConfig) {
         var singleton = Config_1.Singleton.getInstance();
         var config = singleton.config;
-        this.tiles = config.gridSettings.initialArray;
-        this.arraySize = config.gridSettings.arraySize;
+        this.tiles = gameboardConfig.initialArray;
+        this.arraySize = gameboardConfig.arraySize;
     }
     TilesArray.prototype.get = function (x, y) {
         return this.tiles[y * (this.arraySize + 1) + x];

@@ -1,13 +1,14 @@
 import { Config, Singleton } from '../Config';
+import GameboardConfig from './../Object/GameboardConfig';
 export default class TilesArray {
   private tiles: Array<number>;
   private arraySize: number;
 
-  constructor() {
+  constructor(gameboardConfig: GameboardConfig) {
     let singleton = Singleton.getInstance();
     let config = singleton.config;
-    this.tiles = config.gridSettings.initialArray;
-    this.arraySize = config.gridSettings.arraySize;
+    this.tiles = gameboardConfig.initialArray;
+    this.arraySize = gameboardConfig.arraySize;
   }
 
   get(x: number, y: number): number {

@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("./Config");
 var SpriteFactory_1 = require("./Tools/SpriteFactory");
-var TileSprite = (function () {
-    function TileSprite(x, y, value, gameboardConfig) {
+var GridTile = (function () {
+    function GridTile(x, y, value, gameboardConfig) {
         var singleton = Config_1.Singleton.getInstance();
         this.game = singleton.game;
         this.config = singleton.config;
@@ -14,7 +14,7 @@ var TileSprite = (function () {
         this.spriteFactory = new SpriteFactory_1.default();
         this.createSprite();
     }
-    TileSprite.prototype.createSprite = function () {
+    GridTile.prototype.createSprite = function () {
         var id = this.getTileSprite(this.value);
         var sprite = this.spriteFactory.makeTile(this.x, this.y, id);
         this.sfxId = id + '-sfx';
@@ -22,7 +22,7 @@ var TileSprite = (function () {
         sprite.body.collideWorldBounds = true;
         this.sprite = sprite;
     };
-    TileSprite.prototype.getTileSprite = function (tile) {
+    GridTile.prototype.getTileSprite = function (tile) {
         var list = this.gameboardConfig.tiles;
         var index = this.getArrayPositionFromNumber(tile);
         if (index >= 0) {
@@ -35,11 +35,11 @@ var TileSprite = (function () {
         }
         return null;
     };
-    TileSprite.prototype.getArrayPositionFromNumber = function (tile) {
+    GridTile.prototype.getArrayPositionFromNumber = function (tile) {
         return tile === this.gameboardConfig.minimumValue
             ? 0
             : this.getArrayPositionFromNumber(tile / 2) + 1;
     };
-    return TileSprite;
+    return GridTile;
 }());
-exports.default = TileSprite;
+exports.default = GridTile;

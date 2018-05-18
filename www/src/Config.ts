@@ -56,40 +56,4 @@ export class GridSettings {
   gridPaddingX: number;
   gridPaddingY: number;
   tileScale: number;
-  arraySize: number;
-  initialArray: Array<number>;
-  minimumValue: number;
-  tiles: Array<Tile>;
-  mainTile: string;
-}
-
-export class Tile {
-  id: string;
-  name: string;
-  fullName: string;
-  friendId: string;
-  sfxId: string;
-  summary: string;
-  playable: boolean;
-
-  powerId: string;
-  powerName: string;
-
-  constructor(
-    id: string,
-    name: string,
-    fullName: string,
-    friendId: string,
-    sfxId: string,
-    summary: string,
-    playable = true
-  ) {
-    this.id = id;
-    this.name = name;
-    this.fullName = fullName;
-    this.friendId = friendId;
-    this.sfxId = sfxId;
-    this.summary = summary;
-    this.playable = playable;
-  }
 }

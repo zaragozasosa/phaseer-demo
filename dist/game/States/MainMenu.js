@@ -28,8 +28,11 @@ var MainMenu = (function (_super) {
         this.textFactory.makeHorizontalCentered(900, 'Click to start', 50);
     };
     MainMenu.prototype.update = function () {
-        if (this.game.input.activePointer.justReleased(150)) {
-            this.game.state.start('Unranked');
+        if (this.game.input.activePointer.isDown) {
+            this.game.state.start('CharacterSelection');
+        }
+        if (this.cursor.checkKeys()) {
+            this.game.state.start('CharacterSelection');
         }
     };
     return MainMenu;

@@ -6,24 +6,25 @@ var TextFactory_1 = require("./Tools/TextFactory");
 var GraphicsFactory_1 = require("./Tools/GraphicsFactory");
 var TilesArray_1 = require("./Tools/TilesArray");
 var InputManager_1 = require("./Tools/InputManager");
-var TileSprite_1 = require("./TileSprite");
+var GridTile_1 = require("./GridTile");
 var Grid = (function () {
-    function Grid(gameboardCallback) {
+    function Grid(gameboardConfig, gameboardCallback) {
         var singleton = Config_1.Singleton.getInstance();
         this.game = singleton.game;
         this.config = singleton.config;
         this.textFactory = new TextFactory_1.default();
         this.graphicsFactory = new GraphicsFactory_1.default();
         this.spriteFactory = new SpriteFactory_1.default();
+        this.gameboardConfig = gameboardConfig;
         this.gameboardCallback = gameboardCallback;
         this.xSpeed = 0;
         this.ySpeed = 0;
         this.speed = 3000 * this.config.scaleFactor;
         this.animating = false;
-        this.arraySize = this.config.gridSettings.arraySize;
+        this.arraySize = gameboardConfig.arraySize;
         this.wallsGroup = this.makeWalls();
         this.lastMergedTile = 0;
-        this.tilesArray = new TilesArray_1.default();
+        this.tilesArray = new TilesArray_1.default(gameboardConfig);
         this.tiles = [];
         this.tilesGroup = this.game.add.group();
         this.framesGroup = this.makeTileFrames();
@@ -45,7 +46,7 @@ var Grid = (function () {
             this.tilesArray.set(ranX, ranY, 1);
         }
         var value = this.tilesArray.get(ranX, ranY);
-        var tile = new TileSprite_1.default(ranX, ranY, value, this.game, this.config);
+        var tile = new GridTile_1.default(ranX, ranY, value, this.gameboardConfig);
         this.tilesGroup.add(tile.sprite);
         this.game.world.bringToTop(this.framesGroup);
     };
@@ -95,17 +96,23 @@ var Grid = (function () {
     Grid.prototype.updateGameboard = function () {
         this.tilesGroup.removeAll(true);
         this.tiles = [];
-        for (var x = 0; x <= this.config.gridSettings.arraySize; x++) {
-            for (var y = 0; y <= this.config.gridSettings.arraySize; y++) {
+        for (var x = 0; x <= this.arraySize; x++) {
+            for (var y = 0; y <= this.arraySize; y++) {
                 var value = this.tilesArray.get(x, y);
                 if (value !== 0) {
-                    var tile = new TileSprite_1.default(x, y, value, this.game, this.config);
+                    var tile = new GridTile_1.default(x, y, value, this.gameboardConfig);
                     if (this.lastMergedTile === tile.value &&
-                        (tile.value !== this.config.gridSettings.minimumValue * 2 ||
+                        (tile.value !== this.gameboardConfig.minimumValue * 2 ||
                             this.game.rnd.integerInRange(0, 1) === 0) &&
-                        (tile.value !== this.config.gridSettings.minimumValue * 4 ||
+                        (tile.value !== this.gameboardConfig.minimumValue * 4 ||
+                            this.game.rnd.integerInRange(0, 1) === 0) &&
+                        (tile.value !== this.gameboardConfig.minimumValue * 8 ||
+                            this.game.rnd.integerInRange(0, 1) === 0) &&
+                        (tile.value !== this.gameboardConfig.minimumValue * 16 ||
+                            this.game.rnd.integerInRange(0, 2) !== 0) &&
+                        (tile.value !== this.gameboardConfig.minimumValue * 32 ||
                             this.game.rnd.integerInRange(0, 2) !== 0)) {
-                        this.game.sound.play(tile.sfxId, 2);
+                        this.game.sound.play(tile.sfxId, 1.5);
                     }
                     this.tiles.push(tile);
                     this.tilesGroup.add(tile.sprite);
@@ -217,8 +224,8 @@ var Grid = (function () {
         return group;
     };
     Grid.prototype.reorderTileList = function () {
-        var list = this.config.gridSettings.tiles;
-        while (list[0].id !== this.config.gridSettings.mainTile) {
+        var list = this.gameboardConfig.tiles;
+        while (list[0].id !== this.gameboardConfig.mainTile.id) {
             var last = list.pop();
             list.unshift(last);
         }
@@ -227,7 +234,7 @@ var Grid = (function () {
             secondArray.push(list[0]);
             secondArray.push(list[list.length - 1]);
             var thirdArray = list.splice(1, list.length - 2);
-            this.config.gridSettings.tiles = secondArray.concat(thirdArray);
+            this.gameboardConfig.tiles = secondArray.concat(thirdArray);
         }
     };
     return Grid;

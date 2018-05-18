@@ -19,12 +19,12 @@ export default class MainMenu extends Phaser.State {
   }
 
   update() {
-    if (this.game.input.activePointer.justReleased(150)) {
-      this.game.state.start('Unranked');
+    if (this.game.input.activePointer.isDown) {
+      this.game.state.start('CharacterSelection');
     }
 
-    // if(this.cursor.checkKeys()) {
-    //   this.game.state.start('Unranked');      
-    // }
+    if(this.cursor.checkKeys()) {
+      this.game.state.start('CharacterSelection');      
+    }
   }
 }

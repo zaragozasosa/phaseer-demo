@@ -4,16 +4,18 @@ import TextFactory from './Tools/TextFactory';
 import GraphicsFactory from './Tools/GraphicsFactory';
 import TilesArray from './Tools/TilesArray';
 import InputManager from './Tools/InputManager';
-import TileSprite from './TileSprite';
+import GridTile from './GridTile';
+import GameboardConfig from './Object/GameboardConfig';
 
 export default class Grid {
   private game: Phaser.Game;
   private config: Config;
+  private gameboardConfig: GameboardConfig;
   private textFactory: TextFactory;
   private graphicsFactory: GraphicsFactory;
   private spriteFactory: SpriteFactory;
 
-  tiles: Array<TileSprite>;
+  tiles: Array<GridTile>;
   tilesArray: TilesArray;
   tilesGroup: Phaser.Group;
   wallsGroup: Phaser.Group;
@@ -31,24 +33,24 @@ export default class Grid {
 
   gameboardCallback: any;
 
-  constructor(gameboardCallback: any) {
+  constructor(gameboardConfig: GameboardConfig, gameboardCallback: any) {
     let singleton = Singleton.getInstance();
     this.game = singleton.game;
     this.config = singleton.config;
     this.textFactory = new TextFactory();
     this.graphicsFactory = new GraphicsFactory();
     this.spriteFactory = new SpriteFactory();
-
+    this.gameboardConfig = gameboardConfig;
     this.gameboardCallback = gameboardCallback;
 
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.speed = 3000 * this.config.scaleFactor;
     this.animating = false;
-    this.arraySize = this.config.gridSettings.arraySize;
+    this.arraySize = gameboardConfig.arraySize;
     this.wallsGroup = this.makeWalls();
     this.lastMergedTile = 0;
-    this.tilesArray = new TilesArray();
+    this.tilesArray = new TilesArray(gameboardConfig);
     this.tiles = [];
     this.tilesGroup = this.game.add.group();
 
@@ -73,7 +75,7 @@ export default class Grid {
     }
     let value = this.tilesArray.get(ranX, ranY);
 
-    let tile = new TileSprite(ranX, ranY, value, this.game, this.config);
+    let tile = new GridTile(ranX, ranY, value, this.gameboardConfig);
     this.tilesGroup.add(tile.sprite);
     this.game.world.bringToTop(this.framesGroup);
   }
@@ -138,19 +140,25 @@ export default class Grid {
     this.tilesGroup.removeAll(true);
     this.tiles = [];
 
-    for (let x = 0; x <= this.config.gridSettings.arraySize; x++) {
-      for (let y = 0; y <= this.config.gridSettings.arraySize; y++) {
+    for (let x = 0; x <= this.arraySize; x++) {
+      for (let y = 0; y <= this.arraySize; y++) {
         let value = this.tilesArray.get(x, y);
         if (value !== 0) {
-          let tile = new TileSprite(x, y, value, this.game, this.config);
+          let tile = new GridTile(x, y, value, this.gameboardConfig);
           if (
             this.lastMergedTile === tile.value &&
-            (tile.value !== this.config.gridSettings.minimumValue * 2 ||
-              this.game.rnd.integerInRange(0, 1) === 0) && 
-              (tile.value !== this.config.gridSettings.minimumValue * 4 ||
-                this.game.rnd.integerInRange(0, 2) !== 0)
+            (tile.value !== this.gameboardConfig.minimumValue * 2 ||
+              this.game.rnd.integerInRange(0, 1) === 0) &&
+            (tile.value !== this.gameboardConfig.minimumValue * 4 ||
+              this.game.rnd.integerInRange(0, 1) === 0) &&
+            (tile.value !== this.gameboardConfig.minimumValue * 8 ||
+              this.game.rnd.integerInRange(0, 1) === 0) &&
+            (tile.value !== this.gameboardConfig.minimumValue * 16 ||
+              this.game.rnd.integerInRange(0, 2) !== 0) &&
+            (tile.value !== this.gameboardConfig.minimumValue * 32 ||
+              this.game.rnd.integerInRange(0, 2) !== 0)
           ) {
-            this.game.sound.play(tile.sfxId, 2);
+            this.game.sound.play(tile.sfxId, 1.5);
           }
           this.tiles.push(tile);
           this.tilesGroup.add(tile.sprite);
@@ -287,9 +295,9 @@ export default class Grid {
   }
 
   reorderTileList() {
-    let list = this.config.gridSettings.tiles;
+    let list = this.gameboardConfig.tiles;
 
-    while (list[0].id !== this.config.gridSettings.mainTile) {
+    while (list[0].id !== this.gameboardConfig.mainTile.id) {
       let last = list.pop();
       list.unshift(last);
     }
@@ -299,7 +307,7 @@ export default class Grid {
       secondArray.push(list[0]);
       secondArray.push(list[list.length - 1]);
       let thirdArray = list.splice(1, list.length - 2);
-      this.config.gridSettings.tiles = secondArray.concat(thirdArray);
+      this.gameboardConfig.tiles = secondArray.concat(thirdArray);
     }
   }
 }

@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": false,
     "noImplicitAny": false,
     "removeComments": true,
-    "noLib": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "typeRoots" : ["./www/typings"]
+    "typeRoots" : ["./www/typings"],
+    "lib": ["es5", "es2015", "dom"]
   },
   "exclude": ["node_modules"]
 }

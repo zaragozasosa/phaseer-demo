@@ -12,23 +12,36 @@ export default class SpriteFactory {
   makeTile(x: number, y: number, id: string) {
     let size = this.config.gridSettings.tileSize;
     let scale = this.config.gridSettings.tileScale;
-    return this.make(x * size, y * size, id, scale);
+    let padX = this.config.gridSettings.gridPaddingX;
+    let padY = this.config.gridSettings.gridPaddingY;
+    return this.createSprite(x * size, y * size, id, scale, padX, padY);
   }
 
-  make(posX: number, posY: number, id: string, spriteScale = 1) {
+  createSprite(
+    posX: number,
+    posY: number,
+    id: string,
+    scale = 1,
+    padX = 0,
+    padY = 0
+  ) {
     let x = posX * this.config.scaleFactor;
     let y = posY * this.config.scaleFactor;
 
     let config = this.config;
-    let xPad = config.safeZone.paddingX + this.config.gridSettings.gridPaddingX;
-    let yPad = config.safeZone.paddingY + this.config.gridSettings.gridPaddingY;
+    let xPad = config.safeZone.paddingX + padX;
+    let yPad = config.safeZone.paddingY + padY;
     let sprite = this.game.add.sprite(x + xPad, y + yPad, id);
-    sprite.scale.setTo(
-      config.scaleFactor * spriteScale,
-      config.scaleFactor * spriteScale
-    );
+    sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
 
     return sprite;
+  }
+
+  makeMenuTile(x: number, y: number, id: string, yPad: number, ratio: number) {
+    let size = this.config.gridSettings.tileSize * ratio;
+    let scale = this.config.gridSettings.tileScale * ratio;
+
+    return this.createSprite(x * size, y * size, id, scale, 0, yPad);
   }
 
   makeCentered(posY: number, id: string, spriteScale = 1) {
@@ -48,30 +61,60 @@ export default class SpriteFactory {
     return sprite;
   }
 
-  makeTileFrame(posX: number, posY: number) {
+  makeFrame(x: number, y: number, size: number, lineWidth: number, color: any) {
+    let scaledSize = this.config.scaleFactor * size;
     let graphics = this.game.add.graphics(0, 0);
-    let lineWidth = this.config.gridSettings.frameLineWidth;
-    let frameSize = this.config.gridSettings.tileSize - lineWidth / 2;
-    let color = this.config.gridSettings.lineColor;
-    let xPad =
-      this.config.safeZone.paddingX + this.config.gridSettings.gridPaddingX;
-    let yPad =
-      this.config.safeZone.paddingY + this.config.gridSettings.gridPaddingY;
-
-    let x =
-      posX * this.config.gridSettings.tileSize * this.config.scaleFactor + xPad;
-    let y =
-      posY * this.config.gridSettings.tileSize * this.config.scaleFactor + yPad;
-
     graphics.lineStyle(lineWidth, color, 1);
-    let rect = graphics.drawRect(
-      x,
-      y,
-      frameSize * this.config.scaleFactor,
-      frameSize * this.config.scaleFactor
-    );
+    let rect = graphics.drawRect(x, y, scaledSize, scaledSize);
     this.game.physics.enable(rect, Phaser.Physics.ARCADE);
 
     return rect;
+  }
+
+  makeTileFrame(
+    posX: number,
+    posY: number,
+    ratio = 1,
+    xPadding = null,
+    yPadding = null
+  ) {
+    let config = this.config.gridSettings;
+    let scale = this.config.scaleFactor;
+    let lineWidth = config.frameLineWidth;
+    let safeZone = this.config.safeZone;
+
+    let frameSize = config.tileSize * ratio - lineWidth / 2;
+    let color = config.lineColor;
+    let xPad = safeZone.paddingX + (xPadding ? xPadding : config.gridPaddingX);
+    let yPad = safeZone.paddingY + (yPadding ? yPadding : config.gridPaddingY);
+    let x = posX * config.tileSize * ratio * scale;
+    let y = posY * config.tileSize * ratio * scale;
+
+    return this.makeFrame(x + xPad, y + yPad, frameSize, lineWidth, color);
+  }
+
+  updateTileFrame(
+    frame: Phaser.Graphics,
+    posX: number,
+    posY: number,
+    ratio = 1,
+    xPadding = null,
+    yPadding = null
+  ) {
+    let config = this.config.gridSettings;
+    let scale = this.config.scaleFactor;
+    let lineWidth = config.frameLineWidth;
+    let safeZone = this.config.safeZone;
+
+    let frameSize = config.tileSize * ratio - lineWidth / 2;
+    let xPad = safeZone.paddingX + (xPadding ? xPadding : config.gridPaddingX);
+    let yPad = safeZone.paddingY + (yPadding ? yPadding : config.gridPaddingY);
+    let x = posX * config.tileSize * ratio * scale;
+    let y = posY * config.tileSize * ratio * scale;
+
+    frame.x = x;
+    frame.y = y;
+
+    return frame;
   }
 }

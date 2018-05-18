@@ -4,27 +4,30 @@ import TextFactory from './Tools/TextFactory';
 import GraphicsFactory from './Tools/GraphicsFactory';
 import TilesArray from './Tools/TilesArray';
 import Grid from './Grid';
+import GameboardConfig from './Object/GameboardConfig';
 
 export default class Gameboard {
   private game: Phaser.Game;
   private config: Config;
   private grid: Grid;
   private textFactory: TextFactory;
+  private gameboardConfig: GameboardConfig;
 
   debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
   points: number;
   movements: number;
 
-  constructor() {
+  constructor(gameboardConfig: GameboardConfig) {
     let singleton = Singleton.getInstance();
     this.game = singleton.game;
     this.config = singleton.config;
     this.textFactory = new TextFactory();
-
+    this.gameboardConfig = gameboardConfig;
     this.addBackground();
 
     this.grid = new Grid(
+      gameboardConfig,
       function() {
         this.updateScore();
       }.bind(this)
@@ -59,7 +62,7 @@ export default class Gameboard {
   }
 
   addHeader() {
-    this.header = this.textFactory.makeStroked(20, 80, '', 50);
+    this.header = this.textFactory.make(20, 80, '', 50);
     this.updateHeader();
   }
 
@@ -87,16 +90,16 @@ export default class Gameboard {
     this.debugArray = [];
 
     this.debugArray.push(
-      this.textFactory.makeStroked(posX, posY, '', 30, true)
+      this.textFactory.make(posX, posY, '', 30, true)
     );
     this.debugArray.push(
-      this.textFactory.makeStroked(posX + 150, posY, '', 30, true)
+      this.textFactory.make(posX + 150, posY, '', 30, true)
     );
     this.debugArray.push(
-      this.textFactory.makeStroked(posX + 300, posY, '', 30, true)
+      this.textFactory.make(posX + 300, posY, '', 30, true)
     );
     this.debugArray.push(
-      this.textFactory.makeStroked(posX + 450, posY, '', 30, true)
+      this.textFactory.make(posX + 450, posY, '', 30, true)
     );
 
     this.updateDebuggingMatrix();

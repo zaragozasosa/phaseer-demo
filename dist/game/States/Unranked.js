@@ -16,8 +16,8 @@ var Unranked = (function (_super) {
     function Unranked() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Unranked.prototype.create = function () {
-        this.gameboard = new Gameboard_1.default();
+    Unranked.prototype.init = function (gameboardConfig) {
+        this.gameboard = new Gameboard_1.default(gameboardConfig);
     };
     Unranked.prototype.update = function () {
         this.gameboard.update();

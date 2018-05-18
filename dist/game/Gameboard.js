@@ -4,13 +4,14 @@ var Config_1 = require("./Config");
 var TextFactory_1 = require("./Tools/TextFactory");
 var Grid_1 = require("./Grid");
 var Gameboard = (function () {
-    function Gameboard() {
+    function Gameboard(gameboardConfig) {
         var singleton = Config_1.Singleton.getInstance();
         this.game = singleton.game;
         this.config = singleton.config;
         this.textFactory = new TextFactory_1.default();
+        this.gameboardConfig = gameboardConfig;
         this.addBackground();
-        this.grid = new Grid_1.default(function () {
+        this.grid = new Grid_1.default(gameboardConfig, function () {
             this.updateScore();
         }.bind(this));
         this.movements = 0;
@@ -33,7 +34,7 @@ var Gameboard = (function () {
         graphics.endFill();
     };
     Gameboard.prototype.addHeader = function () {
-        this.header = this.textFactory.makeStroked(20, 80, '', 50);
+        this.header = this.textFactory.make(20, 80, '', 50);
         this.updateHeader();
     };
     Gameboard.prototype.addPowerButton = function () {
@@ -46,10 +47,10 @@ var Gameboard = (function () {
         var posX = 250;
         var posY = 1300;
         this.debugArray = [];
-        this.debugArray.push(this.textFactory.makeStroked(posX, posY, '', 30, true));
-        this.debugArray.push(this.textFactory.makeStroked(posX + 150, posY, '', 30, true));
-        this.debugArray.push(this.textFactory.makeStroked(posX + 300, posY, '', 30, true));
-        this.debugArray.push(this.textFactory.makeStroked(posX + 450, posY, '', 30, true));
+        this.debugArray.push(this.textFactory.make(posX, posY, '', 30, true));
+        this.debugArray.push(this.textFactory.make(posX + 150, posY, '', 30, true));
+        this.debugArray.push(this.textFactory.make(posX + 300, posY, '', 30, true));
+        this.debugArray.push(this.textFactory.make(posX + 450, posY, '', 30, true));
         this.updateDebuggingMatrix();
     };
     Gameboard.prototype.updateScore = function () {
