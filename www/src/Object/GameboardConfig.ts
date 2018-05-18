@@ -30,7 +30,7 @@ export default class GameboardConfig {
         'gunshot.mp3',
         '5DeMayo',
         'Cinco de Mayo',
-        'A simple boy who claims being the long descendant of a famous general. His dog Chili often gets lost when visiting the park.'
+        'A simple guy who claims to be the long-lost descendent of a deceased famous general. Enjoys lazing around his computer and overpriced beer. His dog Chili often gets lost when visiting the park.'
       )
     );
 
@@ -40,10 +40,10 @@ export default class GameboardConfig {
         'Chili',
         'Chili Bagel',
         'nacho',
-        'bark.wav',
+        'howl.mp3',
         '5DeMayo',
         'Cinco de Mayo!',
-        "Hey, you shouldn't be able to read this!",
+        "Hey, you shouldn't be able to read this!"
       )
     );
 
@@ -56,7 +56,7 @@ export default class GameboardConfig {
         'ahaha.wav',
         'blackMagic',
         'Black Magic',
-        'Mira is a fickle, cruel witch that enjoys throwing humans into murder games. Also a low-profile online writer, only publishes using pen names.'
+        "A fickle, cruel witch that enjoys throwing humans into murder games and seeing how they lose their sanity. She's also a low-profile online writer who only publishes using pen names."
       )
     );
 
@@ -66,10 +66,10 @@ export default class GameboardConfig {
         'Lord Fancy',
         'Sir Lord Fancypants',
         'lord-fancy',
-        'portal.mp3',
+        'chuckle.mp3',
         'blackMagic',
         'Black Magic',
-        'Fancy demon at day, even fancier at night. This creature of elegant nature was hired by Mira to capture humans and bake cookies.'
+        'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'
       )
     );
 
@@ -95,7 +95,7 @@ export default class GameboardConfig {
         'sorry.wav',
         'timeTravel',
         'Time Travel',
-        "Canadian pro-gamer online, shy as hell in real life. Afraid of social interaction, hides her gender online. Big fan of Kinjo's work."
+        "Canadian pro-gamer online, shy as hell waitress in real life. Very afraid of social interaction, she's forced to hide her gender on the internet. Number 1 fan of Kinjo's work."
       )
     );
 
@@ -108,7 +108,7 @@ export default class GameboardConfig {
         'radio.mp3',
         'detectiveWork',
         'Detective Work',
-        'Top trained FBI agent, impossible crimes and murders are his speciality. Fluently speaks 32 languages, expert cook, master of observation and deduction.'
+        'Top-trained FBI agent, impossible crimes and murders are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'
       )
     );
 
@@ -128,7 +128,7 @@ export default class GameboardConfig {
     list.push(
       new Tile(
         'bren',
-        'Bren',
+        'B.R.E.N.',
         'Brotherhating_ridiculously_efficient_nerd.py',
         'meushijyo',
         'wow.wav',
@@ -157,10 +157,10 @@ export default class GameboardConfig {
         'Roxx',
         'Roxx Ann',
         'choco',
-        'fire.mp3',
+        'page.mp3',
         'gachaAddiction',
         'Gacha Addiction',
-        "A reserved fairy who comes from the Land of Fiction, highly skilled in fire magic. Often visits our world looking for books or japanese media. Choco's close friend."
+        "A kind, reserved fairy who comes from the Land of Fiction, highly skilled in fire magic. Often visits our world looking for books or japanese media. Stays in touch with Choco using the interdimensional computer network."
       )
     );
 
@@ -170,10 +170,10 @@ export default class GameboardConfig {
         'Choco',
         'Choco Jax',
         'rox',
-        'pencil.mp3',
+        'gacha.wav',
         'gachaAddiction',
         'Gacha Addiction',
-        'Professional digital artist with a worrysome tendency to Gacha games. Close friend of Rox, they met each other years ago through the popular online community "Neon Virtual Pets: Z".'
+        'Professional digital artist with a worrysome gambling habit (please join my Patreon!). Close friend of Rox, they met each other years ago through the popular online community "Neon Virtual Pets: Z".'
       )
     );
 
@@ -186,7 +186,7 @@ export default class GameboardConfig {
         'meow.wav',
         'reportedForRP',
         'Reported for RP',
-        'Cosplay amateur, full of creativity. Capable of taking a bunch of trash and creating a totally functional budget costume. His cat often accompanies him to cons.'
+        "Heir to the Lionstar family, owner of a never-ending fortune. The prince, however, rejects his own lineage and indulges in low-cost cosplaying. He's often found in cons around the world, always accompanied by his cat, Caesar."
       )
     );
 
@@ -199,7 +199,7 @@ export default class GameboardConfig {
         'letsrock.wav',
         'reportedForRP',
         'Reported for RP',
-        "Highly advanced robotic entity, fugitive from the secret lab where it was assembled, this robot now spends his time in what it found most interesting, human's roleplaying."
+        'The latest in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology, obviously, roleplaying as a human...'
       )
     );
 
@@ -212,7 +212,7 @@ export default class GameboardConfig {
         'dice.mp3',
         'rollForInit',
         'Roll for Initiative!',
-        'Dungeon Master of legend, owner of a thousand stories. Has been trying to get her friend Jessy into roleplaying games for a while, without much success.'
+        'Dungeon Master of legend, crafter of a thousand stories, rumored to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
       )
     );
 
@@ -225,7 +225,7 @@ export default class GameboardConfig {
         'red.mp3',
         'rollForInit',
         'Roll for Initiative!',
-        "Witch Doctor, psychologist and compulsive liar. When she's not out in a distant galaxy, the psych enjoys spending time with Magil, although she's not very fond of the nerdy stuff."
+        "Witch Doctor, psychologist, and compulsive liar. When she's not roaming a distant galaxy, the academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
       )
     );
 

@@ -67,7 +67,7 @@ var CharacterSelection = (function (_super) {
             _loop_1();
         }
         displayArray.push(characters.find(function (x) { return x.id === 'nacho'; }));
-        displayArray.push(new Tile_1.default('random', 'Random', '', '', 'sound.wav', '', '???', 'Select a random character.'));
+        displayArray.push(new Tile_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing you fool!'));
         var _loop_2 = function (char) {
             var sprite = this_2.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
             sprite.inputEnabled = true;
@@ -104,10 +104,10 @@ var CharacterSelection = (function (_super) {
         this.ratio = ratio;
         this.displayArray = displayArray;
         this.setSelectedCharacter(displayArray[0]);
-        this.buttonFactory.make(650, 960, ['start-1', 'start-2', 'start-3'], function () {
+        this.buttonFactory.make(635, 930, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this));
-        this.selectedSprite = this.spriteFactory.createSprite(550, 530, this.selectedCharacter.id, 2.3);
+        this.selectedSprite = this.spriteFactory.createSprite(570, 530, this.selectedCharacter.id, 2.2);
     };
     CharacterSelection.prototype.gameStart = function () {
         if (this.selectedCharacter.id === 'random') {
@@ -125,19 +125,19 @@ var CharacterSelection = (function (_super) {
         }
         this.selectedFrame = this.spriteFactory.makeTileFrame(char.gridX, char.gridY, this.ratio, 0, this.yMenuPad);
         if (!this.selectedName) {
-            this.selectedName = this.textFactory.make(-490, -190, char.name, 50);
+            this.selectedName = this.textFactory.make(-633, -190, char.name, 50);
         }
         else {
             this.selectedName.setText(char.name);
         }
         if (!this.selectedFullName) {
-            this.selectedFullName = this.textFactory.make(-485, -120, char.fullName, 35);
+            this.selectedFullName = this.textFactory.make(-630, -120, char.fullName, 35);
         }
         else {
             this.selectedFullName.setText(char.fullName);
         }
         if (!this.selectedPower) {
-            this.selectedPower = this.textFactory.make(-485, -70, "Special ability: " + char.powerName, 35);
+            this.selectedPower = this.textFactory.make(-630, -70, "Special ability: " + char.powerName, 35);
         }
         else {
             this.selectedPower.setText("Special ability: " + char.powerName);

@@ -86,12 +86,12 @@ export default class CharacterSelection extends Phaser.State {
       new Tile(
         'random',
         'Random',
-        '',
+        'Select a random character',
         '',
         'sound.wav',
         '',
-        '???',
-        'Select a random character.'
+        '?????',
+        'Decision paralysis? Just click the button and start playing you fool!'
       )
     );
 
@@ -137,8 +137,8 @@ export default class CharacterSelection extends Phaser.State {
     this.setSelectedCharacter(displayArray[0]);
 
     this.buttonFactory.make(
-      650,
-      960,
+      635,
+      930,
       ['start-1', 'start-2', 'start-3'],
       function() {
         this.gameStart();
@@ -146,10 +146,10 @@ export default class CharacterSelection extends Phaser.State {
     );
 
     this.selectedSprite = this.spriteFactory.createSprite(
-      550,
+      570,
       530,
       this.selectedCharacter.id,
-      2.3
+      2.2
     );
   }
 
@@ -180,14 +180,14 @@ export default class CharacterSelection extends Phaser.State {
     );
 
     if (!this.selectedName) {
-      this.selectedName = this.textFactory.make(-490, -190, char.name, 50);
+      this.selectedName = this.textFactory.make(-633, -190, char.name, 50);
     } else {
       this.selectedName.setText(char.name);
     }
 
     if (!this.selectedFullName) {
       this.selectedFullName = this.textFactory.make(
-        -485,
+        -630,
         -120,
         char.fullName,
         35
@@ -198,7 +198,7 @@ export default class CharacterSelection extends Phaser.State {
 
     if (!this.selectedPower) {
       this.selectedPower = this.textFactory.make(
-        -485,
+        -630,
         -70,
         `Special ability: ${char.powerName}`,
         35
