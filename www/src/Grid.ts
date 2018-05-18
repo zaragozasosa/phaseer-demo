@@ -148,7 +148,7 @@ export default class Grid {
           if (
             this.lastMergedTile === tile.value &&
             (tile.value !== this.gameboardConfig.minimumValue * 2 ||
-              this.game.rnd.integerInRange(0, 1) === 0) &&
+              this.game.rnd.integerInRange(0, 2) === 0) &&
             (tile.value !== this.gameboardConfig.minimumValue * 4 ||
               this.game.rnd.integerInRange(0, 1) === 0) &&
             (tile.value !== this.gameboardConfig.minimumValue * 8 ||
