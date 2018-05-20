@@ -23,9 +23,9 @@ export default class Tile {
     powerId: string,
     powerName: string,
     summary: string,
+    playable = true,    
     gridX = 0,
     gridY = 0,
-    playable = true
   ) {
     this.id = id;
     this.name = name;

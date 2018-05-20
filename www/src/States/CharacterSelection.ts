@@ -66,22 +66,22 @@ export default class CharacterSelection extends Phaser.State {
     let displayArray: Array<Tile> = [];
     this.menuItems = [];
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
-    let playableCharacters = characters.filter(x => x.id !== 'nacho');
-    let playableGroups = this.gameboardConfig.groups.filter(
-      x => x !== '5DeMayo'
-    );
+    displayArray = characters.filter(x => x.playable);
+    // let playableGroups = this.gameboardConfig.groups.filter(
+    //   x => x !== '5DeMayo'
+    // );
 
-    while (displayArray.length < playableGroups.length * 2) {
-      let randomGroup =
-        playableGroups[this.game.rnd.between(0, playableGroups.length - 1)];
-      if (!displayArray.some(x => x.powerId === randomGroup)) {
-        displayArray = displayArray.concat(
-          characters.filter(x => x.powerId === randomGroup)
-        );
-      }
-    }
+    // while (displayArray.length < playableGroups.length * 2) {
+    //   let randomGroup =
+    //     playableGroups[this.game.rnd.between(0, playableGroups.length - 1)];
+    //   if (!displayArray.some(x => x.powerId === randomGroup)) {
+    //     displayArray = displayArray.concat(
+    //       characters.filter(x => x.powerId === randomGroup)
+    //     );
+    //   }
+    // }
 
-    displayArray.push(characters.find(x => x.id === 'nacho'));
+    // displayArray.push(characters.find(x => x.id === 'nacho'));
     displayArray.push(
       new Tile(
         'random',
@@ -91,7 +91,7 @@ export default class CharacterSelection extends Phaser.State {
         'sound.wav',
         '',
         '?????',
-        'Decision paralysis? Just click the button and start playing you fool!'
+        'Decision paralysis? Just click the button and start playing, you fool!'
       )
     );
 

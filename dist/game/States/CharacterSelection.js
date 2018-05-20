@@ -54,26 +54,14 @@ var CharacterSelection = (function (_super) {
         var displayArray = [];
         this.menuItems = [];
         characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
-        var playableCharacters = characters.filter(function (x) { return x.id !== 'nacho'; });
-        var playableGroups = this.gameboardConfig.groups.filter(function (x) { return x !== '5DeMayo'; });
-        var _loop_1 = function () {
-            var randomGroup = playableGroups[this_1.game.rnd.between(0, playableGroups.length - 1)];
-            if (!displayArray.some(function (x) { return x.powerId === randomGroup; })) {
-                displayArray = displayArray.concat(characters.filter(function (x) { return x.powerId === randomGroup; }));
-            }
-        };
-        var this_1 = this;
-        while (displayArray.length < playableGroups.length * 2) {
-            _loop_1();
-        }
-        displayArray.push(characters.find(function (x) { return x.id === 'nacho'; }));
-        displayArray.push(new Tile_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing you fool!'));
-        var _loop_2 = function (char) {
-            var sprite = this_2.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
+        displayArray = characters.filter(function (x) { return x.playable; });
+        displayArray.push(new Tile_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
+        var _loop_1 = function (char) {
+            var sprite = this_1.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
             sprite.inputEnabled = true;
             sprite.events.onInputDown.add(function () {
                 this.setSelectedCharacter(char);
-            }.bind(this_2));
+            }.bind(this_1));
             char.sprite = sprite;
             char.gridX = column;
             char.gridY = row;
@@ -95,10 +83,10 @@ var CharacterSelection = (function (_super) {
                 }
             }
         };
-        var this_2 = this;
+        var this_1 = this;
         for (var _i = 0, displayArray_1 = displayArray; _i < displayArray_1.length; _i++) {
             var char = displayArray_1[_i];
-            _loop_2(char);
+            _loop_1(char);
         }
         this.yMenuPad = yMenuPad;
         this.ratio = ratio;
