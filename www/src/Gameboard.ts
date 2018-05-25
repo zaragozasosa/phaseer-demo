@@ -2,9 +2,9 @@ import { Config, Singleton } from './Config';
 import SpriteFactory from './Tools/SpriteFactory';
 import TextFactory from './Tools/TextFactory';
 import GraphicsFactory from './Tools/GraphicsFactory';
-import TilesArray from './Tools/TilesArray';
+import LogicalGrid from './Tools/LogicalGrid';
 import Grid from './Grid';
-import GameboardConfig from './Object/GameboardConfig';
+import GameboardConfig from './Objects/GameboardConfig';
 
 export default class Gameboard {
   private game: Phaser.Game;
@@ -12,6 +12,7 @@ export default class Gameboard {
   private grid: Grid;
   private textFactory: TextFactory;
   private gameboardConfig: GameboardConfig;
+  private graphicsFactory: GraphicsFactory;
 
   debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
@@ -23,8 +24,10 @@ export default class Gameboard {
     this.game = singleton.game;
     this.config = singleton.config;
     this.textFactory = new TextFactory();
+    this.graphicsFactory = new GraphicsFactory();
     this.gameboardConfig = gameboardConfig;
-    this.addBackground();
+    this.graphicsFactory.addBackground();
+    this.debugArray = [];
 
     this.grid = new Grid(
       gameboardConfig,
@@ -34,7 +37,7 @@ export default class Gameboard {
     );
 
     this.movements = 0;
-    this.points = this.grid.tilesArray.calculateSum();
+    this.points = this.grid.calculatePoints();
     this.addHeader();
     this.addDebuggingMatrix();
   }
@@ -43,30 +46,12 @@ export default class Gameboard {
     this.grid.update();
   }
 
-  addBackground() {
-    let game = this.game;
-    let config = this.config;
-    let xPad = config.safeZone.paddingX;
-    let yPad = config.safeZone.paddingY;
-    var graphics = this.game.add.graphics(0, 0);
-
-    graphics.lineStyle(0);
-    graphics.beginFill(0x2f3136, 1);
-    graphics.drawRect(
-      xPad,
-      yPad,
-      config.safeZone.safeWidth,
-      config.safeZone.safeHeight
-    );
-    graphics.endFill();
-  }
-
-  addHeader() {
+  private addHeader() {
     this.header = this.textFactory.make(20, 80, '', 50);
     this.updateHeader();
   }
 
-  addPowerButton() {
+  private addPowerButton() {
     let posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
     let posY = this.config.safeZone.paddingY + 1200 * this.config.scaleFactor;
 
@@ -83,52 +68,44 @@ export default class Gameboard {
     button.scale.setTo(this.config.scaleFactor, this.config.scaleFactor);
   }
 
-  addDebuggingMatrix() {
+  private addDebuggingMatrix() {
     let posX = 250;
     let posY = 1300;
 
     this.debugArray = [];
 
     this.debugArray.push(
-      this.textFactory.make(posX, posY, '', 30, true)
+      this.textFactory.makeCenteredAnchor(posX, posY, '', 30)
     );
     this.debugArray.push(
-      this.textFactory.make(posX + 150, posY, '', 30, true)
+      this.textFactory.makeCenteredAnchor(posX + 150, posY, '', 30)
     );
     this.debugArray.push(
-      this.textFactory.make(posX + 300, posY, '', 30, true)
+      this.textFactory.makeCenteredAnchor(posX + 300, posY, '', 30)
     );
     this.debugArray.push(
-      this.textFactory.make(posX + 450, posY, '', 30, true)
+      this.textFactory.makeCenteredAnchor(posX + 450, posY, '', 30)
     );
 
     this.updateDebuggingMatrix();
   }
 
-  updateScore() {
+  private updateScore() {
     this.movements++;
-    this.points = this.grid.tilesArray.calculateSum();
+    this.points = this.grid.calculatePoints();
     this.updateHeader();
     this.updateDebuggingMatrix();
   }
 
-  updateDebuggingMatrix() {
+  private updateDebuggingMatrix() {
     this.debugArray.forEach(
       function(text: any, index: number) {
-        text.setText(
-          `${this.grid.tilesArray.get(index, 0)}\n${this.grid.tilesArray.get(
-            index,
-            1
-          )}\n${this.grid.tilesArray.get(index, 2)}\n${this.grid.tilesArray.get(
-            index,
-            3
-          )}`
-        );
+        text.setText(this.grid.getColumnForDebug(index));
       }.bind(this)
     );
   }
 
-  updateHeader() {
+  private updateHeader() {
     this.header.setText(
       `Score: ${this.points}     Movements: ${this.movements}`
     );

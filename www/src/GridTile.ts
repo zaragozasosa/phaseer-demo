@@ -1,63 +1,65 @@
 import { Config, Singleton } from './Config';
+import Tile from './Objects/Tile';
 import SpriteFactory from './Tools/SpriteFactory';
-import GameboardConfig from './Object/GameboardConfig';
+import GameboardConfig from './Objects/GameboardConfig';
 
 export default class GridTile {
-  x: number;
-  y: number;
+  model: Tile;
+  willBeDestroyed: boolean;
+  willBeMerged: boolean;
+  posX: number;
+  posY: number;
   value: number;
   sprite: Phaser.Sprite;
-  sfxId: string;
 
   private game: Phaser.Game;
   private config: Config;
   private spriteFactory: SpriteFactory;
   private gameboardConfig: GameboardConfig;
-  
+
   constructor(
     x: number,
     y: number,
-    value: number,
-    gameboardConfig: GameboardConfig
+    gameboardConfig: GameboardConfig,
+    position = 0,
+    value = 0
   ) {
     let singleton = Singleton.getInstance();
     this.game = singleton.game;
     this.config = singleton.config;
     this.gameboardConfig = gameboardConfig;
-    this.x = x;
-    this.y = y;
-    this.value = value;
+    this.willBeDestroyed = false;
+    this.willBeMerged = false;
+
+    if (value === 0) {
+      this.model = gameboardConfig.tiles[position];
+    } else {
+      this.model = gameboardConfig.tiles.find(x => x.staticValue === value);
+    }
+    this.value = this.model.staticValue;
+
+    this.posX = x;
+    this.posY = y;
     this.spriteFactory = new SpriteFactory();
-    this.createSprite();
+    this.sprite = this.createSprite();
   }
 
-  createSprite() {
-    let id = this.getTileSprite(this.value);
-    let sprite = this.spriteFactory.makeTile(this.x, this.y, id);
-    this.sfxId = id + '-sfx';
+  private createSprite() {
+    let tile = this.model;
+    let sprite = this.spriteFactory.makeTile(this.posX, this.posY, tile.id);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
     sprite.body.collideWorldBounds = true;
 
+    return sprite;
+  }
+
+  updateSprite() {
+    let model = this.model;
+    let sprite = this.spriteFactory.updateTile(
+      this.posX,
+      this.posY,
+      this.sprite
+    );
     this.sprite = sprite;
-  }
-
-  getTileSprite(tile: number) {
-    let list = this.gameboardConfig.tiles;
-
-    let index = this.getArrayPositionFromNumber(tile);
-    if (index >= 0) {
-      if(list[index]) {
-        return list[index].id;        
-      } else {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  getArrayPositionFromNumber(tile: number): number {
-    return tile === this.gameboardConfig.minimumValue
-      ? 0
-      : this.getArrayPositionFromNumber(tile / 2) + 1;
   }
 }

@@ -56,25 +56,38 @@ var Game = (function (_super) {
             scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
         }
         safeZone = new Config_1.SafeZone(safeWidth, safeHeight, paddingX, paddingY);
-        _this.setupConfig(scaleFactor, safeZone);
+        var config = new Config_1.Config();
+        _this.colorConfig(config);
+        _this.setupConfig(config, scaleFactor, safeZone);
+        _this.forceSingleUpdate = true;
+        Config_1.Singleton.getInstance().config = config;
+        Config_1.Singleton.getInstance().game = _this;
         _this.bootGame();
         return _this;
     }
-    Game.prototype.setupConfig = function (scaleFactor, safeZone) {
+    Game.prototype.setupConfig = function (config, scaleFactor, safeZone) {
         var gridSettings;
-        var config = Config_1.Singleton.getInstance().config;
         gridSettings = new Config_1.GridSettings();
-        gridSettings.tileSize = 240;
-        gridSettings.frameLineWidth = 4;
-        gridSettings.lineColor = 0x99AAB5;
-        gridSettings.gridPaddingX = 0 * scaleFactor;
+        gridSettings.tileSize = 230;
+        gridSettings.frameLineWidth = 30;
+        gridSettings.lineColor = config.colorSettings.primary;
+        gridSettings.activeLineColor = config.colorSettings.selected;
+        gridSettings.gridPaddingX = 20 * scaleFactor;
         gridSettings.gridPaddingY = 200 * scaleFactor;
-        gridSettings.tileScale = 240 / 180;
+        gridSettings.tileScale = 230 / 180;
+        gridSettings.font = 'Verdana,Geneva,sans-serif';
         config.scaleFactor = scaleFactor;
         config.safeZone = safeZone;
         config.gridSettings = gridSettings;
-        Config_1.Singleton.getInstance().config = config;
-        Config_1.Singleton.getInstance().game = this;
+    };
+    Game.prototype.colorConfig = function (config) {
+        var color = new Config_1.ColorSettings();
+        color.background = '#2f3136';
+        color.primary = '#99AAB5';
+        color.selected = '#000000';
+        color.text = '#FFFFFF';
+        color.altText = '#99AAB5';
+        config.colorSettings = color;
     };
     Game.prototype.bootGame = function () {
         this.state.add('Boot', Boot_1.default, false);

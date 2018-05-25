@@ -1,11 +1,20 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("../Config");
-var GraphicsFactory = (function () {
+var Factory_1 = require("./Factory");
+var GraphicsFactory = (function (_super) {
+    __extends(GraphicsFactory, _super);
     function GraphicsFactory() {
-        var singleton = Config_1.Singleton.getInstance();
-        this.game = singleton.game;
-        this.config = singleton.config;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     GraphicsFactory.prototype.makeWall = function (x, y, long, tall) {
         var game = this.game;
@@ -24,16 +33,18 @@ var GraphicsFactory = (function () {
         return wall;
     };
     GraphicsFactory.prototype.drawGridRect = function () {
-        var config = this.config;
-        var xPad = config.safeZone.paddingX + config.gridSettings.gridPaddingX;
-        var yPad = config.safeZone.paddingY + config.gridSettings.gridPaddingY;
+    };
+    GraphicsFactory.prototype.addBackground = function () {
+        var safeZone = this.config.safeZone;
+        var colorSettings = this.config.colorSettings;
+        var xPad = safeZone.paddingX;
+        var yPad = safeZone.paddingY;
         var graphics = this.game.add.graphics(0, 0);
-        var wallLength = config.gridSettings.tileSize * 4 * config.scaleFactor;
         graphics.lineStyle(0);
-        graphics.beginFill(0x23272A, 1);
-        graphics.drawRect(xPad, yPad, wallLength, wallLength);
+        graphics.beginFill(Phaser.Color.hexToRGB(colorSettings.background), 1);
+        graphics.drawRect(xPad, yPad, safeZone.safeWidth, safeZone.safeHeight);
         graphics.endFill();
     };
     return GraphicsFactory;
-}());
+}(Factory_1.default));
 exports.default = GraphicsFactory;

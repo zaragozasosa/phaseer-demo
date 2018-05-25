@@ -1,16 +1,6 @@
 import { Singleton, Config } from '../Config';
-export default class TextFactory {
-  private game: Phaser.Game;
-  private config: Config;
-  private font;
-
-  constructor() {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
-    this.font = 'Verdana,Geneva,sans-serif';
-  }
-
+import Factory from './Factory';
+export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
     let xPos =
       x * this.config.gridSettings.tileSize +
@@ -27,23 +17,70 @@ export default class TextFactory {
     posY: number,
     text: string,
     textSize: number,
-    center = false,
-    color = '#ffffff'
+    altColor = false
   ) {
+    var colorConfig = this.config.colorSettings;
     let x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
     let y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
-
+    let color = altColor ? colorConfig.altText : colorConfig.text;
     let textObj = this.game.add.text(x, y, text);
 
-    textObj.font = this.font;
+    textObj.font = this.config.gridSettings.font;
     textObj.fontSize = textSize * this.config.scaleFactor;
     textObj.addColor(color, 0);
 
-    if (center) {
-      textObj.anchor.set(0.5);
-    }
-
     this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
+    return textObj;
+  }
+
+  makeXBounded(
+    posY: number,
+    text: string,
+    textSize: number,
+    align: string,
+    altColor = false
+  ) {
+    let safeZone = this.config.safeZone;
+    let boundPadding = 15 * this.config.scaleFactor;
+    let textObj = this.make(0, posY, text, textSize, altColor);
+    textObj.wordWrap = true;
+    textObj.wordWrapWidth = safeZone.safeWidth;
+    textObj.boundsAlignH = align;
+    textObj.setTextBounds(
+      boundPadding,
+      boundPadding,
+      safeZone.safeWidth - boundPadding,
+      safeZone.safeHeight - boundPadding
+    );
+
+    return textObj;
+  }
+
+  makeXBoundedOptions(
+    posY: number,
+    text: string,
+    textSize: number,
+    align: string,
+    wordWrapWidth: number,
+    padding: number,
+    lineHeight: number,
+    altColor = false
+  ) {
+    let safeZone = this.config.safeZone;
+    let textObj = this.make(0, posY, text, textSize, altColor);
+    let pad = padding * this.config.scaleFactor;
+    textObj.wordWrap = true;
+    textObj.wordWrapWidth = wordWrapWidth * this.config.scaleFactor;
+
+    textObj.boundsAlignH = align;
+    textObj.lineSpacing = lineHeight;
+    textObj.setTextBounds(
+      pad,
+      pad,
+      safeZone.safeWidth - pad,
+      safeZone.safeHeight - pad
+    );
+
     return textObj;
   }
 
@@ -52,42 +89,38 @@ export default class TextFactory {
     text: string,
     textSize: number,
     align: string,
-    color = '#99AAB5'
+    altColor = false,
+    wordWrapWidth = 0,
+    padding = 0
   ) {
+    let boundPadding = padding ? padding : 15;
     let safeZone = this.config.safeZone;
-    let graphic = this.make(posX, 0, text, textSize, false, color);
+    let graphic = this.make(posX, 0, text, textSize, altColor);
     graphic.wordWrap = true;
-    graphic.wordWrapWidth = safeZone.safeWidth;
+    graphic.wordWrapWidth = wordWrapWidth
+      ? wordWrapWidth * this.config.scaleFactor
+      : safeZone.safeWidth;
     graphic.boundsAlignV = align;
     graphic.setTextBounds(
-      10,
-      10,
-      safeZone.safeWidth - 10,
-      safeZone.safeHeight - 10
+      boundPadding,
+      boundPadding,
+      safeZone.safeWidth - boundPadding,
+      safeZone.safeHeight - boundPadding
     );
 
     return graphic;
   }
 
-  makeXBounded(
+  makeCenteredAnchor(
+    posX: number,
     posY: number,
     text: string,
     textSize: number,
-    align: string,
-    color = '#99AAB5',
+    altColor = false
   ) {
-    let safeZone = this.config.safeZone;
-    let graphic = this.make(0, posY, text, textSize, false, color);
-    graphic.wordWrap = true;
-    graphic.wordWrapWidth = safeZone.safeWidth;
-    graphic.boundsAlignH = align;
-    graphic.setTextBounds(
-      10,
-      10,
-      safeZone.safeWidth - 10,
-      safeZone.safeHeight - 10
-    );
+    let textObj = this.make(posX, posY, text, textSize, altColor);
+    textObj.anchor.set(0.5);
 
-    return graphic;
+    return textObj;
   }
 }

@@ -10,9 +10,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var GameboardConfig_1 = require("./../Object/GameboardConfig");
+var GameboardConfig_1 = require("./../Objects/GameboardConfig");
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
-var Tile_1 = require("./../Object/Tile");
+var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
+var InputManager_1 = require("./../Tools/InputManager");
+var Tile_1 = require("./../Objects/Tile");
 var TextFactory_1 = require("./../Tools/TextFactory");
 var Config_1 = require("./../Config");
 var ButtonFactory_1 = require("./../Tools/ButtonFactory");
@@ -28,7 +30,9 @@ var CharacterSelection = (function (_super) {
         this.gameboardConfig = new GameboardConfig_1.default();
         this.spriteFactory = new SpriteFactory_1.default();
         this.textFactory = new TextFactory_1.default();
+        this.graphicsFactory = new GraphicsFactory_1.default();
         this.buttonFactory = new ButtonFactory_1.default();
+        this.inputManager = new InputManager_1.default();
         for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
             var path = "assets/images/tiles/" + sprite.id + ".png";
@@ -55,16 +59,16 @@ var CharacterSelection = (function (_super) {
         this.menuItems = [];
         characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
         displayArray = characters.filter(function (x) { return x.playable; });
+        this.graphicsFactory.addBackground();
         displayArray.push(new Tile_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
             var sprite = this_1.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
+            var frame = this_1.spriteFactory.makeMenuTile(column, row, 'frame', yMenuPad, ratio);
             sprite.inputEnabled = true;
             sprite.events.onInputDown.add(function () {
                 this.setSelectedCharacter(char);
             }.bind(this_1));
-            char.sprite = sprite;
-            char.gridX = column;
-            char.gridY = row;
+            char.frame = frame;
             column++;
             if (column === maxColumns) {
                 row++;
@@ -91,53 +95,60 @@ var CharacterSelection = (function (_super) {
         this.yMenuPad = yMenuPad;
         this.ratio = ratio;
         this.displayArray = displayArray;
-        this.setSelectedCharacter(displayArray[0]);
+        var rnd = this.game.rnd.between(0, displayArray.length - 2);
+        this.setSelectedCharacter(displayArray[rnd]);
         this.buttonFactory.make(635, 935, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this));
-        this.selectedSprite = this.spriteFactory.createSprite(570, 530, this.selectedCharacter.id, 2.1);
+        this.selectedSprite = this.spriteFactory.createSprite(590, 550, this.selectedCharacter.id, 2);
     };
     CharacterSelection.prototype.gameStart = function () {
         if (this.selectedCharacter.id === 'random') {
             this.selectedCharacter = this.displayArray[this.game.rnd.between(0, this.displayArray.length - 1)];
         }
         this.gameboardConfig.mainTile = this.selectedCharacter;
-        this.game.sound.play(this.selectedCharacter.id + "-sfx", 1.5);
+        this.game.sound.play(this.selectedCharacter.id + "-sfx", 1);
         this.state.start('Unranked', true, false, this.gameboardConfig);
     };
     CharacterSelection.prototype.setSelectedCharacter = function (char) {
-        this.game.sound.play('beep', 2);
+        this.game.sound.play('beep', 1.5);
         this.selectedCharacter = char;
         if (this.selectedSprite) {
             this.selectedSprite.loadTexture(char.id);
         }
-        this.selectedFrame = this.spriteFactory.makeTileFrame(char.gridX, char.gridY, this.ratio, 0, this.yMenuPad);
+        if (this.selectedFrame) {
+            this.selectedFrame.tint = Phaser.Color.WHITE;
+        }
+        char.frame.tint = Phaser.Color.BLACK;
+        this.selectedFrame = char.frame;
         if (!this.selectedName) {
-            this.selectedName = this.textFactory.make(-633, -190, char.name, 50, false, '#ffffff');
+            this.selectedName = this.textFactory.make(18, 700, char.name, 50);
         }
         else {
             this.selectedName.setText(char.name);
         }
         if (!this.selectedFullName) {
-            this.selectedFullName = this.textFactory.make(-630, -120, char.fullName, 35, false, '#ffffff');
+            this.selectedFullName = this.textFactory.makeXBoundedOptions(740, char.fullName, 35, 'left', 600, 20, -10);
         }
         else {
             this.selectedFullName.setText(char.fullName);
         }
         if (!this.selectedPower) {
-            this.selectedPower = this.textFactory.make(-630, -70, "Special ability: " + char.powerName, 35, false, '#ffffff');
+            this.selectedPower = this.textFactory.make(20, 875, "Special Power: " + char.powerName, 30);
         }
         else {
-            this.selectedPower.setText("Special ability: " + char.powerName);
+            this.selectedPower.setText("Special Power: " + char.powerName);
         }
         if (!this.selectedSummary) {
-            this.selectedSummary = this.textFactory.makeYBounded(0, char.summary, 35, 'bottom');
-            this.selectedSummary.addChild(this.selectedPower);
-            this.selectedSummary.addChild(this.selectedFullName);
-            this.selectedSummary.addChild(this.selectedName);
+            this.selectedSummary = this.textFactory.makeXBounded(1040, char.summary, 30, 'left', true);
         }
         else {
             this.selectedSummary.setText(char.summary);
+        }
+    };
+    CharacterSelection.prototype.update = function () {
+        if (this.inputManager.checkKeys()) {
+            this.gameStart();
         }
     };
     return CharacterSelection;

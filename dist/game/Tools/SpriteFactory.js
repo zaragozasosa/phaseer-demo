@@ -1,11 +1,20 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("../Config");
-var SpriteFactory = (function () {
+var Factory_1 = require("./Factory");
+var SpriteFactory = (function (_super) {
+    __extends(SpriteFactory, _super);
     function SpriteFactory() {
-        var singleton = Config_1.Singleton.getInstance();
-        this.game = singleton.game;
-        this.config = singleton.config;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     SpriteFactory.prototype.makeTile = function (x, y, id) {
         var size = this.config.gridSettings.tileSize;
@@ -13,6 +22,25 @@ var SpriteFactory = (function () {
         var padX = this.config.gridSettings.gridPaddingX;
         var padY = this.config.gridSettings.gridPaddingY;
         return this.createSprite(x * size, y * size, id, scale, padX, padY);
+    };
+    SpriteFactory.prototype.makeMenuTile = function (x, y, id, padY, ratio) {
+        var size = this.config.gridSettings.tileSize * ratio;
+        var scale = this.config.gridSettings.tileScale * ratio;
+        var padX = this.config.gridSettings.gridPaddingX;
+        return this.createSprite(x * size, y * size, id, scale, padX, padY);
+    };
+    SpriteFactory.prototype.updateTile = function (x, y, sprite) {
+        var size = this.config.gridSettings.tileSize;
+        var scale = this.config.gridSettings.tileScale;
+        var xPad = this.config.gridSettings.gridPaddingX;
+        var yPad = this.config.gridSettings.gridPaddingY;
+        var posX = x * size * this.config.scaleFactor;
+        var posY = y * size * this.config.scaleFactor;
+        var padX = this.config.safeZone.paddingX + xPad;
+        var padY = this.config.safeZone.paddingY + yPad;
+        sprite.position.x = posX + padX;
+        sprite.position.y = posY + padY;
+        return sprite;
     };
     SpriteFactory.prototype.createSprite = function (posX, posY, id, scale, padX, padY) {
         if (scale === void 0) { scale = 1; }
@@ -27,11 +55,6 @@ var SpriteFactory = (function () {
         sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
         return sprite;
     };
-    SpriteFactory.prototype.makeMenuTile = function (x, y, id, yPad, ratio) {
-        var size = this.config.gridSettings.tileSize * ratio;
-        var scale = this.config.gridSettings.tileScale * ratio;
-        return this.createSprite(x * size, y * size, id, scale, 0, yPad);
-    };
     SpriteFactory.prototype.makeCentered = function (posY, id, spriteScale) {
         if (spriteScale === void 0) { spriteScale = 1; }
         var y = posY * this.config.scaleFactor;
@@ -44,47 +67,6 @@ var SpriteFactory = (function () {
         sprite.x = xPad + x;
         return sprite;
     };
-    SpriteFactory.prototype.makeFrame = function (x, y, size, lineWidth, color) {
-        var scaledSize = this.config.scaleFactor * size;
-        var graphics = this.game.add.graphics(0, 0);
-        graphics.lineStyle(lineWidth, color, 1);
-        var rect = graphics.drawRect(x, y, scaledSize, scaledSize);
-        this.game.physics.enable(rect, Phaser.Physics.ARCADE);
-        return rect;
-    };
-    SpriteFactory.prototype.makeTileFrame = function (posX, posY, ratio, xPadding, yPadding) {
-        if (ratio === void 0) { ratio = 1; }
-        if (xPadding === void 0) { xPadding = null; }
-        if (yPadding === void 0) { yPadding = null; }
-        var config = this.config.gridSettings;
-        var scale = this.config.scaleFactor;
-        var lineWidth = config.frameLineWidth;
-        var safeZone = this.config.safeZone;
-        var frameSize = config.tileSize * ratio - lineWidth / 2;
-        var color = config.lineColor;
-        var xPad = safeZone.paddingX + (xPadding ? xPadding : config.gridPaddingX);
-        var yPad = safeZone.paddingY + (yPadding ? yPadding : config.gridPaddingY);
-        var x = posX * config.tileSize * ratio * scale;
-        var y = posY * config.tileSize * ratio * scale;
-        return this.makeFrame(x + xPad, y + yPad, frameSize, lineWidth, color);
-    };
-    SpriteFactory.prototype.updateTileFrame = function (frame, posX, posY, ratio, xPadding, yPadding) {
-        if (ratio === void 0) { ratio = 1; }
-        if (xPadding === void 0) { xPadding = null; }
-        if (yPadding === void 0) { yPadding = null; }
-        var config = this.config.gridSettings;
-        var scale = this.config.scaleFactor;
-        var lineWidth = config.frameLineWidth;
-        var safeZone = this.config.safeZone;
-        var frameSize = config.tileSize * ratio - lineWidth / 2;
-        var xPad = safeZone.paddingX + (xPadding ? xPadding : config.gridPaddingX);
-        var yPad = safeZone.paddingY + (yPadding ? yPadding : config.gridPaddingY);
-        var x = posX * config.tileSize * ratio * scale;
-        var y = posY * config.tileSize * ratio * scale;
-        frame.x = x;
-        frame.y = y;
-        return frame;
-    };
     return SpriteFactory;
-}());
+}(Factory_1.default));
 exports.default = SpriteFactory;

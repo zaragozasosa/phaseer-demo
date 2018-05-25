@@ -1,6 +1,5 @@
 /// <reference path="../../node_modules/phaser-ce/typescript/phaser.comments.d.ts"/>
-
-import { Config, SafeZone, GridSettings, Singleton } from './Config';
+import { Config, SafeZone, GridSettings, Singleton, ColorSettings } from './Config';
 import Boot from './States/Boot';
 import Preloader from './States/Preloader';
 import MainMenu from './States/MainMenu';
@@ -59,29 +58,43 @@ export default class Game extends Phaser.Game {
 
     safeZone = new SafeZone(safeWidth, safeHeight, paddingX, paddingY);
 
-    this.setupConfig(scaleFactor, safeZone);
+    let config = new Config();
+    this.colorConfig(config);
+    this.setupConfig(config, scaleFactor, safeZone);
+    this.forceSingleUpdate = true;
+    Singleton.getInstance().config = config;
+    Singleton.getInstance().game = this;
     this.bootGame();
   }
 
-  setupConfig(scaleFactor: number, safeZone: SafeZone) {
+  setupConfig(config: Config, scaleFactor: number, safeZone: SafeZone) {
     let gridSettings: GridSettings;
-    let config = Singleton.getInstance().config;
-
+    
     gridSettings = new GridSettings();
-    gridSettings.tileSize = 240;
-    gridSettings.frameLineWidth = 4;
-    gridSettings.lineColor = 0x99AAB5;
-    gridSettings.gridPaddingX = 0 * scaleFactor;
+    gridSettings.tileSize = 230;
+    gridSettings.frameLineWidth = 30;
+    gridSettings.lineColor = config.colorSettings.primary;
+    gridSettings.activeLineColor = config.colorSettings.selected;
+    gridSettings.gridPaddingX = 20 * scaleFactor;
     gridSettings.gridPaddingY = 200 * scaleFactor;
-    gridSettings.tileScale = 240 / 180;
-
+    gridSettings.tileScale = 230 / 180;
+    gridSettings.font = 'Verdana,Geneva,sans-serif';
 
     config.scaleFactor = scaleFactor;
     config.safeZone = safeZone;
     config.gridSettings = gridSettings;
 
-    Singleton.getInstance().config = config;
-    Singleton.getInstance().game = this;
+  }
+
+  colorConfig(config: Config) {
+    let color = new  ColorSettings();
+    color.background = '#2f3136';
+    color.primary = '#99AAB5';
+    color.selected = '#000000';
+    color.text = '#FFFFFF';
+    color.altText = '#99AAB5';
+
+    config.colorSettings = color;
   }
 
   bootGame() {

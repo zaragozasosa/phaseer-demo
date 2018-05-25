@@ -29,6 +29,15 @@ export class Config {
   scaleFactor: number;
   safeZone: SafeZone;
   gridSettings: GridSettings;
+  colorSettings: ColorSettings;
+}
+
+export class ColorSettings {
+  background: string;
+  primary: string;
+  selected: string;  
+  text: string;
+  altText: string;
 }
 
 export class SafeZone {
@@ -53,7 +62,9 @@ export class GridSettings {
   tileSize: number;
   frameLineWidth: number;
   lineColor: any;
+  activeLineColor: any;
   gridPaddingX: number;
   gridPaddingY: number;
   tileScale: number;
+  font: string;
 }

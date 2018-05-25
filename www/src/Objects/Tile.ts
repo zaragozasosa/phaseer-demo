@@ -6,13 +6,11 @@ export default class Tile {
   sfxId: string;
   summary: string;
   playable: boolean;
-
   powerId: string;
   powerName: string;
 
-  gridX: number;
-  gridY: number;
-  sprite: Phaser.Sprite;
+  staticValue: number;
+  frame: Phaser.Sprite;
   
   constructor(
     id: string,
@@ -35,8 +33,6 @@ export default class Tile {
     this.powerId = powerId;
     this.powerName = powerName;
     this.summary = summary;
-    this.gridX = gridX;
-    this.gridY = gridY;
     this.playable = playable;
   }
 }

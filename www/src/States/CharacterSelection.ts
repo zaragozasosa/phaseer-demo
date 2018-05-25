@@ -1,6 +1,8 @@
-import GameboardConfig from './../Object/GameboardConfig';
+import GameboardConfig from './../Objects/GameboardConfig';
 import SpriteFactory from './../Tools/SpriteFactory';
-import Tile from './../Object/Tile';
+import GraphicsFactory from './../Tools/GraphicsFactory';
+import InputManager from './../Tools/InputManager';
+import Tile from './../Objects/Tile';
 import TextFactory from './../Tools/TextFactory';
 import { Config, Singleton } from './../Config';
 import ButtonFactory from './../Tools/ButtonFactory';
@@ -11,23 +13,25 @@ export default class CharacterSelection extends Phaser.State {
   gameboardConfig: GameboardConfig;
   spriteFactory: SpriteFactory;
   textFactory: TextFactory;
+  graphicsFactory: GraphicsFactory;
   buttonFactory: ButtonFactory;
+  inputManager: InputManager;
+
   preloadBar: Phaser.Sprite;
   selectedCharacter: Tile;
-  selectedFrame: Phaser.Graphics;
+  displayArray: Array<Tile>;
+  menuItems: Array<Phaser.Sprite>;
+  updated: boolean;
+  ratio: number;
+  yMenuPad: number;
+
+  selectedFrame: Phaser.Sprite;
   selectedName: Phaser.Text;
   selectedFullName: Phaser.Text;
   selectedSummary: Phaser.Text;
   selectedPower: Phaser.Text;
   selectedSprite: Phaser.Sprite;
   startButton: Phaser.Button;
-
-  displayArray: Array<Tile>;
-  menuItems: Array<Phaser.Sprite>;
-  updated: boolean;
-
-  ratio: number;
-  yMenuPad: number;
 
   preload() {
     let singleton = Singleton.getInstance();
@@ -37,7 +41,9 @@ export default class CharacterSelection extends Phaser.State {
     this.gameboardConfig = new GameboardConfig();
     this.spriteFactory = new SpriteFactory();
     this.textFactory = new TextFactory();
+    this.graphicsFactory = new GraphicsFactory();
     this.buttonFactory = new ButtonFactory();
+    this.inputManager = new InputManager();
     for (let sprite of this.gameboardConfig.tiles) {
       let path = `assets/images/tiles/${sprite.id}.png`;
       let sfx = `assets/sfx/${sprite.id}-${sprite.sfxId}`;
@@ -67,21 +73,9 @@ export default class CharacterSelection extends Phaser.State {
     this.menuItems = [];
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
     displayArray = characters.filter(x => x.playable);
-    // let playableGroups = this.gameboardConfig.groups.filter(
-    //   x => x !== '5DeMayo'
-    // );
 
-    // while (displayArray.length < playableGroups.length * 2) {
-    //   let randomGroup =
-    //     playableGroups[this.game.rnd.between(0, playableGroups.length - 1)];
-    //   if (!displayArray.some(x => x.powerId === randomGroup)) {
-    //     displayArray = displayArray.concat(
-    //       characters.filter(x => x.powerId === randomGroup)
-    //     );
-    //   }
-    // }
+    this.graphicsFactory.addBackground();
 
-    // displayArray.push(characters.find(x => x.id === 'nacho'));
     displayArray.push(
       new Tile(
         'random',
@@ -103,6 +97,15 @@ export default class CharacterSelection extends Phaser.State {
         yMenuPad,
         ratio
       );
+
+      let frame = this.spriteFactory.makeMenuTile(
+        column,
+        row,
+        'frame',
+        yMenuPad,
+        ratio
+      );
+
       sprite.inputEnabled = true;
       sprite.events.onInputDown.add(
         function() {
@@ -110,9 +113,7 @@ export default class CharacterSelection extends Phaser.State {
         }.bind(this)
       );
 
-      char.sprite = sprite;
-      char.gridX = column;
-      char.gridY = row;
+      char.frame = frame;
 
       column++;
       if (column === maxColumns) {
@@ -134,7 +135,9 @@ export default class CharacterSelection extends Phaser.State {
     this.yMenuPad = yMenuPad;
     this.ratio = ratio;
     this.displayArray = displayArray;
-    this.setSelectedCharacter(displayArray[0]);
+
+    let rnd = this.game.rnd.between(0, displayArray.length - 2);
+    this.setSelectedCharacter(displayArray[rnd]);
 
     this.buttonFactory.make(
       635,
@@ -146,10 +149,10 @@ export default class CharacterSelection extends Phaser.State {
     );
 
     this.selectedSprite = this.spriteFactory.createSprite(
-      570,
-      530,
+      590,
+      550,
       this.selectedCharacter.id,
-      2.1
+      2
     );
   }
 
@@ -160,46 +163,39 @@ export default class CharacterSelection extends Phaser.State {
       ];
     }
     this.gameboardConfig.mainTile = this.selectedCharacter;
-    this.game.sound.play(`${this.selectedCharacter.id}-sfx`, 1.5);
+    this.game.sound.play(`${this.selectedCharacter.id}-sfx`, 1);
     this.state.start('Unranked', true, false, this.gameboardConfig);
   }
 
   setSelectedCharacter(char: Tile) {
-    this.game.sound.play('beep', 2);
+    this.game.sound.play('beep', 1.5);
     this.selectedCharacter = char;
     if (this.selectedSprite) {
       this.selectedSprite.loadTexture(char.id);
     }
 
-    this.selectedFrame = this.spriteFactory.makeTileFrame(
-      char.gridX,
-      char.gridY,
-      this.ratio,
-      0,
-      this.yMenuPad
-    );
+    if (this.selectedFrame) {
+      this.selectedFrame.tint = Phaser.Color.WHITE;
+    }
+
+    char.frame.tint = Phaser.Color.BLACK;
+    this.selectedFrame = char.frame;
 
     if (!this.selectedName) {
-      this.selectedName = this.textFactory.make(
-        -633,
-        -190,
-        char.name,
-        50,
-        false,
-        '#ffffff'
-      );
+      this.selectedName = this.textFactory.make(18, 700, char.name, 50);
     } else {
       this.selectedName.setText(char.name);
     }
 
     if (!this.selectedFullName) {
-      this.selectedFullName = this.textFactory.make(
-        -630,
-        -120,
+      this.selectedFullName = this.textFactory.makeXBoundedOptions(
+        740,
         char.fullName,
         35,
-        false,
-        '#ffffff'
+        'left',
+        600,
+        20,
+        -10
       );
     } else {
       this.selectedFullName.setText(char.fullName);
@@ -207,30 +203,31 @@ export default class CharacterSelection extends Phaser.State {
 
     if (!this.selectedPower) {
       this.selectedPower = this.textFactory.make(
-        -630,
-        -70,
-        `Special ability: ${char.powerName}`,
-        35,
-        false,
-        '#ffffff'
+        20,
+        875,
+        `Special Power: ${char.powerName}`,
+        30
       );
     } else {
-      this.selectedPower.setText(`Special ability: ${char.powerName}`);
+      this.selectedPower.setText(`Special Power: ${char.powerName}`);
     }
 
     if (!this.selectedSummary) {
-      this.selectedSummary = this.textFactory.makeYBounded(
-        0,
+      this.selectedSummary = this.textFactory.makeXBounded(
+        1040,
         char.summary,
-        35,
-        'bottom'
+        30,
+        'left',
+        true
       );
-
-      this.selectedSummary.addChild(this.selectedPower);
-      this.selectedSummary.addChild(this.selectedFullName);
-      this.selectedSummary.addChild(this.selectedName);
     } else {
       this.selectedSummary.setText(char.summary);
+    }
+  }
+
+  update() {
+    if (this.inputManager.checkKeys()) {
+      this.gameStart();
     }
   }
 }

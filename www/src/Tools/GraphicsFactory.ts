@@ -1,13 +1,6 @@
 import { Config, Singleton } from '../Config';
-export default class GraphicsFactory {
-  private game: Phaser.Game;
-  private config: Config;
-
-  constructor() {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
-  }
+import Factory from './Factory';
+export default class GraphicsFactory extends Factory {
 
   makeWall(x: number, y: number, long: number, tall: number): Phaser.Sprite {
     let game = this.game;
@@ -32,15 +25,30 @@ export default class GraphicsFactory {
   }
 
   drawGridRect() {
-    let config = this.config;
-    let xPad = config.safeZone.paddingX + config.gridSettings.gridPaddingX;
-    let yPad = config.safeZone.paddingY + config.gridSettings.gridPaddingY;
-    let graphics = this.game.add.graphics(0, 0);
-    let wallLength = config.gridSettings.tileSize * 4 * config.scaleFactor;
+    // let config = this.config;
+    // let xPad = config.safeZone.paddingX + config.gridSettings.gridPaddingX;
+    // let yPad = config.safeZone.paddingY + config.gridSettings.gridPaddingY;
+    // let graphics = this.game.add.graphics(0, 0);
+    // let wallLength = config.gridSettings.tileSize * 4 * config.scaleFactor;
+    // graphics.lineStyle(0);
+    // graphics.beginFill(
+    //   Phaser.Color.hexToRGB(this.config.colorSettings.altText),
+    //   1
+    // );
+    // graphics.drawRect(xPad, yPad, wallLength, wallLength);
+    // graphics.endFill();
+  }
+  
 
+  addBackground() {
+    let safeZone = this.config.safeZone;
+    let colorSettings = this.config.colorSettings;
+    let xPad = safeZone.paddingX;
+    let yPad = safeZone.paddingY;
+    var graphics = this.game.add.graphics(0, 0);
     graphics.lineStyle(0);
-    graphics.beginFill(0x23272A, 1);
-    graphics.drawRect(xPad, yPad, wallLength, wallLength);
+    graphics.beginFill(Phaser.Color.hexToRGB(colorSettings.background), 1);
+    graphics.drawRect(xPad, yPad, safeZone.safeWidth, safeZone.safeHeight);
     graphics.endFill();
   }
 }

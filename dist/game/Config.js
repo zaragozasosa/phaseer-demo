@@ -40,6 +40,12 @@ var Config = (function () {
     return Config;
 }());
 exports.Config = Config;
+var ColorSettings = (function () {
+    function ColorSettings() {
+    }
+    return ColorSettings;
+}());
+exports.ColorSettings = ColorSettings;
 var SafeZone = (function () {
     function SafeZone(safeWidth, safeHeight, paddingX, paddingY) {
         this.safeWidth = safeWidth;

@@ -1,20 +1,38 @@
 import { Config, Singleton } from '../Config';
-export default class SpriteFactory {
-  private game: Phaser.Game;
-  private config: Config;
-
-  constructor() {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
-  }
-
+import Factory from './Factory';
+export default class SpriteFactory extends Factory {
   makeTile(x: number, y: number, id: string) {
     let size = this.config.gridSettings.tileSize;
     let scale = this.config.gridSettings.tileScale;
     let padX = this.config.gridSettings.gridPaddingX;
     let padY = this.config.gridSettings.gridPaddingY;
     return this.createSprite(x * size, y * size, id, scale, padX, padY);
+  }
+
+  makeMenuTile(x: number, y: number, id: string, padY: number, ratio: number) {
+    let size = this.config.gridSettings.tileSize * ratio;
+    let scale = this.config.gridSettings.tileScale * ratio;
+    let padX = this.config.gridSettings.gridPaddingX;
+    return this.createSprite(x * size, y * size, id, scale, padX, padY);
+  }
+
+  updateTile(x: number, y: number, sprite: Phaser.Sprite) {
+    let size = this.config.gridSettings.tileSize;
+    let scale = this.config.gridSettings.tileScale;
+    let xPad = this.config.gridSettings.gridPaddingX;
+    let yPad = this.config.gridSettings.gridPaddingY;
+
+    let posX = x * size * this.config.scaleFactor;
+    let posY = y * size * this.config.scaleFactor;
+
+    let padX = this.config.safeZone.paddingX + xPad;
+    let padY = this.config.safeZone.paddingY + yPad;
+    
+    //sprite.body.moves = false;    
+
+    sprite.position.x = posX + padX;
+    sprite.position.y = posY + padY;
+    return sprite;
   }
 
   createSprite(
@@ -37,13 +55,6 @@ export default class SpriteFactory {
     return sprite;
   }
 
-  makeMenuTile(x: number, y: number, id: string, yPad: number, ratio: number) {
-    let size = this.config.gridSettings.tileSize * ratio;
-    let scale = this.config.gridSettings.tileScale * ratio;
-
-    return this.createSprite(x * size, y * size, id, scale, 0, yPad);
-  }
-
   makeCentered(posY: number, id: string, spriteScale = 1) {
     let y = posY * this.config.scaleFactor;
     let config = this.config;
@@ -59,62 +70,5 @@ export default class SpriteFactory {
     sprite.x = xPad + x;
 
     return sprite;
-  }
-
-  makeFrame(x: number, y: number, size: number, lineWidth: number, color: any) {
-    let scaledSize = this.config.scaleFactor * size;
-    let graphics = this.game.add.graphics(0, 0);
-    graphics.lineStyle(lineWidth, color, 1);
-    let rect = graphics.drawRect(x, y, scaledSize, scaledSize);
-    this.game.physics.enable(rect, Phaser.Physics.ARCADE);
-
-    return rect;
-  }
-
-  makeTileFrame(
-    posX: number,
-    posY: number,
-    ratio = 1,
-    xPadding = null,
-    yPadding = null
-  ) {
-    let config = this.config.gridSettings;
-    let scale = this.config.scaleFactor;
-    let lineWidth = config.frameLineWidth;
-    let safeZone = this.config.safeZone;
-
-    let frameSize = config.tileSize * ratio - lineWidth / 2;
-    let color = config.lineColor;
-    let xPad = safeZone.paddingX + (xPadding ? xPadding : config.gridPaddingX);
-    let yPad = safeZone.paddingY + (yPadding ? yPadding : config.gridPaddingY);
-    let x = posX * config.tileSize * ratio * scale;
-    let y = posY * config.tileSize * ratio * scale;
-
-    return this.makeFrame(x + xPad, y + yPad, frameSize, lineWidth, color);
-  }
-
-  updateTileFrame(
-    frame: Phaser.Graphics,
-    posX: number,
-    posY: number,
-    ratio = 1,
-    xPadding = null,
-    yPadding = null
-  ) {
-    let config = this.config.gridSettings;
-    let scale = this.config.scaleFactor;
-    let lineWidth = config.frameLineWidth;
-    let safeZone = this.config.safeZone;
-
-    let frameSize = config.tileSize * ratio - lineWidth / 2;
-    let xPad = safeZone.paddingX + (xPadding ? xPadding : config.gridPaddingX);
-    let yPad = safeZone.paddingY + (yPadding ? yPadding : config.gridPaddingY);
-    let x = posX * config.tileSize * ratio * scale;
-    let y = posY * config.tileSize * ratio * scale;
-
-    frame.x = x;
-    frame.y = y;
-
-    return frame;
   }
 }

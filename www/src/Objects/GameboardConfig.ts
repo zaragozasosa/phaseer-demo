@@ -31,7 +31,7 @@ export default class GameboardConfig {
         'keyboard.mp3',
         'powerGaming',
         'Power Gaming',
-        'Genius programmer. Created BREN trying to code the perfect little sister, but now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'
+        'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'
       )
     );
 
@@ -39,12 +39,12 @@ export default class GameboardConfig {
       new Tile(
         'bren',
         'B.R.E.N.',
-        'Brotherhating_ridiculously_efficient_nerd.py',
+        'brotherhating ridiculously efficient nerd.py',
         'meushijyo',
         'wow.wav',
         'powerGaming',
         'Power Gaming',
-        'Cutting-edge sentient Artificial Intelligence. Instead of planning the end of the world, this script enjoys crunching numbers, playing games and explaining why other players suck.'
+        'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'
       )
     );
 
@@ -67,7 +67,7 @@ export default class GameboardConfig {
         'Choco',
         'Choco Jax',
         'rox',
-        'gacha.wav',
+        'chachin.mp3',
         'gachaAddiction',
         'Gacha Addiction',
         'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'
@@ -96,7 +96,7 @@ export default class GameboardConfig {
         'sweeping.wav',
         'detectiveWork',
         'Detective Work',
-        'A clumsy maid devoted to her master. Cleaning is her passion and she likes to do her job thoroughly. Sometimes too thoroughly.'
+        `A clumsy maid devoted to her master. She is often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson and is passionate about it. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. Nothing can stop her. You should run...`
       )
     );
 
@@ -116,8 +116,8 @@ export default class GameboardConfig {
     list.push(
       new Tile(
         'eleve',
-        `L'Élève Avancé`,
-        `XxX-L'Élève-Avancé-Timide-XxX`,
+        `L'Élève`,
+        `L'Élève-Avancé-Timide`,
         'kinjo',
         'sorry.wav',
         'timeTravel',
@@ -143,7 +143,7 @@ export default class GameboardConfig {
       new Tile(
         'r1r1',
         'R1-R1',
-        'Autonomous Socialization Unit R1-R1',
+        'Autonomous Socialization Unit',
         'attarou',
         'letsrock.wav',
         'reportedForRP',

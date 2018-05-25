@@ -19,9 +19,7 @@ export default class Preloader extends Phaser.State {
     this.load.image('start-1', 'assets/images/start-1.png');
     this.load.image('start-2', 'assets/images/start-2.png');
     this.load.image('start-3', 'assets/images/start-3.png');
-    
-
-    
+    this.load.image('frame', 'assets/images/frame.png');
   }
 
   create() {

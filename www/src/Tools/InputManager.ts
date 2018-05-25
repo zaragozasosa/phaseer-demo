@@ -1,30 +1,22 @@
 /// <reference path="../../typings/swipe.d.ts"/>
 
 import { Config, Singleton } from '../Config';
-export default class InputManager {
-  private game: Phaser.Game;
-  private config: Config;
+import Factory from './Factory';
+export default class InputManager extends Factory {
   private swipe: Swipe;
   private cursors: Phaser.CursorKeys;
-  private spaceKey: Phaser.Key;
-  private enterKey: Phaser.Key;
   private keyPressed: boolean;
 
   constructor() {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
+    super();
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.swipe = new Swipe(this.game);
 
-    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-
     this.game.input.keyboard
-      .addKey(Phaser.Keyboard.UP)
+      .addKey(Phaser.Keyboard.SPACEBAR)
       .onDown.add(this.keyPressedEvent, this);
     this.game.input.keyboard
-      .addKey(Phaser.Keyboard.UP)
+      .addKey(Phaser.Keyboard.ENTER)
       .onDown.add(this.keyPressedEvent, this);
   }
 
@@ -35,16 +27,12 @@ export default class InputManager {
   checkCursor() {
     if (this.game.device.desktop) {
       if (this.cursors.left.justDown) {
-        console.log(' left');
         return Phaser.Keyboard.LEFT;
       } else if (this.cursors.right.justDown) {
-        console.log(' right');
         return Phaser.Keyboard.RIGHT;
       } else if (this.cursors.up.justDown) {
-        console.log(' up');
         return Phaser.Keyboard.UP;
       } else if (this.cursors.down.justDown) {
-        console.log(' down');
         return Phaser.Keyboard.DOWN;
       }
     } else {

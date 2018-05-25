@@ -1,12 +1,20 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("../Config");
-var TextFactory = (function () {
+var Factory_1 = require("./Factory");
+var TextFactory = (function (_super) {
+    __extends(TextFactory, _super);
     function TextFactory() {
-        var singleton = Config_1.Singleton.getInstance();
-        this.game = singleton.game;
-        this.config = singleton.config;
-        this.font = 'Verdana,Geneva,sans-serif';
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
         var xPos = x * this.config.gridSettings.tileSize +
@@ -15,41 +23,63 @@ var TextFactory = (function () {
             this.config.gridSettings.gridPaddingY;
         return this.make(xPos, yPos, value.toString(), size);
     };
-    TextFactory.prototype.make = function (posX, posY, text, textSize, center, color) {
-        if (center === void 0) { center = false; }
-        if (color === void 0) { color = '#ffffff'; }
+    TextFactory.prototype.make = function (posX, posY, text, textSize, altColor) {
+        if (altColor === void 0) { altColor = false; }
+        var colorConfig = this.config.colorSettings;
         var x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
         var y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
+        var color = altColor ? colorConfig.altText : colorConfig.text;
         var textObj = this.game.add.text(x, y, text);
-        textObj.font = this.font;
+        textObj.font = this.config.gridSettings.font;
         textObj.fontSize = textSize * this.config.scaleFactor;
         textObj.addColor(color, 0);
-        if (center) {
-            textObj.anchor.set(0.5);
-        }
         this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
         return textObj;
     };
-    TextFactory.prototype.makeYBounded = function (posX, text, textSize, align, color) {
-        if (color === void 0) { color = '#99AAB5'; }
+    TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, altColor) {
+        if (altColor === void 0) { altColor = false; }
         var safeZone = this.config.safeZone;
-        var graphic = this.make(posX, 0, text, textSize, false, color);
+        var boundPadding = 15 * this.config.scaleFactor;
+        var textObj = this.make(0, posY, text, textSize, altColor);
+        textObj.wordWrap = true;
+        textObj.wordWrapWidth = safeZone.safeWidth;
+        textObj.boundsAlignH = align;
+        textObj.setTextBounds(boundPadding, boundPadding, safeZone.safeWidth - boundPadding, safeZone.safeHeight - boundPadding);
+        return textObj;
+    };
+    TextFactory.prototype.makeXBoundedOptions = function (posY, text, textSize, align, wordWrapWidth, padding, lineHeight, altColor) {
+        if (altColor === void 0) { altColor = false; }
+        var safeZone = this.config.safeZone;
+        var textObj = this.make(0, posY, text, textSize, altColor);
+        var pad = padding * this.config.scaleFactor;
+        textObj.wordWrap = true;
+        textObj.wordWrapWidth = wordWrapWidth * this.config.scaleFactor;
+        textObj.boundsAlignH = align;
+        textObj.lineSpacing = lineHeight;
+        textObj.setTextBounds(pad, pad, safeZone.safeWidth - pad, safeZone.safeHeight - pad);
+        return textObj;
+    };
+    TextFactory.prototype.makeYBounded = function (posX, text, textSize, align, altColor, wordWrapWidth, padding) {
+        if (altColor === void 0) { altColor = false; }
+        if (wordWrapWidth === void 0) { wordWrapWidth = 0; }
+        if (padding === void 0) { padding = 0; }
+        var boundPadding = padding ? padding : 15;
+        var safeZone = this.config.safeZone;
+        var graphic = this.make(posX, 0, text, textSize, altColor);
         graphic.wordWrap = true;
-        graphic.wordWrapWidth = safeZone.safeWidth;
+        graphic.wordWrapWidth = wordWrapWidth
+            ? wordWrapWidth * this.config.scaleFactor
+            : safeZone.safeWidth;
         graphic.boundsAlignV = align;
-        graphic.setTextBounds(10, 10, safeZone.safeWidth - 10, safeZone.safeHeight - 10);
+        graphic.setTextBounds(boundPadding, boundPadding, safeZone.safeWidth - boundPadding, safeZone.safeHeight - boundPadding);
         return graphic;
     };
-    TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, color) {
-        if (color === void 0) { color = '#99AAB5'; }
-        var safeZone = this.config.safeZone;
-        var graphic = this.make(0, posY, text, textSize, false, color);
-        graphic.wordWrap = true;
-        graphic.wordWrapWidth = safeZone.safeWidth;
-        graphic.boundsAlignH = align;
-        graphic.setTextBounds(10, 10, safeZone.safeWidth - 10, safeZone.safeHeight - 10);
-        return graphic;
+    TextFactory.prototype.makeCenteredAnchor = function (posX, posY, text, textSize, altColor) {
+        if (altColor === void 0) { altColor = false; }
+        var textObj = this.make(posX, posY, text, textSize, altColor);
+        textObj.anchor.set(0.5);
+        return textObj;
     };
     return TextFactory;
-}());
+}(Factory_1.default));
 exports.default = TextFactory;

@@ -15,20 +15,20 @@ var TileArray = (function (_super) {
     __extends(TileArray, _super);
     function TileArray(gameboardConfig) {
         var _this = _super.call(this) || this;
-        _this.tiles = gameboardConfig.initialArray;
+        _this.gameboardConfig = gameboardConfig;
         _this.arraySize = gameboardConfig.arraySize;
         return _this;
     }
     TileArray.prototype.get = function (x, y) {
-        return this.tiles[y * (this.arraySize + 1) + x];
+        return this.grid[y * (this.arraySize + 1) + x];
     };
     TileArray.prototype.set = function (x, y, value) {
-        this.tiles[y * (this.arraySize + 1) + x] = value;
+        this.grid[y * (this.arraySize + 1) + x] = value;
     };
     TileArray.prototype.isFull = function () {
-        for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
-            var tile = _a[_i];
-            if (tile === 0) {
+        for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
+            var item = _a[_i];
+            if (item.tile.value === 0) {
                 return false;
             }
         }
@@ -36,19 +36,33 @@ var TileArray = (function (_super) {
     };
     TileArray.prototype.emptyTiles = function () {
         var empty = 0;
-        for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
-            var tile = _a[_i];
-            if (tile === 0) {
+        for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
+            var item = _a[_i];
+            if (item.tile.value === 0) {
                 empty++;
             }
         }
         return empty;
     };
+    TileArray.prototype.reorderTileList = function () {
+        var list = this.gameboardConfig.tiles;
+        while (list[0].id !== this.gameboardConfig.mainTile.id) {
+            var last = list.pop();
+            list.unshift(last);
+        }
+        if (list[0].friendId !== list[1].id) {
+            var secondArray = [];
+            secondArray.push(list[0]);
+            secondArray.push(list[list.length - 1]);
+            var thirdArray = list.splice(1, list.length - 2);
+            this.gameboardConfig.tiles = secondArray.concat(thirdArray);
+        }
+    };
     TileArray.prototype.calculateSum = function () {
         var points = 0;
-        for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
-            var tile = _a[_i];
-            points += tile;
+        for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
+            var items = _a[_i];
+            points += items.tile.value;
         }
         return points;
     };
