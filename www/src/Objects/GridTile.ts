@@ -1,12 +1,11 @@
 import { Config, Singleton } from './../Models/Config';
-import Tile from './../Models/Tile';
+import TileModel from './../Models/TileModel';
 import SpriteFactory from './../Tools/SpriteFactory';
 import GameboardConfig from './GameboardConfig';
 
 export default class GridTile {
-  model: Tile;
-  willBeDestroyed: boolean;
-  willBeMerged: boolean;
+  model: TileModel;
+  nextTile: GridTile;
   posX: number;
   posY: number;
   value: number;
@@ -16,6 +15,7 @@ export default class GridTile {
   private config: Config;
   private spriteFactory: SpriteFactory;
   private gameboardConfig: GameboardConfig;
+  private mergeTween: Phaser.Tween;
 
   constructor(
     x: number,
@@ -28,8 +28,7 @@ export default class GridTile {
     this.game = singleton.game;
     this.config = singleton.config;
     this.gameboardConfig = gameboardConfig;
-    this.willBeDestroyed = false;
-    this.willBeMerged = false;
+    this.nextTile = null;
 
     if (value === 0) {
       this.model = gameboardConfig.tiles[position];
@@ -42,6 +41,97 @@ export default class GridTile {
     this.posY = y;
     this.spriteFactory = new SpriteFactory();
     this.sprite = this.createSprite();
+
+    this.sprite.alpha = 0;
+    this.game.add.tween(this.sprite).to({ alpha: 1 }, 500, 'Linear', true);
+
+    let tween1 = this.game.add
+      .tween(this.sprite)
+      .to({ alpha: 0.3 }, 100, 'Linear');
+    let tween2 = this.game.add
+      .tween(this.sprite)
+      .to({ alpha: 1 }, 300, 'Linear');
+
+    this.mergeTween = tween1.chain(tween2);
+  }
+
+  get isMoving(): boolean {
+    if (!this.sprite) {
+      return false;
+    }
+
+    let velocity = this.sprite.body.velocity;
+    return velocity.x || velocity.y;
+  }
+
+  animate(keyboardInput: number) {
+    let direction = this.getDirection(keyboardInput);
+    let body = this.sprite.body;
+    let config = this.config;
+
+    if (direction !== null) {
+      let distance = config.safeZone.safeWidth * config.scaleFactor;
+      body.moves = true;
+      body.moveTo(500, this.config.safeZone.safeWidth, direction);
+      body.onMoveComplete.addOnce(this.updateTile, this);
+    }
+  }
+
+  overlaps(tilesGroup: Phaser.Group, wallsGroup: Phaser.Group) {
+    this.game.physics.arcade.overlap(
+      this.sprite,
+      tilesGroup,
+      function(a: Phaser.Sprite, b: Phaser.Sprite) {
+        if (a && b) {
+          if (a.key === b.key) {
+            console.log('collision, merging');
+            return false;
+          } else {
+            let velocity = this.sprite.body.velocity;
+            if (velocity.x || velocity.y) {
+              console.log('collision in sprites x sprite');
+              this.sprite.body.stopMovement(true);
+              return true;
+            }
+          }
+        }
+      }.bind(this)
+    );
+
+    this.game.physics.arcade.overlap(
+      this.sprite,
+      wallsGroup,
+      function(a: any, b: any) {
+        if (a && b) {
+          let velocity = this.sprite.body.velocity;
+          if (velocity.x || velocity.y) {
+            console.log('collision in sprites x wall');
+            this.sprite.body.stopMovement(true);
+            return true;
+          }
+        }
+      }.bind(this)
+    );
+  }
+
+  private updateTile() {
+    this.sprite.body.moves = false;
+    if (this.nextTile) {
+      this.sprite.kill();
+      this.nextTile.merge();
+    } else {
+      this.spriteFactory.updateTile(this.posX, this.posY, this.sprite);
+    }
+  }
+
+  private merge() {
+    let tile = this.gameboardConfig.tiles.find(
+      x => x.staticValue === this.value
+    );
+    this.model = tile;
+    this.sprite.loadTexture(tile.id);
+
+    this.mergeTween.start();
   }
 
   private createSprite() {
@@ -53,13 +143,17 @@ export default class GridTile {
     return sprite;
   }
 
-  updateSprite() {
-    let model = this.model;
-    let sprite = this.spriteFactory.updateTile(
-      this.posX,
-      this.posY,
-      this.sprite
-    );
-    this.sprite = sprite;
+  private getDirection(keyboardInput: number) {
+    return keyboardInput === Phaser.Keyboard.UP
+      ? Phaser.ANGLE_UP
+      : keyboardInput === Phaser.Keyboard.DOWN
+        ? Phaser.ANGLE_DOWN
+        : keyboardInput === Phaser.Keyboard.RIGHT
+          ? Phaser.ANGLE_RIGHT
+          : keyboardInput === Phaser.Keyboard.LEFT ? Phaser.ANGLE_LEFT : null;
+  }
+
+  toString() {
+    return `${this.sprite.key}  ${this.value} -  ${this.posX}:${this.posY}`;
   }
 }

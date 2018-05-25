@@ -42,16 +42,16 @@ export default class Grid {
   }
 
   update() {
-    this.game.world.bringToTop(this.framesGroup);
+    //this.game.world.bringToTop(this.framesGroup);
     
     if (!this.animating) {
       var cursor = this.input.checkCursor();
       if(cursor) {
-        this.animating = this.gridLogic.checkInput(cursor);
+        this.animating = this.gridLogic.scanGrid(cursor);
       }
       cursor = null;
     } else {
-      this.checkCollisions();
+      this.manageCollisions();
     }
   }
 
@@ -63,22 +63,21 @@ export default class Grid {
     return this.gridLogic.sumTiles();
   }
 
-  private checkCollisions() {
-    if (this.gridLogic.checkCollisions(this.wallsGroup)) {
+  private manageCollisions() {
+    if (this.gridLogic.manageCollisions(this.wallsGroup)) {
       this.animating = false;
       this.gameboardCallback();
     }
   }
 
   private makeWalls(): Phaser.Group {
-    let wallLength = this.config.gridSettings.tileSize * 4;
+    let wallLength = (this.config.gridSettings.tileSize + 5) * 4;
     let group = this.game.add.group();
 
-    this.graphicsFactory.drawGridRect();
-    group.add(this.graphicsFactory.makeWall(0, 0, 1, wallLength));
-    group.add(this.graphicsFactory.makeWall(0, 0, wallLength, 1));
-    group.add(this.graphicsFactory.makeWall(0, wallLength, wallLength, 1));
-    group.add(this.graphicsFactory.makeWall(wallLength, 0, 1, wallLength));
+    group.add(this.graphicsFactory.makeWall(-10, -10, 2, wallLength));
+    group.add(this.graphicsFactory.makeWall(-10, -10, wallLength, 2));
+    group.add(this.graphicsFactory.makeWall(-10, wallLength, wallLength, 2));
+    group.add(this.graphicsFactory.makeWall(wallLength, -10, 2, wallLength));
 
     return group;
   }

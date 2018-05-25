@@ -26,11 +26,10 @@ export default class SpriteFactory extends Factory {
 
     let padX = this.config.safeZone.paddingX + xPad;
     let padY = this.config.safeZone.paddingY + yPad;
-    
-    //sprite.body.moves = false;    
 
     sprite.position.x = posX + padX;
     sprite.position.y = posY + padY;
+
     return sprite;
   }
 

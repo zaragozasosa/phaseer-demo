@@ -32,24 +32,7 @@ export default class LogicalGrid {
     this.add();
   }
 
-  checkCollisions(wallsGroup: Phaser.Group) {
-    for (let tile of this.grid.filter(x => x)) {
-      this.game.physics.arcade.collide(tile.sprite, this.tilesGroup, function(
-        a: Phaser.Sprite,
-        b: Phaser.Sprite
-      ) {
-        if (a.key === b.key) {
-          return false;
-        }
-        return true;
-      });
-      this.game.physics.arcade.collide(tile.sprite, wallsGroup);
-    }
-
-    return this.tilesStopped();
-  }
-
-  checkInput(keyboardInput: number) {
+  scanGrid(keyboardInput: number) {
     var animating = false;
 
     let minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
@@ -78,7 +61,7 @@ export default class LogicalGrid {
       startX -= xIncrement;
       do {
         startX += xIncrement;
-        if (this.tryPushing(startX, startY, keyboardInput)) {
+        if (this.pushTile(startX, startY, keyboardInput)) {
           animating = true;
         }
       } while (startX !== stopX);
@@ -87,16 +70,130 @@ export default class LogicalGrid {
     return animating;
   }
 
-  private tryPushing(x: number, y: number, keyboardInput: number) {
-    let tile = this.get(x, y);
-    if (tile) {
-      if (this.pushTile(tile, keyboardInput)) {
-        this.animateTile(tile, keyboardInput);
-        return true;
+  manageCollisions(wallsGroup: Phaser.Group) {
+    for (let tile of this.grid.filter(x => x)) {
+      tile.overlaps(this.tilesGroup, wallsGroup);
+    }
+
+    return this.tilesStopped();
+  }
+
+  private tilesStopped() {
+    let allStopped = true;
+    let game = this.game;
+
+    if (this.grid.filter(x => x && x.isMoving).length) {
+      allStopped = false;
+    }
+
+    if (allStopped) {
+      console.log('Stopped!');
+      this.updateGrid();
+    }
+
+    return allStopped;
+  }
+
+  private updateGrid() {
+    if (this.lastMergedTile) {
+      let value = this.lastMergedTile.value;
+      if (
+        (value === this.gameboardConfig.minimumValue * 2 &&
+          this.game.rnd.integerInRange(0, 2) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 4 &&
+          this.game.rnd.integerInRange(0, 2) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 8 &&
+          this.game.rnd.integerInRange(0, 2) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 16 &&
+          this.game.rnd.integerInRange(0, 1) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 32 &&
+          this.game.rnd.integerInRange(0, 1) === 0)
+      ) {
+        this.game.sound.play(this.lastMergedTile.model.id + "-sfx", 1);
       }
+    }
+
+    this.cleanGrid();
+
+    if (!this.isFull()) {
+      this.add();
+    }
+  }
+
+  private cleanGrid() {
+    let killed = this.grid.filter(x => x && !x.sprite.alive);
+    for (let item of killed) {
+      item.sprite.destroy(true);
+      this.set(item.posX, item.posY, null);
+    }
+
+    this.lastMergedTile = null;
+    this.tilesGroup.removeAll();
+
+    for (let item of this.grid.filter(x => x)) {
+      this.tilesGroup.add(item.sprite);
+    }
+  }
+
+  private pushTile(x: number, y: number, keyboardInput: number) {
+    let tile = this.get(x, y);
+    if (!tile) {
       return false;
     }
-    return false;
+
+    let isDirty = false;
+    let pushX =
+      keyboardInput === Phaser.KeyCode.RIGHT
+        ? 1
+        : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
+    let pushY =
+      keyboardInput === Phaser.KeyCode.DOWN
+        ? 1
+        : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
+    let actualX = tile.posX;
+    let actualY = tile.posY;
+
+    let newX = actualX + pushX;
+    let newY = actualY + pushY;
+
+    while (
+      newX >= 0 &&
+      newX <= this.arraySize &&
+      newY >= 0 &&
+      newY <= this.arraySize
+    ) {
+      let nextTile = this.get(newX, newY);
+      if (!nextTile || !nextTile.value) {
+        //move the tile
+        tile.posX = newX;
+        tile.posY = newY;
+        this.set(newX, newY, tile);
+        this.set(actualX, actualY, null);
+        actualX = newX;
+        actualY = newY;
+        isDirty = true;
+      } else if (nextTile && nextTile.value === tile.value) {
+        //merge tiles
+        let newValue = tile.value * 2;
+        this.mergeTile(nextTile, tile);
+        isDirty = true;
+        this.lastMergedTile =
+          this.lastMergedTile && this.lastMergedTile.value >= newValue
+            ? this.lastMergedTile
+            : this.get(newX, newY);
+        break;
+      } else {
+        break;
+      }
+
+      newX += pushX;
+      newY += pushY;
+    }
+
+    if (isDirty) {
+      tile.animate(keyboardInput);
+    }
+    return isDirty;
   }
 
   private add() {
@@ -117,36 +214,6 @@ export default class LogicalGrid {
     let tile = new GridTile(ranX, ranY, this.gameboardConfig, newTilePos);
     this.set(ranX, ranY, tile);
     this.tilesGroup.add(tile.sprite);
-  }
-
-  private updateGrid() {
-    if (this.lastMergedTile) {
-      let value = this.lastMergedTile.value;
-      if (
-        (value !== this.gameboardConfig.minimumValue * 2 ||
-          this.game.rnd.integerInRange(0, 3) === 0) &&
-        (value !== this.gameboardConfig.minimumValue * 4 ||
-          this.game.rnd.integerInRange(0, 2) === 0) &&
-        (value !== this.gameboardConfig.minimumValue * 8 ||
-          this.game.rnd.integerInRange(0, 2) === 0) &&
-        (value !== this.gameboardConfig.minimumValue * 16 ||
-          this.game.rnd.integerInRange(0, 1) === 0) &&
-        (value !== this.gameboardConfig.minimumValue * 32 ||
-          this.game.rnd.integerInRange(0, 1) === 0)
-      ) {
-        this.game.sound.play(this.lastMergedTile.model.sfxId, 1);
-      }
-    }
-
-    this.lastMergedTile = null;
-    this.mergeAndKillTiles();
-
-    if (!this.isFull()) {
-      this.add();
-      return true;
-    } else {
-      return false;
-    }
   }
 
   private reorderTileList() {
@@ -182,136 +249,12 @@ export default class LogicalGrid {
     this.grid[position] = tile;
   }
 
-  private animateTile(tile: GridTile, keyboardInput: number) {
-    let distance = this.config.safeZone.safeWidth;
-    let direction =
-      keyboardInput === Phaser.Keyboard.UP
-        ? Phaser.ANGLE_UP
-        : keyboardInput === Phaser.Keyboard.DOWN
-          ? Phaser.ANGLE_DOWN
-          : Phaser.Keyboard.RIGHT ? Phaser.ANGLE_RIGHT : Phaser.ANGLE_LEFT;
+  private push(tile: GridTile, keyboardInput: number) {}
 
-    tile.sprite.body.moveTo(500, distance, direction);
-    tile.sprite.body.stopVelocityOnCollide = true;
-  }
-
-  private tilesStopped() {
-    let allStopped = true;
-    let game = this.game;
-    this.tilesGroup.forEach(
-      function(sprite: Phaser.Sprite) {
-        if (sprite.body.velocity.x !== 0 || sprite.body.velocity.y !== 0) {
-          allStopped = false;
-        }
-      }.bind(this)
-    );
-
-    if(allStopped) {
-      this.updateGrid();
-    }
-
-    return allStopped;
-  }
-
-  private pushTile(tile: GridTile, keyboardInput: number) {
-    let isDirty = false;
-    let pushX =
-      keyboardInput === Phaser.KeyCode.RIGHT
-        ? 1
-        : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
-    let pushY =
-      keyboardInput === Phaser.KeyCode.DOWN
-        ? 1
-        : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
-    let actualX = tile.posX;
-    let actualY = tile.posY;
-
-    let newX = actualX + pushX;
-    let newY = actualY + pushY;
-
-    while (
-      newX >= 0 &&
-      newX <= this.arraySize &&
-      newY >= 0 &&
-      newY <= this.arraySize
-    ) {
-      let nextTile = this.get(newX, newY);
-      if (!nextTile || !nextTile.value) {
-        //move the tile
-        tile.posX = newX;
-        tile.posY = newY;
-        this.set(newX, newY, tile);
-        this.set(actualX, actualY, null);
-        actualX = newX;
-        actualY = newY;
-        isDirty = true;
-      } else {
-        if (nextTile && nextTile.value === tile.value) {
-          //merge tiles
-          let newValue = tile.value * 2;
-          this.mergeTile(nextTile);
-          this.killTile(tile);
-          isDirty = true;
-          this.lastMergedTile =
-            this.lastMergedTile && this.lastMergedTile.value < newValue
-              ? this.get(newX, newY)
-              : this.lastMergedTile;
-          break;
-        } else {
-          break;
-        }
-      }
-
-      newX += pushX;
-      newY += pushY;
-    }
-    return isDirty;
-  }
-
-  private killTile(tile: GridTile) {
-    tile.willBeDestroyed = true;
-    tile.value = 0;
-  }
-
-  private mergeTile(tile: GridTile) {
-    tile.willBeMerged = true;
-    tile.value *= 2;
-  }
-
-  private mergeAndKillTiles() {
-    let kill = this.grid.filter(x => x && x.willBeDestroyed);
-    if (kill.length) {
-      console.log(kill);
-    }
-    for (let item of kill) {
-      item.sprite.destroy();
-      this.set(item.posX, item.posY, null);
-    }
-
-    let merge = this.grid.filter(x => x && x.willBeMerged);
-    for (let item of merge) {
-      let nextTile = this.gameboardConfig.tiles.find(
-        x => x.staticValue === item.value
-      );
-      item.sprite.loadTexture(nextTile.id);
-      this.set(item.posX, item.posY, item);
-    }
-
-    this.tilesGroup.removeAll();
-    for (let item of this.grid) {
-      if (item) {
-        item.updateSprite();
-        this.tilesGroup.add(item.sprite);
-      }
-    }
-
-    if (this.grid.filter(x => x).length !== this.tilesGroup.children.length) {
-      console.log(this.grid);
-      console.log(this.tilesGroup.children);
-      console.log('-----------');
-    } else {
-      console.log('-----------');
-    }
+  private mergeTile(nextTile: GridTile, previousTile: GridTile) {
+    nextTile.value *= 2;
+    previousTile.value = 0;
+    previousTile.nextTile = nextTile;
   }
 
   private isFull(): boolean {

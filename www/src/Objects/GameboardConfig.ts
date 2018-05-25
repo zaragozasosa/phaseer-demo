@@ -1,10 +1,10 @@
-import Tile from './../Models/Tile';
+import TileModel from './../Models/TileModel';
 export default class GameboardConfig {
-  mainTile: Tile;
+  mainTile: TileModel;
   arraySize: number;
   initialArray: Array<number>;
   minimumValue: number;
-  tiles: Array<Tile>;
+  tiles: Array<TileModel>;
   groups: Array<string>;
 
   constructor() {
@@ -20,10 +20,10 @@ export default class GameboardConfig {
   }
 
   createTiles() {
-    let list = new Array<Tile>();
+    let list = new Array<TileModel>();
 
     list.push(
-      new Tile(
+      new TileModel(
         'meushijyo',
         'Meushi',
         'Meushi Jyoji',
@@ -36,7 +36,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'bren',
         'B.R.E.N.',
         'brotherhating ridiculously efficient nerd.py',
@@ -49,7 +49,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'rox',
         'Roxx',
         'Roxx Ann',
@@ -62,7 +62,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'choco',
         'Choco',
         'Choco Jax',
@@ -75,7 +75,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'smith',
         'Agent Smith',
         'Codename: S.N.O.W',
@@ -88,7 +88,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'lily',
         'Lily',
         'Lily Hast',
@@ -101,7 +101,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'kinjo',
         'Kinjo',
         'Kinjo Goldbar',
@@ -114,7 +114,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'eleve',
         `L'Élève`,
         `L'Élève-Avancé-Timide`,
@@ -127,7 +127,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'attarou',
         'Attarou',
         'Attarou Lionstar',
@@ -140,7 +140,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'r1r1',
         'R1-R1',
         'Autonomous Socialization Unit',
@@ -153,7 +153,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'magil',
         'Magil',
         'Dungeon Master Magil',
@@ -166,7 +166,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'jessy',
         'Jessy',
         'Ph.D. Jessy',
@@ -179,7 +179,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'mira',
         'Mira',
         'Black Witch Mira',
@@ -192,7 +192,7 @@ export default class GameboardConfig {
     );
 
     list.push(
-      new Tile(
+      new TileModel(
         'fancy',
         'Lord Fancy',
         'Sir Lord Fancypants',
@@ -204,7 +204,7 @@ export default class GameboardConfig {
       )
     );
     list.push(
-      new Tile(
+      new TileModel(
         'nacho',
         'Nacho',
         'Ignacio Zaragoza',
@@ -216,7 +216,7 @@ export default class GameboardConfig {
       )
     );
     list.push(
-      new Tile(
+      new TileModel(
         'chili',
         'Chili',
         'Chili Bagel',

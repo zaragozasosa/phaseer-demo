@@ -23,6 +23,7 @@ var MainMenu = (function (_super) {
         this.textFactory = new TextFactory_1.default();
         this.cursor = new InputManager_1.default();
         var music = this.game.add.audio('bgm');
+        music.play('', 0, 0.5, true);
         this.spriteFactory.makeCentered(100, 'title', 0.8);
         this.textFactory.makeXBounded(900, 'Click to start', 50, 'center', true);
     };

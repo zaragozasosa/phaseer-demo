@@ -69,12 +69,14 @@ var Game = (function (_super) {
         var gridSettings;
         gridSettings = new Config_1.GridSettings();
         gridSettings.tileSize = 230;
+        gridSettings.intendedTileSize = 190;
         gridSettings.frameLineWidth = 30;
         gridSettings.lineColor = config.colorSettings.primary;
         gridSettings.activeLineColor = config.colorSettings.selected;
         gridSettings.gridPaddingX = 20 * scaleFactor;
         gridSettings.gridPaddingY = 200 * scaleFactor;
-        gridSettings.tileScale = 230 / 180;
+        gridSettings.tileScale =
+            gridSettings.tileSize / gridSettings.intendedTileSize;
         gridSettings.font = 'Verdana,Geneva,sans-serif';
         config.scaleFactor = scaleFactor;
         config.safeZone = safeZone;

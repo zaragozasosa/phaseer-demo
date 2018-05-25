@@ -1,4 +1,4 @@
-export default class Tile {
+export default class TileModel {
   id: string;
   name: string;
   fullName: string;

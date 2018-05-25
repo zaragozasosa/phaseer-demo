@@ -2,7 +2,7 @@ import GameboardConfig from './../Objects/GameboardConfig';
 import SpriteFactory from './../Tools/SpriteFactory';
 import GraphicsFactory from './../Tools/GraphicsFactory';
 import InputManager from './../Tools/InputManager';
-import Tile from './../Models/Tile';
+import TileModel from './../Models/TileModel';
 import TextFactory from './../Tools/TextFactory';
 import { Config, Singleton } from './../Models/Config';
 import ButtonFactory from './../Tools/ButtonFactory';
@@ -18,8 +18,8 @@ export default class CharacterSelection extends Phaser.State {
   inputManager: InputManager;
 
   preloadBar: Phaser.Sprite;
-  selectedCharacter: Tile;
-  displayArray: Array<Tile>;
+  selectedCharacter: TileModel;
+  displayArray: Array<TileModel>;
   menuItems: Array<Phaser.Sprite>;
   updated: boolean;
   ratio: number;
@@ -68,8 +68,8 @@ export default class CharacterSelection extends Phaser.State {
     let arraySize = this.gameboardConfig.arraySize + 1;
     let maxColumns = 6;
     let ratio = arraySize / maxColumns;
-    let characters: Array<Tile>;
-    let displayArray: Array<Tile> = [];
+    let characters: Array<TileModel>;
+    let displayArray: Array<TileModel> = [];
     this.menuItems = [];
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
     displayArray = characters.filter(x => x.playable);
@@ -77,7 +77,7 @@ export default class CharacterSelection extends Phaser.State {
     this.graphicsFactory.addBackground();
 
     displayArray.push(
-      new Tile(
+      new TileModel(
         'random',
         'Random',
         'Select a random character',
@@ -167,7 +167,7 @@ export default class CharacterSelection extends Phaser.State {
     this.state.start('Unranked', true, false, this.gameboardConfig);
   }
 
-  setSelectedCharacter(char: Tile) {
+  setSelectedCharacter(char: TileModel) {
     this.game.sound.play('beep', 1.5);
     this.selectedCharacter = char;
     if (this.selectedSprite) {

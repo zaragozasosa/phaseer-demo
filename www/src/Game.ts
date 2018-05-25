@@ -1,5 +1,11 @@
 /// <reference path="../../node_modules/phaser-ce/typescript/phaser.comments.d.ts"/>
-import { Config, SafeZone, GridSettings, Singleton, ColorSettings } from './Models/Config';
+import {
+  Config,
+  SafeZone,
+  GridSettings,
+  Singleton,
+  ColorSettings
+} from './Models/Config';
 import Boot from './States/Boot';
 import Preloader from './States/Preloader';
 import MainMenu from './States/MainMenu';
@@ -69,25 +75,26 @@ export default class Game extends Phaser.Game {
 
   setupConfig(config: Config, scaleFactor: number, safeZone: SafeZone) {
     let gridSettings: GridSettings;
-    
+
     gridSettings = new GridSettings();
     gridSettings.tileSize = 230;
+    gridSettings.intendedTileSize = 190;
     gridSettings.frameLineWidth = 30;
     gridSettings.lineColor = config.colorSettings.primary;
     gridSettings.activeLineColor = config.colorSettings.selected;
     gridSettings.gridPaddingX = 20 * scaleFactor;
     gridSettings.gridPaddingY = 200 * scaleFactor;
-    gridSettings.tileScale = 230 / 180;
+    gridSettings.tileScale =
+      gridSettings.tileSize / gridSettings.intendedTileSize;
     gridSettings.font = 'Verdana,Geneva,sans-serif';
 
     config.scaleFactor = scaleFactor;
     config.safeZone = safeZone;
     config.gridSettings = gridSettings;
-
   }
 
   colorConfig(config: Config) {
-    let color = new  ColorSettings();
+    let color = new ColorSettings();
     color.background = '#2f3136';
     color.primary = '#99AAB5';
     color.selected = '#000000';

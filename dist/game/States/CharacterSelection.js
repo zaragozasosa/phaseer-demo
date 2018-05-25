@@ -14,7 +14,7 @@ var GameboardConfig_1 = require("./../Objects/GameboardConfig");
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
 var InputManager_1 = require("./../Tools/InputManager");
-var Tile_1 = require("./../Models/Tile");
+var TileModel_1 = require("./../Models/TileModel");
 var TextFactory_1 = require("./../Tools/TextFactory");
 var Config_1 = require("./../Models/Config");
 var ButtonFactory_1 = require("./../Tools/ButtonFactory");
@@ -60,7 +60,7 @@ var CharacterSelection = (function (_super) {
         characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
         displayArray = characters.filter(function (x) { return x.playable; });
         this.graphicsFactory.addBackground();
-        displayArray.push(new Tile_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
+        displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
             var sprite = this_1.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
             var frame = this_1.spriteFactory.makeMenuTile(column, row, 'frame', yMenuPad, ratio);

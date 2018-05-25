@@ -17,6 +17,9 @@ export default class GraphicsFactory extends Factory {
 
     let wall = this.game.add.sprite(xPad, yPad);
     this.game.physics.enable(wall, Phaser.Physics.ARCADE);
+
+    wall.width = long * config.scaleFactor;
+    wall.height = tall * config.scaleFactor;
     wall.body.setSize(long * config.scaleFactor, tall * config.scaleFactor);
     wall.body.immovable = true;
 

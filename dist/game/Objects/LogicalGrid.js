@@ -20,20 +20,7 @@ var LogicalGrid = (function () {
         this.add();
         this.add();
     }
-    LogicalGrid.prototype.checkCollisions = function (wallsGroup) {
-        for (var _i = 0, _a = this.grid.filter(function (x) { return x; }); _i < _a.length; _i++) {
-            var tile = _a[_i];
-            this.game.physics.arcade.collide(tile.sprite, this.tilesGroup, function (a, b) {
-                if (a.key === b.key) {
-                    return false;
-                }
-                return true;
-            });
-            this.game.physics.arcade.collide(tile.sprite, wallsGroup);
-        }
-        return this.tilesStopped();
-    };
-    LogicalGrid.prototype.checkInput = function (keyboardInput) {
+    LogicalGrid.prototype.scanGrid = function (keyboardInput) {
         var animating = false;
         var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
         var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
@@ -56,23 +43,117 @@ var LogicalGrid = (function () {
             startX -= xIncrement;
             do {
                 startX += xIncrement;
-                if (this.tryPushing(startX, startY, keyboardInput)) {
+                if (this.pushTile(startX, startY, keyboardInput)) {
                     animating = true;
                 }
             } while (startX !== stopX);
         } while (startY !== stopY);
         return animating;
     };
-    LogicalGrid.prototype.tryPushing = function (x, y, keyboardInput) {
-        var tile = this.get(x, y);
-        if (tile) {
-            if (this.pushTile(tile, keyboardInput)) {
-                this.animateTile(tile, keyboardInput);
-                return true;
+    LogicalGrid.prototype.manageCollisions = function (wallsGroup) {
+        for (var _i = 0, _a = this.grid.filter(function (x) { return x; }); _i < _a.length; _i++) {
+            var tile = _a[_i];
+            tile.overlaps(this.tilesGroup, wallsGroup);
+        }
+        return this.tilesStopped();
+    };
+    LogicalGrid.prototype.tilesStopped = function () {
+        var allStopped = true;
+        var game = this.game;
+        if (this.grid.filter(function (x) { return x && x.isMoving; }).length) {
+            allStopped = false;
+        }
+        if (allStopped) {
+            console.log('Stopped!');
+            this.updateGrid();
+        }
+        return allStopped;
+    };
+    LogicalGrid.prototype.updateGrid = function () {
+        if (this.lastMergedTile) {
+            var value = this.lastMergedTile.value;
+            if ((value === this.gameboardConfig.minimumValue * 2 &&
+                this.game.rnd.integerInRange(0, 2) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 4 &&
+                    this.game.rnd.integerInRange(0, 2) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 8 &&
+                    this.game.rnd.integerInRange(0, 2) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 16 &&
+                    this.game.rnd.integerInRange(0, 1) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 32 &&
+                    this.game.rnd.integerInRange(0, 1) === 0)) {
+                this.game.sound.play(this.lastMergedTile.model.id + "-sfx", 1);
             }
+        }
+        this.cleanGrid();
+        if (!this.isFull()) {
+            this.add();
+        }
+    };
+    LogicalGrid.prototype.cleanGrid = function () {
+        var killed = this.grid.filter(function (x) { return x && !x.sprite.alive; });
+        for (var _i = 0, killed_1 = killed; _i < killed_1.length; _i++) {
+            var item = killed_1[_i];
+            item.sprite.destroy(true);
+            this.set(item.posX, item.posY, null);
+        }
+        this.lastMergedTile = null;
+        this.tilesGroup.removeAll();
+        for (var _a = 0, _b = this.grid.filter(function (x) { return x; }); _a < _b.length; _a++) {
+            var item = _b[_a];
+            this.tilesGroup.add(item.sprite);
+        }
+    };
+    LogicalGrid.prototype.pushTile = function (x, y, keyboardInput) {
+        var tile = this.get(x, y);
+        if (!tile) {
             return false;
         }
-        return false;
+        var isDirty = false;
+        var pushX = keyboardInput === Phaser.KeyCode.RIGHT
+            ? 1
+            : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
+        var pushY = keyboardInput === Phaser.KeyCode.DOWN
+            ? 1
+            : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
+        var actualX = tile.posX;
+        var actualY = tile.posY;
+        var newX = actualX + pushX;
+        var newY = actualY + pushY;
+        while (newX >= 0 &&
+            newX <= this.arraySize &&
+            newY >= 0 &&
+            newY <= this.arraySize) {
+            var nextTile = this.get(newX, newY);
+            if (!nextTile || !nextTile.value) {
+                tile.posX = newX;
+                tile.posY = newY;
+                this.set(newX, newY, tile);
+                this.set(actualX, actualY, null);
+                actualX = newX;
+                actualY = newY;
+                isDirty = true;
+            }
+            else if (nextTile && nextTile.value === tile.value) {
+                var newValue = tile.value * 2;
+                this.mergeTile(nextTile, tile);
+                isDirty = true;
+                this.lastMergedTile =
+                    this.lastMergedTile && this.lastMergedTile.value >= newValue
+                        ? this.lastMergedTile
+                        : this.get(newX, newY);
+                break;
+            }
+            else {
+                break;
+            }
+            newX += pushX;
+            newY += pushY;
+        }
+        if (isDirty) {
+            tile.animate(keyboardInput);
+        }
+        return isDirty;
     };
     LogicalGrid.prototype.add = function () {
         var newTilePos;
@@ -91,32 +172,6 @@ var LogicalGrid = (function () {
         var tile = new GridTile_1.default(ranX, ranY, this.gameboardConfig, newTilePos);
         this.set(ranX, ranY, tile);
         this.tilesGroup.add(tile.sprite);
-    };
-    LogicalGrid.prototype.updateGrid = function () {
-        if (this.lastMergedTile) {
-            var value = this.lastMergedTile.value;
-            if ((value !== this.gameboardConfig.minimumValue * 2 ||
-                this.game.rnd.integerInRange(0, 3) === 0) &&
-                (value !== this.gameboardConfig.minimumValue * 4 ||
-                    this.game.rnd.integerInRange(0, 2) === 0) &&
-                (value !== this.gameboardConfig.minimumValue * 8 ||
-                    this.game.rnd.integerInRange(0, 2) === 0) &&
-                (value !== this.gameboardConfig.minimumValue * 16 ||
-                    this.game.rnd.integerInRange(0, 1) === 0) &&
-                (value !== this.gameboardConfig.minimumValue * 32 ||
-                    this.game.rnd.integerInRange(0, 1) === 0)) {
-                this.game.sound.play(this.lastMergedTile.model.sfxId, 1);
-            }
-        }
-        this.lastMergedTile = null;
-        this.mergeAndKillTiles();
-        if (!this.isFull()) {
-            this.add();
-            return true;
-        }
-        else {
-            return false;
-        }
     };
     LogicalGrid.prototype.reorderTileList = function () {
         var list = this.gameboardConfig.tiles;
@@ -146,121 +201,11 @@ var LogicalGrid = (function () {
         var position = y * (this.arraySize + 1) + x;
         this.grid[position] = tile;
     };
-    LogicalGrid.prototype.animateTile = function (tile, keyboardInput) {
-        var distance = this.config.safeZone.safeWidth;
-        var direction = keyboardInput === Phaser.Keyboard.UP
-            ? Phaser.ANGLE_UP
-            : keyboardInput === Phaser.Keyboard.DOWN
-                ? Phaser.ANGLE_DOWN
-                : Phaser.Keyboard.RIGHT ? Phaser.ANGLE_RIGHT : Phaser.ANGLE_LEFT;
-        tile.sprite.body.moveTo(500, distance, direction);
-        tile.sprite.body.stopVelocityOnCollide = true;
-    };
-    LogicalGrid.prototype.tilesStopped = function () {
-        var allStopped = true;
-        var game = this.game;
-        this.tilesGroup.forEach(function (sprite) {
-            if (sprite.body.velocity.x !== 0 || sprite.body.velocity.y !== 0) {
-                allStopped = false;
-            }
-        }.bind(this));
-        if (allStopped) {
-            this.updateGrid();
-        }
-        return allStopped;
-    };
-    LogicalGrid.prototype.pushTile = function (tile, keyboardInput) {
-        var isDirty = false;
-        var pushX = keyboardInput === Phaser.KeyCode.RIGHT
-            ? 1
-            : keyboardInput === Phaser.KeyCode.LEFT ? -1 : 0;
-        var pushY = keyboardInput === Phaser.KeyCode.DOWN
-            ? 1
-            : keyboardInput === Phaser.KeyCode.UP ? -1 : 0;
-        var actualX = tile.posX;
-        var actualY = tile.posY;
-        var newX = actualX + pushX;
-        var newY = actualY + pushY;
-        while (newX >= 0 &&
-            newX <= this.arraySize &&
-            newY >= 0 &&
-            newY <= this.arraySize) {
-            var nextTile = this.get(newX, newY);
-            if (!nextTile || !nextTile.value) {
-                tile.posX = newX;
-                tile.posY = newY;
-                this.set(newX, newY, tile);
-                this.set(actualX, actualY, null);
-                actualX = newX;
-                actualY = newY;
-                isDirty = true;
-            }
-            else {
-                if (nextTile && nextTile.value === tile.value) {
-                    var newValue = tile.value * 2;
-                    this.mergeTile(nextTile);
-                    this.killTile(tile);
-                    isDirty = true;
-                    this.lastMergedTile =
-                        this.lastMergedTile && this.lastMergedTile.value < newValue
-                            ? this.get(newX, newY)
-                            : this.lastMergedTile;
-                    break;
-                }
-                else {
-                    break;
-                }
-            }
-            newX += pushX;
-            newY += pushY;
-        }
-        return isDirty;
-    };
-    LogicalGrid.prototype.killTile = function (tile) {
-        tile.willBeDestroyed = true;
-        tile.value = 0;
-    };
-    LogicalGrid.prototype.mergeTile = function (tile) {
-        tile.willBeMerged = true;
-        tile.value *= 2;
-    };
-    LogicalGrid.prototype.mergeAndKillTiles = function () {
-        var kill = this.grid.filter(function (x) { return x && x.willBeDestroyed; });
-        if (kill.length) {
-            console.log(kill);
-        }
-        for (var _i = 0, kill_1 = kill; _i < kill_1.length; _i++) {
-            var item = kill_1[_i];
-            item.sprite.destroy();
-            this.set(item.posX, item.posY, null);
-        }
-        var merge = this.grid.filter(function (x) { return x && x.willBeMerged; });
-        var _loop_1 = function (item) {
-            var nextTile = this_1.gameboardConfig.tiles.find(function (x) { return x.staticValue === item.value; });
-            item.sprite.loadTexture(nextTile.id);
-            this_1.set(item.posX, item.posY, item);
-        };
-        var this_1 = this;
-        for (var _a = 0, merge_1 = merge; _a < merge_1.length; _a++) {
-            var item = merge_1[_a];
-            _loop_1(item);
-        }
-        this.tilesGroup.removeAll();
-        for (var _b = 0, _c = this.grid; _b < _c.length; _b++) {
-            var item = _c[_b];
-            if (item) {
-                item.updateSprite();
-                this.tilesGroup.add(item.sprite);
-            }
-        }
-        if (this.grid.filter(function (x) { return x; }).length !== this.tilesGroup.children.length) {
-            console.log(this.grid);
-            console.log(this.tilesGroup.children);
-            console.log('-----------');
-        }
-        else {
-            console.log('-----------');
-        }
+    LogicalGrid.prototype.push = function (tile, keyboardInput) { };
+    LogicalGrid.prototype.mergeTile = function (nextTile, previousTile) {
+        nextTile.value *= 2;
+        previousTile.value = 0;
+        previousTile.nextTile = nextTile;
     };
     LogicalGrid.prototype.isFull = function () {
         for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
