@@ -98,10 +98,9 @@ export default class CharacterSelection extends Phaser.State {
         ratio
       );
 
-      let frame = this.spriteFactory.makeMenuTile(
+      let frame = this.spriteFactory.makeFrame(
         column,
         row,
-        'frame',
         yMenuPad,
         ratio
       );

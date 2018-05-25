@@ -60,7 +60,7 @@ var Grid = (function () {
         var arraySize = this.gameboardConfig.arraySize;
         for (var x = 0; x <= arraySize; x++) {
             for (var y = 0; y <= arraySize; y++) {
-                group.add(this.spriteFactory.makeTile(x, y, 'frame'));
+                group.add(this.spriteFactory.makeFrame(x, y));
             }
         }
         return group;

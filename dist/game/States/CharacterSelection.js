@@ -63,7 +63,7 @@ var CharacterSelection = (function (_super) {
         displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
             var sprite = this_1.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
-            var frame = this_1.spriteFactory.makeMenuTile(column, row, 'frame', yMenuPad, ratio);
+            var frame = this_1.spriteFactory.makeFrame(column, row, yMenuPad, ratio);
             sprite.inputEnabled = true;
             sprite.events.onInputDown.add(function () {
                 this.setSelectedCharacter(char);

@@ -1,5 +1,14 @@
 import Factory from './Factory';
 export default class SpriteFactory extends Factory {
+  makeFrame(x: number, y: number, paddingY = null, ratio = 1) {
+    let settings = this.config.gridSettings;
+    let size = settings.tileSize * ratio;
+    let scale = (settings.tileSize / settings.realTileSize) * ratio;
+    let padX = settings.gridPaddingX;
+    let padY = paddingY ? paddingY : settings.gridPaddingY;
+    return this.createSprite(x * size, y * size, 'frame', scale, padX, padY);
+  }
+
   makeTile(x: number, y: number, id: string) {
     let size = this.config.gridSettings.tileSize;
     let scale = this.config.gridSettings.tileScale;
@@ -8,7 +17,7 @@ export default class SpriteFactory extends Factory {
     return this.createSprite(x * size, y * size, id, scale, padX, padY);
   }
 
-  makeMenuTile(x: number, y: number, id: string, padY: number, ratio: number) {
+  makeMenuTile(x: number, y: number, id: string,  padY: number, ratio: number) {
     let size = this.config.gridSettings.tileSize * ratio;
     let scale = this.config.gridSettings.tileScale * ratio;
     let padX = this.config.gridSettings.gridPaddingX;
@@ -33,6 +42,23 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
+  makeCentered(posY: number, id: string, spriteScale = 1) {
+    let y = posY * this.config.scaleFactor;
+    let config = this.config;
+    let xPad = config.safeZone.paddingX + this.config.gridSettings.gridPaddingX;
+    let yPad = config.safeZone.paddingY + this.config.gridSettings.gridPaddingY;
+    let sprite = this.game.add.sprite(0, y + yPad, id);
+    sprite.scale.setTo(
+      config.scaleFactor * spriteScale,
+      config.scaleFactor * spriteScale
+    );
+
+    let x = (this.config.safeZone.safeWidth - sprite.width) / 2;
+    sprite.x = xPad + x;
+
+    return sprite;
+  }
+
   createSprite(
     posX: number,
     posY: number,
@@ -49,23 +75,6 @@ export default class SpriteFactory extends Factory {
     let yPad = config.safeZone.paddingY + padY;
     let sprite = this.game.add.sprite(x + xPad, y + yPad, id);
     sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
-
-    return sprite;
-  }
-
-  makeCentered(posY: number, id: string, spriteScale = 1) {
-    let y = posY * this.config.scaleFactor;
-    let config = this.config;
-    let xPad = config.safeZone.paddingX + this.config.gridSettings.gridPaddingX;
-    let yPad = config.safeZone.paddingY + this.config.gridSettings.gridPaddingY;
-    let sprite = this.game.add.sprite(0, y + yPad, id);
-    sprite.scale.setTo(
-      config.scaleFactor * spriteScale,
-      config.scaleFactor * spriteScale
-    );
-
-    let x = (this.config.safeZone.safeWidth - sprite.width) / 2;
-    sprite.x = xPad + x;
 
     return sprite;
   }

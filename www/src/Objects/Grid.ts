@@ -87,7 +87,7 @@ export default class Grid {
     let arraySize = this.gameboardConfig.arraySize;
     for (let x = 0; x <= arraySize; x++) {
       for (let y = 0; y <= arraySize; y++) {
-        group.add(this.spriteFactory.makeTile(x, y, 'frame'));
+        group.add(this.spriteFactory.makeFrame(x, y));
       }
     }
     return group;

@@ -60,7 +60,7 @@ export class SafeZone {
 
 export class GridSettings {
   tileSize: number;
-  intendedTileSize: number;
+  realTileSize: number;
   frameLineWidth: number;
   lineColor: any;
   activeLineColor: any;

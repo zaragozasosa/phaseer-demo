@@ -78,14 +78,14 @@ export default class Game extends Phaser.Game {
 
     gridSettings = new GridSettings();
     gridSettings.tileSize = 230;
-    gridSettings.intendedTileSize = 190;
+    gridSettings.realTileSize = 180;
     gridSettings.frameLineWidth = 30;
     gridSettings.lineColor = config.colorSettings.primary;
     gridSettings.activeLineColor = config.colorSettings.selected;
     gridSettings.gridPaddingX = 20 * scaleFactor;
     gridSettings.gridPaddingY = 200 * scaleFactor;
     gridSettings.tileScale =
-      gridSettings.tileSize / gridSettings.intendedTileSize;
+      gridSettings.tileSize / (gridSettings.realTileSize + 10);
     gridSettings.font = 'Verdana,Geneva,sans-serif';
 
     config.scaleFactor = scaleFactor;
