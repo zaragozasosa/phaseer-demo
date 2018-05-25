@@ -1,4 +1,4 @@
-import Gameboard from '../Gameboard';
+import Gameboard from './../Objects/Gameboard';
 import GameboardConfig from './../Objects/GameboardConfig';
 
 export default class Unranked extends Phaser.State {

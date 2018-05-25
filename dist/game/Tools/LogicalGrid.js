@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var GridTile_1 = require("./../GridTile");
+var GridTile_1 = require("./../Objects/GridTile");
 var Factory_1 = require("./Factory");
 var LogicalGrid = (function (_super) {
     __extends(LogicalGrid, _super);
@@ -72,21 +72,6 @@ var LogicalGrid = (function (_super) {
             } while (startX !== stopX);
         } while (startY !== stopY);
         return animating;
-    };
-    LogicalGrid.prototype.sumTiles = function () {
-        var points = 0;
-        for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
-            var tile = _a[_i];
-            points += tile ? tile.value : 0;
-        }
-        return points;
-    };
-    LogicalGrid.prototype.getColumnForDebug = function (row) {
-        var val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
-        var val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
-        var val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
-        var val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
-        return val1 + "\n" + val2 + "\n" + val3 + "\n" + val4;
     };
     LogicalGrid.prototype.tryPushing = function (x, y, keyboardInput) {
         var tile = this.get(x, y);
@@ -305,6 +290,21 @@ var LogicalGrid = (function (_super) {
             }
         }
         return empty;
+    };
+    LogicalGrid.prototype.sumTiles = function () {
+        var points = 0;
+        for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
+            var tile = _a[_i];
+            points += tile ? tile.value : 0;
+        }
+        return points;
+    };
+    LogicalGrid.prototype.getColumnForDebug = function (row) {
+        var val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
+        var val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
+        var val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
+        var val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
+        return val1 + "\n" + val2 + "\n" + val3 + "\n" + val4;
     };
     return LogicalGrid;
 }(Factory_1.default));

@@ -1,6 +1,5 @@
 /// <reference path="../../typings/swipe.d.ts"/>
 
-import { Config, Singleton } from '../Config';
 import Factory from './Factory';
 export default class InputManager extends Factory {
   private swipe: Swipe;

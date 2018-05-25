@@ -2,9 +2,9 @@ import GameboardConfig from './../Objects/GameboardConfig';
 import SpriteFactory from './../Tools/SpriteFactory';
 import GraphicsFactory from './../Tools/GraphicsFactory';
 import InputManager from './../Tools/InputManager';
-import Tile from './../Objects/Tile';
+import Tile from './../Models/Tile';
 import TextFactory from './../Tools/TextFactory';
-import { Config, Singleton } from './../Config';
+import { Config, Singleton } from './../Models/Config';
 import ButtonFactory from './../Tools/ButtonFactory';
 
 export default class CharacterSelection extends Phaser.State {

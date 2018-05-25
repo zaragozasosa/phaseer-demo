@@ -1,4 +1,3 @@
-import { Config, Singleton } from '../Config';
 import Factory from './Factory';
 export default class GraphicsFactory extends Factory {
 

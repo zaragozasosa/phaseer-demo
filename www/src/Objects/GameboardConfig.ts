@@ -1,4 +1,4 @@
-import Tile from './Tile';
+import Tile from './../Models/Tile';
 export default class GameboardConfig {
   mainTile: Tile;
   arraySize: number;

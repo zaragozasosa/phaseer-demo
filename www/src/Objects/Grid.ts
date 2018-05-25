@@ -1,11 +1,11 @@
-import { Config, Singleton } from './Config';
-import SpriteFactory from './Tools/SpriteFactory';
-import TextFactory from './Tools/TextFactory';
-import GraphicsFactory from './Tools/GraphicsFactory';
-import LogicalGrid from './Tools/LogicalGrid';
-import InputManager from './Tools/InputManager';
+import { Config, Singleton } from './../Models/Config';
+import SpriteFactory from './../Tools/SpriteFactory';
+import TextFactory from './../Tools/TextFactory';
+import GraphicsFactory from './../Tools/GraphicsFactory';
+import LogicalGrid from './../Tools/LogicalGrid';
+import InputManager from './../Tools/InputManager';
 import GridTile from './GridTile';
-import GameboardConfig from './Objects/GameboardConfig';
+import GameboardConfig from './GameboardConfig';
 
 export default class Grid {
   private game: Phaser.Game;

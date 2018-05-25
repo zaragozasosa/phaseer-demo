@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Tile_1 = require("./../Models/Tile");
+var Tile_1 = require("./Tile");
 var GameboardConfig = (function () {
     function GameboardConfig() {
         this.arraySize = 3;

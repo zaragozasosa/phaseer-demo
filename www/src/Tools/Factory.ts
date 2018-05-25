@@ -1,4 +1,4 @@
-import { Config, Singleton } from '../Config';
+import { Config, Singleton } from './../Models/Config';
 
 export default class Factory {
   protected game: Phaser.Game;

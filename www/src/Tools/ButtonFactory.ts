@@ -1,4 +1,3 @@
-import { Config, Singleton } from '../Config';
 import Factory from './Factory';
 export default class ButtonFactory extends Factory {
   make(x: number, y: number, list: Array<string>, click: any) {

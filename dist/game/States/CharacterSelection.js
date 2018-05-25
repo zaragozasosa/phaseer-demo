@@ -14,9 +14,9 @@ var GameboardConfig_1 = require("./../Objects/GameboardConfig");
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
 var InputManager_1 = require("./../Tools/InputManager");
-var Tile_1 = require("./../Objects/Tile");
+var Tile_1 = require("./../Models/Tile");
 var TextFactory_1 = require("./../Tools/TextFactory");
-var Config_1 = require("./../Config");
+var Config_1 = require("./../Models/Config");
 var ButtonFactory_1 = require("./../Tools/ButtonFactory");
 var CharacterSelection = (function (_super) {
     __extends(CharacterSelection, _super);

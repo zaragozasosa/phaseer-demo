@@ -1,7 +1,7 @@
-import { Config, Singleton } from './Config';
-import Tile from './Objects/Tile';
-import SpriteFactory from './Tools/SpriteFactory';
-import GameboardConfig from './Objects/GameboardConfig';
+import { Config, Singleton } from './../Models/Config';
+import Tile from './../Models/Tile';
+import SpriteFactory from './../Tools/SpriteFactory';
+import GameboardConfig from './GameboardConfig';
 
 export default class GridTile {
   model: Tile;

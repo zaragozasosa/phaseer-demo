@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("./Config");
+var Config_1 = require("./Models/Config");
 var Boot_1 = require("./States/Boot");
 var Preloader_1 = require("./States/Preloader");
 var MainMenu_1 = require("./States/MainMenu");

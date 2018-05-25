@@ -1,4 +1,3 @@
-import { Singleton, Config } from '../Config';
 import Factory from './Factory';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {

@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Gameboard_1 = require("../Gameboard");
+var Gameboard_1 = require("./../Objects/Gameboard");
 var Unranked = (function (_super) {
     __extends(Unranked, _super);
     function Unranked() {

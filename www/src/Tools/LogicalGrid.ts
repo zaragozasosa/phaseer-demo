@@ -1,6 +1,6 @@
-import { Config, Singleton } from '../Config';
+import { Config, Singleton } from './../Models/Config';
 import GameboardConfig from './../Objects/GameboardConfig';
-import GridTile from './../GridTile';
+import GridTile from './../Objects/GridTile';
 import Factory from './Factory';
 
 export default class LogicalGrid extends Factory {
@@ -82,23 +82,6 @@ export default class LogicalGrid extends Factory {
     } while (startY !== stopY);
 
     return animating;
-  }
-
-  sumTiles() {
-    let points = 0;
-    for (let tile of this.grid) {
-      points += tile ? tile.value : 0;
-    }
-    return points;
-  }
-
-  getColumnForDebug(row: number) {
-    let val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
-    let val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
-    let val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
-    let val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
-
-    return `${val1}\n${val2}\n${val3}\n${val4}`;
   }
 
   private tryPushing(x: number, y: number, keyboardInput: number) {
@@ -345,5 +328,22 @@ export default class LogicalGrid extends Factory {
       }
     }
     return empty;
+  }
+
+  sumTiles() {
+    let points = 0;
+    for (let tile of this.grid) {
+      points += tile ? tile.value : 0;
+    }
+    return points;
+  }
+
+  getColumnForDebug(row: number) {
+    let val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
+    let val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
+    let val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
+    let val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
+
+    return `${val1}\n${val2}\n${val3}\n${val4}`;
   }
 }

@@ -1,4 +1,4 @@
-import { Singleton } from '../Config';
+import { Singleton } from './../Models/Config';
 import SpriteFactory from './../Tools/SpriteFactory';
 export default class Preloader extends Phaser.State {
   preloadBar: Phaser.Sprite;

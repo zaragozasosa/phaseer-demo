@@ -1,5 +1,5 @@
 /// <reference path="../../node_modules/phaser-ce/typescript/phaser.comments.d.ts"/>
-import { Config, SafeZone, GridSettings, Singleton, ColorSettings } from './Config';
+import { Config, SafeZone, GridSettings, Singleton, ColorSettings } from './Models/Config';
 import Boot from './States/Boot';
 import Preloader from './States/Preloader';
 import MainMenu from './States/MainMenu';

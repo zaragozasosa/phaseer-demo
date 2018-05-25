@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("../Config");
+var Config_1 = require("./../Models/Config");
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var Preloader = (function (_super) {
     __extends(Preloader, _super);

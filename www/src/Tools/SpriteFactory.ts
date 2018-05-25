@@ -1,4 +1,3 @@
-import { Config, Singleton } from '../Config';
 import Factory from './Factory';
 export default class SpriteFactory extends Factory {
   makeTile(x: number, y: number, id: string) {
