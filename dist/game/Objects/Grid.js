@@ -4,7 +4,7 @@ var Config_1 = require("./../Models/Config");
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var TextFactory_1 = require("./../Tools/TextFactory");
 var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
-var LogicalGrid_1 = require("./../Tools/LogicalGrid");
+var LogicalGrid_1 = require("./../Objects/LogicalGrid");
 var InputManager_1 = require("./../Tools/InputManager");
 var Grid = (function () {
     function Grid(gameboardConfig, gameboardCallback) {

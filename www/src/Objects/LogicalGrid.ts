@@ -1,9 +1,10 @@
 import { Config, Singleton } from './../Models/Config';
 import GameboardConfig from './../Objects/GameboardConfig';
 import GridTile from './../Objects/GridTile';
-import Factory from './Factory';
 
-export default class LogicalGrid extends Factory {
+export default class LogicalGrid {
+  private game: Phaser.Game;
+  private config: Config;
   private grid: Array<GridTile>;
   private arraySize: number;
   private gameboardConfig: GameboardConfig;
@@ -11,7 +12,9 @@ export default class LogicalGrid extends Factory {
   private tilesGroup: Phaser.Group;
 
   constructor(gameboardConfig: GameboardConfig) {
-    super();
+    let singleton = Singleton.getInstance();
+    this.game = singleton.game;
+    this.config = singleton.config;
     this.gameboardConfig = gameboardConfig;
     this.arraySize = gameboardConfig.arraySize;
     this.tilesGroup = this.game.add.group();

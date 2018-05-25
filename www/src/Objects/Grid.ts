@@ -2,7 +2,7 @@ import { Config, Singleton } from './../Models/Config';
 import SpriteFactory from './../Tools/SpriteFactory';
 import TextFactory from './../Tools/TextFactory';
 import GraphicsFactory from './../Tools/GraphicsFactory';
-import LogicalGrid from './../Tools/LogicalGrid';
+import LogicalGrid from './../Objects/LogicalGrid';
 import InputManager from './../Tools/InputManager';
 import GridTile from './GridTile';
 import GameboardConfig from './GameboardConfig';
