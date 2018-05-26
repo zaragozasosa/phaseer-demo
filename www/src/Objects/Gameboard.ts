@@ -26,7 +26,7 @@ export default class Gameboard extends Base{
     this.movements = 0;
     this.points = this.grid.calculatePoints();
     this.addHeader();
-    this.addDebuggingMatrix();
+    //this.addDebuggingMatrix();
   }
 
   update() {

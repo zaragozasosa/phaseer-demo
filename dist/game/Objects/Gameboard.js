@@ -25,7 +25,6 @@ var Gameboard = (function (_super) {
         _this.movements = 0;
         _this.points = _this.grid.calculatePoints();
         _this.addHeader();
-        _this.addDebuggingMatrix();
         return _this;
     }
     Gameboard.prototype.update = function () {

@@ -116,9 +116,9 @@ export default class LogicalGrid extends Base{
   }
 
   private cleanGrid() {
-    let killed = this.grid.filter(x => x && !x.sprite.alive);
+    let killed = this.grid.filter(x => x && !x.isAlive);
     for (let item of killed) {
-      item.sprite.destroy(true);
+      item.destroy(true);
       this.set(item.posX, item.posY, null);
     }
 
@@ -126,7 +126,7 @@ export default class LogicalGrid extends Base{
     this.tilesGroup.removeAll();
 
     for (let item of this.grid.filter(x => x)) {
-      this.tilesGroup.add(item.sprite);
+      this.tilesGroup.add(item.getGroup);
     }
   }
 
@@ -208,7 +208,7 @@ export default class LogicalGrid extends Base{
 
     let tile = new GridTile(ranX, ranY, this.gameboardConfig, newTilePos);
     this.set(ranX, ranY, tile);
-    this.tilesGroup.add(tile.sprite);
+    this.tilesGroup.add(tile.getGroup);
   }
 
   private reorderTileList() {

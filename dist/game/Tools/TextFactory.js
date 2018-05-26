@@ -17,13 +17,21 @@ var TextFactory = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
-        var xPos = 30 + x * this.config.gridSettings.tileSize +
-            this.config.gridSettings.gridPaddingX;
-        var yPos = 120 + y * this.config.gridSettings.tileSize +
-            this.config.gridSettings.gridPaddingY;
+        var settings = this.config.gridSettings;
+        var xPos = settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
+        var yPos = settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
         var txt = this.make(xPos, yPos, value.toString(), size);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
         return txt;
+    };
+    TextFactory.prototype.updateTileNumber = function (x, y, text) {
+        var settings = this.config.gridSettings;
+        var xPos = settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
+        var yPos = settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
+        var posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
+        var posY = this.config.safeZone.paddingY + yPos * this.config.scaleFactor;
+        text.position.x = posX;
+        text.position.y = posY;
     };
     TextFactory.prototype.make = function (posX, posY, text, textSize, altColor) {
         if (altColor === void 0) { altColor = false; }

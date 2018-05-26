@@ -8,9 +8,9 @@ export default class GridTile extends Base {
   posX: number;
   posY: number;
   value: number;
-  sprite: Phaser.Sprite;
-  number: Phaser.Text;
-  group: Phaser.Group;
+  private sprite: Phaser.Sprite;
+  private number: Phaser.Text;
+  private group: Phaser.Group;
 
   private gameboardConfig: GameboardConfig;
   private mergeTween: Phaser.Tween;
@@ -45,19 +45,20 @@ export default class GridTile extends Base {
 
     this.mergeTween = t1.chain(t2);
 
-    // this.number = this.tools.text.makeTileNumber(
-    //   this.posX,
-    //   this.posY,
-    //   this.value,
-    //   40
-    // );
-    // this.group = this.game.add.group();
-    // this.group.add(this.sprite);
-    // this.group.add(this.number);
-
-    // this.group.bringToTop(this.number);
+    this.number = this.tools.text.makeTileNumber(
+      this.posX,
+      this.posY,
+      this.value,
+      40
+    );
+    this.group = this.tools.misc.addGroup();
+    this.group.addChild(this.sprite);
+    this.group.addChild(this.number);
   }
 
+  get isAlive(): boolean {
+    return this.sprite && this.sprite.alive;
+  }
   get isMoving(): boolean {
     if (!this.sprite) {
       return false;
@@ -67,15 +68,22 @@ export default class GridTile extends Base {
     return velocity.x || velocity.y;
   }
 
+  get getGroup(): Phaser.Group {
+    return this.group;
+  }
+
   animate(keyboardInput: number) {
     let direction = this.getDirection(keyboardInput);
     let body = this.sprite.body;
     let config = this.config;
-
     if (direction !== null) {
       let distance = config.safeZone.safeWidth * config.scaleFactor;
-      body.moves = true;
-      body.moveTo(500, this.config.safeZone.safeWidth, direction);
+      for (let item of this.group.getAll()) {
+        item.body.moves = true;
+        item.body.moveTo(500, this.config.safeZone.safeWidth, direction);
+      }
+      // body.moves = true;
+      // body.moveTo(500, this.config.safeZone.safeWidth, direction);
       // body.setAll('moves', true);
       // body.callAll(
       //   'moveTo',
@@ -84,30 +92,36 @@ export default class GridTile extends Base {
       //   this.config.safeZone.safeWidth,
       //   direction
       // );
-      body.onMoveComplete.addOnce(this.updateTile, this);
+      body.onMoveComplete.addOnce(this.update, this);
     }
   }
 
   overlaps(tilesGroup: Phaser.Group, wallsGroup: Phaser.Group) {
-    this.tools.misc.overlap(
-      this.sprite,
-      tilesGroup,
-      function(a: Phaser.Sprite, b: Phaser.Sprite) {
-        if (a && b) {
-          if (a.key === b.key) {
-            console.log('collision, merging');
-            return false;
-          } else {
-            let velocity = this.sprite.body.velocity;
-            if (velocity.x || velocity.y) {
-              console.log('collision in sprites x sprite');
-              this.sprite.body.stopMovement(true);
-              return true;
+    let group = this.group;
+    
+    for (let groupItem of tilesGroup.getAll()) {
+      this.tools.misc.overlap(
+        this.sprite,
+        groupItem.getBottom(),
+        function(s: Phaser.Sprite, g: Phaser.Sprite) {
+          if (s && g) {
+            if (s.key === g.key) {
+              console.log('merge overlap');
+              return false;
+            } else {
+              let velocity = this.sprite.body.velocity;
+              if (velocity.x || velocity.y) {
+                console.log('collision in sprites x sprite');
+                for (let item of group.getAll()) {
+                  item.body.stopMovement(true);
+                }
+                return true;
+              }
             }
           }
-        }
-      }.bind(this)
-    );
+        }.bind(this)
+      );
+    }
 
     this.tools.misc.overlap(
       this.sprite,
@@ -117,7 +131,10 @@ export default class GridTile extends Base {
           let velocity = this.sprite.body.velocity;
           if (velocity.x || velocity.y) {
             console.log('collision in sprites x wall');
-            this.sprite.body.stopMovement(true);
+            for (let item of group.getAll()) {
+              item.body.stopMovement(true);
+            }
+            //this.sprite.body.stopMovement(true);
             return true;
           }
         }
@@ -125,13 +142,29 @@ export default class GridTile extends Base {
     );
   }
 
-  private updateTile() {
-    this.sprite.body.moves = false;
+  destroy(destroyChildren = false) {
+    this.group.destroy(destroyChildren);
+  }
+
+  private update() {
+    for (let item of this.group.getAll()) {
+      item.body.moves = false;
+    }
     if (this.nextTile) {
-      this.sprite.kill();
+      for (let item of this.group.getAll()) {
+        item.kill();
+      }
       this.nextTile.merge();
     } else {
-      this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
+      for (let item of this.group.getAll()) {
+        if (item instanceof Phaser.Sprite) {
+          this.tools.sprite.updateTile(this.posX, this.posY, item);
+        }
+
+        if (item instanceof Phaser.Text) {
+          this.tools.text.updateTileNumber(this.posX, this.posY, item);
+        }
+      }
     }
   }
 
@@ -141,7 +174,7 @@ export default class GridTile extends Base {
     );
     this.model = tile;
     this.sprite.loadTexture(tile.id);
-    // this.number.setText(this.value + '');
+    this.number.setText(this.value + '');
     this.mergeTween.start();
   }
 

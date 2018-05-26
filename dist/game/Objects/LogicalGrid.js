@@ -100,17 +100,17 @@ var LogicalGrid = (function (_super) {
         }
     };
     LogicalGrid.prototype.cleanGrid = function () {
-        var killed = this.grid.filter(function (x) { return x && !x.sprite.alive; });
+        var killed = this.grid.filter(function (x) { return x && !x.isAlive; });
         for (var _i = 0, killed_1 = killed; _i < killed_1.length; _i++) {
             var item = killed_1[_i];
-            item.sprite.destroy(true);
+            item.destroy(true);
             this.set(item.posX, item.posY, null);
         }
         this.lastMergedTile = null;
         this.tilesGroup.removeAll();
         for (var _a = 0, _b = this.grid.filter(function (x) { return x; }); _a < _b.length; _a++) {
             var item = _b[_a];
-            this.tilesGroup.add(item.sprite);
+            this.tilesGroup.add(item.getGroup);
         }
     };
     LogicalGrid.prototype.pushTile = function (x, y, keyboardInput) {
@@ -180,7 +180,7 @@ var LogicalGrid = (function (_super) {
         var value = this.get(ranX, ranY);
         var tile = new GridTile_1.default(ranX, ranY, this.gameboardConfig, newTilePos);
         this.set(ranX, ranY, tile);
-        this.tilesGroup.add(tile.sprite);
+        this.tilesGroup.add(tile.getGroup);
     };
     LogicalGrid.prototype.reorderTileList = function () {
         var list = this.gameboardConfig.tiles;

@@ -102,6 +102,8 @@ export class GridSettings {
   tileScale: number;
   tilePadding: number;
   font: string;
+  tileNumberPadX: number;
+  tileNumberPadY: number;
 }
 
 export class Tools {

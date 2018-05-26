@@ -1,17 +1,30 @@
 import Factory from './Base/Factory';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
+    let settings = this.config.gridSettings;
     let xPos =
-      30 + x * this.config.gridSettings.tileSize +
-      this.config.gridSettings.gridPaddingX;
+      settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
     let yPos =
-      120 + y * this.config.gridSettings.tileSize +
-      this.config.gridSettings.gridPaddingY;
+      settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
 
     let txt = this.make(xPos, yPos, value.toString(), size);
     this.game.physics.enable(txt, Phaser.Physics.ARCADE);
 
     return txt;
+  }
+
+  updateTileNumber(x: number, y: number, text: Phaser.Text) {
+    let settings = this.config.gridSettings;
+    let xPos =
+      settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
+    let yPos =
+      settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
+
+    let posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
+    let posY = this.config.safeZone.paddingY + yPos * this.config.scaleFactor;
+
+    text.position.x = posX;
+    text.position.y = posY;
   }
 
   make(

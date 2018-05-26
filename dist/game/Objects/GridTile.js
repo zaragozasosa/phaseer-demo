@@ -35,8 +35,19 @@ var GridTile = (function (_super) {
         var t1 = misc.tweenTo(_this.sprite, { alpha: 0.3 }, 100, 'Linear');
         var t2 = misc.tweenTo(_this.sprite, { alpha: 1 }, 300, 'Linear');
         _this.mergeTween = t1.chain(t2);
+        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 40);
+        _this.group = _this.tools.misc.addGroup();
+        _this.group.addChild(_this.sprite);
+        _this.group.addChild(_this.number);
         return _this;
     }
+    Object.defineProperty(GridTile.prototype, "isAlive", {
+        get: function () {
+            return this.sprite && this.sprite.alive;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(GridTile.prototype, "isMoving", {
         get: function () {
             if (!this.sprite) {
@@ -48,53 +59,91 @@ var GridTile = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(GridTile.prototype, "getGroup", {
+        get: function () {
+            return this.group;
+        },
+        enumerable: true,
+        configurable: true
+    });
     GridTile.prototype.animate = function (keyboardInput) {
         var direction = this.getDirection(keyboardInput);
         var body = this.sprite.body;
         var config = this.config;
         if (direction !== null) {
             var distance = config.safeZone.safeWidth * config.scaleFactor;
-            body.moves = true;
-            body.moveTo(500, this.config.safeZone.safeWidth, direction);
-            body.onMoveComplete.addOnce(this.updateTile, this);
+            for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
+                var item = _a[_i];
+                item.body.moves = true;
+                item.body.moveTo(500, this.config.safeZone.safeWidth, direction);
+            }
+            body.onMoveComplete.addOnce(this.update, this);
         }
     };
     GridTile.prototype.overlaps = function (tilesGroup, wallsGroup) {
-        this.tools.misc.overlap(this.sprite, tilesGroup, function (a, b) {
-            if (a && b) {
-                if (a.key === b.key) {
-                    console.log('collision, merging');
-                    return false;
-                }
-                else {
-                    var velocity = this.sprite.body.velocity;
-                    if (velocity.x || velocity.y) {
-                        console.log('collision in sprites x sprite');
-                        this.sprite.body.stopMovement(true);
-                        return true;
+        var group = this.group;
+        for (var _i = 0, _a = tilesGroup.getAll(); _i < _a.length; _i++) {
+            var groupItem = _a[_i];
+            this.tools.misc.overlap(this.sprite, groupItem.getBottom(), function (s, g) {
+                if (s && g) {
+                    if (s.key === g.key) {
+                        console.log('merge overlap');
+                        return false;
+                    }
+                    else {
+                        var velocity = this.sprite.body.velocity;
+                        if (velocity.x || velocity.y) {
+                            console.log('collision in sprites x sprite');
+                            for (var _i = 0, _a = group.getAll(); _i < _a.length; _i++) {
+                                var item = _a[_i];
+                                item.body.stopMovement(true);
+                            }
+                            return true;
+                        }
                     }
                 }
-            }
-        }.bind(this));
+            }.bind(this));
+        }
         this.tools.misc.overlap(this.sprite, wallsGroup, function (a, b) {
             if (a && b) {
                 var velocity = this.sprite.body.velocity;
                 if (velocity.x || velocity.y) {
                     console.log('collision in sprites x wall');
-                    this.sprite.body.stopMovement(true);
+                    for (var _i = 0, _a = group.getAll(); _i < _a.length; _i++) {
+                        var item = _a[_i];
+                        item.body.stopMovement(true);
+                    }
                     return true;
                 }
             }
         }.bind(this));
     };
-    GridTile.prototype.updateTile = function () {
-        this.sprite.body.moves = false;
+    GridTile.prototype.destroy = function (destroyChildren) {
+        if (destroyChildren === void 0) { destroyChildren = false; }
+        this.group.destroy(destroyChildren);
+    };
+    GridTile.prototype.update = function () {
+        for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
+            var item = _a[_i];
+            item.body.moves = false;
+        }
         if (this.nextTile) {
-            this.sprite.kill();
+            for (var _b = 0, _c = this.group.getAll(); _b < _c.length; _b++) {
+                var item = _c[_b];
+                item.kill();
+            }
             this.nextTile.merge();
         }
         else {
-            this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
+            for (var _d = 0, _e = this.group.getAll(); _d < _e.length; _d++) {
+                var item = _e[_d];
+                if (item instanceof Phaser.Sprite) {
+                    this.tools.sprite.updateTile(this.posX, this.posY, item);
+                }
+                if (item instanceof Phaser.Text) {
+                    this.tools.text.updateTileNumber(this.posX, this.posY, item);
+                }
+            }
         }
     };
     GridTile.prototype.merge = function () {
@@ -102,6 +151,7 @@ var GridTile = (function (_super) {
         var tile = this.gameboardConfig.tiles.find(function (x) { return x.staticValue === _this.value; });
         this.model = tile;
         this.sprite.loadTexture(tile.id);
+        this.number.setText(this.value + '');
         this.mergeTween.start();
     };
     GridTile.prototype.createSprite = function () {

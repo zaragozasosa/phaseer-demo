@@ -86,7 +86,9 @@ export default class ConfigSetup {
       gridSettings.tileSize / (gridSettings.physicalTileSize + 10);
     gridSettings.tilePadding = 0;
     gridSettings.font = 'Verdana,Geneva,sans-serif';
-
+    gridSettings.tileNumberPadX = 30;
+    gridSettings.tileNumberPadY = 120;
+    
     config.gridSettings = gridSettings;
   }
 
