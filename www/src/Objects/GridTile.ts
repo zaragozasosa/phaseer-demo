@@ -1,19 +1,17 @@
-import { Config, Singleton } from './../Models/Config';
+import Base from './../Base';
 import TileModel from './../Models/TileModel';
-import SpriteFactory from './../Tools/SpriteFactory';
-import GameboardConfig from './GameboardConfig';
+import GameboardConfig from './../Config/GameboardConfig';
 
-export default class GridTile {
+export default class GridTile extends Base {
   model: TileModel;
   nextTile: GridTile;
   posX: number;
   posY: number;
   value: number;
   sprite: Phaser.Sprite;
+  number: Phaser.Text;
+  group: Phaser.Group;
 
-  private game: Phaser.Game;
-  private config: Config;
-  private spriteFactory: SpriteFactory;
   private gameboardConfig: GameboardConfig;
   private mergeTween: Phaser.Tween;
 
@@ -24,9 +22,7 @@ export default class GridTile {
     position = 0,
     value = 0
   ) {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
+    super();
     this.gameboardConfig = gameboardConfig;
     this.nextTile = null;
 
@@ -39,7 +35,6 @@ export default class GridTile {
 
     this.posX = x;
     this.posY = y;
-    this.spriteFactory = new SpriteFactory();
     this.sprite = this.createSprite();
 
     this.sprite.alpha = 0;
@@ -53,6 +48,18 @@ export default class GridTile {
       .to({ alpha: 1 }, 300, 'Linear');
 
     this.mergeTween = tween1.chain(tween2);
+
+    // this.number = this.tools.text.makeTileNumber(
+    //   this.posX,
+    //   this.posY,
+    //   this.value,
+    //   40
+    // );
+    // this.group = this.game.add.group();
+    // this.group.add(this.sprite);
+    // this.group.add(this.number);
+
+    // this.group.bringToTop(this.number);
   }
 
   get isMoving(): boolean {
@@ -73,6 +80,14 @@ export default class GridTile {
       let distance = config.safeZone.safeWidth * config.scaleFactor;
       body.moves = true;
       body.moveTo(500, this.config.safeZone.safeWidth, direction);
+      // body.setAll('moves', true);
+      // body.callAll(
+      //   'moveTo',
+      //   this,
+      //   500,
+      //   this.config.safeZone.safeWidth,
+      //   direction
+      // );
       body.onMoveComplete.addOnce(this.updateTile, this);
     }
   }
@@ -120,7 +135,7 @@ export default class GridTile {
       this.sprite.kill();
       this.nextTile.merge();
     } else {
-      this.spriteFactory.updateTile(this.posX, this.posY, this.sprite);
+      this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
     }
   }
 
@@ -130,13 +145,13 @@ export default class GridTile {
     );
     this.model = tile;
     this.sprite.loadTexture(tile.id);
-
+    // this.number.setText(this.value + '');
     this.mergeTween.start();
   }
 
   private createSprite() {
     let tile = this.model;
-    let sprite = this.spriteFactory.makeTile(this.posX, this.posY, tile.id);
+    let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
     sprite.body.collideWorldBounds = true;
 

@@ -1,10 +1,8 @@
-import { Config, Singleton } from './../Models/Config';
-import GameboardConfig from './../Objects/GameboardConfig';
+import GameboardConfig from './../Config/GameboardConfig';
 import GridTile from './../Objects/GridTile';
+import Base from './../Base';
 
-export default class LogicalGrid {
-  private game: Phaser.Game;
-  private config: Config;
+export default class LogicalGrid extends Base{
   private grid: Array<GridTile>;
   private arraySize: number;
   private gameboardConfig: GameboardConfig;
@@ -12,9 +10,7 @@ export default class LogicalGrid {
   private tilesGroup: Phaser.Group;
 
   constructor(gameboardConfig: GameboardConfig) {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
+    super();
     this.gameboardConfig = gameboardConfig;
     this.arraySize = gameboardConfig.arraySize;
     this.tilesGroup = this.game.add.group();

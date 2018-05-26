@@ -1,15 +1,17 @@
 import SpriteFactory from './../Tools/SpriteFactory';
 import TextFactory from './../Tools/TextFactory';
-import InputManager from './../Tools/InputManager';
+import InputManager from './../InputManager';
+import { Singleton } from './../Config/Config';
 export default class MainMenu extends Phaser.State {
   private spriteFactory: SpriteFactory;
   private textFactory: TextFactory;
   private cursor: InputManager;
 
   create() {
-    this.spriteFactory = new SpriteFactory();
-    this.textFactory = new TextFactory();
-    this.cursor = new InputManager();
+    let config = Singleton.get().config;
+    this.spriteFactory = new SpriteFactory(config);
+    this.textFactory = new TextFactory(config);
+    this.cursor = new InputManager(config);
 
     let music = this.game.add.audio('bgm');
     music.play('', 0, 0.5, true);

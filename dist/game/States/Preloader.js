@@ -10,18 +10,16 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("./../Models/Config");
-var SpriteFactory_1 = require("./../Tools/SpriteFactory");
+var Config_1 = require("./../Config/Config");
 var Preloader = (function (_super) {
     __extends(Preloader, _super);
     function Preloader() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Preloader.prototype.preload = function () {
-        var singleton = Config_1.Singleton.getInstance();
-        var config = singleton.config;
-        var spriteFactory = new SpriteFactory_1.default();
-        this.preloadBar = spriteFactory.makeCentered(300, 'preloadBar', 2);
+        var singleton = Config_1.Singleton.get();
+        var tools = singleton.tools;
+        this.preloadBar = tools.sprite.makeCentered(300, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
         this.load.image('title', 'assets/images/concept.png');
         this.game.load.audio('bgm', ['assets/audio/Puzzle-Action-2.mp3']);

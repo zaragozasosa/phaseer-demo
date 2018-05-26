@@ -1,24 +1,34 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("./../Models/Config");
 var GridTile_1 = require("./../Objects/GridTile");
-var LogicalGrid = (function () {
+var Base_1 = require("./../Base");
+var LogicalGrid = (function (_super) {
+    __extends(LogicalGrid, _super);
     function LogicalGrid(gameboardConfig) {
-        var singleton = Config_1.Singleton.getInstance();
-        this.game = singleton.game;
-        this.config = singleton.config;
-        this.gameboardConfig = gameboardConfig;
-        this.arraySize = gameboardConfig.arraySize;
-        this.tilesGroup = this.game.add.group();
-        this.grid = [];
-        for (var x = 0; x <= this.arraySize; x++) {
-            for (var y = 0; y <= this.arraySize; y++) {
-                this.grid.push(null);
+        var _this = _super.call(this) || this;
+        _this.gameboardConfig = gameboardConfig;
+        _this.arraySize = gameboardConfig.arraySize;
+        _this.tilesGroup = _this.game.add.group();
+        _this.grid = [];
+        for (var x = 0; x <= _this.arraySize; x++) {
+            for (var y = 0; y <= _this.arraySize; y++) {
+                _this.grid.push(null);
             }
         }
-        this.reorderTileList();
-        this.add();
-        this.add();
+        _this.reorderTileList();
+        _this.add();
+        _this.add();
+        return _this;
     }
     LogicalGrid.prototype.scanGrid = function (keyboardInput) {
         var animating = false;
@@ -242,5 +252,5 @@ var LogicalGrid = (function () {
         return val1 + "\n" + val2 + "\n" + val3 + "\n" + val4;
     };
     return LogicalGrid;
-}());
+}(Base_1.default));
 exports.default = LogicalGrid;

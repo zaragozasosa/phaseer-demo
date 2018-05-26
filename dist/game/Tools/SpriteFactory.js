@@ -21,16 +21,17 @@ var SpriteFactory = (function (_super) {
         if (ratio === void 0) { ratio = 1; }
         var settings = this.config.gridSettings;
         var size = settings.tileSize * ratio;
-        var scale = (settings.tileSize / settings.realTileSize) * ratio;
+        var scale = settings.tileSize / settings.physicalTileSize * ratio;
         var padX = settings.gridPaddingX;
         var padY = paddingY ? paddingY : settings.gridPaddingY;
         return this.createSprite(x * size, y * size, 'frame', scale, padX, padY);
     };
     SpriteFactory.prototype.makeTile = function (x, y, id) {
+        var gridSettings = this.config.gridSettings;
         var size = this.config.gridSettings.tileSize;
         var scale = this.config.gridSettings.tileScale;
-        var padX = this.config.gridSettings.gridPaddingX;
-        var padY = this.config.gridSettings.gridPaddingY;
+        var padX = gridSettings.gridPaddingX + gridSettings.tilePadding;
+        var padY = gridSettings.gridPaddingY + gridSettings.tilePadding;
         return this.createSprite(x * size, y * size, id, scale, padX, padY);
     };
     SpriteFactory.prototype.makeMenuTile = function (x, y, id, padY, ratio) {
@@ -40,10 +41,11 @@ var SpriteFactory = (function (_super) {
         return this.createSprite(x * size, y * size, id, scale, padX, padY);
     };
     SpriteFactory.prototype.updateTile = function (x, y, sprite) {
+        var gridSettings = this.config.gridSettings;
         var size = this.config.gridSettings.tileSize;
         var scale = this.config.gridSettings.tileScale;
-        var xPad = this.config.gridSettings.gridPaddingX;
-        var yPad = this.config.gridSettings.gridPaddingY;
+        var xPad = gridSettings.gridPaddingX + gridSettings.tilePadding;
+        var yPad = gridSettings.gridPaddingY + gridSettings.tilePadding;
         var posX = x * size * this.config.scaleFactor;
         var posY = y * size * this.config.scaleFactor;
         var padX = this.config.safeZone.paddingX + xPad;

@@ -1,10 +1,12 @@
-import GameboardConfig from './../Objects/GameboardConfig';
+import GameboardConfig from './../Config/GameboardConfig';
 import SpriteFactory from './../Tools/SpriteFactory';
 import GraphicsFactory from './../Tools/GraphicsFactory';
-import InputManager from './../Tools/InputManager';
+
+import InputManager from './../InputManager';
 import TileModel from './../Models/TileModel';
+
 import TextFactory from './../Tools/TextFactory';
-import { Config, Singleton } from './../Models/Config';
+import { Config, Singleton } from './../Config/Config';
 import ButtonFactory from './../Tools/ButtonFactory';
 
 export default class CharacterSelection extends Phaser.State {
@@ -34,16 +36,16 @@ export default class CharacterSelection extends Phaser.State {
   startButton: Phaser.Button;
 
   preload() {
-    let singleton = Singleton.getInstance();
+    let singleton = Singleton.get();
     this.game = singleton.game;
     this.config = singleton.config;
 
     this.gameboardConfig = new GameboardConfig();
-    this.spriteFactory = new SpriteFactory();
-    this.textFactory = new TextFactory();
-    this.graphicsFactory = new GraphicsFactory();
-    this.buttonFactory = new ButtonFactory();
-    this.inputManager = new InputManager();
+    this.spriteFactory = new SpriteFactory(this.config);
+    this.textFactory = new TextFactory(this.config);
+    this.graphicsFactory = new GraphicsFactory(this.config);
+    this.buttonFactory = new ButtonFactory(this.config);
+    this.inputManager = new InputManager(this.config);
     for (let sprite of this.gameboardConfig.tiles) {
       let path = `assets/images/tiles/${sprite.id}.png`;
       let sfx = `assets/sfx/${sprite.id}-${sprite.sfxId}`;

@@ -1,14 +1,12 @@
-import { Singleton } from './../Models/Config';
-import SpriteFactory from './../Tools/SpriteFactory';
+import { Singleton } from './../Config/Config';
 export default class Preloader extends Phaser.State {
   preloadBar: Phaser.Sprite;
 
   preload() {
-    let singleton = Singleton.getInstance();
-    let config = singleton.config;
-    let spriteFactory = new SpriteFactory();
+    let singleton = Singleton.get();
+    let tools = singleton.tools;
 
-    this.preloadBar = spriteFactory.makeCentered(300, 'preloadBar', 2);
+    this.preloadBar = tools.sprite.makeCentered(300, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
 
     this.load.image('title', 'assets/images/concept.png');

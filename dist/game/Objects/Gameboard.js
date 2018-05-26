@@ -1,48 +1,48 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("./../Models/Config");
-var TextFactory_1 = require("./../Tools/TextFactory");
-var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
+var Base_1 = require("./../Base");
 var Grid_1 = require("./Grid");
-var Gameboard = (function () {
+var Gameboard = (function (_super) {
+    __extends(Gameboard, _super);
     function Gameboard(gameboardConfig) {
-        var singleton = Config_1.Singleton.getInstance();
-        this.game = singleton.game;
-        this.config = singleton.config;
-        this.textFactory = new TextFactory_1.default();
-        this.graphicsFactory = new GraphicsFactory_1.default();
-        this.gameboardConfig = gameboardConfig;
-        this.graphicsFactory.addBackground();
-        this.debugArray = [];
-        this.grid = new Grid_1.default(gameboardConfig, function () {
+        var _this = _super.call(this) || this;
+        _this.gameboardConfig = gameboardConfig;
+        _this.tools.graphics.addBackground();
+        _this.debugArray = [];
+        _this.grid = new Grid_1.default(gameboardConfig, function () {
             this.updateScore();
-        }.bind(this));
-        this.movements = 0;
-        this.points = this.grid.calculatePoints();
-        this.addHeader();
-        this.addDebuggingMatrix();
+        }.bind(_this));
+        _this.movements = 0;
+        _this.points = _this.grid.calculatePoints();
+        _this.addHeader();
+        _this.addDebuggingMatrix();
+        return _this;
     }
     Gameboard.prototype.update = function () {
         this.grid.update();
     };
     Gameboard.prototype.addHeader = function () {
-        this.header = this.textFactory.make(20, 80, '', 50);
+        this.header = this.tools.text.make(20, 80, '', 50);
         this.updateHeader();
-    };
-    Gameboard.prototype.addPowerButton = function () {
-        var posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
-        var posY = this.config.safeZone.paddingY + 1200 * this.config.scaleFactor;
-        var button = this.game.add.button(posX, posY, 'button', null, this, 1, 0, 2);
-        button.scale.setTo(this.config.scaleFactor, this.config.scaleFactor);
     };
     Gameboard.prototype.addDebuggingMatrix = function () {
         var posX = 250;
         var posY = 1300;
         this.debugArray = [];
-        this.debugArray.push(this.textFactory.makeCenteredAnchor(posX, posY, '', 30));
-        this.debugArray.push(this.textFactory.makeCenteredAnchor(posX + 150, posY, '', 30));
-        this.debugArray.push(this.textFactory.makeCenteredAnchor(posX + 300, posY, '', 30));
-        this.debugArray.push(this.textFactory.makeCenteredAnchor(posX + 450, posY, '', 30));
+        this.debugArray.push(this.tools.text.makeCenteredAnchor(posX, posY, '', 30));
+        this.debugArray.push(this.tools.text.makeCenteredAnchor(posX + 150, posY, '', 30));
+        this.debugArray.push(this.tools.text.makeCenteredAnchor(posX + 300, posY, '', 30));
+        this.debugArray.push(this.tools.text.makeCenteredAnchor(posX + 450, posY, '', 30));
         this.updateDebuggingMatrix();
     };
     Gameboard.prototype.updateScore = function () {
@@ -60,5 +60,5 @@ var Gameboard = (function () {
         this.header.setText("Score: " + this.points + "     Movements: " + this.movements);
     };
     return Gameboard;
-}());
+}(Base_1.default));
 exports.default = Gameboard;

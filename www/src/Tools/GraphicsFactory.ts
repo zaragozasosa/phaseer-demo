@@ -1,17 +1,16 @@
 import Factory from './Factory';
 export default class GraphicsFactory extends Factory {
-
   makeWall(x: number, y: number, long: number, tall: number): Phaser.Sprite {
     let game = this.game;
     let config = this.config;
     let scale = config.scaleFactor;
 
     let xPad =
-      x * config.scaleFactor +
+      (x - 5) * config.scaleFactor +
       config.safeZone.paddingX +
       config.gridSettings.gridPaddingX;
     let yPad =
-      y * config.scaleFactor +
+      (y - 5) * config.scaleFactor +
       config.safeZone.paddingY +
       config.gridSettings.gridPaddingY;
 
@@ -20,7 +19,10 @@ export default class GraphicsFactory extends Factory {
 
     wall.width = long * config.scaleFactor;
     wall.height = tall * config.scaleFactor;
-    wall.body.setSize(long * config.scaleFactor, tall * config.scaleFactor);
+    wall.body.setSize(
+      (long + 20) * config.scaleFactor,
+      (tall + 20) * config.scaleFactor
+    );
     wall.body.immovable = true;
 
     return wall;
@@ -40,7 +42,6 @@ export default class GraphicsFactory extends Factory {
     // graphics.drawRect(xPad, yPad, wallLength, wallLength);
     // graphics.endFill();
   }
-  
 
   addBackground() {
     let safeZone = this.config.safeZone;

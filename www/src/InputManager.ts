@@ -1,13 +1,13 @@
-/// <reference path="../../typings/swipe.d.ts"/>
+/// <reference path="..//typings/swipe.d.ts"/>
 
-import Factory from './Factory';
+import Factory from './Tools/Factory';
 export default class InputManager extends Factory {
   private swipe: Swipe;
   private cursors: Phaser.CursorKeys;
   private keyPressed: boolean;
 
-  constructor() {
-    super();
+  constructor(config) {
+    super(config);
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.swipe = new Swipe(this.game);
 

@@ -1,26 +1,30 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Config_1 = require("./../Models/Config");
-var SpriteFactory_1 = require("./../Tools/SpriteFactory");
-var TextFactory_1 = require("./../Tools/TextFactory");
-var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
+var Base_1 = require("./../Base");
 var LogicalGrid_1 = require("./../Objects/LogicalGrid");
-var InputManager_1 = require("./../Tools/InputManager");
-var Grid = (function () {
+var InputManager_1 = require("./../InputManager");
+var Grid = (function (_super) {
+    __extends(Grid, _super);
     function Grid(gameboardConfig, gameboardCallback) {
-        var singleton = Config_1.Singleton.getInstance();
-        this.game = singleton.game;
-        this.config = singleton.config;
-        this.textFactory = new TextFactory_1.default();
-        this.graphicsFactory = new GraphicsFactory_1.default();
-        this.spriteFactory = new SpriteFactory_1.default();
-        this.gameboardConfig = gameboardConfig;
-        this.gameboardCallback = gameboardCallback;
-        this.animating = false;
-        this.wallsGroup = this.makeWalls();
-        this.gridLogic = new LogicalGrid_1.default(gameboardConfig);
-        this.framesGroup = this.makeTileFrames();
-        this.input = new InputManager_1.default();
+        var _this = _super.call(this) || this;
+        _this.gameboardConfig = gameboardConfig;
+        _this.gameboardCallback = gameboardCallback;
+        _this.animating = false;
+        _this.wallsGroup = _this.makeWalls();
+        _this.gridLogic = new LogicalGrid_1.default(gameboardConfig);
+        _this.framesGroup = _this.makeTileFrames();
+        _this.input = new InputManager_1.default(_this.config);
+        return _this;
     }
     Grid.prototype.update = function () {
         if (!this.animating) {
@@ -47,12 +51,12 @@ var Grid = (function () {
         }
     };
     Grid.prototype.makeWalls = function () {
-        var wallLength = (this.config.gridSettings.tileSize + 5) * 4;
+        var wallLength = (this.config.gridSettings.tileSize) * 4;
         var group = this.game.add.group();
-        group.add(this.graphicsFactory.makeWall(-10, -10, 2, wallLength));
-        group.add(this.graphicsFactory.makeWall(-10, -10, wallLength, 2));
-        group.add(this.graphicsFactory.makeWall(-10, wallLength, wallLength, 2));
-        group.add(this.graphicsFactory.makeWall(wallLength, -10, 2, wallLength));
+        group.add(this.tools.graphics.makeWall(0, 0, 1, wallLength));
+        group.add(this.tools.graphics.makeWall(0, 0, wallLength, 1));
+        group.add(this.tools.graphics.makeWall(0, wallLength, wallLength, 1));
+        group.add(this.tools.graphics.makeWall(wallLength, 0, 1, wallLength));
         return group;
     };
     Grid.prototype.makeTileFrames = function () {
@@ -60,11 +64,11 @@ var Grid = (function () {
         var arraySize = this.gameboardConfig.arraySize;
         for (var x = 0; x <= arraySize; x++) {
             for (var y = 0; y <= arraySize; y++) {
-                group.add(this.spriteFactory.makeFrame(x, y));
+                group.add(this.tools.sprite.makeFrame(x, y));
             }
         }
         return group;
     };
     return Grid;
-}());
+}(Base_1.default));
 exports.default = Grid;

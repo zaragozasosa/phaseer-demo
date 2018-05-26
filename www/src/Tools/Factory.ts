@@ -1,12 +1,11 @@
-import { Config, Singleton } from './../Models/Config';
+import { GameInstance, Config } from './../Config/Config';
 
 export default class Factory {
   protected game: Phaser.Game;
   protected config: Config;
 
-  constructor() {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
+  constructor(config) {
+    this.game = GameInstance.get().game;
+    this.config = config;
   }
 }

@@ -2,13 +2,16 @@ import Factory from './Factory';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
     let xPos =
-      x * this.config.gridSettings.tileSize +
+      30 + x * this.config.gridSettings.tileSize +
       this.config.gridSettings.gridPaddingX;
     let yPos =
-      y * this.config.gridSettings.tileSize +
+      120 + y * this.config.gridSettings.tileSize +
       this.config.gridSettings.gridPaddingY;
 
-    return this.make(xPos, yPos, value.toString(), size);
+    let txt = this.make(xPos, yPos, value.toString(), size);
+    this.game.physics.enable(txt, Phaser.Physics.ARCADE);
+
+    return txt;
   }
 
   make(
@@ -28,7 +31,6 @@ export default class TextFactory extends Factory {
     textObj.fontSize = textSize * this.config.scaleFactor;
     textObj.addColor(color, 0);
 
-    this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
     return textObj;
   }
 

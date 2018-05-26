@@ -3,21 +3,22 @@ export default class SpriteFactory extends Factory {
   makeFrame(x: number, y: number, paddingY = null, ratio = 1) {
     let settings = this.config.gridSettings;
     let size = settings.tileSize * ratio;
-    let scale = (settings.tileSize / settings.realTileSize) * ratio;
+    let scale = settings.tileSize / settings.physicalTileSize * ratio;
     let padX = settings.gridPaddingX;
     let padY = paddingY ? paddingY : settings.gridPaddingY;
     return this.createSprite(x * size, y * size, 'frame', scale, padX, padY);
   }
 
   makeTile(x: number, y: number, id: string) {
+    let gridSettings = this.config.gridSettings;
     let size = this.config.gridSettings.tileSize;
     let scale = this.config.gridSettings.tileScale;
-    let padX = this.config.gridSettings.gridPaddingX;
-    let padY = this.config.gridSettings.gridPaddingY;
+    let padX = gridSettings.gridPaddingX + gridSettings.tilePadding;
+    let padY = gridSettings.gridPaddingY + gridSettings.tilePadding;
     return this.createSprite(x * size, y * size, id, scale, padX, padY);
   }
 
-  makeMenuTile(x: number, y: number, id: string,  padY: number, ratio: number) {
+  makeMenuTile(x: number, y: number, id: string, padY: number, ratio: number) {
     let size = this.config.gridSettings.tileSize * ratio;
     let scale = this.config.gridSettings.tileScale * ratio;
     let padX = this.config.gridSettings.gridPaddingX;
@@ -25,10 +26,12 @@ export default class SpriteFactory extends Factory {
   }
 
   updateTile(x: number, y: number, sprite: Phaser.Sprite) {
+    let gridSettings = this.config.gridSettings;
+    
     let size = this.config.gridSettings.tileSize;
     let scale = this.config.gridSettings.tileScale;
-    let xPad = this.config.gridSettings.gridPaddingX;
-    let yPad = this.config.gridSettings.gridPaddingY;
+    let xPad = gridSettings.gridPaddingX + gridSettings.tilePadding;
+    let yPad = gridSettings.gridPaddingY + gridSettings.tilePadding;
 
     let posX = x * size * this.config.scaleFactor;
     let posY = y * size * this.config.scaleFactor;

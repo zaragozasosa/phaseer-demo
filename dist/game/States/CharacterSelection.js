@@ -10,13 +10,13 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var GameboardConfig_1 = require("./../Objects/GameboardConfig");
+var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
-var InputManager_1 = require("./../Tools/InputManager");
+var InputManager_1 = require("./../InputManager");
 var TileModel_1 = require("./../Models/TileModel");
 var TextFactory_1 = require("./../Tools/TextFactory");
-var Config_1 = require("./../Models/Config");
+var Config_1 = require("./../Config/Config");
 var ButtonFactory_1 = require("./../Tools/ButtonFactory");
 var CharacterSelection = (function (_super) {
     __extends(CharacterSelection, _super);
@@ -24,15 +24,15 @@ var CharacterSelection = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     CharacterSelection.prototype.preload = function () {
-        var singleton = Config_1.Singleton.getInstance();
+        var singleton = Config_1.Singleton.get();
         this.game = singleton.game;
         this.config = singleton.config;
         this.gameboardConfig = new GameboardConfig_1.default();
-        this.spriteFactory = new SpriteFactory_1.default();
-        this.textFactory = new TextFactory_1.default();
-        this.graphicsFactory = new GraphicsFactory_1.default();
-        this.buttonFactory = new ButtonFactory_1.default();
-        this.inputManager = new InputManager_1.default();
+        this.spriteFactory = new SpriteFactory_1.default(this.config);
+        this.textFactory = new TextFactory_1.default(this.config);
+        this.graphicsFactory = new GraphicsFactory_1.default(this.config);
+        this.buttonFactory = new ButtonFactory_1.default(this.config);
+        this.inputManager = new InputManager_1.default(this.config);
         for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
             var path = "assets/images/tiles/" + sprite.id + ".png";

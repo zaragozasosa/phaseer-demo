@@ -1,31 +1,19 @@
-import { Config, Singleton } from './../Models/Config';
-import SpriteFactory from './../Tools/SpriteFactory';
-import TextFactory from './../Tools/TextFactory';
-import GraphicsFactory from './../Tools/GraphicsFactory';
+import Base from './../Base';
 import Grid from './Grid';
-import GameboardConfig from './GameboardConfig';
+import GameboardConfig from './../Config/GameboardConfig';
 
-export default class Gameboard {
-  private game: Phaser.Game;
-  private config: Config;
+export default class Gameboard extends Base{
   private grid: Grid;
-  private textFactory: TextFactory;
   private gameboardConfig: GameboardConfig;
-  private graphicsFactory: GraphicsFactory;
-
   debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
   points: number;
   movements: number;
 
   constructor(gameboardConfig: GameboardConfig) {
-    let singleton = Singleton.getInstance();
-    this.game = singleton.game;
-    this.config = singleton.config;
-    this.textFactory = new TextFactory();
-    this.graphicsFactory = new GraphicsFactory();
+    super();
     this.gameboardConfig = gameboardConfig;
-    this.graphicsFactory.addBackground();
+    this.tools.graphics.addBackground();
     this.debugArray = [];
 
     this.grid = new Grid(
@@ -46,25 +34,8 @@ export default class Gameboard {
   }
 
   private addHeader() {
-    this.header = this.textFactory.make(20, 80, '', 50);
+    this.header = this.tools.text.make(20, 80, '', 50);
     this.updateHeader();
-  }
-
-  private addPowerButton() {
-    let posX = this.config.safeZone.paddingX + 250 * this.config.scaleFactor;
-    let posY = this.config.safeZone.paddingY + 1200 * this.config.scaleFactor;
-
-    let button = this.game.add.button(
-      posX,
-      posY,
-      'button',
-      null,
-      this,
-      1,
-      0,
-      2
-    );
-    button.scale.setTo(this.config.scaleFactor, this.config.scaleFactor);
   }
 
   private addDebuggingMatrix() {
@@ -74,16 +45,16 @@ export default class Gameboard {
     this.debugArray = [];
 
     this.debugArray.push(
-      this.textFactory.makeCenteredAnchor(posX, posY, '', 30)
+      this.tools.text.makeCenteredAnchor(posX, posY, '', 30)
     );
     this.debugArray.push(
-      this.textFactory.makeCenteredAnchor(posX + 150, posY, '', 30)
+      this.tools.text.makeCenteredAnchor(posX + 150, posY, '', 30)
     );
     this.debugArray.push(
-      this.textFactory.makeCenteredAnchor(posX + 300, posY, '', 30)
+      this.tools.text.makeCenteredAnchor(posX + 300, posY, '', 30)
     );
     this.debugArray.push(
-      this.textFactory.makeCenteredAnchor(posX + 450, posY, '', 30)
+      this.tools.text.makeCenteredAnchor(posX + 450, posY, '', 30)
     );
 
     this.updateDebuggingMatrix();

@@ -17,11 +17,13 @@ var TextFactory = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
-        var xPos = x * this.config.gridSettings.tileSize +
+        var xPos = 30 + x * this.config.gridSettings.tileSize +
             this.config.gridSettings.gridPaddingX;
-        var yPos = y * this.config.gridSettings.tileSize +
+        var yPos = 120 + y * this.config.gridSettings.tileSize +
             this.config.gridSettings.gridPaddingY;
-        return this.make(xPos, yPos, value.toString(), size);
+        var txt = this.make(xPos, yPos, value.toString(), size);
+        this.game.physics.enable(txt, Phaser.Physics.ARCADE);
+        return txt;
     };
     TextFactory.prototype.make = function (posX, posY, text, textSize, altColor) {
         if (altColor === void 0) { altColor = false; }
@@ -33,7 +35,6 @@ var TextFactory = (function (_super) {
         textObj.font = this.config.gridSettings.font;
         textObj.fontSize = textSize * this.config.scaleFactor;
         textObj.addColor(color, 0);
-        this.game.physics.enable(textObj, Phaser.Physics.ARCADE);
         return textObj;
     };
     TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, altColor) {

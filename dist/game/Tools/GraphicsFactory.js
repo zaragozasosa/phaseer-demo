@@ -20,17 +20,17 @@ var GraphicsFactory = (function (_super) {
         var game = this.game;
         var config = this.config;
         var scale = config.scaleFactor;
-        var xPad = x * config.scaleFactor +
+        var xPad = (x - 5) * config.scaleFactor +
             config.safeZone.paddingX +
             config.gridSettings.gridPaddingX;
-        var yPad = y * config.scaleFactor +
+        var yPad = (y - 5) * config.scaleFactor +
             config.safeZone.paddingY +
             config.gridSettings.gridPaddingY;
         var wall = this.game.add.sprite(xPad, yPad);
         this.game.physics.enable(wall, Phaser.Physics.ARCADE);
         wall.width = long * config.scaleFactor;
         wall.height = tall * config.scaleFactor;
-        wall.body.setSize(long * config.scaleFactor, tall * config.scaleFactor);
+        wall.body.setSize((long + 20) * config.scaleFactor, (tall + 20) * config.scaleFactor);
         wall.body.immovable = true;
         return wall;
     };
