@@ -17,7 +17,7 @@ var Gameboard = (function (_super) {
     function Gameboard(gameboardConfig) {
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
-        _this.tools.graphics.addBackground();
+        _this.tools.graphic.addBackground();
         _this.debugArray = [];
         _this.grid = new Grid_1.default(gameboardConfig, function () {
             this.updateScore();

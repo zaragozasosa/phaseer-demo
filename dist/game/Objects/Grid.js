@@ -52,15 +52,15 @@ var Grid = (function (_super) {
     };
     Grid.prototype.makeWalls = function () {
         var wallLength = (this.config.gridSettings.tileSize) * 4;
-        var group = this.game.add.group();
-        group.add(this.tools.graphics.makeWall(0, 0, 1, wallLength));
-        group.add(this.tools.graphics.makeWall(0, 0, wallLength, 1));
-        group.add(this.tools.graphics.makeWall(0, wallLength, wallLength, 1));
-        group.add(this.tools.graphics.makeWall(wallLength, 0, 1, wallLength));
+        var group = this.tools.misc.addGroup();
+        group.add(this.tools.graphic.makeWall(0, 0, 1, wallLength));
+        group.add(this.tools.graphic.makeWall(0, 0, wallLength, 1));
+        group.add(this.tools.graphic.makeWall(0, wallLength, wallLength, 1));
+        group.add(this.tools.graphic.makeWall(wallLength, 0, 1, wallLength));
         return group;
     };
     Grid.prototype.makeTileFrames = function () {
-        var group = this.game.add.group();
+        var group = this.tools.misc.addGroup();
         var arraySize = this.gameboardConfig.arraySize;
         for (var x = 0; x <= arraySize; x++) {
             for (var y = 0; y <= arraySize; y++) {

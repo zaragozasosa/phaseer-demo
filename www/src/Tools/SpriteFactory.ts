@@ -1,4 +1,4 @@
-import Factory from './Factory';
+import Factory from './Base/Factory';
 export default class SpriteFactory extends Factory {
   makeFrame(x: number, y: number, paddingY = null, ratio = 1) {
     let settings = this.config.gridSettings;
@@ -15,7 +15,10 @@ export default class SpriteFactory extends Factory {
     let scale = this.config.gridSettings.tileScale;
     let padX = gridSettings.gridPaddingX + gridSettings.tilePadding;
     let padY = gridSettings.gridPaddingY + gridSettings.tilePadding;
-    return this.createSprite(x * size, y * size, id, scale, padX, padY);
+    let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
+    this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+    return sprite;
   }
 
   makeMenuTile(x: number, y: number, id: string, padY: number, ratio: number) {
@@ -27,7 +30,7 @@ export default class SpriteFactory extends Factory {
 
   updateTile(x: number, y: number, sprite: Phaser.Sprite) {
     let gridSettings = this.config.gridSettings;
-    
+
     let size = this.config.gridSettings.tileSize;
     let scale = this.config.gridSettings.tileScale;
     let xPad = gridSettings.gridPaddingX + gridSettings.tilePadding;

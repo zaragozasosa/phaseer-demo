@@ -13,7 +13,7 @@ export default class Gameboard extends Base{
   constructor(gameboardConfig: GameboardConfig) {
     super();
     this.gameboardConfig = gameboardConfig;
-    this.tools.graphics.addBackground();
+    this.tools.graphic.addBackground();
     this.debugArray = [];
 
     this.grid = new Grid(

@@ -4,6 +4,8 @@ var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var ButtonFactory_1 = require("./../Tools/ButtonFactory");
 var TextFactory_1 = require("./../Tools/TextFactory");
 var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
+var MiscFactory_1 = require("./../Tools/MiscFactory");
+var AudioFactory_1 = require("./../Tools/AudioFactory");
 var Singleton = (function () {
     function Singleton() {
     }
@@ -12,7 +14,6 @@ var Singleton = (function () {
             Singleton.instance = new Singleton();
             Singleton.instance._tools = new Tools(config);
             Singleton.instance._config = config;
-            Singleton.instance._game = game;
         }
     };
     Singleton.get = function () {
@@ -31,16 +32,6 @@ var Singleton = (function () {
     Object.defineProperty(Singleton.prototype, "tools", {
         get: function () {
             return this._tools;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Singleton.prototype, "game", {
-        get: function () {
-            return this._game;
-        },
-        set: function (game) {
-            this._game = game;
         },
         enumerable: true,
         configurable: true
@@ -105,9 +96,11 @@ exports.GridSettings = GridSettings;
 var Tools = (function () {
     function Tools(config) {
         this._text = new TextFactory_1.default(config);
-        this._graphics = new GraphicsFactory_1.default(config);
+        this._graphic = new GraphicsFactory_1.default(config);
         this._sprite = new SpriteFactory_1.default(config);
         this._button = new ButtonFactory_1.default(config);
+        this._misc = new MiscFactory_1.default(config);
+        this._audio = new AudioFactory_1.default(config);
     }
     Object.defineProperty(Tools.prototype, "text", {
         get: function () {
@@ -116,9 +109,9 @@ var Tools = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Tools.prototype, "graphics", {
+    Object.defineProperty(Tools.prototype, "graphic", {
         get: function () {
-            return this._graphics;
+            return this._graphic;
         },
         enumerable: true,
         configurable: true
@@ -133,6 +126,20 @@ var Tools = (function () {
     Object.defineProperty(Tools.prototype, "sprite", {
         get: function () {
             return this._sprite;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Tools.prototype, "misc", {
+        get: function () {
+            return this._misc;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Tools.prototype, "audio", {
+        get: function () {
+            return this._audio;
         },
         enumerable: true,
         configurable: true

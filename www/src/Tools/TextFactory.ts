@@ -1,4 +1,4 @@
-import Factory from './Factory';
+import Factory from './Base/Factory';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
     let xPos =

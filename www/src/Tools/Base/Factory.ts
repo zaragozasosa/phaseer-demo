@@ -1,4 +1,4 @@
-import { GameInstance, Config } from './../Config/Config';
+import { GameInstance, Config } from './../../Config/Config';
 
 export default class Factory {
   protected game: Phaser.Game;

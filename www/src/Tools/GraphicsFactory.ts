@@ -1,4 +1,4 @@
-import Factory from './Factory';
+import Factory from './Base/Factory';
 export default class GraphicsFactory extends Factory {
   makeWall(x: number, y: number, long: number, tall: number): Phaser.Sprite {
     let game = this.game;

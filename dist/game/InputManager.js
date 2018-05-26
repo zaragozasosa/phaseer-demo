@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Factory_1 = require("./Tools/Factory");
+var Factory_1 = require("./Tools/Base/Factory");
 var InputManager = (function (_super) {
     __extends(InputManager, _super);
     function InputManager(config) {

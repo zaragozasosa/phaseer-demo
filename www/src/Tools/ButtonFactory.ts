@@ -1,4 +1,4 @@
-import Factory from './Factory';
+import Factory from './Base/Factory';
 export default class ButtonFactory extends Factory {
   make(x: number, y: number, list: Array<string>, click: any) {
     let scale = this.config.scaleFactor;

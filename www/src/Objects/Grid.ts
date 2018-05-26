@@ -58,18 +58,18 @@ export default class Grid extends Base{
 
   private makeWalls(): Phaser.Group {
     let wallLength = (this.config.gridSettings.tileSize) * 4;
-    let group = this.game.add.group();
+    let group = this.tools.misc.addGroup();
 
-    group.add(this.tools.graphics.makeWall(0, 0, 1, wallLength));
-    group.add(this.tools.graphics.makeWall(0, 0, wallLength, 1));
-    group.add(this.tools.graphics.makeWall(0, wallLength, wallLength, 1));
-    group.add(this.tools.graphics.makeWall(wallLength, 0, 1, wallLength));
+    group.add(this.tools.graphic.makeWall(0, 0, 1, wallLength));
+    group.add(this.tools.graphic.makeWall(0, 0, wallLength, 1));
+    group.add(this.tools.graphic.makeWall(0, wallLength, wallLength, 1));
+    group.add(this.tools.graphic.makeWall(wallLength, 0, 1, wallLength));
 
     return group;
   }
 
   private makeTileFrames(): Phaser.Group {
-    let group = this.game.add.group();
+    let group = this.tools.misc.addGroup();
     let arraySize = this.gameboardConfig.arraySize;
     for (let x = 0; x <= arraySize; x++) {
       for (let y = 0; y <= arraySize; y++) {

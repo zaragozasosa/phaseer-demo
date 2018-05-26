@@ -1,6 +1,6 @@
 /// <reference path="..//typings/swipe.d.ts"/>
 
-import Factory from './Tools/Factory';
+import Factory from './Tools/Base/Factory';
 export default class InputManager extends Factory {
   private swipe: Swipe;
   private cursors: Phaser.CursorKeys;

@@ -13,7 +13,7 @@ export default class LogicalGrid extends Base{
     super();
     this.gameboardConfig = gameboardConfig;
     this.arraySize = gameboardConfig.arraySize;
-    this.tilesGroup = this.game.add.group();
+    this.tilesGroup = this.tools.misc.addGroup();
     this.grid = [];
 
     for (let x = 0; x <= this.arraySize; x++) {
@@ -76,7 +76,6 @@ export default class LogicalGrid extends Base{
 
   private tilesStopped() {
     let allStopped = true;
-    let game = this.game;
 
     if (this.grid.filter(x => x && x.isMoving).length) {
       allStopped = false;
@@ -95,17 +94,17 @@ export default class LogicalGrid extends Base{
       let value = this.lastMergedTile.value;
       if (
         (value === this.gameboardConfig.minimumValue * 2 &&
-          this.game.rnd.integerInRange(0, 2) === 0) ||
+          this.tools.misc.randomBetween(0, 2) === 0) ||
         (value === this.gameboardConfig.minimumValue * 4 &&
-          this.game.rnd.integerInRange(0, 2) === 0) ||
+          this.tools.misc.randomBetween(0, 2) === 0) ||
         (value === this.gameboardConfig.minimumValue * 8 &&
-          this.game.rnd.integerInRange(0, 2) === 0) ||
+          this.tools.misc.randomBetween(0, 2) === 0) ||
         (value === this.gameboardConfig.minimumValue * 16 &&
-          this.game.rnd.integerInRange(0, 1) === 0) ||
+          this.tools.misc.randomBetween(0, 1) === 0) ||
         (value === this.gameboardConfig.minimumValue * 32 &&
-          this.game.rnd.integerInRange(0, 1) === 0)
+          this.tools.misc.randomBetween(0, 1) === 0)
       ) {
-        this.game.sound.play(this.lastMergedTile.model.id + "-sfx", 1);
+        this.tools.audio.playSound(this.lastMergedTile.model.id + "-sfx");
       }
     }
 
@@ -195,12 +194,12 @@ export default class LogicalGrid extends Base{
   private add() {
     var newTilePos;
     do {
-      var ranX = this.game.rnd.integerInRange(0, 3);
-      var ranY = this.game.rnd.integerInRange(0, 3);
+      var ranX = this.tools.misc.randomBetween(0, 3);
+      var ranY = this.tools.misc.randomBetween(0, 3);
     } while (this.get(ranX, ranY));
 
     if (this.emptyTiles() > 6) {
-      var chance = this.game.rnd.integerInRange(0, 99);
+      var chance = this.tools.misc.randomBetween(0, 99);
       (newTilePos = ranX), ranY, chance === 98 ? 2 : chance >= 90 ? 1 : 0;
     } else {
       newTilePos = 0;

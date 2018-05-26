@@ -36,18 +36,14 @@ export default class GridTile extends Base {
     this.posX = x;
     this.posY = y;
     this.sprite = this.createSprite();
-
     this.sprite.alpha = 0;
-    this.game.add.tween(this.sprite).to({ alpha: 1 }, 500, 'Linear', true);
+    let misc = this.tools.misc;
+    misc.tweenTo(this.sprite, { alpha: 1 }, 500, 'Linear', true);
 
-    let tween1 = this.game.add
-      .tween(this.sprite)
-      .to({ alpha: 0.3 }, 100, 'Linear');
-    let tween2 = this.game.add
-      .tween(this.sprite)
-      .to({ alpha: 1 }, 300, 'Linear');
+    let t1 = misc.tweenTo(this.sprite, { alpha: 0.3 }, 100, 'Linear');
+    let t2 = misc.tweenTo(this.sprite, { alpha: 1 }, 300, 'Linear');
 
-    this.mergeTween = tween1.chain(tween2);
+    this.mergeTween = t1.chain(t2);
 
     // this.number = this.tools.text.makeTileNumber(
     //   this.posX,
@@ -93,7 +89,7 @@ export default class GridTile extends Base {
   }
 
   overlaps(tilesGroup: Phaser.Group, wallsGroup: Phaser.Group) {
-    this.game.physics.arcade.overlap(
+    this.tools.misc.overlap(
       this.sprite,
       tilesGroup,
       function(a: Phaser.Sprite, b: Phaser.Sprite) {
@@ -113,7 +109,7 @@ export default class GridTile extends Base {
       }.bind(this)
     );
 
-    this.game.physics.arcade.overlap(
+    this.tools.misc.overlap(
       this.sprite,
       wallsGroup,
       function(a: any, b: any) {
@@ -152,7 +148,6 @@ export default class GridTile extends Base {
   private createSprite() {
     let tile = this.model;
     let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
-    this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
     sprite.body.collideWorldBounds = true;
 
     return sprite;

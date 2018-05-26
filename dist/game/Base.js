@@ -4,7 +4,6 @@ var Config_1 = require("./Config/Config");
 var Base = (function () {
     function Base() {
         var singleton = Config_1.Singleton.get();
-        this.game = singleton.game;
         this.config = singleton.config;
         this.tools = singleton.tools;
     }

@@ -25,7 +25,6 @@ var CharacterSelection = (function (_super) {
     }
     CharacterSelection.prototype.preload = function () {
         var singleton = Config_1.Singleton.get();
-        this.game = singleton.game;
         this.config = singleton.config;
         this.gameboardConfig = new GameboardConfig_1.default();
         this.spriteFactory = new SpriteFactory_1.default(this.config);

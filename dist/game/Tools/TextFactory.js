@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Factory_1 = require("./Factory");
+var Factory_1 = require("./Base/Factory");
 var TextFactory = (function (_super) {
     __extends(TextFactory, _super);
     function TextFactory() {

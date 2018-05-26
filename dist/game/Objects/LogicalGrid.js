@@ -18,7 +18,7 @@ var LogicalGrid = (function (_super) {
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
         _this.arraySize = gameboardConfig.arraySize;
-        _this.tilesGroup = _this.game.add.group();
+        _this.tilesGroup = _this.tools.misc.addGroup();
         _this.grid = [];
         for (var x = 0; x <= _this.arraySize; x++) {
             for (var y = 0; y <= _this.arraySize; y++) {
@@ -69,7 +69,6 @@ var LogicalGrid = (function (_super) {
     };
     LogicalGrid.prototype.tilesStopped = function () {
         var allStopped = true;
-        var game = this.game;
         if (this.grid.filter(function (x) { return x && x.isMoving; }).length) {
             allStopped = false;
         }
@@ -83,16 +82,16 @@ var LogicalGrid = (function (_super) {
         if (this.lastMergedTile) {
             var value = this.lastMergedTile.value;
             if ((value === this.gameboardConfig.minimumValue * 2 &&
-                this.game.rnd.integerInRange(0, 2) === 0) ||
+                this.tools.misc.randomBetween(0, 2) === 0) ||
                 (value === this.gameboardConfig.minimumValue * 4 &&
-                    this.game.rnd.integerInRange(0, 2) === 0) ||
+                    this.tools.misc.randomBetween(0, 2) === 0) ||
                 (value === this.gameboardConfig.minimumValue * 8 &&
-                    this.game.rnd.integerInRange(0, 2) === 0) ||
+                    this.tools.misc.randomBetween(0, 2) === 0) ||
                 (value === this.gameboardConfig.minimumValue * 16 &&
-                    this.game.rnd.integerInRange(0, 1) === 0) ||
+                    this.tools.misc.randomBetween(0, 1) === 0) ||
                 (value === this.gameboardConfig.minimumValue * 32 &&
-                    this.game.rnd.integerInRange(0, 1) === 0)) {
-                this.game.sound.play(this.lastMergedTile.model.id + "-sfx", 1);
+                    this.tools.misc.randomBetween(0, 1) === 0)) {
+                this.tools.audio.playSound(this.lastMergedTile.model.id + "-sfx");
             }
         }
         this.cleanGrid();
@@ -168,11 +167,11 @@ var LogicalGrid = (function (_super) {
     LogicalGrid.prototype.add = function () {
         var newTilePos;
         do {
-            var ranX = this.game.rnd.integerInRange(0, 3);
-            var ranY = this.game.rnd.integerInRange(0, 3);
+            var ranX = this.tools.misc.randomBetween(0, 3);
+            var ranY = this.tools.misc.randomBetween(0, 3);
         } while (this.get(ranX, ranY));
         if (this.emptyTiles() > 6) {
-            var chance = this.game.rnd.integerInRange(0, 99);
+            var chance = this.tools.misc.randomBetween(0, 99);
             (newTilePos = ranX), ranY, chance === 98 ? 2 : chance >= 90 ? 1 : 0;
         }
         else {

@@ -30,14 +30,11 @@ var GridTile = (function (_super) {
         _this.posY = y;
         _this.sprite = _this.createSprite();
         _this.sprite.alpha = 0;
-        _this.game.add.tween(_this.sprite).to({ alpha: 1 }, 500, 'Linear', true);
-        var tween1 = _this.game.add
-            .tween(_this.sprite)
-            .to({ alpha: 0.3 }, 100, 'Linear');
-        var tween2 = _this.game.add
-            .tween(_this.sprite)
-            .to({ alpha: 1 }, 300, 'Linear');
-        _this.mergeTween = tween1.chain(tween2);
+        var misc = _this.tools.misc;
+        misc.tweenTo(_this.sprite, { alpha: 1 }, 500, 'Linear', true);
+        var t1 = misc.tweenTo(_this.sprite, { alpha: 0.3 }, 100, 'Linear');
+        var t2 = misc.tweenTo(_this.sprite, { alpha: 1 }, 300, 'Linear');
+        _this.mergeTween = t1.chain(t2);
         return _this;
     }
     Object.defineProperty(GridTile.prototype, "isMoving", {
@@ -63,7 +60,7 @@ var GridTile = (function (_super) {
         }
     };
     GridTile.prototype.overlaps = function (tilesGroup, wallsGroup) {
-        this.game.physics.arcade.overlap(this.sprite, tilesGroup, function (a, b) {
+        this.tools.misc.overlap(this.sprite, tilesGroup, function (a, b) {
             if (a && b) {
                 if (a.key === b.key) {
                     console.log('collision, merging');
@@ -79,7 +76,7 @@ var GridTile = (function (_super) {
                 }
             }
         }.bind(this));
-        this.game.physics.arcade.overlap(this.sprite, wallsGroup, function (a, b) {
+        this.tools.misc.overlap(this.sprite, wallsGroup, function (a, b) {
             if (a && b) {
                 var velocity = this.sprite.body.velocity;
                 if (velocity.x || velocity.y) {
@@ -110,7 +107,6 @@ var GridTile = (function (_super) {
     GridTile.prototype.createSprite = function () {
         var tile = this.model;
         var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
-        this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
         sprite.body.collideWorldBounds = true;
         return sprite;
     };

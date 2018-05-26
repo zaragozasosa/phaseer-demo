@@ -37,7 +37,6 @@ export default class CharacterSelection extends Phaser.State {
 
   preload() {
     let singleton = Singleton.get();
-    this.game = singleton.game;
     this.config = singleton.config;
 
     this.gameboardConfig = new GameboardConfig();

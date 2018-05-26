@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Factory_1 = require("./Factory");
+var Factory_1 = require("./Base/Factory");
 var SpriteFactory = (function (_super) {
     __extends(SpriteFactory, _super);
     function SpriteFactory() {
@@ -32,7 +32,9 @@ var SpriteFactory = (function (_super) {
         var scale = this.config.gridSettings.tileScale;
         var padX = gridSettings.gridPaddingX + gridSettings.tilePadding;
         var padY = gridSettings.gridPaddingY + gridSettings.tilePadding;
-        return this.createSprite(x * size, y * size, id, scale, padX, padY);
+        var sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
+        this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
+        return sprite;
     };
     SpriteFactory.prototype.makeMenuTile = function (x, y, id, padY, ratio) {
         var size = this.config.gridSettings.tileSize * ratio;
