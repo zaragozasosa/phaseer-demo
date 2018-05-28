@@ -14,42 +14,52 @@ var ConfigSetup = (function () {
         var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         var paddingX = 0;
         var paddingY = 0;
+        var bgPaddingX = 0;
+        var bgPaddingY = 0;
+        var bgWidth = 0;
+        var bgHeight = 0;
         var safeWidth = 0;
         var safeHeight = 0;
         var baseWidth = 320;
         var baseHeight = 480;
         var maxPixelRatio = 3;
-        var desktopHeightPadding = !isMobile ? 15 : 0;
+        var desktopPadding = !isMobile ? 10 : 0;
         var baseProportion = baseHeight / baseWidth;
         var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio
             ? window.devicePixelRatio
             : maxPixelRatio;
-        debugger;
         screenPixelRatio = !isMobile ? 1 : screenPixelRatio;
         var screenWidth = window.innerWidth * screenPixelRatio;
-        screenWidth = !isMobile
-            ? screenWidth / screenPixelRatio
-            : screenWidth;
+        screenWidth = !isMobile ? screenWidth / screenPixelRatio : screenWidth;
         var screenHeight = window.innerHeight * screenPixelRatio;
-        screenHeight = !isMobile
-            ? (screenHeight / screenPixelRatio)
-            : screenHeight;
+        screenHeight = !isMobile ? screenHeight / screenPixelRatio : screenHeight;
         var screenProportion = screenHeight / screenWidth;
         var widthProportion = window.innerWidth / baseWidth;
+        bgHeight = screenHeight;
+        bgWidth = screenWidth;
         if (screenProportion > baseProportion) {
-            safeWidth = screenWidth;
+            safeWidth = screenWidth - (desktopPadding * 2);
             safeHeight = safeWidth * baseProportion;
+            bgHeight = safeHeight;
+            safeHeight -= desktopPadding * 2;
             paddingY = (screenHeight - safeHeight) / 2;
+            bgHeight = safeHeight;
             scaleFactor = screenPixelRatio / 3 * widthProportion;
         }
         else if (screenProportion < baseProportion) {
-            safeHeight = screenHeight - desktopHeightPadding * 2;
+            safeHeight = screenHeight - desktopPadding * 2;
             safeWidth = safeHeight / baseProportion;
+            bgWidth = safeWidth;
+            safeWidth -= desktopPadding * 2;
             paddingX = (screenWidth - safeWidth) / 2;
             scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
         }
-        paddingY += desktopHeightPadding;
-        this.config.safeZone = new Config_1.SafeZone(safeWidth, safeHeight, paddingX, paddingY, desktopHeightPadding);
+        if (!isMobile) {
+            bgPaddingX = paddingX;
+        }
+        paddingY += desktopPadding;
+        paddingX += desktopPadding;
+        this.config.safeZone = new Config_1.SafeZone(safeWidth, safeHeight, paddingX, paddingY, bgPaddingX, bgPaddingY, bgWidth, bgHeight);
         this.config.scaleFactor = scaleFactor;
         this.config.screenWidth = screenWidth;
         this.config.screenHeight = screenHeight;

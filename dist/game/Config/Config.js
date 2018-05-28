@@ -84,13 +84,15 @@ var ColorSettings = (function () {
 }());
 exports.ColorSettings = ColorSettings;
 var SafeZone = (function () {
-    function SafeZone(safeWidth, safeHeight, paddingX, paddingY, desktopHeightPadding) {
-        if (desktopHeightPadding === void 0) { desktopHeightPadding = 0; }
+    function SafeZone(safeWidth, safeHeight, paddingX, paddingY, bgPaddingX, bgPaddingY, bgWidth, bgHeight) {
         this.safeWidth = safeWidth;
         this.safeHeight = safeHeight;
         this.paddingX = paddingX;
         this.paddingY = paddingY;
-        this.desktopHeightPadding = desktopHeightPadding;
+        this.bgPaddingX = bgPaddingX;
+        this.bgPaddingY = bgPaddingY;
+        this.bgWidth = bgWidth;
+        this.bgHeight = bgHeight;
     }
     return SafeZone;
 }());

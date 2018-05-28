@@ -39,12 +39,12 @@ var GraphicsFactory = (function (_super) {
     GraphicsFactory.prototype.addBackground = function () {
         var safeZone = this.config.safeZone;
         var color = this.config.color;
-        var xPad = safeZone.paddingX;
-        var yPad = safeZone.paddingY - safeZone.desktopHeightPadding;
+        var xPad = safeZone.bgPaddingX;
+        var yPad = safeZone.bgPaddingY;
         var graphics = this.game.add.graphics(0, 0);
         graphics.lineStyle(0);
         graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
-        graphics.drawRect(xPad, yPad, safeZone.safeWidth, this.config.screenHeight);
+        graphics.drawRect(xPad, yPad, safeZone.bgWidth, safeZone.bgHeight);
         graphics.endFill();
     };
     return GraphicsFactory;

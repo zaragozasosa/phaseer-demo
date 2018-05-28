@@ -88,19 +88,28 @@ export class SafeZone {
     safeHeight: number,
     paddingX: number,
     paddingY: number,
-    desktopHeightPadding = 0
+    bgPaddingX: number,
+    bgPaddingY: number,
+    bgWidth: number,
+    bgHeight: number,
   ) {
     this.safeWidth = safeWidth;
     this.safeHeight = safeHeight;
     this.paddingX = paddingX;
     this.paddingY = paddingY;
-    this.desktopHeightPadding = desktopHeightPadding;
+    this.bgPaddingX = bgPaddingX;
+    this.bgPaddingY = bgPaddingY;
+    this.bgWidth = bgWidth;
+    this.bgHeight = bgHeight;
   }
   safeWidth: number;
   safeHeight: number;
   paddingX: number;
   paddingY: number;
-  desktopHeightPadding: number;
+  bgPaddingX: number;
+  bgPaddingY: number;
+  bgWidth: number;
+  bgHeight: number;
 }
 
 export class GridSettings {

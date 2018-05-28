@@ -33,7 +33,7 @@ var Gameboard = (function (_super) {
         this.grid.update();
     };
     Gameboard.prototype.addHeader = function () {
-        this.header = this.tools.text.make(40, 20, '', 40);
+        this.header = this.tools.text.make(0, 20, '', 40);
         this.updateHeader();
     };
     Gameboard.prototype.addVolumeButton = function () {

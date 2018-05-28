@@ -21,6 +21,7 @@ export default class CharacterSelection extends Phaser.State {
 
   preloadBar: Phaser.Sprite;
   selectedCharacter: TileModel;
+  spriteArray: Array<Phaser.Sprite>;
   displayArray: Array<TileModel>;
   menuItems: Array<Phaser.Sprite>;
   updated: boolean;
@@ -71,6 +72,7 @@ export default class CharacterSelection extends Phaser.State {
     let ratio = arraySize / maxColumns;
     let characters: Array<TileModel>;
     let displayArray: Array<TileModel> = [];
+    this.spriteArray = [];
     this.menuItems = [];
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
     displayArray = characters.filter(x => x.playable);
@@ -98,22 +100,17 @@ export default class CharacterSelection extends Phaser.State {
         yMenuPad,
         ratio
       );
-
-      let frame = this.spriteFactory.makeFrame(
-        column,
-        row,
-        yMenuPad,
-        ratio
-      );
+      if(char.id !== 'random') {
+        sprite.tint = Phaser.Color.BLACK;        
+      }
+      this.spriteArray.push(sprite);
 
       sprite.inputEnabled = true;
       sprite.events.onInputDown.add(
         function() {
-          this.setSelectedCharacter(char);
+          this.setSelectedCharacter(sprite, char);
         }.bind(this)
       );
-
-      char.frame = frame;
 
       column++;
       if (column === maxColumns) {
@@ -136,12 +133,14 @@ export default class CharacterSelection extends Phaser.State {
     this.ratio = ratio;
     this.displayArray = displayArray;
 
+    let select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center', true)
+
     let rnd = this.game.rnd.between(0, displayArray.length - 2);
-    this.setSelectedCharacter(displayArray[rnd]);
+    this.setSelectedCharacter(this.spriteArray[rnd], displayArray[rnd]);
 
     this.buttonFactory.make(
-      660,
-      935,
+      675,
+      965,
       ['start-1', 'start-2', 'start-3'],
       function() {
         this.gameStart();
@@ -151,9 +150,16 @@ export default class CharacterSelection extends Phaser.State {
 
     this.selectedSprite = this.spriteFactory.createSprite(
       590,
-      550,
+      580,
       this.selectedCharacter.id,
       2
+    );
+
+    this.textFactory.make(
+      20,
+      860,
+      `Special Power:`,
+      35
     );
   }
 
@@ -168,19 +174,17 @@ export default class CharacterSelection extends Phaser.State {
     this.state.start('Unranked', true, false, this.gameboardConfig);
   }
 
-  setSelectedCharacter(char: TileModel) {
-    this.game.sound.play('beep', 1.5);
+  setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {
+    this.game.sound.play('beep', 1);
+    this.spriteArray
+      .filter(x => x.key !== 'random')
+      .forEach(x => (x.tint = Phaser.Color.BLACK));
+
+    sprite.tint = Phaser.Color.WHITE;
     this.selectedCharacter = char;
     if (this.selectedSprite) {
       this.selectedSprite.loadTexture(char.id);
     }
-
-    if (this.selectedFrame) {
-      this.selectedFrame.tint = Phaser.Color.WHITE;
-    }
-
-    char.frame.tint = Phaser.Color.BLACK;
-    this.selectedFrame = char.frame;
 
     if (!this.selectedName) {
       this.selectedName = this.textFactory.make(18, 700, char.name, 50);
@@ -205,19 +209,19 @@ export default class CharacterSelection extends Phaser.State {
     if (!this.selectedPower) {
       this.selectedPower = this.textFactory.make(
         20,
-        875,
-        `Special Power: ${char.powerName}`,
-        30
+        900,
+        `${char.powerName}`,
+        40
       );
     } else {
-      this.selectedPower.setText(`Special Power: ${char.powerName}`);
+      this.selectedPower.setText(`${char.powerName}`);
     }
 
     if (!this.selectedSummary) {
       this.selectedSummary = this.textFactory.makeXBounded(
         1040,
         char.summary,
-        30,
+        35,
         'left',
         true
       );

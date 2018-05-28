@@ -55,6 +55,7 @@ var CharacterSelection = (function (_super) {
         var ratio = arraySize / maxColumns;
         var characters;
         var displayArray = [];
+        this.spriteArray = [];
         this.menuItems = [];
         characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
         displayArray = characters.filter(function (x) { return x.playable; });
@@ -62,12 +63,14 @@ var CharacterSelection = (function (_super) {
         displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
             var sprite = this_1.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
-            var frame = this_1.spriteFactory.makeFrame(column, row, yMenuPad, ratio);
+            if (char.id !== 'random') {
+                sprite.tint = Phaser.Color.BLACK;
+            }
+            this_1.spriteArray.push(sprite);
             sprite.inputEnabled = true;
             sprite.events.onInputDown.add(function () {
-                this.setSelectedCharacter(char);
+                this.setSelectedCharacter(sprite, char);
             }.bind(this_1));
-            char.frame = frame;
             column++;
             if (column === maxColumns) {
                 row++;
@@ -94,12 +97,14 @@ var CharacterSelection = (function (_super) {
         this.yMenuPad = yMenuPad;
         this.ratio = ratio;
         this.displayArray = displayArray;
+        var select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center', true);
         var rnd = this.game.rnd.between(0, displayArray.length - 2);
-        this.setSelectedCharacter(displayArray[rnd]);
-        this.buttonFactory.make(660, 935, ['start-1', 'start-2', 'start-3'], function () {
+        this.setSelectedCharacter(this.spriteArray[rnd], displayArray[rnd]);
+        this.buttonFactory.make(675, 965, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this), 1.5);
-        this.selectedSprite = this.spriteFactory.createSprite(590, 550, this.selectedCharacter.id, 2);
+        this.selectedSprite = this.spriteFactory.createSprite(590, 580, this.selectedCharacter.id, 2);
+        this.textFactory.make(20, 860, "Special Power:", 35);
     };
     CharacterSelection.prototype.gameStart = function () {
         if (this.selectedCharacter.id === 'random') {
@@ -109,17 +114,16 @@ var CharacterSelection = (function (_super) {
         this.game.sound.play(this.selectedCharacter.id + "-sfx", 1);
         this.state.start('Unranked', true, false, this.gameboardConfig);
     };
-    CharacterSelection.prototype.setSelectedCharacter = function (char) {
-        this.game.sound.play('beep', 1.5);
+    CharacterSelection.prototype.setSelectedCharacter = function (sprite, char) {
+        this.game.sound.play('beep', 1);
+        this.spriteArray
+            .filter(function (x) { return x.key !== 'random'; })
+            .forEach(function (x) { return (x.tint = Phaser.Color.BLACK); });
+        sprite.tint = Phaser.Color.WHITE;
         this.selectedCharacter = char;
         if (this.selectedSprite) {
             this.selectedSprite.loadTexture(char.id);
         }
-        if (this.selectedFrame) {
-            this.selectedFrame.tint = Phaser.Color.WHITE;
-        }
-        char.frame.tint = Phaser.Color.BLACK;
-        this.selectedFrame = char.frame;
         if (!this.selectedName) {
             this.selectedName = this.textFactory.make(18, 700, char.name, 50);
         }
@@ -133,13 +137,13 @@ var CharacterSelection = (function (_super) {
             this.selectedFullName.setText(char.fullName);
         }
         if (!this.selectedPower) {
-            this.selectedPower = this.textFactory.make(20, 875, "Special Power: " + char.powerName, 30);
+            this.selectedPower = this.textFactory.make(20, 900, "" + char.powerName, 40);
         }
         else {
-            this.selectedPower.setText("Special Power: " + char.powerName);
+            this.selectedPower.setText("" + char.powerName);
         }
         if (!this.selectedSummary) {
-            this.selectedSummary = this.textFactory.makeXBounded(1040, char.summary, 30, 'left', true);
+            this.selectedSummary = this.textFactory.makeXBounded(1040, char.summary, 35, 'left', true);
         }
         else {
             this.selectedSummary.setText(char.summary);

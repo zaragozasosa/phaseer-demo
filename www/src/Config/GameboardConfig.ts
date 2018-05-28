@@ -98,7 +98,7 @@ export default class GameboardConfig {
         'sweeping.wav',
         'detectiveWork',
         'Detective Work',
-        `A clumsy maid devoted to her master. She is often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson and is passionate about it. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. Nothing can stop her. You should run...`
+        `A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run...`
       )
     );
 
@@ -189,7 +189,7 @@ export default class GameboardConfig {
         'ahaha.wav',
         'blackMagic',
         'Black Magic',
-        "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile online writer who only publishes using pen names."
+        "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."
       )
     );
 
