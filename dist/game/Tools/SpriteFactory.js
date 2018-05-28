@@ -84,7 +84,7 @@ var SpriteFactory = (function (_super) {
     };
     SpriteFactory.prototype.createVolumeIcon = function (posX, posY) {
         if (posX === void 0) { posX = 850; }
-        if (posY === void 0) { posY = 40; }
+        if (posY === void 0) { posY = 10; }
         var config = this.config.sound;
         var volId = config.volumeSprite + '-' + config.actualVolumeIndex;
         var sprite = this.createSprite(posX, posY, volId, 1 / 3);

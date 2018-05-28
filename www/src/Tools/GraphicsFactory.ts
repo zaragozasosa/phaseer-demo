@@ -47,11 +47,11 @@ export default class GraphicsFactory extends Factory {
     let safeZone = this.config.safeZone;
     let color = this.config.color;
     let xPad = safeZone.paddingX;
-    let yPad = safeZone.paddingY;
+    let yPad = safeZone.paddingY - safeZone.desktopHeightPadding;
     var graphics = this.game.add.graphics(0, 0);
     graphics.lineStyle(0);
     graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
-    graphics.drawRect(xPad, yPad, safeZone.safeWidth, safeZone.safeHeight);
+    graphics.drawRect(xPad, yPad, safeZone.safeWidth, this.config.screenHeight);
     graphics.endFill();
   }
 }

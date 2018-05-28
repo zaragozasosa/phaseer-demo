@@ -94,7 +94,7 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
-  createVolumeIcon(posX = 850, posY = 40) {
+  createVolumeIcon(posX = 850, posY = 10) {
     let config = this.config.sound;
     let volId = config.volumeSprite + '-' + config.actualVolumeIndex;
     let sprite = this.createSprite(posX, posY, volId, 1 / 3);

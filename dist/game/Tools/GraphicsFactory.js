@@ -40,11 +40,11 @@ var GraphicsFactory = (function (_super) {
         var safeZone = this.config.safeZone;
         var color = this.config.color;
         var xPad = safeZone.paddingX;
-        var yPad = safeZone.paddingY;
+        var yPad = safeZone.paddingY - safeZone.desktopHeightPadding;
         var graphics = this.game.add.graphics(0, 0);
         graphics.lineStyle(0);
         graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
-        graphics.drawRect(xPad, yPad, safeZone.safeWidth, safeZone.safeHeight);
+        graphics.drawRect(xPad, yPad, safeZone.safeWidth, this.config.screenHeight);
         graphics.endFill();
     };
     return GraphicsFactory;

@@ -63,7 +63,7 @@ export default class CharacterSelection extends Phaser.State {
   create() {
     this.preloadBar.destroy();
     this.updated = false;
-    let yMenuPad = 20;
+    let yMenuPad = 5;
     let row = 0;
     let column = 0;
     let arraySize = this.gameboardConfig.arraySize + 1;

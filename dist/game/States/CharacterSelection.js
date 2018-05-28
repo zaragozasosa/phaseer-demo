@@ -47,7 +47,7 @@ var CharacterSelection = (function (_super) {
     CharacterSelection.prototype.create = function () {
         this.preloadBar.destroy();
         this.updated = false;
-        var yMenuPad = 20;
+        var yMenuPad = 5;
         var row = 0;
         var column = 0;
         var arraySize = this.gameboardConfig.arraySize + 1;

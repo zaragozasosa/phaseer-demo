@@ -87,17 +87,20 @@ export class SafeZone {
     safeWidth: number,
     safeHeight: number,
     paddingX: number,
-    paddingY: number
+    paddingY: number,
+    desktopHeightPadding = 0
   ) {
     this.safeWidth = safeWidth;
     this.safeHeight = safeHeight;
     this.paddingX = paddingX;
     this.paddingY = paddingY;
+    this.desktopHeightPadding = desktopHeightPadding;
   }
   safeWidth: number;
   safeHeight: number;
   paddingX: number;
   paddingY: number;
+  desktopHeightPadding: number;
 }
 
 export class GridSettings {

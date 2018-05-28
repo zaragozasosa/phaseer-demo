@@ -84,11 +84,13 @@ var ColorSettings = (function () {
 }());
 exports.ColorSettings = ColorSettings;
 var SafeZone = (function () {
-    function SafeZone(safeWidth, safeHeight, paddingX, paddingY) {
+    function SafeZone(safeWidth, safeHeight, paddingX, paddingY, desktopHeightPadding) {
+        if (desktopHeightPadding === void 0) { desktopHeightPadding = 0; }
         this.safeWidth = safeWidth;
         this.safeHeight = safeHeight;
         this.paddingX = paddingX;
         this.paddingY = paddingY;
+        this.desktopHeightPadding = desktopHeightPadding;
     }
     return SafeZone;
 }());

@@ -25,19 +25,25 @@ var Gameboard = (function (_super) {
         _this.movements = 0;
         _this.points = _this.grid.calculatePoints();
         _this.addHeader();
-        var volIcon = _this.tools.sprite.createVolumeIcon();
-        volIcon.events.onInputDown.add(function () {
-            this.tools.audio.changeAudioLevel(volIcon);
-        }.bind(_this));
-        _this.actionButton = _this.tools.button.make(260, 1200, ['button-mayo'], null);
+        _this.addVolumeButton();
+        _this.addPowerButton();
         return _this;
     }
     Gameboard.prototype.update = function () {
         this.grid.update();
     };
     Gameboard.prototype.addHeader = function () {
-        this.header = this.tools.text.make(20, 80, '', 40);
+        this.header = this.tools.text.make(40, 20, '', 40);
         this.updateHeader();
+    };
+    Gameboard.prototype.addVolumeButton = function () {
+        this.muteToogleSprite = this.tools.sprite.createVolumeIcon();
+        this.muteToogleSprite.events.onInputDown.add(function () {
+            this.tools.audio.changeAudioLevel(this.muteToogleSprite);
+        }.bind(this));
+    };
+    Gameboard.prototype.addPowerButton = function () {
+        this.actionButton = this.tools.button.make(200, 1200, ['button-mayo'], null, 1.2);
     };
     Gameboard.prototype.addDebuggingMatrix = function () {
         var posX = 250;

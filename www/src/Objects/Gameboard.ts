@@ -28,11 +28,8 @@ export default class Gameboard extends Base{
     this.movements = 0;
     this.points = this.grid.calculatePoints();
     this.addHeader();
-    let volIcon = this.tools.sprite.createVolumeIcon();
-    volIcon.events.onInputDown.add(function(){
-      this.tools.audio.changeAudioLevel(volIcon)
-    }.bind(this));
-    this.actionButton = this.tools.button.make(260, 1200, ['button-mayo'], null);
+    this.addVolumeButton();
+    this.addPowerButton();
   }
 
   update() {
@@ -40,8 +37,19 @@ export default class Gameboard extends Base{
   }
 
   private addHeader() {
-    this.header = this.tools.text.make(20, 80, '', 40);
+    this.header = this.tools.text.make(40, 20, '', 40);
     this.updateHeader();
+  }
+
+  private addVolumeButton() {
+    this.muteToogleSprite = this.tools.sprite.createVolumeIcon();
+    this.muteToogleSprite.events.onInputDown.add(function(){
+      this.tools.audio.changeAudioLevel(this.muteToogleSprite)
+    }.bind(this));
+  }
+
+  private addPowerButton() {
+    this.actionButton = this.tools.button.make(200, 1200, ['button-mayo'], null, 1.2);    
   }
 
   private addDebuggingMatrix() {
