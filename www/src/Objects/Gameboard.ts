@@ -9,6 +9,8 @@ export default class Gameboard extends Base{
   header: Phaser.Text;
   points: number;
   movements: number;
+  actionButton: Phaser.Button;
+  muteToogleSprite: Phaser.Sprite;
 
   constructor(gameboardConfig: GameboardConfig) {
     super();
@@ -26,7 +28,11 @@ export default class Gameboard extends Base{
     this.movements = 0;
     this.points = this.grid.calculatePoints();
     this.addHeader();
-    //this.addDebuggingMatrix();
+    let volIcon = this.tools.sprite.createVolumeIcon();
+    volIcon.events.onInputDown.add(function(){
+      this.tools.audio.changeAudioLevel(volIcon)
+    }.bind(this));
+    this.actionButton = this.tools.button.make(260, 1200, ['button-mayo'], null);
   }
 
   update() {
@@ -34,7 +40,7 @@ export default class Gameboard extends Base{
   }
 
   private addHeader() {
-    this.header = this.tools.text.make(20, 80, '', 50);
+    this.header = this.tools.text.make(20, 80, '', 40);
     this.updateHeader();
   }
 

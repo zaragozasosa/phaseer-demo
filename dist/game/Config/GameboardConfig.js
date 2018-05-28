@@ -4,6 +4,7 @@ var TileModel_1 = require("./../Models/TileModel");
 var GameboardConfig = (function () {
     function GameboardConfig() {
         this.arraySize = 3;
+        this.winningTile = 512;
         this.initialArray = [];
         for (var x = 0; x <= this.arraySize; x++) {
             for (var y = 0; y <= this.arraySize; y++) {

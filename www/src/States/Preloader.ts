@@ -18,6 +18,14 @@ export default class Preloader extends Phaser.State {
     this.load.image('start-2', 'assets/images/start-2.png');
     this.load.image('start-3', 'assets/images/start-3.png');
     this.load.image('frame', 'assets/images/frame.png');
+
+    this.load.image('volume-0', 'assets/images/volume-0.png');
+    this.load.image('volume-1', 'assets/images/volume-1.png');
+    this.load.image('volume-2', 'assets/images/volume-2.png');
+
+    this.load.spritesheet('button-mayo', 'assets/images/button-mayo.png', 480, 180);
+    
+    
   }
 
   create() {

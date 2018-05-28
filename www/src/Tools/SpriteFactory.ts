@@ -1,20 +1,29 @@
 import Factory from './Base/Factory';
 export default class SpriteFactory extends Factory {
   makeFrame(x: number, y: number, paddingY = null, ratio = 1) {
-    let settings = this.config.gridSettings;
+    let settings = this.config.grid;
     let size = settings.tileSize * ratio;
-    let scale = settings.tileSize / settings.physicalTileSize * ratio;
     let padX = settings.gridPaddingX;
     let padY = paddingY ? paddingY : settings.gridPaddingY;
-    return this.createSprite(x * size, y * size, 'frame', scale, padX, padY);
+    let frame = this.createSprite(
+      x * size,
+      y * size,
+      'frame',
+      ratio,
+      padX,
+      padY
+    );
+    this.game.physics.enable(frame, Phaser.Physics.ARCADE);
+
+    return frame;
   }
 
   makeTile(x: number, y: number, id: string) {
-    let gridSettings = this.config.gridSettings;
-    let size = this.config.gridSettings.tileSize;
-    let scale = this.config.gridSettings.tileScale;
-    let padX = gridSettings.gridPaddingX + gridSettings.tilePadding;
-    let padY = gridSettings.gridPaddingY + gridSettings.tilePadding;
+    let grid = this.config.grid;
+    let size = this.config.grid.tileSize;
+    let scale = this.config.grid.tileScale;
+    let padX = grid.gridPaddingX + grid.tilePadding;
+    let padY = grid.gridPaddingY + grid.tilePadding;
     let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
@@ -22,19 +31,19 @@ export default class SpriteFactory extends Factory {
   }
 
   makeMenuTile(x: number, y: number, id: string, padY: number, ratio: number) {
-    let size = this.config.gridSettings.tileSize * ratio;
-    let scale = this.config.gridSettings.tileScale * ratio;
-    let padX = this.config.gridSettings.gridPaddingX;
+    let size = this.config.grid.tileSize * ratio;
+    let scale = this.config.grid.tileScale * ratio;
+    let padX = this.config.grid.gridPaddingX;
     return this.createSprite(x * size, y * size, id, scale, padX, padY);
   }
 
   updateTile(x: number, y: number, sprite: Phaser.Sprite) {
-    let gridSettings = this.config.gridSettings;
+    let grid = this.config.grid;
 
-    let size = this.config.gridSettings.tileSize;
-    let scale = this.config.gridSettings.tileScale;
-    let xPad = gridSettings.gridPaddingX + gridSettings.tilePadding;
-    let yPad = gridSettings.gridPaddingY + gridSettings.tilePadding;
+    let size = this.config.grid.tileSize;
+    let scale = this.config.grid.tileScale;
+    let xPad = grid.gridPaddingX + grid.tilePadding;
+    let yPad = grid.gridPaddingY + grid.tilePadding;
 
     let posX = x * size * this.config.scaleFactor;
     let posY = y * size * this.config.scaleFactor;
@@ -51,8 +60,8 @@ export default class SpriteFactory extends Factory {
   makeCentered(posY: number, id: string, spriteScale = 1) {
     let y = posY * this.config.scaleFactor;
     let config = this.config;
-    let xPad = config.safeZone.paddingX + this.config.gridSettings.gridPaddingX;
-    let yPad = config.safeZone.paddingY + this.config.gridSettings.gridPaddingY;
+    let xPad = config.safeZone.paddingX + this.config.grid.gridPaddingX;
+    let yPad = config.safeZone.paddingY + this.config.grid.gridPaddingY;
     let sprite = this.game.add.sprite(0, y + yPad, id);
     sprite.scale.setTo(
       config.scaleFactor * spriteScale,
@@ -82,6 +91,16 @@ export default class SpriteFactory extends Factory {
     let sprite = this.game.add.sprite(x + xPad, y + yPad, id);
     sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
 
+    return sprite;
+  }
+
+  createVolumeIcon(posX = 850, posY = 40) {
+    let config = this.config.sound;
+    let volId = config.volumeSprite + '-' + config.actualVolumeIndex;
+    let sprite = this.createSprite(posX, posY, volId, 1 / 3);
+    sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
+
+    sprite.inputEnabled = true;
     return sprite;
   }
 }

@@ -61,10 +61,19 @@ export class Config {
   screenHeight: number;
   screenWidth: number;
   safeZone: SafeZone;
-  gridSettings: GridSettings;
-  colorSettings: ColorSettings;
+  grid: GridSettings;
+  color: ColorSettings;
+  sound: SoundSettings;
 }
 
+export class SoundSettings {
+  bgmVolume: number;
+  sfxVolume: number;
+  volumeLevels: Array<number>;
+  actualVolumeIndex: number;
+  volumeSprite: string;
+  bgm: Phaser.Sound;
+}
 export class ColorSettings {
   background: string;
   primary: string;

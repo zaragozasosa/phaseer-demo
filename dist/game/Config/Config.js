@@ -71,6 +71,12 @@ var Config = (function () {
     return Config;
 }());
 exports.Config = Config;
+var SoundSettings = (function () {
+    function SoundSettings() {
+    }
+    return SoundSettings;
+}());
+exports.SoundSettings = SoundSettings;
 var ColorSettings = (function () {
     function ColorSettings() {
     }

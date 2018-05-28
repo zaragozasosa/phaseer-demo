@@ -22,10 +22,10 @@ var GraphicsFactory = (function (_super) {
         var scale = config.scaleFactor;
         var xPad = (x - 5) * config.scaleFactor +
             config.safeZone.paddingX +
-            config.gridSettings.gridPaddingX;
+            config.grid.gridPaddingX;
         var yPad = (y - 5) * config.scaleFactor +
             config.safeZone.paddingY +
-            config.gridSettings.gridPaddingY;
+            config.grid.gridPaddingY;
         var wall = this.game.add.sprite(xPad, yPad);
         this.game.physics.enable(wall, Phaser.Physics.ARCADE);
         wall.width = long * config.scaleFactor;
@@ -38,12 +38,12 @@ var GraphicsFactory = (function (_super) {
     };
     GraphicsFactory.prototype.addBackground = function () {
         var safeZone = this.config.safeZone;
-        var colorSettings = this.config.colorSettings;
+        var color = this.config.color;
         var xPad = safeZone.paddingX;
         var yPad = safeZone.paddingY;
         var graphics = this.game.add.graphics(0, 0);
         graphics.lineStyle(0);
-        graphics.beginFill(Phaser.Color.hexToRGB(colorSettings.background), 1);
+        graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
         graphics.drawRect(xPad, yPad, safeZone.safeWidth, safeZone.safeHeight);
         graphics.endFill();
     };

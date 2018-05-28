@@ -2,6 +2,7 @@ import TileModel from './../Models/TileModel';
 export default class GameboardConfig {
   mainTile: TileModel;
   arraySize: number;
+  winningTile: number;
   initialArray: Array<number>;
   minimumValue: number;
   tiles: Array<TileModel>;
@@ -9,6 +10,7 @@ export default class GameboardConfig {
 
   constructor() {
     this.arraySize = 3;
+    this.winningTile = 512;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {

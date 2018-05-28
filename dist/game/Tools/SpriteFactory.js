@@ -19,35 +19,36 @@ var SpriteFactory = (function (_super) {
     SpriteFactory.prototype.makeFrame = function (x, y, paddingY, ratio) {
         if (paddingY === void 0) { paddingY = null; }
         if (ratio === void 0) { ratio = 1; }
-        var settings = this.config.gridSettings;
+        var settings = this.config.grid;
         var size = settings.tileSize * ratio;
-        var scale = settings.tileSize / settings.physicalTileSize * ratio;
         var padX = settings.gridPaddingX;
         var padY = paddingY ? paddingY : settings.gridPaddingY;
-        return this.createSprite(x * size, y * size, 'frame', scale, padX, padY);
+        var frame = this.createSprite(x * size, y * size, 'frame', ratio, padX, padY);
+        this.game.physics.enable(frame, Phaser.Physics.ARCADE);
+        return frame;
     };
     SpriteFactory.prototype.makeTile = function (x, y, id) {
-        var gridSettings = this.config.gridSettings;
-        var size = this.config.gridSettings.tileSize;
-        var scale = this.config.gridSettings.tileScale;
-        var padX = gridSettings.gridPaddingX + gridSettings.tilePadding;
-        var padY = gridSettings.gridPaddingY + gridSettings.tilePadding;
+        var grid = this.config.grid;
+        var size = this.config.grid.tileSize;
+        var scale = this.config.grid.tileScale;
+        var padX = grid.gridPaddingX + grid.tilePadding;
+        var padY = grid.gridPaddingY + grid.tilePadding;
         var sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
         this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
         return sprite;
     };
     SpriteFactory.prototype.makeMenuTile = function (x, y, id, padY, ratio) {
-        var size = this.config.gridSettings.tileSize * ratio;
-        var scale = this.config.gridSettings.tileScale * ratio;
-        var padX = this.config.gridSettings.gridPaddingX;
+        var size = this.config.grid.tileSize * ratio;
+        var scale = this.config.grid.tileScale * ratio;
+        var padX = this.config.grid.gridPaddingX;
         return this.createSprite(x * size, y * size, id, scale, padX, padY);
     };
     SpriteFactory.prototype.updateTile = function (x, y, sprite) {
-        var gridSettings = this.config.gridSettings;
-        var size = this.config.gridSettings.tileSize;
-        var scale = this.config.gridSettings.tileScale;
-        var xPad = gridSettings.gridPaddingX + gridSettings.tilePadding;
-        var yPad = gridSettings.gridPaddingY + gridSettings.tilePadding;
+        var grid = this.config.grid;
+        var size = this.config.grid.tileSize;
+        var scale = this.config.grid.tileScale;
+        var xPad = grid.gridPaddingX + grid.tilePadding;
+        var yPad = grid.gridPaddingY + grid.tilePadding;
         var posX = x * size * this.config.scaleFactor;
         var posY = y * size * this.config.scaleFactor;
         var padX = this.config.safeZone.paddingX + xPad;
@@ -60,8 +61,8 @@ var SpriteFactory = (function (_super) {
         if (spriteScale === void 0) { spriteScale = 1; }
         var y = posY * this.config.scaleFactor;
         var config = this.config;
-        var xPad = config.safeZone.paddingX + this.config.gridSettings.gridPaddingX;
-        var yPad = config.safeZone.paddingY + this.config.gridSettings.gridPaddingY;
+        var xPad = config.safeZone.paddingX + this.config.grid.gridPaddingX;
+        var yPad = config.safeZone.paddingY + this.config.grid.gridPaddingY;
         var sprite = this.game.add.sprite(0, y + yPad, id);
         sprite.scale.setTo(config.scaleFactor * spriteScale, config.scaleFactor * spriteScale);
         var x = (this.config.safeZone.safeWidth - sprite.width) / 2;
@@ -79,6 +80,16 @@ var SpriteFactory = (function (_super) {
         var yPad = config.safeZone.paddingY + padY;
         var sprite = this.game.add.sprite(x + xPad, y + yPad, id);
         sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
+        return sprite;
+    };
+    SpriteFactory.prototype.createVolumeIcon = function (posX, posY) {
+        if (posX === void 0) { posX = 850; }
+        if (posY === void 0) { posY = 40; }
+        var config = this.config.sound;
+        var volId = config.volumeSprite + '-' + config.actualVolumeIndex;
+        var sprite = this.createSprite(posX, posY, volId, 1 / 3);
+        sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
+        sprite.inputEnabled = true;
         return sprite;
     };
     return SpriteFactory;

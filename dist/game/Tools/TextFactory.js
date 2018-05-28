@@ -17,7 +17,7 @@ var TextFactory = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
-        var settings = this.config.gridSettings;
+        var settings = this.config.grid;
         var xPos = settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
         var yPos = settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
         var txt = this.make(xPos, yPos, value.toString(), size);
@@ -25,7 +25,7 @@ var TextFactory = (function (_super) {
         return txt;
     };
     TextFactory.prototype.updateTileNumber = function (x, y, text) {
-        var settings = this.config.gridSettings;
+        var settings = this.config.grid;
         var xPos = settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
         var yPos = settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
         var posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
@@ -35,12 +35,12 @@ var TextFactory = (function (_super) {
     };
     TextFactory.prototype.make = function (posX, posY, text, textSize, altColor) {
         if (altColor === void 0) { altColor = false; }
-        var colorConfig = this.config.colorSettings;
+        var colorConfig = this.config.color;
         var x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
         var y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
         var color = altColor ? colorConfig.altText : colorConfig.text;
         var textObj = this.game.add.text(x, y, text);
-        textObj.font = this.config.gridSettings.font;
+        textObj.font = this.config.grid.font;
         textObj.fontSize = textSize * this.config.scaleFactor;
         textObj.addColor(color, 0);
         return textObj;

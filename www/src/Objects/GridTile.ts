@@ -8,6 +8,7 @@ export default class GridTile extends Base {
   posX: number;
   posY: number;
   value: number;
+  private frame: Phaser.Sprite;
   private sprite: Phaser.Sprite;
   private number: Phaser.Text;
   private group: Phaser.Group;
@@ -35,16 +36,8 @@ export default class GridTile extends Base {
 
     this.posX = x;
     this.posY = y;
+    this.frame = this.createFrame();
     this.sprite = this.createSprite();
-    this.sprite.alpha = 0;
-    let misc = this.tools.misc;
-    misc.tweenTo(this.sprite, { alpha: 1 }, 500, 'Linear', true);
-
-    let t1 = misc.tweenTo(this.sprite, { alpha: 0.3 }, 100, 'Linear');
-    let t2 = misc.tweenTo(this.sprite, { alpha: 1 }, 300, 'Linear');
-
-    this.mergeTween = t1.chain(t2);
-
     this.number = this.tools.text.makeTileNumber(
       this.posX,
       this.posY,
@@ -54,6 +47,16 @@ export default class GridTile extends Base {
     this.group = this.tools.misc.addGroup();
     this.group.addChild(this.sprite);
     this.group.addChild(this.number);
+    this.group.addChild(this.frame);    
+
+    this.group.alpha = 0;
+    let misc = this.tools.misc;
+    misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);
+
+    let t1 = misc.tweenTo(this.group, { alpha: 0.3 }, 100, 'Linear');
+    let t2 = misc.tweenTo(this.group, { alpha: 1 }, 300, 'Linear');
+
+    this.mergeTween = t1.chain(t2);
   }
 
   get isAlive(): boolean {
@@ -82,16 +85,6 @@ export default class GridTile extends Base {
         item.body.moves = true;
         item.body.moveTo(500, this.config.safeZone.safeWidth, direction);
       }
-      // body.moves = true;
-      // body.moveTo(500, this.config.safeZone.safeWidth, direction);
-      // body.setAll('moves', true);
-      // body.callAll(
-      //   'moveTo',
-      //   this,
-      //   500,
-      //   this.config.safeZone.safeWidth,
-      //   direction
-      // );
       body.onMoveComplete.addOnce(this.update, this);
     }
   }
@@ -181,6 +174,14 @@ export default class GridTile extends Base {
   private createSprite() {
     let tile = this.model;
     let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
+    sprite.body.collideWorldBounds = true;
+
+    return sprite;
+  }
+
+  private createFrame() {
+    let tile = this.model;
+    let sprite = this.tools.sprite.makeFrame(this.posX, this.posY);
     sprite.body.collideWorldBounds = true;
 
     return sprite;

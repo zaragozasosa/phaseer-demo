@@ -6,7 +6,7 @@ var ConfigSetup = (function () {
         this.config = new Config_1.Config();
         this.resolutionSetup();
         this.colorConfig();
-        this.gridSettings();
+        this.grid();
     }
     ConfigSetup.prototype.resolutionSetup = function () {
         var scaleFactor;
@@ -23,12 +23,12 @@ var ConfigSetup = (function () {
         var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio
             ? window.devicePixelRatio
             : maxPixelRatio;
+        screenPixelRatio = !isMobile ? 1 : screenPixelRatio;
         var screenWidth = window.innerWidth * screenPixelRatio;
-        screenWidth = !isMobile && screenWidth > 1080 ? 1080 : screenWidth;
         var screenHeight = window.innerHeight * screenPixelRatio;
         screenHeight = !isMobile
             ? screenHeight / screenPixelRatio - 20
-            : screenHeight > 940 ? 940 : screenHeight;
+            : screenHeight;
         var screenProportion = screenHeight / screenWidth;
         var widthProportion = window.innerWidth / baseWidth;
         if (screenProportion > baseProportion) {
@@ -48,25 +48,31 @@ var ConfigSetup = (function () {
         this.config.screenWidth = screenWidth;
         this.config.screenHeight = screenHeight;
     };
-    ConfigSetup.prototype.gridSettings = function () {
+    ConfigSetup.prototype.grid = function () {
         var config = this.config;
         var scaleFactor = config.scaleFactor;
-        var gridSettings;
-        gridSettings = new Config_1.GridSettings();
-        gridSettings.tileSize = 230;
-        gridSettings.physicalTileSize = 180;
-        gridSettings.frameLineWidth = 30;
-        gridSettings.lineColor = config.colorSettings.primary;
-        gridSettings.activeLineColor = config.colorSettings.selected;
-        gridSettings.gridPaddingX = 20 * scaleFactor;
-        gridSettings.gridPaddingY = 200 * scaleFactor;
-        gridSettings.tileScale =
-            gridSettings.tileSize / (gridSettings.physicalTileSize + 10);
-        gridSettings.tilePadding = 0;
-        gridSettings.font = 'Verdana,Geneva,sans-serif';
-        gridSettings.tileNumberPadX = 30;
-        gridSettings.tileNumberPadY = 120;
-        config.gridSettings = gridSettings;
+        var grid;
+        grid = new Config_1.GridSettings();
+        grid.tileSize = 230;
+        grid.physicalTileSize = 180;
+        grid.frameLineWidth = 30;
+        grid.lineColor = config.color.primary;
+        grid.activeLineColor = config.color.selected;
+        grid.gridPaddingX = 25 * scaleFactor;
+        grid.gridPaddingY = 200 * scaleFactor;
+        grid.tileScale =
+            grid.tileSize / (grid.physicalTileSize + 10);
+        grid.tilePadding = 0;
+        grid.font = 'Verdana,Geneva,sans-serif';
+        grid.tileNumberPadX = 30;
+        grid.tileNumberPadY = 110;
+        config.grid = grid;
+        config.sound = new Config_1.SoundSettings();
+        config.sound.bgmVolume = 0.5;
+        config.sound.sfxVolume = 1;
+        config.sound.volumeLevels = [1, 0.5, 0];
+        config.sound.actualVolumeIndex = 0;
+        config.sound.volumeSprite = 'volume';
     };
     ConfigSetup.prototype.colorConfig = function () {
         var color = new Config_1.ColorSettings();
@@ -75,7 +81,7 @@ var ConfigSetup = (function () {
         color.selected = '#000000';
         color.text = '#FFFFFF';
         color.altText = '#99AAB5';
-        this.config.colorSettings = color;
+        this.config.color = color;
     };
     return ConfigSetup;
 }());

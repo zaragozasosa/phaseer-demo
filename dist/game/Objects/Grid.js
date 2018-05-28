@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../Base");
-var LogicalGrid_1 = require("./../Objects/LogicalGrid");
+var LogicalGrid_1 = require("./../Logic/LogicalGrid");
 var InputManager_1 = require("./../InputManager");
 var Grid = (function (_super) {
     __extends(Grid, _super);
@@ -22,7 +22,6 @@ var Grid = (function (_super) {
         _this.animating = false;
         _this.wallsGroup = _this.makeWalls();
         _this.gridLogic = new LogicalGrid_1.default(gameboardConfig);
-        _this.framesGroup = _this.makeTileFrames();
         _this.input = new InputManager_1.default(_this.config);
         return _this;
     }
@@ -51,7 +50,7 @@ var Grid = (function (_super) {
         }
     };
     Grid.prototype.makeWalls = function () {
-        var wallLength = (this.config.gridSettings.tileSize) * 4;
+        var wallLength = (this.config.grid.tileSize) * 4;
         var group = this.tools.misc.addGroup();
         group.add(this.tools.graphic.makeWall(0, 0, 1, wallLength));
         group.add(this.tools.graphic.makeWall(0, 0, wallLength, 1));

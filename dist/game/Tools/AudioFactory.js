@@ -16,10 +16,32 @@ var AudioFactory = (function (_super) {
     function AudioFactory() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    AudioFactory.prototype.playSound = function (id, volume, loop) {
-        if (volume === void 0) { volume = 1; }
+    AudioFactory.prototype.playSound = function (id, loop) {
         if (loop === void 0) { loop = false; }
-        this.game.sound.play(id, volume, loop);
+        var config = this.config.sound;
+        var vol = config.volumeLevels[config.actualVolumeIndex];
+        this.game.sound.play(id, config.sfxVolume * vol, loop);
+    };
+    AudioFactory.prototype.play = function (id, loop) {
+        if (loop === void 0) { loop = true; }
+        var config = this.config.sound;
+        if (config.bgm) {
+            config.bgm.stop();
+            config.bgm.destroy();
+        }
+        var music = this.game.add.audio(id);
+        var vol = config.volumeLevels[config.actualVolumeIndex];
+        config.bgm = music.play('', 0, config.bgmVolume * vol, loop);
+    };
+    AudioFactory.prototype.changeAudioLevel = function (sprite) {
+        var config = this.config.sound;
+        var nextIndex = (config.actualVolumeIndex + 1) % config.volumeLevels.length;
+        config.actualVolumeIndex = nextIndex;
+        sprite.loadTexture(config.volumeSprite + '-' + nextIndex);
+        if (config.bgm) {
+            var vol = config.volumeLevels[config.actualVolumeIndex];
+            config.bgm.volume = config.bgmVolume * vol;
+        }
     };
     return AudioFactory;
 }(Factory_1.default));

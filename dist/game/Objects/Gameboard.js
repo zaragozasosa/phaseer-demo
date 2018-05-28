@@ -25,13 +25,18 @@ var Gameboard = (function (_super) {
         _this.movements = 0;
         _this.points = _this.grid.calculatePoints();
         _this.addHeader();
+        var volIcon = _this.tools.sprite.createVolumeIcon();
+        volIcon.events.onInputDown.add(function () {
+            this.tools.audio.changeAudioLevel(volIcon);
+        }.bind(_this));
+        _this.actionButton = _this.tools.button.make(260, 1200, ['button-mayo'], null);
         return _this;
     }
     Gameboard.prototype.update = function () {
         this.grid.update();
     };
     Gameboard.prototype.addHeader = function () {
-        this.header = this.tools.text.make(20, 80, '', 50);
+        this.header = this.tools.text.make(20, 80, '', 40);
         this.updateHeader();
     };
     Gameboard.prototype.addDebuggingMatrix = function () {

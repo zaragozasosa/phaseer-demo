@@ -16,13 +16,18 @@ var ButtonFactory = (function (_super) {
     function ButtonFactory() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ButtonFactory.prototype.make = function (x, y, list, click) {
+    ButtonFactory.prototype.make = function (x, y, list, click, ratio) {
+        if (ratio === void 0) { ratio = 1; }
+        var button;
         var scale = this.config.scaleFactor;
         var safe = this.config.safeZone;
         var xPos = x * scale + safe.paddingX;
         var yPos = y * scale + safe.paddingY;
-        var button = this.game.add.button(xPos, yPos, list[0], click, null);
-        if (list.length == 3) {
+        if (list.length === 1) {
+            button = this.game.add.button(xPos, yPos, list[0], click, this, 2, 1, 0);
+        }
+        else {
+            button = this.game.add.button(xPos, yPos, list[0], click, null);
             button.onInputOver.add(function () {
                 button.loadTexture(list[1]);
             }, this);
@@ -36,6 +41,8 @@ var ButtonFactory = (function (_super) {
                 button.loadTexture(list[0]);
             }, this);
         }
+        button.scale.x = scale * ratio;
+        button.scale.y = scale * ratio;
         return button;
     };
     return ButtonFactory;

@@ -28,17 +28,19 @@ var GridTile = (function (_super) {
         _this.value = _this.model.staticValue;
         _this.posX = x;
         _this.posY = y;
+        _this.frame = _this.createFrame();
         _this.sprite = _this.createSprite();
-        _this.sprite.alpha = 0;
-        var misc = _this.tools.misc;
-        misc.tweenTo(_this.sprite, { alpha: 1 }, 500, 'Linear', true);
-        var t1 = misc.tweenTo(_this.sprite, { alpha: 0.3 }, 100, 'Linear');
-        var t2 = misc.tweenTo(_this.sprite, { alpha: 1 }, 300, 'Linear');
-        _this.mergeTween = t1.chain(t2);
         _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 40);
         _this.group = _this.tools.misc.addGroup();
         _this.group.addChild(_this.sprite);
         _this.group.addChild(_this.number);
+        _this.group.addChild(_this.frame);
+        _this.group.alpha = 0;
+        var misc = _this.tools.misc;
+        misc.tweenTo(_this.group, { alpha: 1 }, 500, 'Linear', true);
+        var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100, 'Linear');
+        var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300, 'Linear');
+        _this.mergeTween = t1.chain(t2);
         return _this;
     }
     Object.defineProperty(GridTile.prototype, "isAlive", {
@@ -157,6 +159,12 @@ var GridTile = (function (_super) {
     GridTile.prototype.createSprite = function () {
         var tile = this.model;
         var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
+        sprite.body.collideWorldBounds = true;
+        return sprite;
+    };
+    GridTile.prototype.createFrame = function () {
+        var tile = this.model;
+        var sprite = this.tools.sprite.makeFrame(this.posX, this.posY);
         sprite.body.collideWorldBounds = true;
         return sprite;
     };

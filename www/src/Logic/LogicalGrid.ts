@@ -94,14 +94,12 @@ export default class LogicalGrid extends Base{
       let value = this.lastMergedTile.value;
       if (
         (value === this.gameboardConfig.minimumValue * 2 &&
-          this.tools.misc.randomBetween(0, 2) === 0) ||
+          this.tools.misc.randomBetween(0, 3) === 0) ||
         (value === this.gameboardConfig.minimumValue * 4 &&
           this.tools.misc.randomBetween(0, 2) === 0) ||
         (value === this.gameboardConfig.minimumValue * 8 &&
-          this.tools.misc.randomBetween(0, 2) === 0) ||
-        (value === this.gameboardConfig.minimumValue * 16 &&
           this.tools.misc.randomBetween(0, 1) === 0) ||
-        (value === this.gameboardConfig.minimumValue * 32 &&
+        (value === this.gameboardConfig.minimumValue * 16 &&
           this.tools.misc.randomBetween(0, 1) === 0)
       ) {
         this.tools.audio.playSound(this.lastMergedTile.model.id + "-sfx");

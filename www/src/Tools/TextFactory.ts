@@ -1,7 +1,7 @@
 import Factory from './Base/Factory';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
-    let settings = this.config.gridSettings;
+    let settings = this.config.grid;
     let xPos =
       settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
     let yPos =
@@ -14,7 +14,7 @@ export default class TextFactory extends Factory {
   }
 
   updateTileNumber(x: number, y: number, text: Phaser.Text) {
-    let settings = this.config.gridSettings;
+    let settings = this.config.grid;
     let xPos =
       settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
     let yPos =
@@ -34,13 +34,13 @@ export default class TextFactory extends Factory {
     textSize: number,
     altColor = false
   ) {
-    var colorConfig = this.config.colorSettings;
+    var colorConfig = this.config.color;
     let x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
     let y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
     let color = altColor ? colorConfig.altText : colorConfig.text;
     let textObj = this.game.add.text(x, y, text);
 
-    textObj.font = this.config.gridSettings.font;
+    textObj.font = this.config.grid.font;
     textObj.fontSize = textSize * this.config.scaleFactor;
     textObj.addColor(color, 0);
 

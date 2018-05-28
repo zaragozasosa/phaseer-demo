@@ -8,11 +8,11 @@ export default class GraphicsFactory extends Factory {
     let xPad =
       (x - 5) * config.scaleFactor +
       config.safeZone.paddingX +
-      config.gridSettings.gridPaddingX;
+      config.grid.gridPaddingX;
     let yPad =
       (y - 5) * config.scaleFactor +
       config.safeZone.paddingY +
-      config.gridSettings.gridPaddingY;
+      config.grid.gridPaddingY;
 
     let wall = this.game.add.sprite(xPad, yPad);
     this.game.physics.enable(wall, Phaser.Physics.ARCADE);
@@ -30,13 +30,13 @@ export default class GraphicsFactory extends Factory {
 
   drawGridRect() {
     // let config = this.config;
-    // let xPad = config.safeZone.paddingX + config.gridSettings.gridPaddingX;
-    // let yPad = config.safeZone.paddingY + config.gridSettings.gridPaddingY;
+    // let xPad = config.safeZone.paddingX + config.grid.gridPaddingX;
+    // let yPad = config.safeZone.paddingY + config.grid.gridPaddingY;
     // let graphics = this.game.add.graphics(0, 0);
-    // let wallLength = config.gridSettings.tileSize * 4 * config.scaleFactor;
+    // let wallLength = config.grid.tileSize * 4 * config.scaleFactor;
     // graphics.lineStyle(0);
     // graphics.beginFill(
-    //   Phaser.Color.hexToRGB(this.config.colorSettings.altText),
+    //   Phaser.Color.hexToRGB(this.config.color.altText),
     //   1
     // );
     // graphics.drawRect(xPad, yPad, wallLength, wallLength);
@@ -45,12 +45,12 @@ export default class GraphicsFactory extends Factory {
 
   addBackground() {
     let safeZone = this.config.safeZone;
-    let colorSettings = this.config.colorSettings;
+    let color = this.config.color;
     let xPad = safeZone.paddingX;
     let yPad = safeZone.paddingY;
     var graphics = this.game.add.graphics(0, 0);
     graphics.lineStyle(0);
-    graphics.beginFill(Phaser.Color.hexToRGB(colorSettings.background), 1);
+    graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
     graphics.drawRect(xPad, yPad, safeZone.safeWidth, safeZone.safeHeight);
     graphics.endFill();
   }

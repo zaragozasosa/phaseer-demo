@@ -96,9 +96,9 @@ var CharacterSelection = (function (_super) {
         this.displayArray = displayArray;
         var rnd = this.game.rnd.between(0, displayArray.length - 2);
         this.setSelectedCharacter(displayArray[rnd]);
-        this.buttonFactory.make(635, 935, ['start-1', 'start-2', 'start-3'], function () {
+        this.buttonFactory.make(660, 935, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
-        }.bind(this));
+        }.bind(this), 1.5);
         this.selectedSprite = this.spriteFactory.createSprite(590, 550, this.selectedCharacter.id, 2);
     };
     CharacterSelection.prototype.gameStart = function () {

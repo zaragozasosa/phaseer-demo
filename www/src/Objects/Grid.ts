@@ -1,5 +1,5 @@
 import Base from './../Base';
-import LogicalGrid from './../Objects/LogicalGrid';
+import LogicalGrid from './../Logic/LogicalGrid';
 import InputManager from './../InputManager';
 import GridTile from './GridTile';
 import GameboardConfig from './../Config/GameboardConfig';
@@ -24,7 +24,7 @@ export default class Grid extends Base{
     this.wallsGroup = this.makeWalls();
     this.gridLogic = new LogicalGrid(gameboardConfig);
 
-    this.framesGroup = this.makeTileFrames();
+    //this.framesGroup = this.makeTileFrames();
     
     this.input = new InputManager(this.config);
   }
@@ -57,7 +57,7 @@ export default class Grid extends Base{
   }
 
   private makeWalls(): Phaser.Group {
-    let wallLength = (this.config.gridSettings.tileSize) * 4;
+    let wallLength = (this.config.grid.tileSize) * 4;
     let group = this.tools.misc.addGroup();
 
     group.add(this.tools.graphic.makeWall(0, 0, 1, wallLength));

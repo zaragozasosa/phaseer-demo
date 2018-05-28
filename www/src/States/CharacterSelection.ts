@@ -140,12 +140,13 @@ export default class CharacterSelection extends Phaser.State {
     this.setSelectedCharacter(displayArray[rnd]);
 
     this.buttonFactory.make(
-      635,
+      660,
       935,
       ['start-1', 'start-2', 'start-3'],
       function() {
         this.gameStart();
-      }.bind(this)
+      }.bind(this),
+      1.5
     );
 
     this.selectedSprite = this.spriteFactory.createSprite(

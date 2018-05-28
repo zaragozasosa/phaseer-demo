@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var SpriteFactory_1 = require("./../Tools/SpriteFactory");
 var TextFactory_1 = require("./../Tools/TextFactory");
+var AudioFactory_1 = require("./../Tools/AudioFactory");
 var InputManager_1 = require("./../InputManager");
 var Config_1 = require("./../Config/Config");
 var MainMenu = (function (_super) {
@@ -24,10 +25,9 @@ var MainMenu = (function (_super) {
         this.spriteFactory = new SpriteFactory_1.default(config);
         this.textFactory = new TextFactory_1.default(config);
         this.cursor = new InputManager_1.default(config);
-        var music = this.game.add.audio('bgm');
-        music.play('', 0, 0.5, true);
-        this.spriteFactory.makeCentered(100, 'title', 0.8);
-        this.textFactory.makeXBounded(900, 'Click to start', 50, 'center', true);
+        this.audioFactory = new AudioFactory_1.default(config);
+        this.audioFactory.play('bgm');
+        this.textFactory.makeXBounded(600, 'Click to start', 70, 'center', true);
     };
     MainMenu.prototype.update = function () {
         if (this.game.input.activePointer.isDown) {
