@@ -18,8 +18,8 @@ var TextFactory = (function (_super) {
     }
     TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
         var settings = this.config.grid;
-        var xPos = settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
-        var yPos = settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
+        var xPos = settings.gridPaddingX + settings.tileNumberPadX + x * settings.tileSize;
+        var yPos = settings.gridPaddingY + settings.tileNumberPadY + y * settings.tileSize;
         var txt = this.make(xPos, yPos, value.toString(), size);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
         return txt;

@@ -37,7 +37,7 @@ export default class Gameboard extends Base{
   }
 
   private addHeader() {
-    this.header = this.tools.text.make(0, 20, '', 40);
+    this.header = this.tools.text.make(20, 20, '', 40);
     this.updateHeader();
   }
 

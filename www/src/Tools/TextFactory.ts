@@ -3,9 +3,9 @@ export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
     let settings = this.config.grid;
     let xPos =
-      settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
+      settings.gridPaddingX + settings.tileNumberPadX + x * settings.tileSize;
     let yPos =
-      settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
+      settings.gridPaddingY + settings.tileNumberPadY + y * settings.tileSize;
 
     let txt = this.make(xPos, yPos, value.toString(), size);
     this.game.physics.enable(txt, Phaser.Physics.ARCADE);

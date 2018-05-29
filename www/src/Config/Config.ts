@@ -121,7 +121,6 @@ export class GridSettings {
   gridPaddingX: number;
   gridPaddingY: number;
   tileScale: number;
-  tilePadding: number;
   font: string;
   tileNumberPadX: number;
   tileNumberPadY: number;

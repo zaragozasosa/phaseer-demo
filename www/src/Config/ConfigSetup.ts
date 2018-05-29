@@ -31,7 +31,7 @@ export default class ConfigSetup {
     let baseWidth = 320;
     let baseHeight = 480;
     let maxPixelRatio = 3;
-    let desktopPadding = !isMobile ? 10 : 0;
+    let desktopPadding = !isMobile ? 0 : 0;
     let baseProportion = baseHeight / baseWidth;
     let screenPixelRatio =
       window.devicePixelRatio <= maxPixelRatio
@@ -53,10 +53,9 @@ export default class ConfigSetup {
     bgWidth = screenWidth;
 
     if (screenProportion > baseProportion) {
-      safeWidth = screenWidth - (desktopPadding * 2);
+      safeWidth = screenWidth;
       safeHeight = safeWidth * baseProportion;
       bgHeight = safeHeight;
-      safeHeight -= desktopPadding * 2;
       paddingY = (screenHeight - safeHeight) / 2;
       bgHeight = safeHeight;
       scaleFactor = screenPixelRatio / 3 * widthProportion;
@@ -64,7 +63,6 @@ export default class ConfigSetup {
       safeHeight = screenHeight - desktopPadding * 2;
       safeWidth = safeHeight / baseProportion;
       bgWidth = safeWidth;
-      safeWidth -= desktopPadding * 2;
       paddingX = (screenWidth - safeWidth) / 2;
       scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
     }
@@ -74,7 +72,6 @@ export default class ConfigSetup {
     }
 
     paddingY += desktopPadding;
-    paddingX += desktopPadding;
 
     this.config.safeZone = new SafeZone(
       safeWidth,
@@ -105,9 +102,8 @@ export default class ConfigSetup {
     grid.gridPaddingX = 25 * scaleFactor;
     grid.gridPaddingY = 200 * scaleFactor;
     grid.tileScale = grid.tileSize / (grid.physicalTileSize + 10);
-    grid.tilePadding = 0;
     grid.font = 'Verdana,Geneva,sans-serif';
-    grid.tileNumberPadX = 30;
+    grid.tileNumberPadX = 35;
     grid.tileNumberPadY = 110;
 
     config.grid = grid;

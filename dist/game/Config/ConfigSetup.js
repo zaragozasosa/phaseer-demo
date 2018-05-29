@@ -23,7 +23,7 @@ var ConfigSetup = (function () {
         var baseWidth = 320;
         var baseHeight = 480;
         var maxPixelRatio = 3;
-        var desktopPadding = !isMobile ? 10 : 0;
+        var desktopPadding = !isMobile ? 0 : 0;
         var baseProportion = baseHeight / baseWidth;
         var screenPixelRatio = window.devicePixelRatio <= maxPixelRatio
             ? window.devicePixelRatio
@@ -38,10 +38,9 @@ var ConfigSetup = (function () {
         bgHeight = screenHeight;
         bgWidth = screenWidth;
         if (screenProportion > baseProportion) {
-            safeWidth = screenWidth - (desktopPadding * 2);
+            safeWidth = screenWidth;
             safeHeight = safeWidth * baseProportion;
             bgHeight = safeHeight;
-            safeHeight -= desktopPadding * 2;
             paddingY = (screenHeight - safeHeight) / 2;
             bgHeight = safeHeight;
             scaleFactor = screenPixelRatio / 3 * widthProportion;
@@ -50,7 +49,6 @@ var ConfigSetup = (function () {
             safeHeight = screenHeight - desktopPadding * 2;
             safeWidth = safeHeight / baseProportion;
             bgWidth = safeWidth;
-            safeWidth -= desktopPadding * 2;
             paddingX = (screenWidth - safeWidth) / 2;
             scaleFactor = safeWidth / (baseWidth * maxPixelRatio);
         }
@@ -58,7 +56,6 @@ var ConfigSetup = (function () {
             bgPaddingX = paddingX;
         }
         paddingY += desktopPadding;
-        paddingX += desktopPadding;
         this.config.safeZone = new Config_1.SafeZone(safeWidth, safeHeight, paddingX, paddingY, bgPaddingX, bgPaddingY, bgWidth, bgHeight);
         this.config.scaleFactor = scaleFactor;
         this.config.screenWidth = screenWidth;
@@ -77,9 +74,8 @@ var ConfigSetup = (function () {
         grid.gridPaddingX = 25 * scaleFactor;
         grid.gridPaddingY = 200 * scaleFactor;
         grid.tileScale = grid.tileSize / (grid.physicalTileSize + 10);
-        grid.tilePadding = 0;
         grid.font = 'Verdana,Geneva,sans-serif';
-        grid.tileNumberPadX = 30;
+        grid.tileNumberPadX = 35;
         grid.tileNumberPadY = 110;
         config.grid = grid;
         config.sound = new Config_1.SoundSettings();

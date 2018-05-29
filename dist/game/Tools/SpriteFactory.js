@@ -31,8 +31,8 @@ var SpriteFactory = (function (_super) {
         var grid = this.config.grid;
         var size = this.config.grid.tileSize;
         var scale = this.config.grid.tileScale;
-        var padX = grid.gridPaddingX + grid.tilePadding;
-        var padY = grid.gridPaddingY + grid.tilePadding;
+        var padX = grid.gridPaddingX;
+        var padY = grid.gridPaddingY;
         var sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
         this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
         return sprite;
@@ -48,8 +48,8 @@ var SpriteFactory = (function (_super) {
         var grid = this.config.grid;
         var size = this.config.grid.tileSize;
         var scale = this.config.grid.tileScale;
-        var xPad = grid.gridPaddingX + grid.tilePadding;
-        var yPad = grid.gridPaddingY + grid.tilePadding;
+        var xPad = grid.gridPaddingX;
+        var yPad = grid.gridPaddingY;
         var posX = x * size * this.config.scaleFactor;
         var posY = y * size * this.config.scaleFactor;
         var padX = this.config.safeZone.paddingX + xPad;

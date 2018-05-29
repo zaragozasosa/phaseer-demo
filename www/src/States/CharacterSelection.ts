@@ -100,9 +100,7 @@ export default class CharacterSelection extends Phaser.State {
         yMenuPad,
         ratio
       );
-      if(char.id !== 'random') {
-        sprite.tint = Phaser.Color.BLACK;        
-      }
+      sprite.tint = Phaser.Color.GRAY;
       this.spriteArray.push(sprite);
 
       sprite.inputEnabled = true;
@@ -133,7 +131,12 @@ export default class CharacterSelection extends Phaser.State {
     this.ratio = ratio;
     this.displayArray = displayArray;
 
-    let select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center', true)
+    let select = this.textFactory.makeXBounded(
+      480,
+      'Select your character',
+      50,
+      'center'
+    );
 
     let rnd = this.game.rnd.between(0, displayArray.length - 2);
     this.setSelectedCharacter(this.spriteArray[rnd], displayArray[rnd]);
@@ -155,12 +158,7 @@ export default class CharacterSelection extends Phaser.State {
       2
     );
 
-    this.textFactory.make(
-      20,
-      860,
-      `Special Power:`,
-      35
-    );
+    this.textFactory.make(20, 860, `Special Power:`, 35);
   }
 
   gameStart() {
@@ -176,9 +174,7 @@ export default class CharacterSelection extends Phaser.State {
 
   setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {
     this.game.sound.play('beep', 1);
-    this.spriteArray
-      .filter(x => x.key !== 'random')
-      .forEach(x => (x.tint = Phaser.Color.BLACK));
+    this.spriteArray.forEach(x => (x.tint = Phaser.Color.GRAY));
 
     sprite.tint = Phaser.Color.WHITE;
     this.selectedCharacter = char;

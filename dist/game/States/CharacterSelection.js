@@ -63,9 +63,7 @@ var CharacterSelection = (function (_super) {
         displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', '', '?????', 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
             var sprite = this_1.spriteFactory.makeMenuTile(column, row, char.id, yMenuPad, ratio);
-            if (char.id !== 'random') {
-                sprite.tint = Phaser.Color.BLACK;
-            }
+            sprite.tint = Phaser.Color.GRAY;
             this_1.spriteArray.push(sprite);
             sprite.inputEnabled = true;
             sprite.events.onInputDown.add(function () {
@@ -97,7 +95,7 @@ var CharacterSelection = (function (_super) {
         this.yMenuPad = yMenuPad;
         this.ratio = ratio;
         this.displayArray = displayArray;
-        var select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center', true);
+        var select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center');
         var rnd = this.game.rnd.between(0, displayArray.length - 2);
         this.setSelectedCharacter(this.spriteArray[rnd], displayArray[rnd]);
         this.buttonFactory.make(675, 965, ['start-1', 'start-2', 'start-3'], function () {
@@ -116,9 +114,7 @@ var CharacterSelection = (function (_super) {
     };
     CharacterSelection.prototype.setSelectedCharacter = function (sprite, char) {
         this.game.sound.play('beep', 1);
-        this.spriteArray
-            .filter(function (x) { return x.key !== 'random'; })
-            .forEach(function (x) { return (x.tint = Phaser.Color.BLACK); });
+        this.spriteArray.forEach(function (x) { return (x.tint = Phaser.Color.GRAY); });
         sprite.tint = Phaser.Color.WHITE;
         this.selectedCharacter = char;
         if (this.selectedSprite) {

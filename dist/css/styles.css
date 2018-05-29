@@ -1,8 +1,8 @@
 body {
-  overflow: hidden; }
+  overflow: hidden;
+  margin: 0px; }
 
 @media only screen and (min-width: 768px) {
   body {
-    margin: 0px;
     background: url(../assets/images/bg.jpg) no-repeat center center fixed;
     background-size: cover; } }

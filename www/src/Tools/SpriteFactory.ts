@@ -22,8 +22,8 @@ export default class SpriteFactory extends Factory {
     let grid = this.config.grid;
     let size = this.config.grid.tileSize;
     let scale = this.config.grid.tileScale;
-    let padX = grid.gridPaddingX + grid.tilePadding;
-    let padY = grid.gridPaddingY + grid.tilePadding;
+    let padX = grid.gridPaddingX;
+    let padY = grid.gridPaddingY;
     let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
@@ -43,8 +43,8 @@ export default class SpriteFactory extends Factory {
 
     let size = this.config.grid.tileSize;
     let scale = this.config.grid.tileScale;
-    let xPad = grid.gridPaddingX + grid.tilePadding;
-    let yPad = grid.gridPaddingY + grid.tilePadding;
+    let xPad = grid.gridPaddingX;
+    let yPad = grid.gridPaddingY;
 
     let posX = x * size * this.config.scaleFactor;
     let posY = y * size * this.config.scaleFactor;
