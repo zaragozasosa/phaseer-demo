@@ -18,26 +18,28 @@ var TextFactory = (function (_super) {
     }
     TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
         var settings = this.config.grid;
-        var xPos = settings.gridPaddingX + settings.tileNumberPadX + x * settings.tileSize;
-        var yPos = settings.gridPaddingY + settings.tileNumberPadY + y * settings.tileSize;
-        var txt = this.make(xPos, yPos, value.toString(), size);
+        var xPos = settings.tileNumberPadX + x * settings.tileSize;
+        var yPos = settings.tileNumberPadY + y * settings.tileSize;
+        var txt = this.make(xPos, yPos, value.toString(), size, false, settings.gridPaddingX, settings.gridPaddingY);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
         return txt;
     };
     TextFactory.prototype.updateTileNumber = function (x, y, text) {
         var settings = this.config.grid;
-        var xPos = settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
-        var yPos = settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
+        var xPos = settings.tileNumberPadX + x * settings.tileSize;
+        var yPos = settings.tileNumberPadY + y * settings.tileSize;
         var posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
         var posY = this.config.safeZone.paddingY + yPos * this.config.scaleFactor;
-        text.position.x = posX;
-        text.position.y = posY;
+        text.position.x = posX + settings.gridPaddingX;
+        text.position.y = posY + settings.gridPaddingY;
     };
-    TextFactory.prototype.make = function (posX, posY, text, textSize, altColor) {
+    TextFactory.prototype.make = function (posX, posY, text, textSize, altColor, padX, padY) {
         if (altColor === void 0) { altColor = false; }
+        if (padX === void 0) { padX = 0; }
+        if (padY === void 0) { padY = 0; }
         var colorConfig = this.config.color;
-        var x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
-        var y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
+        var x = this.config.safeZone.paddingX + padX + posX * this.config.scaleFactor;
+        var y = this.config.safeZone.paddingY + padY + posY * this.config.scaleFactor;
         var color = altColor ? colorConfig.altText : colorConfig.text;
         var textObj = this.game.add.text(x, y, text);
         textObj.font = this.config.grid.font;
@@ -67,21 +69,6 @@ var TextFactory = (function (_super) {
         textObj.lineSpacing = lineHeight;
         textObj.setTextBounds(pad, pad, safeZone.safeWidth - pad, safeZone.safeHeight - pad);
         return textObj;
-    };
-    TextFactory.prototype.makeYBounded = function (posX, text, textSize, align, altColor, wordWrapWidth, padding) {
-        if (altColor === void 0) { altColor = false; }
-        if (wordWrapWidth === void 0) { wordWrapWidth = 0; }
-        if (padding === void 0) { padding = 0; }
-        var boundPadding = padding ? padding : 15;
-        var safeZone = this.config.safeZone;
-        var graphic = this.make(posX, 0, text, textSize, altColor);
-        graphic.wordWrap = true;
-        graphic.wordWrapWidth = wordWrapWidth
-            ? wordWrapWidth * this.config.scaleFactor
-            : safeZone.safeWidth;
-        graphic.boundsAlignV = align;
-        graphic.setTextBounds(boundPadding, boundPadding, safeZone.safeWidth - boundPadding, safeZone.safeHeight - boundPadding);
-        return graphic;
     };
     TextFactory.prototype.makeCenteredAnchor = function (posX, posY, text, textSize, altColor) {
         if (altColor === void 0) { altColor = false; }

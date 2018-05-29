@@ -55,9 +55,7 @@ export default class ConfigSetup {
     if (screenProportion > baseProportion) {
       safeWidth = screenWidth;
       safeHeight = safeWidth * baseProportion;
-      bgHeight = safeHeight;
       paddingY = (screenHeight - safeHeight) / 2;
-      bgHeight = safeHeight;
       scaleFactor = screenPixelRatio / 3 * widthProportion;
     } else if (screenProportion < baseProportion) {
       safeHeight = screenHeight - desktopPadding * 2;
@@ -69,6 +67,7 @@ export default class ConfigSetup {
 
     if (!isMobile) {
       bgPaddingX = paddingX;
+      bgWidth = safeHeight / baseProportion;      
     }
 
     paddingY += desktopPadding;
@@ -103,8 +102,8 @@ export default class ConfigSetup {
     grid.gridPaddingY = 200 * scaleFactor;
     grid.tileScale = grid.tileSize / (grid.physicalTileSize + 10);
     grid.font = 'Verdana,Geneva,sans-serif';
-    grid.tileNumberPadX = 35;
-    grid.tileNumberPadY = 110;
+    grid.tileNumberPadX = 20;
+    grid.tileNumberPadY = 15;
 
     config.grid = grid;
 

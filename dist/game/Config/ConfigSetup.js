@@ -40,9 +40,7 @@ var ConfigSetup = (function () {
         if (screenProportion > baseProportion) {
             safeWidth = screenWidth;
             safeHeight = safeWidth * baseProportion;
-            bgHeight = safeHeight;
             paddingY = (screenHeight - safeHeight) / 2;
-            bgHeight = safeHeight;
             scaleFactor = screenPixelRatio / 3 * widthProportion;
         }
         else if (screenProportion < baseProportion) {
@@ -54,6 +52,7 @@ var ConfigSetup = (function () {
         }
         if (!isMobile) {
             bgPaddingX = paddingX;
+            bgWidth = safeHeight / baseProportion;
         }
         paddingY += desktopPadding;
         this.config.safeZone = new Config_1.SafeZone(safeWidth, safeHeight, paddingX, paddingY, bgPaddingX, bgPaddingY, bgWidth, bgHeight);
@@ -75,8 +74,8 @@ var ConfigSetup = (function () {
         grid.gridPaddingY = 200 * scaleFactor;
         grid.tileScale = grid.tileSize / (grid.physicalTileSize + 10);
         grid.font = 'Verdana,Geneva,sans-serif';
-        grid.tileNumberPadX = 35;
-        grid.tileNumberPadY = 110;
+        grid.tileNumberPadX = 20;
+        grid.tileNumberPadY = 15;
         config.grid = grid;
         config.sound = new Config_1.SoundSettings();
         config.sound.bgmVolume = 0.5;

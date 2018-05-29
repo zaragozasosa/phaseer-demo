@@ -2,12 +2,18 @@ import Factory from './Base/Factory';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
     let settings = this.config.grid;
-    let xPos =
-      settings.gridPaddingX + settings.tileNumberPadX + x * settings.tileSize;
-    let yPos =
-      settings.gridPaddingY + settings.tileNumberPadY + y * settings.tileSize;
+    let xPos = settings.tileNumberPadX + x * settings.tileSize;
+    let yPos = settings.tileNumberPadY + y * settings.tileSize;
 
-    let txt = this.make(xPos, yPos, value.toString(), size);
+    let txt = this.make(
+      xPos,
+      yPos,
+      value.toString(),
+      size,
+      false,
+      settings.gridPaddingX,
+      settings.gridPaddingY
+    );
     this.game.physics.enable(txt, Phaser.Physics.ARCADE);
 
     return txt;
@@ -15,16 +21,14 @@ export default class TextFactory extends Factory {
 
   updateTileNumber(x: number, y: number, text: Phaser.Text) {
     let settings = this.config.grid;
-    let xPos =
-      settings.tileNumberPadX + x * settings.tileSize + settings.gridPaddingX;
-    let yPos =
-      settings.tileNumberPadY + y * settings.tileSize + settings.gridPaddingY;
+    let xPos = settings.tileNumberPadX + x * settings.tileSize;
+    let yPos = settings.tileNumberPadY + y * settings.tileSize;
 
     let posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
     let posY = this.config.safeZone.paddingY + yPos * this.config.scaleFactor;
 
-    text.position.x = posX;
-    text.position.y = posY;
+    text.position.x = posX + settings.gridPaddingX;
+    text.position.y = posY + settings.gridPaddingY;
   }
 
   make(
@@ -32,11 +36,15 @@ export default class TextFactory extends Factory {
     posY: number,
     text: string,
     textSize: number,
-    altColor = false
+    altColor = false,
+    padX = 0,
+    padY = 0
   ) {
     var colorConfig = this.config.color;
-    let x = this.config.safeZone.paddingX + posX * this.config.scaleFactor;
-    let y = this.config.safeZone.paddingY + posY * this.config.scaleFactor;
+    let x =
+      this.config.safeZone.paddingX + padX + posX * this.config.scaleFactor;
+    let y =
+      this.config.safeZone.paddingY + padY + posY * this.config.scaleFactor;
     let color = altColor ? colorConfig.altText : colorConfig.text;
     let textObj = this.game.add.text(x, y, text);
 
@@ -96,33 +104,6 @@ export default class TextFactory extends Factory {
     );
 
     return textObj;
-  }
-
-  makeYBounded(
-    posX: number,
-    text: string,
-    textSize: number,
-    align: string,
-    altColor = false,
-    wordWrapWidth = 0,
-    padding = 0
-  ) {
-    let boundPadding = padding ? padding : 15;
-    let safeZone = this.config.safeZone;
-    let graphic = this.make(posX, 0, text, textSize, altColor);
-    graphic.wordWrap = true;
-    graphic.wordWrapWidth = wordWrapWidth
-      ? wordWrapWidth * this.config.scaleFactor
-      : safeZone.safeWidth;
-    graphic.boundsAlignV = align;
-    graphic.setTextBounds(
-      boundPadding,
-      boundPadding,
-      safeZone.safeWidth - boundPadding,
-      safeZone.safeHeight - boundPadding
-    );
-
-    return graphic;
   }
 
   makeCenteredAnchor(
