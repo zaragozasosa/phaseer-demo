@@ -104,4 +104,14 @@ export default class SpriteFactory extends Factory {
     sprite.inputEnabled = true;
     return sprite;
   }
+
+  createBackground() {
+    let safeZone = this.config.safeZone;
+    let config = this.config;
+
+    let x = safeZone.bgPaddingX;
+    let y = safeZone.bgPaddingY;
+    let sprite = this.game.add.sprite(x, y, 'witch');
+    sprite.scale.setTo(config.scaleFactor, config.scaleFactor); 
+  }
 }

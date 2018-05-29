@@ -93,6 +93,14 @@ var SpriteFactory = (function (_super) {
         sprite.inputEnabled = true;
         return sprite;
     };
+    SpriteFactory.prototype.createBackground = function () {
+        var safeZone = this.config.safeZone;
+        var config = this.config;
+        var x = safeZone.bgPaddingX;
+        var y = safeZone.bgPaddingY;
+        var sprite = this.game.add.sprite(x, y, 'witch');
+        sprite.scale.setTo(config.scaleFactor, config.scaleFactor);
+    };
     return SpriteFactory;
 }(Factory_1.default));
 exports.default = SpriteFactory;

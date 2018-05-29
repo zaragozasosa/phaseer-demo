@@ -15,7 +15,8 @@ export default class Gameboard extends Base{
   constructor(gameboardConfig: GameboardConfig) {
     super();
     this.gameboardConfig = gameboardConfig;
-    this.tools.graphic.addBackground();
+    //this.tools.graphic.addBackground();
+    this.tools.sprite.createBackground();
     this.debugArray = [];
 
     this.grid = new Grid(
@@ -29,7 +30,7 @@ export default class Gameboard extends Base{
     this.points = this.grid.calculatePoints();
     this.addHeader();
     this.addVolumeButton();
-    this.addPowerButton();
+    //this.addPowerButton();
   }
 
   update() {

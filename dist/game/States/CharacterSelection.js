@@ -43,6 +43,7 @@ var CharacterSelection = (function (_super) {
         this.load.audio("random-sfx", 'assets/sfx/random-sound.wav');
         this.preloadBar = this.spriteFactory.makeCentered(300, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
+        this.load.image('witch', 'assets/images/witch.jpeg');
     };
     CharacterSelection.prototype.create = function () {
         this.preloadBar.destroy();

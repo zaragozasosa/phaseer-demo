@@ -59,6 +59,8 @@ export default class CharacterSelection extends Phaser.State {
 
     this.preloadBar = this.spriteFactory.makeCentered(300, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
+
+    this.load.image('witch', 'assets/images/witch.jpeg');
   }
 
   create() {
