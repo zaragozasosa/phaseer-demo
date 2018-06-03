@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Factory_1 = require("./Base/Factory");
+var Config_1 = require("./../Config/Config");
 var TextFactory = (function (_super) {
     __extends(TextFactory, _super);
     function TextFactory() {
@@ -20,7 +21,7 @@ var TextFactory = (function (_super) {
         var settings = this.config.grid;
         var xPos = settings.tileNumberPadX + x * settings.tileSize;
         var yPos = settings.tileNumberPadY + y * settings.tileSize;
-        var txt = this.make(xPos, yPos, value.toString(), size, false, settings.gridPaddingX, settings.gridPaddingY);
+        var txt = this.make(xPos, yPos, value.toString(), size, Config_1.ColorSettings.TEXT, settings.gridPaddingX, settings.gridPaddingY);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
         return txt;
     };
@@ -33,35 +34,34 @@ var TextFactory = (function (_super) {
         text.position.x = posX + settings.gridPaddingX;
         text.position.y = posY + settings.gridPaddingY;
     };
-    TextFactory.prototype.make = function (posX, posY, text, textSize, altColor, padX, padY) {
-        if (altColor === void 0) { altColor = false; }
+    TextFactory.prototype.make = function (posX, posY, text, textSize, color, padX, padY) {
+        if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
         if (padX === void 0) { padX = 0; }
         if (padY === void 0) { padY = 0; }
-        var colorConfig = this.config.color;
+        var colorString = this.getColor(color);
         var x = this.config.safeZone.paddingX + padX + posX * this.config.scaleFactor;
         var y = this.config.safeZone.paddingY + padY + posY * this.config.scaleFactor;
-        var color = altColor ? colorConfig.altText : colorConfig.text;
         var textObj = this.game.add.text(x, y, text);
         textObj.font = this.config.grid.font;
         textObj.fontSize = textSize * this.config.scaleFactor;
-        textObj.addColor(color, 0);
+        textObj.addColor(colorString, 0);
         return textObj;
     };
-    TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, altColor) {
-        if (altColor === void 0) { altColor = false; }
+    TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, color) {
+        if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
         var safeZone = this.config.safeZone;
         var boundPadding = 15 * this.config.scaleFactor;
-        var textObj = this.make(0, posY, text, textSize, altColor);
+        var textObj = this.make(0, posY, text, textSize, color);
         textObj.wordWrap = true;
         textObj.wordWrapWidth = safeZone.safeWidth;
         textObj.boundsAlignH = align;
         textObj.setTextBounds(boundPadding, boundPadding, safeZone.safeWidth - boundPadding, safeZone.safeHeight - boundPadding);
         return textObj;
     };
-    TextFactory.prototype.makeXBoundedOptions = function (posY, text, textSize, align, wordWrapWidth, padding, lineHeight, altColor) {
-        if (altColor === void 0) { altColor = false; }
+    TextFactory.prototype.makeXBoundedOptions = function (posY, text, textSize, align, wordWrapWidth, padding, lineHeight, color) {
+        if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
         var safeZone = this.config.safeZone;
-        var textObj = this.make(0, posY, text, textSize, altColor);
+        var textObj = this.make(0, posY, text, textSize, color);
         var pad = padding * this.config.scaleFactor;
         textObj.wordWrap = true;
         textObj.wordWrapWidth = wordWrapWidth * this.config.scaleFactor;
@@ -70,9 +70,9 @@ var TextFactory = (function (_super) {
         textObj.setTextBounds(pad, pad, safeZone.safeWidth - pad, safeZone.safeHeight - pad);
         return textObj;
     };
-    TextFactory.prototype.makeCenteredAnchor = function (posX, posY, text, textSize, altColor) {
-        if (altColor === void 0) { altColor = false; }
-        var textObj = this.make(posX, posY, text, textSize, altColor);
+    TextFactory.prototype.makeCenteredAnchor = function (posX, posY, text, textSize, color) {
+        if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
+        var textObj = this.make(posX, posY, text, color);
         textObj.anchor.set(0.5);
         return textObj;
     };

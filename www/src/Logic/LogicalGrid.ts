@@ -2,12 +2,12 @@ import GameboardConfig from './../Config/GameboardConfig';
 import GridTile from './../Objects/GridTile';
 import Base from './../Base';
 
-export default class LogicalGrid extends Base{
-  private grid: Array<GridTile>;
-  private arraySize: number;
-  private gameboardConfig: GameboardConfig;
-  private lastMergedTile: GridTile;
-  private tilesGroup: Phaser.Group;
+export default class LogicalGrid extends Base {
+  protected grid: Array<GridTile>;
+  protected arraySize: number;
+  protected gameboardConfig: GameboardConfig;
+  protected lastMergedTile: GridTile;
+  protected tilesGroup: Phaser.Group;
 
   constructor(gameboardConfig: GameboardConfig) {
     super();
@@ -74,6 +74,27 @@ export default class LogicalGrid extends Base{
     return this.tilesStopped();
   }
 
+  canUsePower() {
+    return false;
+  }
+
+  power() {}
+
+  protected cleanGrid() {
+    let killed = this.grid.filter(x => x && !x.isAlive);
+    for (let item of killed) {
+      item.destroy(true);
+      this.set(item.posX, item.posY, null);
+    }
+
+    this.lastMergedTile = null;
+    this.tilesGroup.removeAll();
+
+    for (let item of this.grid.filter(x => x)) {
+      this.tilesGroup.add(item.getGroup);
+    }
+  }
+
   private tilesStopped() {
     let allStopped = true;
 
@@ -102,7 +123,7 @@ export default class LogicalGrid extends Base{
         (value === this.gameboardConfig.minimumValue * 16 &&
           this.tools.misc.randomBetween(0, 1) === 0)
       ) {
-        this.tools.audio.playSound(this.lastMergedTile.model.id + "-sfx");
+        this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
       }
     }
 
@@ -110,21 +131,6 @@ export default class LogicalGrid extends Base{
 
     if (!this.isFull()) {
       this.add();
-    }
-  }
-
-  private cleanGrid() {
-    let killed = this.grid.filter(x => x && !x.isAlive);
-    for (let item of killed) {
-      item.destroy(true);
-      this.set(item.posX, item.posY, null);
-    }
-
-    this.lastMergedTile = null;
-    this.tilesGroup.removeAll();
-
-    for (let item of this.grid.filter(x => x)) {
-      this.tilesGroup.add(item.getGroup);
     }
   }
 
@@ -267,6 +273,10 @@ export default class LogicalGrid extends Base{
       }
     }
     return empty;
+  }
+
+  protected getTilesOrdered() {
+    return this.grid.filter(x => x).sort((n1, n2) => n2.value - n1.value);
   }
 
   sumTiles() {

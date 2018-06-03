@@ -1,4 +1,5 @@
 import Factory from './Base/Factory';
+import { ColorSettings } from './../Config/Config';
 export default class TextFactory extends Factory {
   makeTileNumber(x: number, y: number, value: number, size: number) {
     let settings = this.config.grid;
@@ -10,7 +11,7 @@ export default class TextFactory extends Factory {
       yPos,
       value.toString(),
       size,
-      false,
+      ColorSettings.TEXT,
       settings.gridPaddingX,
       settings.gridPaddingY
     );
@@ -36,21 +37,20 @@ export default class TextFactory extends Factory {
     posY: number,
     text: string,
     textSize: number,
-    altColor = false,
+    color = ColorSettings.TEXT,
     padX = 0,
-    padY = 0
+    padY = 0,
   ) {
-    var colorConfig = this.config.color;
+    var colorString = this.getColor(color);
     let x =
       this.config.safeZone.paddingX + padX + posX * this.config.scaleFactor;
     let y =
       this.config.safeZone.paddingY + padY + posY * this.config.scaleFactor;
-    let color = altColor ? colorConfig.altText : colorConfig.text;
     let textObj = this.game.add.text(x, y, text);
 
     textObj.font = this.config.grid.font;
     textObj.fontSize = textSize * this.config.scaleFactor;
-    textObj.addColor(color, 0);
+    textObj.addColor(colorString, 0);
 
     return textObj;
   }
@@ -60,11 +60,11 @@ export default class TextFactory extends Factory {
     text: string,
     textSize: number,
     align: string,
-    altColor = false
+    color = ColorSettings.TEXT,
   ) {
     let safeZone = this.config.safeZone;
     let boundPadding = 15 * this.config.scaleFactor;
-    let textObj = this.make(0, posY, text, textSize, altColor);
+    let textObj = this.make(0, posY, text, textSize, color);
     textObj.wordWrap = true;
     textObj.wordWrapWidth = safeZone.safeWidth;
     textObj.boundsAlignH = align;
@@ -86,10 +86,10 @@ export default class TextFactory extends Factory {
     wordWrapWidth: number,
     padding: number,
     lineHeight: number,
-    altColor = false
+    color = ColorSettings.TEXT
   ) {
     let safeZone = this.config.safeZone;
-    let textObj = this.make(0, posY, text, textSize, altColor);
+    let textObj = this.make(0, posY, text, textSize, color);
     let pad = padding * this.config.scaleFactor;
     textObj.wordWrap = true;
     textObj.wordWrapWidth = wordWrapWidth * this.config.scaleFactor;
@@ -111,9 +111,9 @@ export default class TextFactory extends Factory {
     posY: number,
     text: string,
     textSize: number,
-    altColor = false
+    color = ColorSettings.TEXT
   ) {
-    let textObj = this.make(posX, posY, text, textSize, altColor);
+    let textObj = this.make(posX, posY, text, color);
     textObj.anchor.set(0.5);
 
     return textObj;

@@ -1,4 +1,4 @@
-import { Config, Singleton, Tools } from './Config/Config';
+import { Config, Singleton, Tools, ColorSettings } from './Config/Config';
 
 export default class Base {
 	protected config: Config;

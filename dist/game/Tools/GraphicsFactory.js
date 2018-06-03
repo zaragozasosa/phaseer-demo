@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Factory_1 = require("./Base/Factory");
+var Config_1 = require("./../Config/Config");
 var GraphicsFactory = (function (_super) {
     __extends(GraphicsFactory, _super);
     function GraphicsFactory() {
@@ -34,18 +35,39 @@ var GraphicsFactory = (function (_super) {
         wall.body.immovable = true;
         return wall;
     };
-    GraphicsFactory.prototype.drawGridRect = function () {
-    };
-    GraphicsFactory.prototype.addBackground = function () {
+    GraphicsFactory.prototype.addBackground = function (color, alpha) {
+        if (color === void 0) { color = Config_1.ColorSettings.BACKGROUND; }
+        if (alpha === void 0) { alpha = 1; }
         var safeZone = this.config.safeZone;
-        var color = this.config.color;
+        var colorString = this.getColor(color);
         var xPad = safeZone.bgPaddingX;
         var yPad = safeZone.bgPaddingY;
         var graphics = this.game.add.graphics(0, 0);
         graphics.lineStyle(0);
-        graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
+        graphics.beginFill(Phaser.Color.hexToRGB(colorString), alpha);
         graphics.drawRect(xPad, yPad, safeZone.bgWidth, safeZone.bgHeight);
+        return graphics.endFill();
+    };
+    GraphicsFactory.prototype.addWindowBackground = function () {
+        return this.addBackground(Config_1.ColorSettings.BACKGROUND, 0.7);
+    };
+    GraphicsFactory.prototype.makeRect = function (x, y, length, height, lineWidth) {
+        if (lineWidth === void 0) { lineWidth = 0; }
+        var safeZone = this.config.safeZone;
+        var config = this.config;
+        var color = this.config.color;
+        var posX = safeZone.paddingX + x;
+        var posY = safeZone.paddingY + y;
+        var graphics = this.game.add.graphics(0, 0);
+        graphics.lineStyle(lineWidth * config.scaleFactor, Phaser.Color.BLACK);
+        graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
+        var rect = graphics.drawRect(posX, posY, length, height);
         graphics.endFill();
+        return rect;
+    };
+    GraphicsFactory.prototype.makeWindowRect = function () {
+        var w = this.config.window;
+        return this.makeRect(w.defaultX, w.defaultY, w.defaultWidth, w.defaultHeight, w.defaultLineWidth);
     };
     return GraphicsFactory;
 }(Factory_1.default));

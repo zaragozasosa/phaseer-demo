@@ -1,4 +1,5 @@
 import Factory from './Base/Factory';
+import { ColorSettings } from './../Config/Config'
 export default class GraphicsFactory extends Factory {
   makeWall(x: number, y: number, long: number, tall: number): Phaser.Sprite {
     let game = this.game;
@@ -28,30 +29,56 @@ export default class GraphicsFactory extends Factory {
     return wall;
   }
 
-  drawGridRect() {
-    // let config = this.config;
-    // let xPad = config.safeZone.paddingX + config.grid.gridPaddingX;
-    // let yPad = config.safeZone.paddingY + config.grid.gridPaddingY;
-    // let graphics = this.game.add.graphics(0, 0);
-    // let wallLength = config.grid.tileSize * 4 * config.scaleFactor;
-    // graphics.lineStyle(0);
-    // graphics.beginFill(
-    //   Phaser.Color.hexToRGB(this.config.color.altText),
-    //   1
-    // );
-    // graphics.drawRect(xPad, yPad, wallLength, wallLength);
-    // graphics.endFill();
-  }
-
-  addBackground() {
+  addBackground(color = ColorSettings.BACKGROUND, alpha = 1) {
     let safeZone = this.config.safeZone;
-    let color = this.config.color;
+    let colorString  = this.getColor(color);
     let xPad = safeZone.bgPaddingX;
     let yPad = safeZone.bgPaddingY;
     var graphics = this.game.add.graphics(0, 0);
     graphics.lineStyle(0);
-    graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
+    graphics.beginFill(Phaser.Color.hexToRGB(colorString), alpha);
     graphics.drawRect(xPad, yPad, safeZone.bgWidth, safeZone.bgHeight);
+    return graphics.endFill();
+  }
+
+  addWindowBackground() {
+    return this.addBackground(ColorSettings.BACKGROUND, 0.7);
+  }
+
+  makeRect(
+    x: number,
+    y: number,
+    length: number,
+    height: number,
+    lineWidth = 0
+  ) {
+    let safeZone = this.config.safeZone;
+    let config = this.config;
+    let color = this.config.color;
+    let posX = safeZone.paddingX + x;
+    let posY = safeZone.paddingY + y;
+    var graphics = this.game.add.graphics(0, 0);
+    graphics.lineStyle(lineWidth * config.scaleFactor, Phaser.Color.BLACK);
+    graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
+    let rect = graphics.drawRect(
+      posX,
+      posY,
+      length,
+      height
+    );
     graphics.endFill();
+
+    return rect;
+  }
+
+  makeWindowRect() {
+    let w = this.config.window;
+    return this.makeRect(
+      w.defaultX,
+      w.defaultY,
+      w.defaultWidth,      
+      w.defaultHeight,
+      w.defaultLineWidth
+    );
   }
 }

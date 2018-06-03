@@ -71,6 +71,12 @@ var Config = (function () {
     return Config;
 }());
 exports.Config = Config;
+var WindowSettings = (function () {
+    function WindowSettings() {
+    }
+    return WindowSettings;
+}());
+exports.WindowSettings = WindowSettings;
 var SoundSettings = (function () {
     function SoundSettings() {
     }
@@ -80,6 +86,11 @@ exports.SoundSettings = SoundSettings;
 var ColorSettings = (function () {
     function ColorSettings() {
     }
+    ColorSettings.PRIMARY = 1;
+    ColorSettings.BACKGROUND = 2;
+    ColorSettings.SELECTED = 3;
+    ColorSettings.TEXT = 4;
+    ColorSettings.ALT_TEXT = 5;
     return ColorSettings;
 }());
 exports.ColorSettings = ColorSettings;

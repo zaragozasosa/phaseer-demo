@@ -31,7 +31,7 @@ var Preloader = (function (_super) {
         this.load.image('volume-0', 'assets/images/volume-0.png');
         this.load.image('volume-1', 'assets/images/volume-1.png');
         this.load.image('volume-2', 'assets/images/volume-2.png');
-        this.load.spritesheet('button-mayo', 'assets/images/button-mayo.png', 480, 180);
+        this.load.spritesheet('button', 'assets/images/button.png', 193, 71);
     };
     Preloader.prototype.create = function () {
         this.game.state.start('MainMenu');

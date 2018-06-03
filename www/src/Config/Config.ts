@@ -64,6 +64,15 @@ export class Config {
   grid: GridSettings;
   color: ColorSettings;
   sound: SoundSettings;
+  window: WindowSettings;
+}
+
+export class WindowSettings {
+  defaultHeight: number;
+  defaultWidth: number;
+  defaultLineWidth: number;
+  defaultX: number;
+  defaultY: number;
 }
 
 export class SoundSettings {
@@ -80,6 +89,12 @@ export class ColorSettings {
   selected: string;
   text: string;
   altText: string;
+
+  static readonly PRIMARY = 1;
+  static readonly BACKGROUND = 2;
+  static readonly SELECTED = 3;
+  static readonly TEXT = 4;
+  static readonly ALT_TEXT = 5;
 }
 
 export class SafeZone {

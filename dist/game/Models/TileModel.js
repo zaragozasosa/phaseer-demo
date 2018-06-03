@@ -15,6 +15,27 @@ var TileModel = (function () {
         this.summary = summary;
         this.playable = playable;
     }
+    Object.defineProperty(TileModel.prototype, "sfxRoute", {
+        get: function () {
+            return this.id + '-' + this.sfxId;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "sfxLabel", {
+        get: function () {
+            return this.id + '-sfx';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "friendSfxLabel", {
+        get: function () {
+            return this.friendId + '-sfx';
+        },
+        enumerable: true,
+        configurable: true
+    });
     return TileModel;
 }());
 exports.default = TileModel;

@@ -124,6 +124,32 @@ var GridTile = (function (_super) {
         if (destroyChildren === void 0) { destroyChildren = false; }
         this.group.destroy(destroyChildren);
     };
+    GridTile.prototype.kill = function () {
+        for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
+            var item = _a[_i];
+            item.kill();
+        }
+    };
+    GridTile.prototype.duplicate = function () {
+        this.value *= 2;
+        this.transform();
+    };
+    GridTile.prototype.randomize = function (maxVal, maxChance, minVal, minChance) {
+        var randomChance = this.tools.misc.randomBetween(0, 99);
+        if (randomChance == 0 || randomChance < maxChance) {
+            this.value = maxVal;
+        }
+        else if (randomChance == maxChance ||
+            randomChance < maxChance + minChance) {
+            this.value = minVal;
+        }
+        else {
+            var valuesBetween = this.getValuesBetween(maxVal, minVal);
+            var random = this.tools.misc.randomBetween(0, valuesBetween.length - 1);
+            this.value = valuesBetween[random];
+        }
+        this.transform();
+    };
     GridTile.prototype.update = function () {
         for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
             var item = _a[_i];
@@ -134,7 +160,7 @@ var GridTile = (function (_super) {
                 var item = _c[_b];
                 item.kill();
             }
-            this.nextTile.merge();
+            this.nextTile.transform();
         }
         else {
             for (var _d = 0, _e = this.group.getAll(); _d < _e.length; _d++) {
@@ -148,7 +174,7 @@ var GridTile = (function (_super) {
             }
         }
     };
-    GridTile.prototype.merge = function () {
+    GridTile.prototype.transform = function () {
         var _this = this;
         var tile = this.gameboardConfig.tiles.find(function (x) { return x.staticValue === _this.value; });
         this.model = tile;
@@ -176,6 +202,14 @@ var GridTile = (function (_super) {
                 : keyboardInput === Phaser.Keyboard.RIGHT
                     ? Phaser.ANGLE_RIGHT
                     : keyboardInput === Phaser.Keyboard.LEFT ? Phaser.ANGLE_LEFT : null;
+    };
+    GridTile.prototype.getValuesBetween = function (max, min) {
+        var array = [];
+        while (max > min) {
+            max = max / 2;
+            array.push(max);
+        }
+        return array;
     };
     GridTile.prototype.toString = function () {
         return this.sprite.key + "  " + this.value + " -  " + this.posX + ":" + this.posY;

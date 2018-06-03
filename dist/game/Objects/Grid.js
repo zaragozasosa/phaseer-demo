@@ -13,15 +13,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../Base");
 var LogicalGrid_1 = require("./../Logic/LogicalGrid");
 var InputManager_1 = require("./../InputManager");
+var PowerWindow_1 = require("./Windows/PowerWindow");
 var Grid = (function (_super) {
     __extends(Grid, _super);
-    function Grid(gameboardConfig, gameboardCallback) {
+    function Grid(gameboardConfig, gridLogic) {
+        if (gridLogic === void 0) { gridLogic = null; }
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
-        _this.gameboardCallback = gameboardCallback;
         _this.animating = false;
         _this.wallsGroup = _this.makeWalls();
-        _this.gridLogic = new LogicalGrid_1.default(gameboardConfig);
+        if (gridLogic) {
+            _this.gridLogic = gridLogic;
+        }
+        else {
+            _this.gridLogic = new LogicalGrid_1.default(gameboardConfig);
+        }
         _this.input = new InputManager_1.default(_this.config);
         return _this;
     }
@@ -30,6 +36,7 @@ var Grid = (function (_super) {
             var cursor = this.input.checkCursor();
             if (cursor) {
                 this.animating = this.gridLogic.scanGrid(cursor);
+                this.buttonDisableMightChange();
             }
             cursor = null;
         }
@@ -43,14 +50,31 @@ var Grid = (function (_super) {
     Grid.prototype.calculatePoints = function () {
         return this.gridLogic.sumTiles();
     };
+    Grid.prototype.activatePower = function () {
+        var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
+        this.gridLogic.power();
+        this.gameboardConfig.updateScoreSignal.dispatch(false);
+    };
+    Grid.prototype.canUsePower = function () {
+        return this.gridLogic.canUsePower();
+    };
+    Grid.prototype.buttonDisableMightChange = function () {
+        if (!this.animating && this.canUsePower()) {
+            this.gameboardConfig.toogleButtonSignal.dispatch(false);
+        }
+        else {
+            this.gameboardConfig.toogleButtonSignal.dispatch(true);
+        }
+    };
     Grid.prototype.manageCollisions = function () {
         if (this.gridLogic.manageCollisions(this.wallsGroup)) {
             this.animating = false;
-            this.gameboardCallback();
+            this.buttonDisableMightChange();
+            this.gameboardConfig.updateScoreSignal.dispatch();
         }
     };
     Grid.prototype.makeWalls = function () {
-        var wallLength = (this.config.grid.tileSize) * 4;
+        var wallLength = this.config.grid.tileSize * 4;
         var group = this.tools.misc.addGroup();
         group.add(this.tools.graphic.makeWall(0, 0, 1, wallLength));
         group.add(this.tools.graphic.makeWall(0, 0, wallLength, 1));

@@ -6,7 +6,7 @@ import InputManager from './../InputManager';
 import TileModel from './../Models/TileModel';
 
 import TextFactory from './../Tools/TextFactory';
-import { Config, Singleton } from './../Config/Config';
+import { Config, Singleton, ColorSettings } from './../Config/Config';
 import ButtonFactory from './../Tools/ButtonFactory';
 
 export default class CharacterSelection extends Phaser.State {
@@ -48,10 +48,10 @@ export default class CharacterSelection extends Phaser.State {
     this.inputManager = new InputManager(this.config);
     for (let sprite of this.gameboardConfig.tiles) {
       let path = `assets/images/tiles/${sprite.id}.png`;
-      let sfx = `assets/sfx/${sprite.id}-${sprite.sfxId}`;
+      let sfx = `assets/sfx/${sprite.sfxRoute}`;
 
       this.load.image(sprite.id, path);
-      this.load.audio(`${sprite.id}-sfx`, [sfx]);
+      this.load.audio(`${sprite.sfxLabel}`, [sfx]);
     }
 
     this.load.image('random', 'assets/images/tiles/random.png');
@@ -137,7 +137,8 @@ export default class CharacterSelection extends Phaser.State {
       480,
       'Select your character',
       50,
-      'center'
+      'center',
+      ColorSettings.PRIMARY
     );
 
     let rnd = this.game.rnd.between(0, displayArray.length - 2);
@@ -169,7 +170,9 @@ export default class CharacterSelection extends Phaser.State {
         this.game.rnd.between(0, this.displayArray.length - 1)
       ];
     }
-    this.gameboardConfig.mainTile = this.selectedCharacter;
+    this.gameboardConfig.mainTile = this.gameboardConfig.tiles.find(function(tile) {
+      return tile.id === this.selectedCharacter.id;
+    }.bind(this)) ;
     this.game.sound.play(`${this.selectedCharacter.id}-sfx`, 1);
     this.state.start('Unranked', true, false, this.gameboardConfig);
   }
@@ -221,7 +224,7 @@ export default class CharacterSelection extends Phaser.State {
         char.summary,
         35,
         'left',
-        true
+        ColorSettings.ALT_TEXT
       );
     } else {
       this.selectedSummary.setText(char.summary);

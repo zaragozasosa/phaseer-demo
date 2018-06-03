@@ -3,7 +3,8 @@ import {
   SafeZone,
   GridSettings,
   ColorSettings,
-  SoundSettings
+  SoundSettings,
+  WindowSettings
 } from './Config';
 
 export default class ConfigSetup {
@@ -14,6 +15,7 @@ export default class ConfigSetup {
     this.resolutionSetup();
     this.colorConfig();
     this.grid();
+    this.windowConfig();
   }
 
   resolutionSetup() {
@@ -67,7 +69,7 @@ export default class ConfigSetup {
 
     if (!isMobile) {
       bgPaddingX = paddingX;
-      bgWidth = safeHeight / baseProportion;      
+      bgWidth = safeHeight / baseProportion;
     }
 
     paddingY += desktopPadding;
@@ -115,14 +117,41 @@ export default class ConfigSetup {
     config.sound.volumeSprite = 'volume';
   }
 
+  //lily
+  // color.background = '#434D6C';
+  // color.primary = '#21283B';
+  // color.selected = '#BE1E2D';
+  // color.text = '#EEF2FC';
+  // color.altText = '#BBBEC6';
+
+  //rosa
+  // color.background = '#393939';
+  // color.primary = '#21283B';
+  // color.selected = '#1C1C1C';
+  // color.text = '#EEF2FC';
+  // color.altText = '#937A7A';
+
   colorConfig() {
     let color = new ColorSettings();
-    color.background = '#2f3136';
-    color.primary = '#99AAB5';
-    color.selected = '#000000';
-    color.text = '#FFFFFF';
-    color.altText = '#99AAB5';
+    color.background = '#1C1C1C';
+    color.primary = '#B1851E';
+    color.selected = '#837B97';
+    color.text = '#EEF2FC';
+    color.altText = '#7E7E7E';
 
     this.config.color = color;
+  }
+
+  windowConfig() {
+    this.config.window = new WindowSettings();
+    let window = this.config.window;
+    window.defaultLineWidth = 20;
+    window.defaultWidth =
+      this.config.safeZone.safeWidth -
+      6 * window.defaultLineWidth * this.config.scaleFactor;
+    window.defaultHeight = this.config.safeZone.safeHeight * (1 / 3);
+
+    window.defaultX = window.defaultLineWidth * 3 * this.config.scaleFactor;
+    window.defaultY = window.defaultHeight;
   }
 }

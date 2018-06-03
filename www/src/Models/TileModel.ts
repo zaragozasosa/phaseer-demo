@@ -11,6 +11,18 @@ export default class TileModel {
 
   staticValue: number;
   frame: Phaser.Sprite;
+
+  get sfxRoute(): string {
+    return this.id + '-' + this.sfxId;
+  }
+
+  get sfxLabel(): string {
+    return this.id + '-sfx';
+  }
+
+  get friendSfxLabel(): string {
+    return this.friendId + '-sfx';
+  }
   
   constructor(
     id: string,
@@ -35,4 +47,6 @@ export default class TileModel {
     this.summary = summary;
     this.playable = playable;
   }
+
+
 }

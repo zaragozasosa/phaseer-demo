@@ -8,6 +8,9 @@ export default class GameboardConfig {
   tiles: Array<TileModel>;
   groups: Array<string>;
 
+  updateScoreSignal: Phaser.Signal;
+  toogleButtonSignal: Phaser.Signal;
+
   constructor() {
     this.arraySize = 3;
     this.winningTile = 512;
@@ -59,7 +62,7 @@ export default class GameboardConfig {
         'page.mp3',
         'gachaAddiction',
         'Gacha Addiction',
-        "A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network."
+        'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'
       )
     );
 
@@ -162,7 +165,7 @@ export default class GameboardConfig {
         'jessy',
         'dice.mp3',
         'rollForInit',
-        'Roll for Initiative!',
+        'Roll for Initiative',
         'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
       )
     );
@@ -175,7 +178,7 @@ export default class GameboardConfig {
         'magil',
         'red.mp3',
         'rollForInit',
-        'Roll for Initiative!',
+        'Roll for Initiative',
         "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
       )
     );
@@ -198,7 +201,7 @@ export default class GameboardConfig {
         'fancy',
         'Lord Fancy',
         'Sir Lord Fancypants',
-        'lord-fancy',
+        'mira',
         'hyehye.mp3',
         'blackMagic',
         'Black Magic',
@@ -210,7 +213,7 @@ export default class GameboardConfig {
         'nacho',
         'Nacho',
         'Ignacio Zaragoza',
-        'chili',
+        null,
         'gunshot.mp3',
         '5DeMayo',
         'Cinco de Mayo',
@@ -222,7 +225,7 @@ export default class GameboardConfig {
         'chili',
         'Chili',
         'Chili Bagel',
-        'nacho',
+        null,
         'howl.mp3',
         '5DeMayo',
         'Cinco de Mayo!',

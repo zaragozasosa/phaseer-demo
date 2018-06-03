@@ -47,7 +47,7 @@ export default class GridTile extends Base {
     this.group = this.tools.misc.addGroup();
     this.group.addChild(this.sprite);
     this.group.addChild(this.number);
-    this.group.addChild(this.frame);    
+    this.group.addChild(this.frame);
 
     this.group.alpha = 0;
     let misc = this.tools.misc;
@@ -91,7 +91,7 @@ export default class GridTile extends Base {
 
   overlaps(tilesGroup: Phaser.Group, wallsGroup: Phaser.Group) {
     let group = this.group;
-    
+
     for (let groupItem of tilesGroup.getAll()) {
       this.tools.misc.overlap(
         this.sprite,
@@ -139,6 +139,40 @@ export default class GridTile extends Base {
     this.group.destroy(destroyChildren);
   }
 
+  kill() {
+    for (let item of this.group.getAll()) {
+      item.kill();
+    }
+  }
+
+  duplicate() {
+    this.value *= 2;
+    this.transform();
+  }
+
+  randomize(
+    maxVal: number,
+    maxChance: number,
+    minVal: number,
+    minChance: number
+  ) {
+    let randomChance = this.tools.misc.randomBetween(0, 99);
+    if (randomChance == 0 || randomChance < maxChance) {
+      this.value = maxVal;
+    } else if (
+      randomChance == maxChance ||
+      randomChance < maxChance + minChance
+    ) {
+      this.value = minVal;
+    } else {
+      let valuesBetween = this.getValuesBetween(maxVal, minVal);
+      let random = this.tools.misc.randomBetween(0, valuesBetween.length - 1);
+      this.value = valuesBetween[random];
+    }
+
+    this.transform();
+  }
+
   private update() {
     for (let item of this.group.getAll()) {
       item.body.moves = false;
@@ -147,7 +181,7 @@ export default class GridTile extends Base {
       for (let item of this.group.getAll()) {
         item.kill();
       }
-      this.nextTile.merge();
+      this.nextTile.transform();
     } else {
       for (let item of this.group.getAll()) {
         if (item instanceof Phaser.Sprite) {
@@ -161,7 +195,7 @@ export default class GridTile extends Base {
     }
   }
 
-  private merge() {
+  private transform() {
     let tile = this.gameboardConfig.tiles.find(
       x => x.staticValue === this.value
     );
@@ -195,6 +229,16 @@ export default class GridTile extends Base {
         : keyboardInput === Phaser.Keyboard.RIGHT
           ? Phaser.ANGLE_RIGHT
           : keyboardInput === Phaser.Keyboard.LEFT ? Phaser.ANGLE_LEFT : null;
+  }
+
+  private getValuesBetween(max: number, min: number) {
+    let array = [];
+    while (max > min) {
+      max = max / 2;
+      array.push(max);
+    }
+
+    return array;
   }
 
   toString() {

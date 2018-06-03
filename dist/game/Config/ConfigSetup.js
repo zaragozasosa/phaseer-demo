@@ -7,6 +7,7 @@ var ConfigSetup = (function () {
         this.resolutionSetup();
         this.colorConfig();
         this.grid();
+        this.windowConfig();
     }
     ConfigSetup.prototype.resolutionSetup = function () {
         var scaleFactor;
@@ -86,12 +87,23 @@ var ConfigSetup = (function () {
     };
     ConfigSetup.prototype.colorConfig = function () {
         var color = new Config_1.ColorSettings();
-        color.background = '#2f3136';
-        color.primary = '#99AAB5';
-        color.selected = '#000000';
-        color.text = '#FFFFFF';
-        color.altText = '#99AAB5';
+        color.background = '#1C1C1C';
+        color.primary = '#B1851E';
+        color.selected = '#837B97';
+        color.text = '#EEF2FC';
+        color.altText = '#7E7E7E';
         this.config.color = color;
+    };
+    ConfigSetup.prototype.windowConfig = function () {
+        this.config.window = new Config_1.WindowSettings();
+        var window = this.config.window;
+        window.defaultLineWidth = 20;
+        window.defaultWidth =
+            this.config.safeZone.safeWidth -
+                6 * window.defaultLineWidth * this.config.scaleFactor;
+        window.defaultHeight = this.config.safeZone.safeHeight * (1 / 3);
+        window.defaultX = window.defaultLineWidth * 3 * this.config.scaleFactor;
+        window.defaultY = window.defaultHeight;
     };
     return ConfigSetup;
 }());

@@ -3,37 +3,41 @@ import LogicalGrid from './../Logic/LogicalGrid';
 import InputManager from './../InputManager';
 import GridTile from './GridTile';
 import GameboardConfig from './../Config/GameboardConfig';
+import PowerWindow from './Windows/PowerWindow';
 
-export default class Grid extends Base{
-  private gameboardConfig: GameboardConfig;
+export default class Grid extends Base {
+  protected gameboardConfig: GameboardConfig;
 
+  protected gridLogic: LogicalGrid;
+  protected wallsGroup: Phaser.Group;
+  protected framesGroup: Phaser.Group;
+  protected animating: boolean;
+  protected input: InputManager;
+  //protected gameboardCallback: any;
 
-  private gridLogic: LogicalGrid;
-  private wallsGroup: Phaser.Group;
-  private framesGroup: Phaser.Group;
-  private animating: boolean;
-  private input: InputManager;
-  private gameboardCallback: any;
-
-  constructor(gameboardConfig: GameboardConfig, gameboardCallback: any) {
+  constructor(gameboardConfig: GameboardConfig, gridLogic = null) {
     super();
     this.gameboardConfig = gameboardConfig;
-    this.gameboardCallback = gameboardCallback;
 
     this.animating = false;
     this.wallsGroup = this.makeWalls();
-    this.gridLogic = new LogicalGrid(gameboardConfig);
+    if(gridLogic) {
+      this.gridLogic = gridLogic;
+    } else {
+      this.gridLogic = new LogicalGrid(gameboardConfig);            
+    }
 
     //this.framesGroup = this.makeTileFrames();
-    
+
     this.input = new InputManager(this.config);
   }
 
   update() {
     if (!this.animating) {
       var cursor = this.input.checkCursor();
-      if(cursor) {
+      if (cursor) {
         this.animating = this.gridLogic.scanGrid(cursor);
+        this.buttonDisableMightChange();
       }
       cursor = null;
     } else {
@@ -49,15 +53,34 @@ export default class Grid extends Base{
     return this.gridLogic.sumTiles();
   }
 
+  activatePower() {
+    let window = new PowerWindow(this.gameboardConfig.mainTile);
+    this.gridLogic.power();
+    this.gameboardConfig.updateScoreSignal.dispatch(false);
+  }
+
+  protected canUsePower() {
+		return this.gridLogic.canUsePower();
+	}
+
+  private buttonDisableMightChange() {
+    if(!this.animating && this.canUsePower()) {
+      this.gameboardConfig.toogleButtonSignal.dispatch(false);      
+    } else {
+      this.gameboardConfig.toogleButtonSignal.dispatch(true);      
+    }
+  }
+
   private manageCollisions() {
     if (this.gridLogic.manageCollisions(this.wallsGroup)) {
       this.animating = false;
-      this.gameboardCallback();
+      this.buttonDisableMightChange();
+      this.gameboardConfig.updateScoreSignal.dispatch();
     }
   }
 
   private makeWalls(): Phaser.Group {
-    let wallLength = (this.config.grid.tileSize) * 4;
+    let wallLength = this.config.grid.tileSize * 4;
     let group = this.tools.misc.addGroup();
 
     group.add(this.tools.graphic.makeWall(0, 0, 1, wallLength));

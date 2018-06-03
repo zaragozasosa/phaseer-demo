@@ -67,6 +67,24 @@ var LogicalGrid = (function (_super) {
         }
         return this.tilesStopped();
     };
+    LogicalGrid.prototype.canUsePower = function () {
+        return false;
+    };
+    LogicalGrid.prototype.power = function () { };
+    LogicalGrid.prototype.cleanGrid = function () {
+        var killed = this.grid.filter(function (x) { return x && !x.isAlive; });
+        for (var _i = 0, killed_1 = killed; _i < killed_1.length; _i++) {
+            var item = killed_1[_i];
+            item.destroy(true);
+            this.set(item.posX, item.posY, null);
+        }
+        this.lastMergedTile = null;
+        this.tilesGroup.removeAll();
+        for (var _a = 0, _b = this.grid.filter(function (x) { return x; }); _a < _b.length; _a++) {
+            var item = _b[_a];
+            this.tilesGroup.add(item.getGroup);
+        }
+    };
     LogicalGrid.prototype.tilesStopped = function () {
         var allStopped = true;
         if (this.grid.filter(function (x) { return x && x.isMoving; }).length) {
@@ -89,26 +107,12 @@ var LogicalGrid = (function (_super) {
                     this.tools.misc.randomBetween(0, 1) === 0) ||
                 (value === this.gameboardConfig.minimumValue * 16 &&
                     this.tools.misc.randomBetween(0, 1) === 0)) {
-                this.tools.audio.playSound(this.lastMergedTile.model.id + "-sfx");
+                this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
             }
         }
         this.cleanGrid();
         if (!this.isFull()) {
             this.add();
-        }
-    };
-    LogicalGrid.prototype.cleanGrid = function () {
-        var killed = this.grid.filter(function (x) { return x && !x.isAlive; });
-        for (var _i = 0, killed_1 = killed; _i < killed_1.length; _i++) {
-            var item = killed_1[_i];
-            item.destroy(true);
-            this.set(item.posX, item.posY, null);
-        }
-        this.lastMergedTile = null;
-        this.tilesGroup.removeAll();
-        for (var _a = 0, _b = this.grid.filter(function (x) { return x; }); _a < _b.length; _a++) {
-            var item = _b[_a];
-            this.tilesGroup.add(item.getGroup);
         }
     };
     LogicalGrid.prototype.pushTile = function (x, y, keyboardInput) {
@@ -232,6 +236,9 @@ var LogicalGrid = (function (_super) {
             }
         }
         return empty;
+    };
+    LogicalGrid.prototype.getTilesOrdered = function () {
+        return this.grid.filter(function (x) { return x; }).sort(function (n1, n2) { return n2.value - n1.value; });
     };
     LogicalGrid.prototype.sumTiles = function () {
         var points = 0;

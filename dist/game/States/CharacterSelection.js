@@ -35,9 +35,9 @@ var CharacterSelection = (function (_super) {
         for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
             var path = "assets/images/tiles/" + sprite.id + ".png";
-            var sfx = "assets/sfx/" + sprite.id + "-" + sprite.sfxId;
+            var sfx = "assets/sfx/" + sprite.sfxRoute;
             this.load.image(sprite.id, path);
-            this.load.audio(sprite.id + "-sfx", [sfx]);
+            this.load.audio("" + sprite.sfxLabel, [sfx]);
         }
         this.load.image('random', 'assets/images/tiles/random.png');
         this.load.audio("random-sfx", 'assets/sfx/random-sound.wav');
@@ -96,7 +96,7 @@ var CharacterSelection = (function (_super) {
         this.yMenuPad = yMenuPad;
         this.ratio = ratio;
         this.displayArray = displayArray;
-        var select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center');
+        var select = this.textFactory.makeXBounded(480, 'Select your character', 50, 'center', Config_1.ColorSettings.PRIMARY);
         var rnd = this.game.rnd.between(0, displayArray.length - 2);
         this.setSelectedCharacter(this.spriteArray[rnd], displayArray[rnd]);
         this.buttonFactory.make(675, 965, ['start-1', 'start-2', 'start-3'], function () {
@@ -109,7 +109,9 @@ var CharacterSelection = (function (_super) {
         if (this.selectedCharacter.id === 'random') {
             this.selectedCharacter = this.displayArray[this.game.rnd.between(0, this.displayArray.length - 1)];
         }
-        this.gameboardConfig.mainTile = this.selectedCharacter;
+        this.gameboardConfig.mainTile = this.gameboardConfig.tiles.find(function (tile) {
+            return tile.id === this.selectedCharacter.id;
+        }.bind(this));
         this.game.sound.play(this.selectedCharacter.id + "-sfx", 1);
         this.state.start('Unranked', true, false, this.gameboardConfig);
     };
@@ -140,7 +142,7 @@ var CharacterSelection = (function (_super) {
             this.selectedPower.setText("" + char.powerName);
         }
         if (!this.selectedSummary) {
-            this.selectedSummary = this.textFactory.makeXBounded(1040, char.summary, 35, 'left', true);
+            this.selectedSummary = this.textFactory.makeXBounded(1040, char.summary, 35, 'left', Config_1.ColorSettings.ALT_TEXT);
         }
         else {
             this.selectedSummary.setText(char.summary);
