@@ -2,7 +2,7 @@ import Grid from './../Grid';
 import ReportedForRPLogic from './../../Logic/PlayerLogic/ReportedForRPLogic';
 import GameboardConfig from './../../Config/GameboardConfig';
 
-export default class BlackMagic extends Grid {
+export default class ReportedForRP extends Grid {
   protected gridLogic: ReportedForRPLogic;
 
   constructor(config: GameboardConfig) {

@@ -12,14 +12,14 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
 var PowerGamingLogic_1 = require("./../../Logic/PlayerLogic/PowerGamingLogic");
-var BlackMagic = (function (_super) {
-    __extends(BlackMagic, _super);
-    function BlackMagic(config) {
+var PowerGaming = (function (_super) {
+    __extends(PowerGaming, _super);
+    function PowerGaming(config) {
         var _this = this;
         var gridLogic = new PowerGamingLogic_1.default(config);
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
-    return BlackMagic;
+    return PowerGaming;
 }(Grid_1.default));
-exports.default = BlackMagic;
+exports.default = PowerGaming;

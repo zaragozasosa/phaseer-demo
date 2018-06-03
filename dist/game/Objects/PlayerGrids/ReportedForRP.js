@@ -12,14 +12,14 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
 var ReportedForRPLogic_1 = require("./../../Logic/PlayerLogic/ReportedForRPLogic");
-var BlackMagic = (function (_super) {
-    __extends(BlackMagic, _super);
-    function BlackMagic(config) {
+var ReportedForRP = (function (_super) {
+    __extends(ReportedForRP, _super);
+    function ReportedForRP(config) {
         var _this = this;
         var gridLogic = new ReportedForRPLogic_1.default(config);
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
-    return BlackMagic;
+    return ReportedForRP;
 }(Grid_1.default));
-exports.default = BlackMagic;
+exports.default = ReportedForRP;
