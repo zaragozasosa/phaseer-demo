@@ -9,4 +9,5 @@ export default class GachaAddiction extends Grid {
     let gridLogic = new GachaAddictionLogic(config);
     super(config, gridLogic);
   }
+
 }
