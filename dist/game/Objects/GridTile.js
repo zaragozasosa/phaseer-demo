@@ -41,6 +41,10 @@ var GridTile = (function (_super) {
         var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100, 'Linear');
         var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300, 'Linear');
         _this.mergeTween = t1.chain(t2);
+        _this.sprite.inputEnabled = true;
+        _this.sprite.events.onInputDown.add(function () {
+            this.gameboardConfig.clickTileSignal.dispatch(this);
+        }.bind(_this));
         return _this;
     }
     Object.defineProperty(GridTile.prototype, "isAlive", {
@@ -89,13 +93,11 @@ var GridTile = (function (_super) {
             this.tools.misc.overlap(this.sprite, groupItem.getBottom(), function (s, g) {
                 if (s && g) {
                     if (s.key === g.key) {
-                        console.log('merge overlap');
                         return false;
                     }
                     else {
                         var velocity = this.sprite.body.velocity;
                         if (velocity.x || velocity.y) {
-                            console.log('collision in sprites x sprite');
                             for (var _i = 0, _a = group.getAll(); _i < _a.length; _i++) {
                                 var item = _a[_i];
                                 item.body.stopMovement(true);
@@ -110,7 +112,6 @@ var GridTile = (function (_super) {
             if (a && b) {
                 var velocity = this.sprite.body.velocity;
                 if (velocity.x || velocity.y) {
-                    console.log('collision in sprites x wall');
                     for (var _i = 0, _a = group.getAll(); _i < _a.length; _i++) {
                         var item = _a[_i];
                         item.body.stopMovement(true);
@@ -130,9 +131,12 @@ var GridTile = (function (_super) {
             item.kill();
         }
     };
-    GridTile.prototype.duplicate = function () {
-        this.value *= 2;
+    GridTile.prototype.changeValue = function (newValue) {
+        this.value = newValue;
         this.transform();
+    };
+    GridTile.prototype.duplicate = function () {
+        this.changeValue(this.value * 2);
     };
     GridTile.prototype.randomize = function (maxVal, maxChance, minVal, minChance) {
         var randomChance = this.tools.misc.randomBetween(0, 99);
@@ -205,9 +209,10 @@ var GridTile = (function (_super) {
     };
     GridTile.prototype.getValuesBetween = function (max, min) {
         var array = [];
+        max = max / 2;
         while (max > min) {
-            max = max / 2;
             array.push(max);
+            max = max / 2;
         }
         return array;
     };

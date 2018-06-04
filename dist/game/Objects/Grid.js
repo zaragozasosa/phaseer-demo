@@ -11,29 +11,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../Base");
-var LogicalGrid_1 = require("./../Logic/LogicalGrid");
-var InputManager_1 = require("./../InputManager");
-var PowerWindow_1 = require("./Windows/PowerWindow");
 var Grid = (function (_super) {
     __extends(Grid, _super);
     function Grid(gameboardConfig, gridLogic) {
-        if (gridLogic === void 0) { gridLogic = null; }
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
         _this.animating = false;
         _this.wallsGroup = _this.makeWalls();
-        if (gridLogic) {
-            _this.gridLogic = gridLogic;
-        }
-        else {
-            _this.gridLogic = new LogicalGrid_1.default(gameboardConfig);
-        }
-        _this.input = new InputManager_1.default(_this.config);
+        _this.gridLogic = gridLogic;
         return _this;
     }
-    Grid.prototype.update = function () {
+    Grid.prototype.update = function (cursor) {
         if (!this.animating) {
-            var cursor = this.input.checkCursor();
             if (cursor) {
                 this.animating = this.gridLogic.scanGrid(cursor);
                 this.buttonDisableMightChange();
@@ -44,14 +33,10 @@ var Grid = (function (_super) {
             this.manageCollisions();
         }
     };
-    Grid.prototype.getColumnForDebug = function (column) {
-        return this.gridLogic.getColumnForDebug(column);
-    };
     Grid.prototype.calculatePoints = function () {
         return this.gridLogic.sumTiles();
     };
     Grid.prototype.activatePower = function () {
-        var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
         this.gridLogic.power();
         this.gameboardConfig.updateScoreSignal.dispatch(false);
     };

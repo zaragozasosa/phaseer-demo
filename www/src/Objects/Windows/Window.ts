@@ -2,23 +2,27 @@ import Base from './../../Base';
 export default class Window extends Base {
   protected rect: Phaser.Graphics;
   protected sprites: Phaser.Group;
-  protected message: Phaser.Text;
-  protected group: Phaser.Group;
+  protected message: Phaser.Group;
   protected background: Phaser.Graphics;
   protected showTween: Phaser.Tween;
   protected hideTween: Phaser.Tween;
 
-  protected constructor() {
+  constructor() {
     super();
   }
 
-  protected init(rect: Phaser.Graphics, sprites: Phaser.Group, message) {
+  init(message: Phaser.Group, sprites = null, rect = null) {
+    if(!rect) {
+      rect = this.tools.graphic.makeWindowRect();      
+    } 
+    this.rect = rect;    
     this.background = this.tools.graphic.addWindowBackground();
     let background = this.background;
-    this.rect = rect;
-    this.sprites = sprites;
+    if(sprites) {
+      this.sprites = sprites;
+      rect.addChild(sprites);      
+    }
     this.message = message;
-    rect.addChild(sprites);
     rect.addChild(message);
     background.addChild(rect);
     this.tools.misc.bringToTop(rect);
@@ -27,7 +31,7 @@ export default class Window extends Base {
     this.hideTween = this.tools.misc.tweenTo(background, { alpha: 0 });
   }
 
-  protected show() {
+  show() {
 		this.showTween.start();
 	}
 
@@ -35,7 +39,7 @@ export default class Window extends Base {
 		this.hideTween.start();
 	}
 
-	protected hideAndDestroy() {
+	hideAndDestroy() {
 		this.hideTween.onComplete.add(this.destroy, this);
 		this.hideTween.start();	
 	}

@@ -5,22 +5,23 @@ export default class InputManager extends Factory {
   private swipe: Swipe;
   private cursors: Phaser.CursorKeys;
   private keyPressed: boolean;
+  private escapePressed: boolean;
 
   constructor(config) {
     super(config);
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.swipe = new Swipe(this.game);
 
-    this.game.input.keyboard
-      .addKey(Phaser.Keyboard.SPACEBAR)
-      .onDown.add(this.keyPressedEvent, this);
-    this.game.input.keyboard
-      .addKey(Phaser.Keyboard.ENTER)
-      .onDown.add(this.keyPressedEvent, this);
-  }
+    this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(() => {
+      this.keyPressed = true;
+    });
+    this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER).onDown.add(() => {
+      this.keyPressed = true;
+    });
 
-  private keyPressedEvent() {
-    this.keyPressed = true;
+    this.game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(() => {
+      this.escapePressed = true;
+    });
   }
 
   checkCursor() {
@@ -52,7 +53,7 @@ export default class InputManager extends Factory {
     return null;
   }
 
-  checkKeys() {
+  checkEnter() {
     if (this.keyPressed) {
       this.keyPressed = false;
       return true;
@@ -60,8 +61,21 @@ export default class InputManager extends Factory {
     return false;
   }
 
-  check() {
-    var cursor = this.checkCursor();
-    return cursor === null ? this.checkKeys : cursor;
+  checkEscape() {
+    if (this.escapePressed) {
+      this.escapePressed = false;
+      return true;
+    }
+    return false;
+  }
+
+  checkKeys() {
+    if (this.checkEnter()) {
+      return Phaser.Keyboard.ENTER;
+    }
+
+    if (this.checkEscape()) {
+      return Phaser.Keyboard.ESC;
+    }
   }
 }

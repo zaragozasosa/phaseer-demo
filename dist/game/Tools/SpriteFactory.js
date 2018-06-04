@@ -97,7 +97,7 @@ var SpriteFactory = (function (_super) {
         var safeZone = this.config.safeZone;
         var config = this.config;
         var x = safeZone.bgPaddingX;
-        var y = safeZone.bgPaddingY;
+        var y = safeZone.bgPaddingY + safeZone.paddingY;
         var sprite = this.game.add.sprite(x, y, 'witch');
         sprite.scale.setTo(config.scaleFactor, config.scaleFactor);
     };

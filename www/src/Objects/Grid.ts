@@ -3,38 +3,26 @@ import LogicalGrid from './../Logic/LogicalGrid';
 import InputManager from './../InputManager';
 import GridTile from './GridTile';
 import GameboardConfig from './../Config/GameboardConfig';
-import PowerWindow from './Windows/PowerWindow';
 
-export default class Grid extends Base {
+export default abstract class Grid extends Base {
   protected gameboardConfig: GameboardConfig;
 
   protected gridLogic: LogicalGrid;
   protected wallsGroup: Phaser.Group;
   protected framesGroup: Phaser.Group;
   protected animating: boolean;
-  protected input: InputManager;
-  //protected gameboardCallback: any;
 
-  constructor(gameboardConfig: GameboardConfig, gridLogic = null) {
+  constructor(gameboardConfig: GameboardConfig, gridLogic: LogicalGrid) {
     super();
     this.gameboardConfig = gameboardConfig;
 
     this.animating = false;
     this.wallsGroup = this.makeWalls();
-    if(gridLogic) {
-      this.gridLogic = gridLogic;
-    } else {
-      this.gridLogic = new LogicalGrid(gameboardConfig);            
-    }
-
-    //this.framesGroup = this.makeTileFrames();
-
-    this.input = new InputManager(this.config);
+    this.gridLogic = gridLogic;
   }
 
-  update() {
+  update(cursor: number) {
     if (!this.animating) {
-      var cursor = this.input.checkCursor();
       if (cursor) {
         this.animating = this.gridLogic.scanGrid(cursor);
         this.buttonDisableMightChange();
@@ -45,29 +33,24 @@ export default class Grid extends Base {
     }
   }
 
-  getColumnForDebug(column: number) {
-    return this.gridLogic.getColumnForDebug(column);
-  }
-
   calculatePoints() {
     return this.gridLogic.sumTiles();
   }
 
-  activatePower() {
-    let window = new PowerWindow(this.gameboardConfig.mainTile);
+  activatePower(): any {
     this.gridLogic.power();
     this.gameboardConfig.updateScoreSignal.dispatch(false);
   }
 
   protected canUsePower() {
-		return this.gridLogic.canUsePower();
-	}
+    return this.gridLogic.canUsePower();
+  }
 
   private buttonDisableMightChange() {
-    if(!this.animating && this.canUsePower()) {
-      this.gameboardConfig.toogleButtonSignal.dispatch(false);      
+    if (!this.animating && this.canUsePower()) {
+      this.gameboardConfig.toogleButtonSignal.dispatch(false);
     } else {
-      this.gameboardConfig.toogleButtonSignal.dispatch(true);      
+      this.gameboardConfig.toogleButtonSignal.dispatch(true);
     }
   }
 
@@ -101,4 +84,8 @@ export default class Grid extends Base {
     }
     return group;
   }
+
+  // getColumnForDebug(column: number) {
+  //   return this.gridLogic.getColumnForDebug(column);
+  // }
 }

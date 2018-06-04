@@ -49,7 +49,7 @@ var GraphicsFactory = (function (_super) {
         return graphics.endFill();
     };
     GraphicsFactory.prototype.addWindowBackground = function () {
-        return this.addBackground(Config_1.ColorSettings.BACKGROUND, 0.7);
+        return this.addBackground(Config_1.ColorSettings.BACKGROUND, 0.9);
     };
     GraphicsFactory.prototype.makeRect = function (x, y, length, height, lineWidth) {
         if (lineWidth === void 0) { lineWidth = 0; }

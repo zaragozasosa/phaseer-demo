@@ -2,7 +2,7 @@ import GameboardConfig from './../Config/GameboardConfig';
 import GridTile from './../Objects/GridTile';
 import Base from './../Base';
 
-export default class LogicalGrid extends Base {
+export default abstract class LogicalGrid extends Base {
   protected grid: Array<GridTile>;
   protected arraySize: number;
   protected gameboardConfig: GameboardConfig;
@@ -78,7 +78,44 @@ export default class LogicalGrid extends Base {
     return false;
   }
 
-  power() {}
+  randomizeTile(tile: GridTile = null) {
+    var tiles = this.getTilesOrdered();
+    let unique = tiles
+      .map(item => item.value)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    let maxValue = tiles[0].value;
+    let minValue = tiles[tiles.length - 1].value;
+    let maxTilePercentage = 20 - (unique.length - 3) * 2.5;
+
+    if (maxTilePercentage < 10) {
+      maxTilePercentage = 10;
+    }
+
+    let minTilePercentage = 30 - (unique.length - 3) * 2.5;
+    if (minTilePercentage < 20) {
+      minTilePercentage = 20;
+    }
+
+    if(tile === null) {
+      for (let x = 0; x < tiles.length; x++) {
+        tiles[x].randomize(
+          maxValue,
+          maxTilePercentage,
+          minValue,
+          minTilePercentage
+        );
+      }
+    } else {
+      tile.randomize(
+        maxValue,
+        maxTilePercentage,
+        minValue,
+        minTilePercentage
+      );
+    }
+
+  }
 
   protected cleanGrid() {
     let killed = this.grid.filter(x => x && !x.isAlive);
@@ -95,7 +132,33 @@ export default class LogicalGrid extends Base {
     }
   }
 
-  private tilesStopped() {
+  protected reconfigureGrid(newGrid: Array<string>) {
+    let x = 0;
+    let y = 0;
+    for (let i = 0; i < this.grid.length; i++) {
+      let tile = this.get(x, y);
+      let newValue = newGrid[i];
+
+      if (newValue === '0' && tile) {
+        tile.kill();
+      } else if (newValue !== '0' && tile) {
+        tile.changeValue(Number(newValue));
+      } else if (newValue !== '0' && !tile) {
+        let tile = new GridTile(x, y, this.gameboardConfig, 0, Number(newValue));
+        this.set(x, y, tile);
+        this.tilesGroup.add(tile.getGroup);
+      }
+
+      x++;
+      if (x > this.gameboardConfig.arraySize) {
+        x = 0;
+        y++;
+      }
+    }
+    this.cleanGrid();
+  }
+
+  protected tilesStopped() {
     let allStopped = true;
 
     if (this.grid.filter(x => x && x.isMoving).length) {
@@ -103,14 +166,13 @@ export default class LogicalGrid extends Base {
     }
 
     if (allStopped) {
-      console.log('Stopped!');
       this.updateGrid();
     }
 
     return allStopped;
   }
 
-  private updateGrid() {
+  protected updateGrid() {
     if (this.lastMergedTile) {
       let value = this.lastMergedTile.value;
       if (
@@ -132,6 +194,10 @@ export default class LogicalGrid extends Base {
     if (!this.isFull()) {
       this.add();
     }
+  }
+
+  protected getTilesOrdered() {
+    return this.grid.filter(x => x).sort((n1, n2) => n2.value - n1.value);
   }
 
   private pushTile(x: number, y: number, keyboardInput: number) {
@@ -248,8 +314,6 @@ export default class LogicalGrid extends Base {
     this.grid[position] = tile;
   }
 
-  private push(tile: GridTile, keyboardInput: number) {}
-
   private mergeTile(nextTile: GridTile, previousTile: GridTile) {
     nextTile.value *= 2;
     previousTile.value = 0;
@@ -275,10 +339,6 @@ export default class LogicalGrid extends Base {
     return empty;
   }
 
-  protected getTilesOrdered() {
-    return this.grid.filter(x => x).sort((n1, n2) => n2.value - n1.value);
-  }
-
   sumTiles() {
     let points = 0;
     for (let tile of this.grid) {
@@ -287,12 +347,14 @@ export default class LogicalGrid extends Base {
     return points;
   }
 
-  getColumnForDebug(row: number) {
-    let val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
-    let val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
-    let val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
-    let val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
+  abstract power()
 
-    return `${val1}\n${val2}\n${val3}\n${val4}`;
-  }
+  // getColumnForDebug(row: number) {
+  //   let val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
+  //   let val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
+  //   let val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
+  //   let val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
+
+  //   return `${val1}\n${val2}\n${val3}\n${val4}`;
+  // }
 }

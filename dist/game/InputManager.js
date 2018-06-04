@@ -17,17 +17,17 @@ var InputManager = (function (_super) {
         var _this = _super.call(this, config) || this;
         _this.cursors = _this.game.input.keyboard.createCursorKeys();
         _this.swipe = new Swipe(_this.game);
-        _this.game.input.keyboard
-            .addKey(Phaser.Keyboard.SPACEBAR)
-            .onDown.add(_this.keyPressedEvent, _this);
-        _this.game.input.keyboard
-            .addKey(Phaser.Keyboard.ENTER)
-            .onDown.add(_this.keyPressedEvent, _this);
+        _this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(function () {
+            _this.keyPressed = true;
+        });
+        _this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER).onDown.add(function () {
+            _this.keyPressed = true;
+        });
+        _this.game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(function () {
+            _this.escapePressed = true;
+        });
         return _this;
     }
-    InputManager.prototype.keyPressedEvent = function () {
-        this.keyPressed = true;
-    };
     InputManager.prototype.checkCursor = function () {
         if (this.game.device.desktop) {
             if (this.cursors.left.justDown) {
@@ -60,16 +60,27 @@ var InputManager = (function (_super) {
         }
         return null;
     };
-    InputManager.prototype.checkKeys = function () {
+    InputManager.prototype.checkEnter = function () {
         if (this.keyPressed) {
             this.keyPressed = false;
             return true;
         }
         return false;
     };
-    InputManager.prototype.check = function () {
-        var cursor = this.checkCursor();
-        return cursor === null ? this.checkKeys : cursor;
+    InputManager.prototype.checkEscape = function () {
+        if (this.escapePressed) {
+            this.escapePressed = false;
+            return true;
+        }
+        return false;
+    };
+    InputManager.prototype.checkKeys = function () {
+        if (this.checkEnter()) {
+            return Phaser.Keyboard.ENTER;
+        }
+        if (this.checkEscape()) {
+            return Phaser.Keyboard.ESC;
+        }
     };
     return InputManager;
 }(Factory_1.default));

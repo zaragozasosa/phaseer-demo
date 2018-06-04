@@ -8,8 +8,13 @@ export default class GameboardConfig {
   tiles: Array<TileModel>;
   groups: Array<string>;
 
+  bulletAmmo: number;
+  diceAmmo: number;
+
   updateScoreSignal: Phaser.Signal;
   toogleButtonSignal: Phaser.Signal;
+  clickTileSignal: Phaser.Signal;
+  updateAmmoSignal: Phaser.Signal;
 
   constructor() {
     this.arraySize = 3;
@@ -21,6 +26,8 @@ export default class GameboardConfig {
       }
     }
     this.minimumValue = 1;
+    this.bulletAmmo = 6;
+    this.diceAmmo = 5;
     this.createTiles();
   }
 
@@ -164,7 +171,7 @@ export default class GameboardConfig {
         'Dungeon Master Magil',
         'jessy',
         'dice.mp3',
-        'rollForInit',
+        'rollForInitiative',
         'Roll for Initiative',
         'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
       )
@@ -177,7 +184,7 @@ export default class GameboardConfig {
         'Ph.D. Jessy',
         'magil',
         'red.mp3',
-        'rollForInit',
+        'rollForInitiative',
         'Roll for Initiative',
         "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
       )
@@ -208,6 +215,7 @@ export default class GameboardConfig {
         'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'
       )
     );
+
     list.push(
       new TileModel(
         'nacho',
@@ -215,11 +223,12 @@ export default class GameboardConfig {
         'Ignacio Zaragoza',
         null,
         'gunshot.mp3',
-        '5DeMayo',
+        'CincoDeMayo',
         'Cinco de Mayo',
         'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'
       )
     );
+
     list.push(
       new TileModel(
         'chili',
@@ -227,8 +236,8 @@ export default class GameboardConfig {
         'Chili Bagel',
         null,
         'howl.mp3',
-        '5DeMayo',
-        'Cinco de Mayo!',
+        'CincoDeMayo',
+        'Cinco de Mayo',
         "Hey, you shouldn't be able to read this!",
         false
       )

@@ -2,10 +2,23 @@ import Base from './../Base';
 import Grid from './Grid';
 import GridFactory from './GridFactory';
 import GameboardConfig from './../Config/GameboardConfig';
+import InputManager from './../InputManager';
+import AmmoModel from './../Models/AmmoModel';
+import GameboardMode from './../Models/GameboardMode';
+import PowerWindow from './Windows/PowerWindow';
+import Window from './Windows/Window';
+import { ColorSettings } from './../Config/Config';
+
+
+import AmmoBar from './AmmoBar';
 
 export default class Gameboard extends Base {
   private grid: Grid;
   private gameboardConfig: GameboardConfig;
+  private input: InputManager;
+  private mode: number;
+  private ammoBar: AmmoBar;
+
   debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
   points: number;
@@ -15,6 +28,9 @@ export default class Gameboard extends Base {
   timerSeconds: number;
   actionButton: Phaser.Button;
   isButtonSleeping: boolean;
+
+  isPaused: boolean;
+  pausedWindow: Window;
 
   constructor(gameboardConfig: GameboardConfig) {
     super();
@@ -36,45 +52,72 @@ export default class Gameboard extends Base {
         this.toogleButton(disabled);
       }.bind(this)
     );
-    
-    this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
-    this.gameboardConfig.updateScoreSignal = updateScoreSignal;
-    
-    
 
-    this.grid = GridFactory.create(
-      gameboardConfig
+    let updateAmmoSignal = new Phaser.Signal();
+    updateAmmoSignal.add(
+      function() {
+        this.updateAmmo();
+      }.bind(this)
     );
 
+    this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
+    this.gameboardConfig.updateScoreSignal = updateScoreSignal;
+    this.gameboardConfig.updateAmmoSignal = updateAmmoSignal;
+    this.gameboardConfig.clickTileSignal = new Phaser.Signal();
 
+    this.grid = GridFactory.create(gameboardConfig);
+    this.isPaused = false;
     this.movements = 0;
     this.points = this.grid.calculatePoints();
     this.addHeader();
     this.addVolumeButton();
     this.addPowerButton();
     this.addTimer();
+
+    this.input = new InputManager(this.config);
+    this.mode = GameboardMode.DEFAULT;
   }
 
   update() {
-    this.grid.update();
-  }
-
-  private toogleButton(disabled: boolean) {
-    if(disabled || this.isButtonSleeping) {
-      this.actionButton.tint = Phaser.Color.GRAY;
-      this.actionButton.inputEnabled = false;
+    var keys = this.input.checkKeys();
+    if (keys === Phaser.Keyboard.ESC) {
+      this.pauseToogle();
     }
-    else {
-      this.actionButton.tint = Phaser.Color.WHITE;
-      this.actionButton.inputEnabled = true;
+    if (!this.isPaused) {
+      var cursor = this.input.checkCursor();
+      this.grid.update(cursor);
     }
   }
 
   activatePower() {
-    this.actionButton.tint = Phaser.Color.GRAY;
-    this.actionButton.inputEnabled = false;
-    this.isButtonSleeping = true;
-    this.grid.activatePower();
+    this.actionButton.kill();
+    let window = new PowerWindow(this.gameboardConfig.mainTile);
+
+    let response = this.grid.activatePower();
+    if (response && response instanceof AmmoModel) {
+      this.mode = GameboardMode.AMMO;
+      let model: AmmoModel = response;
+      this.ammoBar = new AmmoBar(model);
+    }
+  }
+
+  private updateAmmo() {
+    if (this.mode === GameboardMode.AMMO) {
+      if (this.ammoBar.update() === 0) {
+        this.mode = GameboardMode.DEFAULT;
+        this.gameboardConfig.clickTileSignal.removeAll();
+      }
+    }
+  }
+
+  private toogleButton(disabled: boolean) {
+    if (disabled || this.isButtonSleeping) {
+      this.actionButton.tint = Phaser.Color.GRAY;
+      this.actionButton.inputEnabled = false;
+    } else {
+      this.actionButton.tint = Phaser.Color.WHITE;
+      this.actionButton.inputEnabled = true;
+    }
   }
 
   private addHeader() {
@@ -95,11 +138,11 @@ export default class Gameboard extends Base {
     this.actionButton = this.tools.button.make(
       310,
       1250,
-      ['button'],
+      ['power'],
       function() {
         this.activatePower();
       }.bind(this),
-      2
+      1.5
     );
 
     this.isButtonSleeping = true;
@@ -110,7 +153,7 @@ export default class Gameboard extends Base {
 
     timer.start();
     timer.add(
-      1000 * 1,
+      1000 * 30,
       function() {
         this.isButtonSleeping = false;
       }.bind(this)
@@ -148,6 +191,31 @@ export default class Gameboard extends Base {
 
   private num(n) {
     return n > 9 ? '' + n : '0' + n;
+  }
+
+  private pauseToogle() {
+    if (this.isPaused) {
+      this.pausedWindow.hideAndDestroy();
+      this.isPaused = false;
+    } else {
+      this.pausedWindow = new Window();
+      let group = this.tools.misc.addGroup();
+      let text = this.tools.text.makeXBounded(400, '- PAUSED -', 80, 'center', ColorSettings.PRIMARY);
+      let text2 = this.tools.text.make(80, 560, 'Power name:', 50);
+      let text3 = this.tools.text.make(80, 630, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
+
+      let text4 = this.tools.text.make(80, 800, 'Requirements:', 50);
+      let text5 = this.tools.text.make(80, 860, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
+      group.add(text);
+      group.add(text2);
+      group.add(text3);
+      group.add(text4);
+      group.add(text5);
+
+      this.pausedWindow.init(group);
+      this.pausedWindow.show();
+      this.isPaused = true;
+    }
   }
 
   // private addDebuggingMatrix() {

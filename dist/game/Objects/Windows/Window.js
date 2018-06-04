@@ -16,13 +16,20 @@ var Window = (function (_super) {
     function Window() {
         return _super.call(this) || this;
     }
-    Window.prototype.init = function (rect, sprites, message) {
+    Window.prototype.init = function (message, sprites, rect) {
+        if (sprites === void 0) { sprites = null; }
+        if (rect === void 0) { rect = null; }
+        if (!rect) {
+            rect = this.tools.graphic.makeWindowRect();
+        }
+        this.rect = rect;
         this.background = this.tools.graphic.addWindowBackground();
         var background = this.background;
-        this.rect = rect;
-        this.sprites = sprites;
+        if (sprites) {
+            this.sprites = sprites;
+            rect.addChild(sprites);
+        }
         this.message = message;
-        rect.addChild(sprites);
         rect.addChild(message);
         background.addChild(rect);
         this.tools.misc.bringToTop(rect);

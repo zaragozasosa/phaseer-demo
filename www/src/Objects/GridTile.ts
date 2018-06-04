@@ -57,6 +57,11 @@ export default class GridTile extends Base {
     let t2 = misc.tweenTo(this.group, { alpha: 1 }, 300, 'Linear');
 
     this.mergeTween = t1.chain(t2);
+
+    this.sprite.inputEnabled = true;
+    this.sprite.events.onInputDown.add(function() {
+      this.gameboardConfig.clickTileSignal.dispatch(this);      
+    }.bind(this));
   }
 
   get isAlive(): boolean {
@@ -99,12 +104,10 @@ export default class GridTile extends Base {
         function(s: Phaser.Sprite, g: Phaser.Sprite) {
           if (s && g) {
             if (s.key === g.key) {
-              console.log('merge overlap');
               return false;
             } else {
               let velocity = this.sprite.body.velocity;
               if (velocity.x || velocity.y) {
-                console.log('collision in sprites x sprite');
                 for (let item of group.getAll()) {
                   item.body.stopMovement(true);
                 }
@@ -123,11 +126,9 @@ export default class GridTile extends Base {
         if (a && b) {
           let velocity = this.sprite.body.velocity;
           if (velocity.x || velocity.y) {
-            console.log('collision in sprites x wall');
             for (let item of group.getAll()) {
               item.body.stopMovement(true);
             }
-            //this.sprite.body.stopMovement(true);
             return true;
           }
         }
@@ -145,9 +146,13 @@ export default class GridTile extends Base {
     }
   }
 
-  duplicate() {
-    this.value *= 2;
+  changeValue(newValue: number) {
+    this.value = newValue;
     this.transform();
+  }
+
+  duplicate() {
+    this.changeValue(this.value * 2);
   }
 
   randomize(
@@ -233,9 +238,11 @@ export default class GridTile extends Base {
 
   private getValuesBetween(max: number, min: number) {
     let array = [];
+    max = max / 2;
+    
     while (max > min) {
+      array.push(max);      
       max = max / 2;
-      array.push(max);
     }
 
     return array;

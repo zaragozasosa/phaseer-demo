@@ -24,5 +24,5 @@ export default class BlackMagicLogic extends LogicalGrid {
     } else {
       return false;
     }
-  }
+  }  
 }

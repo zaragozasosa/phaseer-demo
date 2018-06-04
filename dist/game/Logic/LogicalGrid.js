@@ -70,7 +70,31 @@ var LogicalGrid = (function (_super) {
     LogicalGrid.prototype.canUsePower = function () {
         return false;
     };
-    LogicalGrid.prototype.power = function () { };
+    LogicalGrid.prototype.randomizeTile = function (tile) {
+        if (tile === void 0) { tile = null; }
+        var tiles = this.getTilesOrdered();
+        var unique = tiles
+            .map(function (item) { return item.value; })
+            .filter(function (value, index, self) { return self.indexOf(value) === index; });
+        var maxValue = tiles[0].value;
+        var minValue = tiles[tiles.length - 1].value;
+        var maxTilePercentage = 20 - (unique.length - 3) * 2.5;
+        if (maxTilePercentage < 10) {
+            maxTilePercentage = 10;
+        }
+        var minTilePercentage = 30 - (unique.length - 3) * 2.5;
+        if (minTilePercentage < 20) {
+            minTilePercentage = 20;
+        }
+        if (tile === null) {
+            for (var x = 0; x < tiles.length; x++) {
+                tiles[x].randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
+            }
+        }
+        else {
+            tile.randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
+        }
+    };
     LogicalGrid.prototype.cleanGrid = function () {
         var killed = this.grid.filter(function (x) { return x && !x.isAlive; });
         for (var _i = 0, killed_1 = killed; _i < killed_1.length; _i++) {
@@ -85,13 +109,37 @@ var LogicalGrid = (function (_super) {
             this.tilesGroup.add(item.getGroup);
         }
     };
+    LogicalGrid.prototype.reconfigureGrid = function (newGrid) {
+        var x = 0;
+        var y = 0;
+        for (var i = 0; i < this.grid.length; i++) {
+            var tile = this.get(x, y);
+            var newValue = newGrid[i];
+            if (newValue === '0' && tile) {
+                tile.kill();
+            }
+            else if (newValue !== '0' && tile) {
+                tile.changeValue(Number(newValue));
+            }
+            else if (newValue !== '0' && !tile) {
+                var tile_1 = new GridTile_1.default(x, y, this.gameboardConfig, 0, Number(newValue));
+                this.set(x, y, tile_1);
+                this.tilesGroup.add(tile_1.getGroup);
+            }
+            x++;
+            if (x > this.gameboardConfig.arraySize) {
+                x = 0;
+                y++;
+            }
+        }
+        this.cleanGrid();
+    };
     LogicalGrid.prototype.tilesStopped = function () {
         var allStopped = true;
         if (this.grid.filter(function (x) { return x && x.isMoving; }).length) {
             allStopped = false;
         }
         if (allStopped) {
-            console.log('Stopped!');
             this.updateGrid();
         }
         return allStopped;
@@ -114,6 +162,9 @@ var LogicalGrid = (function (_super) {
         if (!this.isFull()) {
             this.add();
         }
+    };
+    LogicalGrid.prototype.getTilesOrdered = function () {
+        return this.grid.filter(function (x) { return x; }).sort(function (n1, n2) { return n2.value - n1.value; });
     };
     LogicalGrid.prototype.pushTile = function (x, y, keyboardInput) {
         var tile = this.get(x, y);
@@ -212,7 +263,6 @@ var LogicalGrid = (function (_super) {
         var position = y * (this.arraySize + 1) + x;
         this.grid[position] = tile;
     };
-    LogicalGrid.prototype.push = function (tile, keyboardInput) { };
     LogicalGrid.prototype.mergeTile = function (nextTile, previousTile) {
         nextTile.value *= 2;
         previousTile.value = 0;
@@ -237,9 +287,6 @@ var LogicalGrid = (function (_super) {
         }
         return empty;
     };
-    LogicalGrid.prototype.getTilesOrdered = function () {
-        return this.grid.filter(function (x) { return x; }).sort(function (n1, n2) { return n2.value - n1.value; });
-    };
     LogicalGrid.prototype.sumTiles = function () {
         var points = 0;
         for (var _i = 0, _a = this.grid; _i < _a.length; _i++) {
@@ -247,13 +294,6 @@ var LogicalGrid = (function (_super) {
             points += tile ? tile.value : 0;
         }
         return points;
-    };
-    LogicalGrid.prototype.getColumnForDebug = function (row) {
-        var val1 = this.get(row, 0) ? this.get(row, 0).value : 0;
-        var val2 = this.get(row, 1) ? this.get(row, 1).value : 0;
-        var val3 = this.get(row, 2) ? this.get(row, 2).value : 0;
-        var val4 = this.get(row, 3) ? this.get(row, 3).value : 0;
-        return val1 + "\n" + val2 + "\n" + val3 + "\n" + val4;
     };
     return LogicalGrid;
 }(Base_1.default));

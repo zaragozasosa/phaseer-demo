@@ -1,8 +1,6 @@
 /// <reference path="../../node_modules/phaser-ce/typescript/phaser.comments.d.ts"/>
 import { Singleton, GameInstance } from './Config/Config';
 import ConfigSetup from './Config/ConfigSetup';
-
-
 import Boot from './States/Boot';
 import Preloader from './States/Preloader';
 import MainMenu from './States/MainMenu';

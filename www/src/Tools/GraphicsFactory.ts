@@ -42,7 +42,7 @@ export default class GraphicsFactory extends Factory {
   }
 
   addWindowBackground() {
-    return this.addBackground(ColorSettings.BACKGROUND, 0.7);
+    return this.addBackground(ColorSettings.BACKGROUND, 0.9);
   }
 
   makeRect(

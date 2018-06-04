@@ -110,7 +110,7 @@ export default class SpriteFactory extends Factory {
     let config = this.config;
 
     let x = safeZone.bgPaddingX;
-    let y = safeZone.bgPaddingY;
+    let y = safeZone.bgPaddingY + safeZone.paddingY;
     let sprite = this.game.add.sprite(x, y, 'witch');
     sprite.scale.setTo(config.scaleFactor, config.scaleFactor); 
   }

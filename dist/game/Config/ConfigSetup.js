@@ -97,13 +97,13 @@ var ConfigSetup = (function () {
     ConfigSetup.prototype.windowConfig = function () {
         this.config.window = new Config_1.WindowSettings();
         var window = this.config.window;
-        window.defaultLineWidth = 20;
+        window.defaultLineWidth = 15;
         window.defaultWidth =
             this.config.safeZone.safeWidth -
-                6 * window.defaultLineWidth * this.config.scaleFactor;
-        window.defaultHeight = this.config.safeZone.safeHeight * (1 / 3);
-        window.defaultX = window.defaultLineWidth * 3 * this.config.scaleFactor;
-        window.defaultY = window.defaultHeight;
+                4 * window.defaultLineWidth * this.config.scaleFactor;
+        window.defaultHeight = this.config.safeZone.safeHeight * (1 / 2);
+        window.defaultX = window.defaultLineWidth * 2 * this.config.scaleFactor;
+        window.defaultY = this.config.safeZone.safeHeight * (1 / 4);
     };
     return ConfigSetup;
 }());

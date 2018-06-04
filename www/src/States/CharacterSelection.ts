@@ -232,7 +232,7 @@ export default class CharacterSelection extends Phaser.State {
   }
 
   update() {
-    if (this.inputManager.checkKeys()) {
+    if (this.inputManager.checkKeys() === Phaser.Keyboard.ENTER) {
       this.gameStart();
     }
   }
