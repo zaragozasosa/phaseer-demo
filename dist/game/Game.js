@@ -16,6 +16,7 @@ var Boot_1 = require("./States/Boot");
 var Preloader_1 = require("./States/Preloader");
 var MainMenu_1 = require("./States/MainMenu");
 var Unranked_1 = require("./States/Unranked");
+var GameboardLoader_1 = require("./States/GameboardLoader");
 var CharacterSelection_1 = require("./States/CharacterSelection");
 var Game = (function (_super) {
     __extends(Game, _super);
@@ -36,6 +37,7 @@ var Game = (function (_super) {
         this.state.add('MainMenu', MainMenu_1.default, false);
         this.state.add('CharacterSelection', CharacterSelection_1.default, false);
         this.state.add('Unranked', Unranked_1.default, false);
+        this.state.add('GameboardLoader', GameboardLoader_1.default, false);
         this.state.start('Boot');
     };
     return Game;

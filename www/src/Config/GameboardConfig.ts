@@ -1,4 +1,6 @@
 import TileModel from './../Models/TileModel';
+import PowerModel from './../Models/PowerModel';
+
 export default class GameboardConfig {
   mainTile: TileModel;
   arraySize: number;
@@ -10,15 +12,22 @@ export default class GameboardConfig {
 
   bulletAmmo: number;
   diceAmmo: number;
+  requiredDiamonds: number;
+  powerDelaySeconds: number;
 
   updateScoreSignal: Phaser.Signal;
   toogleButtonSignal: Phaser.Signal;
   clickTileSignal: Phaser.Signal;
   updateAmmoSignal: Phaser.Signal;
+  mergeTileSignal: Phaser.Signal;
+  chargeSignal: Phaser.Signal;
+
+  powers: Array<PowerModel>;
 
   constructor() {
     this.arraySize = 3;
     this.winningTile = 512;
+    this.powerDelaySeconds = 10;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {
@@ -28,7 +37,99 @@ export default class GameboardConfig {
     this.minimumValue = 1;
     this.bulletAmmo = 6;
     this.diceAmmo = 5;
+    this.requiredDiamonds = 40;
+    this.createPowers();
     this.createTiles();
+  }
+
+  createPowers() {
+    let powers = [];
+
+    powers.push(
+      new PowerModel(
+        'powerGaming',
+        'Power Gaming',
+        'Duplicate the value of every tile in the board below 32.',
+        'Have at least one tile below 32'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'powerGaming',
+        'Power Gaming',
+        'Duplicate the value of every tile in the board below 32.',
+        'Have at least one tile below 32'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'gachaAddiction',
+        'Gacha Addiction',
+        'Collect diamonds! Use them to fully randomize your board!',
+        `Have at least 3 different kind of tiles and ${this
+          .requiredDiamonds} diamonds.`
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'detectiveWork',
+        'Detective Work',
+        'Remove every tile on the grid without a pair.',
+        'Have at least one tile without a pair.'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'timeTravel',
+        'Time Travel',
+        'Go back in time 4 movements ago! Will activate by itself on a game over.',
+        'Have at least 4 previous movements.'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'reportedForRP',
+        'Reported for RP',
+        '3 charges, 3 different powers! Use them at any time you want.\n\n' +
+          '* Sage: Will fill your grid with low value tiles if you have space.\n' +
+          '* Report: Will remove low value tiles, if you have any.\n' +
+          '* Ban: Will remove every tile except your highest.'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'rollForInitiative',
+        'Roll for Initiative',
+        'Randomize any tile you want by clicking on it! Can be used 5 times.',
+        'Have at least 3 different kind of tiles.'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'blackMagic',
+        'Black Magic',
+        'Merge all your tiles, from the lowest to the highest!',
+        'Have at least 6 tiles on the grid.'
+      )
+    );
+
+    powers.push(
+      new PowerModel(
+        'cincoDeMayo',
+        'Cinco de Mayo',
+        'Destroy any tile you want by clicking on it! Can be used 6 times.',
+        'Have at least more than one tile on the grid.'
+      )
+    );
+
+    this.powers = powers;
   }
 
   createTiles() {
@@ -42,7 +143,7 @@ export default class GameboardConfig {
         'bren',
         'keyboard.mp3',
         'powerGaming',
-        'Power Gaming',
+        this.powers.find(x => x.id === 'powerGaming'),
         'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'
       )
     );
@@ -55,7 +156,7 @@ export default class GameboardConfig {
         'meushijyo',
         'wow.wav',
         'powerGaming',
-        'Power Gaming',
+        this.powers.find(x => x.id === 'powerGaming'),
         'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'
       )
     );
@@ -68,7 +169,7 @@ export default class GameboardConfig {
         'choco',
         'page.mp3',
         'gachaAddiction',
-        'Gacha Addiction',
+        this.powers.find(x => x.id === 'gachaAddiction'),
         'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'
       )
     );
@@ -81,7 +182,7 @@ export default class GameboardConfig {
         'rox',
         'chachin.mp3',
         'gachaAddiction',
-        'Gacha Addiction',
+        this.powers.find(x => x.id === 'gachaAddiction'),
         'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'
       )
     );
@@ -94,7 +195,7 @@ export default class GameboardConfig {
         'lily',
         'radio.mp3',
         'detectiveWork',
-        'Detective Work',
+        this.powers.find(x => x.id === 'detectiveWork'),
         'Highly-trained FBI agent. Impossible crimes and high profile murder cases are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'
       )
     );
@@ -107,7 +208,7 @@ export default class GameboardConfig {
         'smith',
         'sweeping.wav',
         'detectiveWork',
-        'Detective Work',
+        this.powers.find(x => x.id === 'detectiveWork'),
         `A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run...`
       )
     );
@@ -120,7 +221,7 @@ export default class GameboardConfig {
         'eleve',
         'coin.wav',
         'timeTravel',
-        'Time Travel',
+        this.powers.find(x => x.id === 'timeTravel'),
         "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."
       )
     );
@@ -133,7 +234,7 @@ export default class GameboardConfig {
         'kinjo',
         'sorry.wav',
         'timeTravel',
-        'Time Travel',
+        this.powers.find(x => x.id === 'timeTravel'),
         "Canadian pro-gamer online, shy as hell waitress in real life. Being very afraid of social interaction, she's forced to hide her identity on the internet. Number 1 fan of Kinjo's works."
       )
     );
@@ -146,7 +247,7 @@ export default class GameboardConfig {
         'r1r1',
         'meow.wav',
         'reportedForRP',
-        'Reported for RP',
+        this.powers.find(x => x.id === 'reportedForRP'),
         "Heir to the Lionstar family headship, owner of a never-ending fortune. This prince, however, rejects his own lineage and indulges in low-budget cosplaying. He's often seen in cons around the world, always accompanied by his cat, Caesar."
       )
     );
@@ -159,7 +260,7 @@ export default class GameboardConfig {
         'attarou',
         'letsrock.wav',
         'reportedForRP',
-        'Reported for RP',
+        this.powers.find(x => x.id === 'reportedForRP'),
         'The latest model in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology in the most obvious fashion: roleplaying as a human...'
       )
     );
@@ -172,7 +273,7 @@ export default class GameboardConfig {
         'jessy',
         'dice.mp3',
         'rollForInitiative',
-        'Roll for Initiative',
+        this.powers.find(x => x.id === 'rollForInitiative'),
         'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
       )
     );
@@ -185,7 +286,7 @@ export default class GameboardConfig {
         'magil',
         'red.mp3',
         'rollForInitiative',
-        'Roll for Initiative',
+        this.powers.find(x => x.id === 'rollForInitiative'),
         "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
       )
     );
@@ -198,7 +299,7 @@ export default class GameboardConfig {
         'fancy',
         'ahaha.wav',
         'blackMagic',
-        'Black Magic',
+        this.powers.find(x => x.id === 'blackMagic'),
         "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."
       )
     );
@@ -211,7 +312,7 @@ export default class GameboardConfig {
         'mira',
         'hyehye.mp3',
         'blackMagic',
-        'Black Magic',
+        this.powers.find(x => x.id === 'blackMagic'),
         'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'
       )
     );
@@ -223,8 +324,8 @@ export default class GameboardConfig {
         'Ignacio Zaragoza',
         null,
         'gunshot.mp3',
-        'CincoDeMayo',
-        'Cinco de Mayo',
+        'cincoDeMayo',
+        this.powers.find(x => x.id === 'cincoDeMayo'),
         'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'
       )
     );
@@ -236,8 +337,8 @@ export default class GameboardConfig {
         'Chili Bagel',
         null,
         'howl.mp3',
-        'CincoDeMayo',
-        'Cinco de Mayo',
+        '',
+        null,
         "Hey, you shouldn't be able to read this!",
         false
       )

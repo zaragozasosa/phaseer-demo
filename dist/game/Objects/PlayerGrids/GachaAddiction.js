@@ -20,6 +20,15 @@ var GachaAddiction = (function (_super) {
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
+    GachaAddiction.prototype.activatePower = function () {
+        if (this.diamondInfo) {
+            this.gridLogic.power();
+        }
+        else {
+            this.diamondInfo = this.gridLogic.getPowerInfo();
+            return this.diamondInfo;
+        }
+    };
     return GachaAddiction;
 }(Grid_1.default));
 exports.default = GachaAddiction;

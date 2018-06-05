@@ -22,6 +22,19 @@ var AudioFactory = (function (_super) {
         var vol = config.volumeLevels[config.actualVolumeIndex];
         this.game.sound.play(id, config.sfxVolume * vol, loop);
     };
+    AudioFactory.prototype.playTwoSounds = function (gameConfig) {
+        var config = this.config.sound;
+        var vol = config.volumeLevels[config.actualVolumeIndex];
+        this.game.sound.play(gameConfig.mainTile.sfxLabel, config.sfxVolume * vol);
+        this.game.time.events.add(500, function () {
+            if (gameConfig.mainTile.friendId) {
+                this.game.sound.play(gameConfig.mainTile.friendSfxLabel, config.sfxVolume * vol);
+            }
+            else {
+                this.game.sound.play(gameConfig.mainTile.sfxLabel, config.sfxVolume * vol);
+            }
+        }.bind(this));
+    };
     AudioFactory.prototype.play = function (id, loop) {
         if (loop === void 0) { loop = true; }
         var config = this.config.sound;

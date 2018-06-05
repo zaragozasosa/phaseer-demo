@@ -3,21 +3,15 @@ import Grid from './Grid';
 import GridFactory from './GridFactory';
 import GameboardConfig from './../Config/GameboardConfig';
 import InputManager from './../InputManager';
-import AmmoModel from './../Models/AmmoModel';
-import GameboardMode from './../Models/GameboardMode';
 import PowerWindow from './Windows/PowerWindow';
-import Window from './Windows/Window';
+import PauseWindow from './Windows/PauseWindow';
 import { ColorSettings } from './../Config/Config';
 
-
-import AmmoBar from './AmmoBar';
-
 export default class Gameboard extends Base {
-  private grid: Grid;
-  private gameboardConfig: GameboardConfig;
-  private input: InputManager;
-  private mode: number;
-  private ammoBar: AmmoBar;
+  protected grid: Grid;
+  protected gameboardConfig: GameboardConfig;
+  protected input: InputManager;
+  protected mode: number;
 
   debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
@@ -30,7 +24,7 @@ export default class Gameboard extends Base {
   isButtonSleeping: boolean;
 
   isPaused: boolean;
-  pausedWindow: Window;
+  pausedWindow: PauseWindow;
 
   constructor(gameboardConfig: GameboardConfig) {
     super();
@@ -53,18 +47,13 @@ export default class Gameboard extends Base {
       }.bind(this)
     );
 
-    let updateAmmoSignal = new Phaser.Signal();
-    updateAmmoSignal.add(
-      function() {
-        this.updateAmmo();
-      }.bind(this)
-    );
-
     this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
     this.gameboardConfig.updateScoreSignal = updateScoreSignal;
-    this.gameboardConfig.updateAmmoSignal = updateAmmoSignal;
     this.gameboardConfig.clickTileSignal = new Phaser.Signal();
-
+    this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
+    this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
+    this.gameboardConfig.chargeSignal = new Phaser.Signal();
+    
     this.grid = GridFactory.create(gameboardConfig);
     this.isPaused = false;
     this.movements = 0;
@@ -75,7 +64,6 @@ export default class Gameboard extends Base {
     this.addTimer();
 
     this.input = new InputManager(this.config);
-    this.mode = GameboardMode.DEFAULT;
   }
 
   update() {
@@ -92,25 +80,11 @@ export default class Gameboard extends Base {
   activatePower() {
     this.actionButton.kill();
     let window = new PowerWindow(this.gameboardConfig.mainTile);
-
-    let response = this.grid.activatePower();
-    if (response && response instanceof AmmoModel) {
-      this.mode = GameboardMode.AMMO;
-      let model: AmmoModel = response;
-      this.ammoBar = new AmmoBar(model);
-    }
+    this.tools.audio.playTwoSounds(this.gameboardConfig);
   }
 
-  private updateAmmo() {
-    if (this.mode === GameboardMode.AMMO) {
-      if (this.ammoBar.update() === 0) {
-        this.mode = GameboardMode.DEFAULT;
-        this.gameboardConfig.clickTileSignal.removeAll();
-      }
-    }
-  }
 
-  private toogleButton(disabled: boolean) {
+  protected toogleButton(disabled: boolean) {
     if (disabled || this.isButtonSleeping) {
       this.actionButton.tint = Phaser.Color.GRAY;
       this.actionButton.inputEnabled = false;
@@ -153,7 +127,7 @@ export default class Gameboard extends Base {
 
     timer.start();
     timer.add(
-      1000 * 30,
+      1000 * this.gameboardConfig.powerDelaySeconds,
       function() {
         this.isButtonSleeping = false;
       }.bind(this)
@@ -198,22 +172,24 @@ export default class Gameboard extends Base {
       this.pausedWindow.hideAndDestroy();
       this.isPaused = false;
     } else {
-      this.pausedWindow = new Window();
-      let group = this.tools.misc.addGroup();
-      let text = this.tools.text.makeXBounded(400, '- PAUSED -', 80, 'center', ColorSettings.PRIMARY);
-      let text2 = this.tools.text.make(80, 560, 'Power name:', 50);
-      let text3 = this.tools.text.make(80, 630, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
 
-      let text4 = this.tools.text.make(80, 800, 'Requirements:', 50);
-      let text5 = this.tools.text.make(80, 860, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
-      group.add(text);
-      group.add(text2);
-      group.add(text3);
-      group.add(text4);
-      group.add(text5);
+      this.pausedWindow = new PauseWindow(this.gameboardConfig.mainTile);
+      // this.pausedWindow = new Window();
+      // let group = this.tools.misc.addGroup();
+      // let text = this.tools.text.makeXBounded(400, '- PAUSED -', 80, 'center', ColorSettings.PRIMARY);
+      // let text2 = this.tools.text.make(80, 560, 'Power name:', 50);
+      // let text3 = this.tools.text.make(80, 630, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
 
-      this.pausedWindow.init(group);
-      this.pausedWindow.show();
+      // let text4 = this.tools.text.make(80, 800, 'Requirements:', 50);
+      // let text5 = this.tools.text.make(80, 860, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
+      // group.add(text);
+      // group.add(text2);
+      // group.add(text3);
+      // group.add(text4);
+      // group.add(text5);
+
+      // this.pausedWindow.init(group);
+      // this.pausedWindow.show();
       this.isPaused = true;
     }
   }

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TileModel = (function () {
-    function TileModel(id, name, fullName, friendId, sfxId, powerId, powerName, summary, playable, gridX, gridY) {
+    function TileModel(id, name, fullName, friendId, sfxId, powerId, power, summary, playable, gridX, gridY) {
         if (playable === void 0) { playable = true; }
         if (gridX === void 0) { gridX = 0; }
         if (gridY === void 0) { gridY = 0; }
@@ -11,7 +11,7 @@ var TileModel = (function () {
         this.friendId = friendId;
         this.sfxId = sfxId;
         this.powerId = powerId;
-        this.powerName = powerName;
+        this.power = power;
         this.summary = summary;
         this.playable = playable;
     }

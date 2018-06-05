@@ -6,6 +6,8 @@ export default class Preloader extends Phaser.State {
     let singleton = Singleton.get();
     let tools = singleton.tools;
 
+    tools.graphic.addBackground();    
+
     this.preloadBar = tools.sprite.makeCentered(300, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
 
@@ -17,12 +19,9 @@ export default class Preloader extends Phaser.State {
     this.load.image('start-3', 'assets/images/start-3.png');
     this.load.image('frame', 'assets/images/frame.png');
 
-    this.load.image('volume-0', 'assets/images/volume-0.png');
-    this.load.image('volume-1', 'assets/images/volume-1.png');
-    this.load.image('volume-2', 'assets/images/volume-2.png');
-
     this.load.image('bullet', 'assets/images/bullet.png');
     this.load.image('dice', 'assets/images/dice.png');
+    this.load.image('diamond', 'assets/images/diamond.png');    
     
     this.load.spritesheet('power', 'assets/images/power.png', 249, 93);
   }

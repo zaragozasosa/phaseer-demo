@@ -74,10 +74,6 @@ export default abstract class LogicalGrid extends Base {
     return this.tilesStopped();
   }
 
-  canUsePower() {
-    return false;
-  }
-
   randomizeTile(tile: GridTile = null) {
     var tiles = this.getTilesOrdered();
     let unique = tiles
@@ -97,7 +93,7 @@ export default abstract class LogicalGrid extends Base {
       minTilePercentage = 20;
     }
 
-    if(tile === null) {
+    if (tile === null) {
       for (let x = 0; x < tiles.length; x++) {
         tiles[x].randomize(
           maxValue,
@@ -107,14 +103,8 @@ export default abstract class LogicalGrid extends Base {
         );
       }
     } else {
-      tile.randomize(
-        maxValue,
-        maxTilePercentage,
-        minValue,
-        minTilePercentage
-      );
+      tile.randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
     }
-
   }
 
   protected cleanGrid() {
@@ -144,7 +134,13 @@ export default abstract class LogicalGrid extends Base {
       } else if (newValue !== '0' && tile) {
         tile.changeValue(Number(newValue));
       } else if (newValue !== '0' && !tile) {
-        let tile = new GridTile(x, y, this.gameboardConfig, 0, Number(newValue));
+        let tile = new GridTile(
+          x,
+          y,
+          this.gameboardConfig,
+          0,
+          Number(newValue)
+        );
         this.set(x, y, tile);
         this.tilesGroup.add(tile.getGroup);
       }
@@ -196,8 +192,90 @@ export default abstract class LogicalGrid extends Base {
     }
   }
 
-  protected getTilesOrdered() {
-    return this.grid.filter(x => x).sort((n1, n2) => n2.value - n1.value);
+  protected getTilesOrdered(asc = false) {
+    if (asc) {
+      return this.grid.filter(x => x).sort((n1, n2) => n1.value - n2.value);
+    } else {
+      return this.grid.filter(x => x).sort((n1, n2) => n2.value - n1.value);
+    }
+  }
+
+  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
+    nextTile.value *= 2;
+    previousTile.value = 0;
+    previousTile.nextTile = nextTile;
+  }
+
+  protected add() {
+    var newTilePos;
+    do {
+      var ranX = this.tools.misc.randomBetween(0, 3);
+      var ranY = this.tools.misc.randomBetween(0, 3);
+    } while (this.get(ranX, ranY));
+
+    if (this.emptyTiles() > 6) {
+      var chance = this.tools.misc.randomBetween(0, 99);
+      (newTilePos = ranX), ranY, chance === 98 ? 2 : chance >= 90 ? 1 : 0;
+    } else {
+      newTilePos = 0;
+    }
+    let value = this.get(ranX, ranY);
+
+    let tile = new GridTile(ranX, ranY, this.gameboardConfig, newTilePos);
+    this.set(ranX, ranY, tile);
+    this.tilesGroup.add(tile.getGroup);
+  }
+
+  protected get(x: number, y: number): GridTile {
+    let position = y * (this.arraySize + 1) + x;
+    return this.grid[position];
+  }
+
+  protected set(x: number, y: number, tile: GridTile) {
+    let position = y * (this.arraySize + 1) + x;
+    this.grid[position] = tile;
+  }
+
+  protected isFull(): boolean {
+    for (let tile of this.grid) {
+      if (!tile) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  protected emptyTiles(): number {
+    let empty = 0;
+    for (let tile of this.grid) {
+      if (tile && tile.value === 0) {
+        empty++;
+      }
+    }
+    return empty;
+  }
+
+  private reorderTileList() {
+    let list = this.gameboardConfig.tiles;
+
+    while (list[0].id !== this.gameboardConfig.mainTile.id) {
+      let last = list.pop();
+      list.unshift(last);
+    }
+
+    if (list[0].friendId !== list[1].id) {
+      let secondArray = [];
+      secondArray.push(list[0]);
+      secondArray.push(list[list.length - 1]);
+      let thirdArray = list.splice(1, list.length - 2);
+      this.gameboardConfig.tiles = secondArray.concat(thirdArray);
+    }
+
+    let value = this.gameboardConfig.minimumValue;
+    for (let tile of this.gameboardConfig.tiles) {
+      tile.staticValue = value;
+      value *= 2;
+    }
   }
 
   private pushTile(x: number, y: number, keyboardInput: number) {
@@ -261,84 +339,6 @@ export default abstract class LogicalGrid extends Base {
     return isDirty;
   }
 
-  private add() {
-    var newTilePos;
-    do {
-      var ranX = this.tools.misc.randomBetween(0, 3);
-      var ranY = this.tools.misc.randomBetween(0, 3);
-    } while (this.get(ranX, ranY));
-
-    if (this.emptyTiles() > 6) {
-      var chance = this.tools.misc.randomBetween(0, 99);
-      (newTilePos = ranX), ranY, chance === 98 ? 2 : chance >= 90 ? 1 : 0;
-    } else {
-      newTilePos = 0;
-    }
-    let value = this.get(ranX, ranY);
-
-    let tile = new GridTile(ranX, ranY, this.gameboardConfig, newTilePos);
-    this.set(ranX, ranY, tile);
-    this.tilesGroup.add(tile.getGroup);
-  }
-
-  private reorderTileList() {
-    let list = this.gameboardConfig.tiles;
-
-    while (list[0].id !== this.gameboardConfig.mainTile.id) {
-      let last = list.pop();
-      list.unshift(last);
-    }
-
-    if (list[0].friendId !== list[1].id) {
-      let secondArray = [];
-      secondArray.push(list[0]);
-      secondArray.push(list[list.length - 1]);
-      let thirdArray = list.splice(1, list.length - 2);
-      this.gameboardConfig.tiles = secondArray.concat(thirdArray);
-    }
-
-    let value = this.gameboardConfig.minimumValue;
-    for (let tile of this.gameboardConfig.tiles) {
-      tile.staticValue = value;
-      value *= 2;
-    }
-  }
-
-  private get(x: number, y: number): GridTile {
-    let position = y * (this.arraySize + 1) + x;
-    return this.grid[position];
-  }
-
-  private set(x: number, y: number, tile: GridTile) {
-    let position = y * (this.arraySize + 1) + x;
-    this.grid[position] = tile;
-  }
-
-  private mergeTile(nextTile: GridTile, previousTile: GridTile) {
-    nextTile.value *= 2;
-    previousTile.value = 0;
-    previousTile.nextTile = nextTile;
-  }
-
-  private isFull(): boolean {
-    for (let tile of this.grid) {
-      if (!tile) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private emptyTiles(): number {
-    let empty = 0;
-    for (let tile of this.grid) {
-      if (tile && tile.value === 0) {
-        empty++;
-      }
-    }
-    return empty;
-  }
-
   sumTiles() {
     let points = 0;
     for (let tile of this.grid) {
@@ -347,7 +347,9 @@ export default abstract class LogicalGrid extends Base {
     return points;
   }
 
-  abstract power()
+  abstract canUsePower()  
+
+  abstract power();
 
   // getColumnForDebug(row: number) {
   //   let val1 = this.get(row, 0) ? this.get(row, 0).value : 0;

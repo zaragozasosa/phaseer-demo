@@ -1,3 +1,4 @@
+import PowerModel from './PowerModel';
 export default class TileModel {
   id: string;
   name: string;
@@ -7,7 +8,8 @@ export default class TileModel {
   summary: string;
   playable: boolean;
   powerId: string;
-  powerName: string;
+
+  power: PowerModel;
 
   staticValue: number;
   frame: Phaser.Sprite;
@@ -23,7 +25,7 @@ export default class TileModel {
   get friendSfxLabel(): string {
     return this.friendId + '-sfx';
   }
-  
+
   constructor(
     id: string,
     name: string,
@@ -31,11 +33,11 @@ export default class TileModel {
     friendId: string,
     sfxId: string,
     powerId: string,
-    powerName: string,
+    power: PowerModel,
     summary: string,
-    playable = true,    
+    playable = true,
     gridX = 0,
-    gridY = 0,
+    gridY = 0
   ) {
     this.id = id;
     this.name = name;
@@ -43,10 +45,8 @@ export default class TileModel {
     this.friendId = friendId;
     this.sfxId = sfxId;
     this.powerId = powerId;
-    this.powerName = powerName;
+    this.power = power;
     this.summary = summary;
     this.playable = playable;
   }
-
-
 }

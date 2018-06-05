@@ -20,6 +20,49 @@ var ReportedForRP = (function (_super) {
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
+    ReportedForRP.prototype.activatePower = function () {
+        if (!this.buttons) {
+            this.buttons = this.makeButtons();
+            return this.buttons;
+        }
+    };
+    ReportedForRP.prototype.makeButtons = function () {
+        var buttons = this.tools.misc.addGroup();
+        buttons.add(this.tools.button.make(50, 1250, ['power'], function () {
+            this.sageClick();
+        }.bind(this)));
+        buttons.add(this.tools.button.make(350, 1250, ['power'], function () {
+            this.reportedClick();
+        }.bind(this)));
+        buttons.add(this.tools.button.make(650, 1250, ['power'], function () {
+            this.bannedClick();
+        }.bind(this)));
+        return buttons;
+    };
+    ReportedForRP.prototype.sageClick = function () {
+        if (this.gridLogic.sagePower()) {
+            this.gameboardConfig.chargeSignal.dispatch();
+        }
+        else {
+            this.tools.audio.playSound('beep');
+        }
+    };
+    ReportedForRP.prototype.reportedClick = function () {
+        if (this.gridLogic.reportedPower()) {
+            this.gameboardConfig.chargeSignal.dispatch();
+        }
+        else {
+            this.tools.audio.playSound('beep');
+        }
+    };
+    ReportedForRP.prototype.bannedClick = function () {
+        if (this.gridLogic.bannedPower()) {
+            this.gameboardConfig.chargeSignal.dispatch();
+        }
+        else {
+            this.tools.audio.playSound('beep');
+        }
+    };
     return ReportedForRP;
 }(Grid_1.default));
 exports.default = ReportedForRP;

@@ -15,6 +15,7 @@ export default class GridTile extends Base {
 
   private gameboardConfig: GameboardConfig;
   private mergeTween: Phaser.Tween;
+  private randomizeTween: Phaser.Tween;
 
   constructor(
     x: number,
@@ -38,18 +39,22 @@ export default class GridTile extends Base {
     this.posY = y;
     this.frame = this.createFrame();
     this.sprite = this.createSprite();
+
+    this.group = this.tools.misc.addGroup();
+    this.sprite.anchor.setTo(0, 0);
     this.number = this.tools.text.makeTileNumber(
       this.posX,
       this.posY,
       this.value,
       40
     );
-    this.group = this.tools.misc.addGroup();
     this.group.addChild(this.sprite);
     this.group.addChild(this.number);
     this.group.addChild(this.frame);
 
     this.group.alpha = 0;
+    this.group.angle = 0;
+
     let misc = this.tools.misc;
     misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);
 
@@ -58,10 +63,18 @@ export default class GridTile extends Base {
 
     this.mergeTween = t1.chain(t2);
 
+    this.randomizeTween = this.tools.misc.tweenTo(
+      this.sprite,
+      { angle: 360 },
+      500
+    );
+
     this.sprite.inputEnabled = true;
-    this.sprite.events.onInputDown.add(function() {
-      this.gameboardConfig.clickTileSignal.dispatch(this);      
-    }.bind(this));
+    this.sprite.events.onInputDown.add(
+      function() {
+        this.gameboardConfig.clickTileSignal.dispatch(this);
+      }.bind(this)
+    );
   }
 
   get isAlive(): boolean {
@@ -146,13 +159,13 @@ export default class GridTile extends Base {
     }
   }
 
-  changeValue(newValue: number) {
-    this.value = newValue;
-    this.transform();
-  }
-
   duplicate() {
     this.changeValue(this.value * 2);
+  }
+
+  changeValue(newValue: number) {
+    this.value = newValue;
+    this.mergeTransform();
   }
 
   randomize(
@@ -175,7 +188,7 @@ export default class GridTile extends Base {
       this.value = valuesBetween[random];
     }
 
-    this.transform();
+    this.randomizeTransform();
   }
 
   private update() {
@@ -186,7 +199,7 @@ export default class GridTile extends Base {
       for (let item of this.group.getAll()) {
         item.kill();
       }
-      this.nextTile.transform();
+      this.nextTile.mergeTransform();
     } else {
       for (let item of this.group.getAll()) {
         if (item instanceof Phaser.Sprite) {
@@ -200,6 +213,25 @@ export default class GridTile extends Base {
     }
   }
 
+  private mergeTransform() {
+    this.transform();
+    this.mergeTween.start();
+  }
+
+  private randomizeTransform() {
+    this.transform();
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.position.x += this.sprite.width / 2;
+    this.sprite.position.y += this.sprite.height / 2;
+
+    this.randomizeTween.start().onComplete.add(
+      function() {
+        this.sprite.anchor.setTo(0, 0);
+        this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
+      }.bind(this)
+    );
+  }
+
   private transform() {
     let tile = this.gameboardConfig.tiles.find(
       x => x.staticValue === this.value
@@ -207,7 +239,6 @@ export default class GridTile extends Base {
     this.model = tile;
     this.sprite.loadTexture(tile.id);
     this.number.setText(this.value + '');
-    this.mergeTween.start();
   }
 
   private createSprite() {
@@ -239,9 +270,9 @@ export default class GridTile extends Base {
   private getValuesBetween(max: number, min: number) {
     let array = [];
     max = max / 2;
-    
+
     while (max > min) {
-      array.push(max);      
+      array.push(max);
       max = max / 2;
     }
 

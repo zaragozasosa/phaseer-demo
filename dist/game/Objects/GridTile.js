@@ -30,17 +30,20 @@ var GridTile = (function (_super) {
         _this.posY = y;
         _this.frame = _this.createFrame();
         _this.sprite = _this.createSprite();
-        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 40);
         _this.group = _this.tools.misc.addGroup();
+        _this.sprite.anchor.setTo(0, 0);
+        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 40);
         _this.group.addChild(_this.sprite);
         _this.group.addChild(_this.number);
         _this.group.addChild(_this.frame);
         _this.group.alpha = 0;
+        _this.group.angle = 0;
         var misc = _this.tools.misc;
         misc.tweenTo(_this.group, { alpha: 1 }, 500, 'Linear', true);
         var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100, 'Linear');
         var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300, 'Linear');
         _this.mergeTween = t1.chain(t2);
+        _this.randomizeTween = _this.tools.misc.tweenTo(_this.sprite, { angle: 360 }, 500);
         _this.sprite.inputEnabled = true;
         _this.sprite.events.onInputDown.add(function () {
             this.gameboardConfig.clickTileSignal.dispatch(this);
@@ -131,12 +134,12 @@ var GridTile = (function (_super) {
             item.kill();
         }
     };
-    GridTile.prototype.changeValue = function (newValue) {
-        this.value = newValue;
-        this.transform();
-    };
     GridTile.prototype.duplicate = function () {
         this.changeValue(this.value * 2);
+    };
+    GridTile.prototype.changeValue = function (newValue) {
+        this.value = newValue;
+        this.mergeTransform();
     };
     GridTile.prototype.randomize = function (maxVal, maxChance, minVal, minChance) {
         var randomChance = this.tools.misc.randomBetween(0, 99);
@@ -152,7 +155,7 @@ var GridTile = (function (_super) {
             var random = this.tools.misc.randomBetween(0, valuesBetween.length - 1);
             this.value = valuesBetween[random];
         }
-        this.transform();
+        this.randomizeTransform();
     };
     GridTile.prototype.update = function () {
         for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
@@ -164,7 +167,7 @@ var GridTile = (function (_super) {
                 var item = _c[_b];
                 item.kill();
             }
-            this.nextTile.transform();
+            this.nextTile.mergeTransform();
         }
         else {
             for (var _d = 0, _e = this.group.getAll(); _d < _e.length; _d++) {
@@ -178,13 +181,26 @@ var GridTile = (function (_super) {
             }
         }
     };
+    GridTile.prototype.mergeTransform = function () {
+        this.transform();
+        this.mergeTween.start();
+    };
+    GridTile.prototype.randomizeTransform = function () {
+        this.transform();
+        this.sprite.anchor.setTo(0.5, 0.5);
+        this.sprite.position.x += this.sprite.width / 2;
+        this.sprite.position.y += this.sprite.height / 2;
+        this.randomizeTween.start().onComplete.add(function () {
+            this.sprite.anchor.setTo(0, 0);
+            this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
+        }.bind(this));
+    };
     GridTile.prototype.transform = function () {
         var _this = this;
         var tile = this.gameboardConfig.tiles.find(function (x) { return x.staticValue === _this.value; });
         this.model = tile;
         this.sprite.loadTexture(tile.id);
         this.number.setText(this.value + '');
-        this.mergeTween.start();
     };
     GridTile.prototype.createSprite = function () {
         var tile = this.model;

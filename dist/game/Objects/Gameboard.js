@@ -13,12 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../Base");
 var GridFactory_1 = require("./GridFactory");
 var InputManager_1 = require("./../InputManager");
-var AmmoModel_1 = require("./../Models/AmmoModel");
-var GameboardMode_1 = require("./../Models/GameboardMode");
 var PowerWindow_1 = require("./Windows/PowerWindow");
-var Window_1 = require("./Windows/Window");
-var Config_1 = require("./../Config/Config");
-var AmmoBar_1 = require("./AmmoBar");
+var PauseWindow_1 = require("./Windows/PauseWindow");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
     function Gameboard(gameboardConfig) {
@@ -35,14 +31,12 @@ var Gameboard = (function (_super) {
         toogleButtonSignal.add(function (disabled) {
             this.toogleButton(disabled);
         }.bind(_this));
-        var updateAmmoSignal = new Phaser.Signal();
-        updateAmmoSignal.add(function () {
-            this.updateAmmo();
-        }.bind(_this));
         _this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
         _this.gameboardConfig.updateScoreSignal = updateScoreSignal;
-        _this.gameboardConfig.updateAmmoSignal = updateAmmoSignal;
         _this.gameboardConfig.clickTileSignal = new Phaser.Signal();
+        _this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
+        _this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
+        _this.gameboardConfig.chargeSignal = new Phaser.Signal();
         _this.grid = GridFactory_1.default.create(gameboardConfig);
         _this.isPaused = false;
         _this.movements = 0;
@@ -52,7 +46,6 @@ var Gameboard = (function (_super) {
         _this.addPowerButton();
         _this.addTimer();
         _this.input = new InputManager_1.default(_this.config);
-        _this.mode = GameboardMode_1.default.DEFAULT;
         return _this;
     }
     Gameboard.prototype.update = function () {
@@ -68,20 +61,7 @@ var Gameboard = (function (_super) {
     Gameboard.prototype.activatePower = function () {
         this.actionButton.kill();
         var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
-        var response = this.grid.activatePower();
-        if (response && response instanceof AmmoModel_1.default) {
-            this.mode = GameboardMode_1.default.AMMO;
-            var model = response;
-            this.ammoBar = new AmmoBar_1.default(model);
-        }
-    };
-    Gameboard.prototype.updateAmmo = function () {
-        if (this.mode === GameboardMode_1.default.AMMO) {
-            if (this.ammoBar.update() === 0) {
-                this.mode = GameboardMode_1.default.DEFAULT;
-                this.gameboardConfig.clickTileSignal.removeAll();
-            }
-        }
+        this.tools.audio.playTwoSounds(this.gameboardConfig);
     };
     Gameboard.prototype.toogleButton = function (disabled) {
         if (disabled || this.isButtonSleeping) {
@@ -112,7 +92,7 @@ var Gameboard = (function (_super) {
         this.actionButton.tint = Phaser.Color.GRAY;
         var timer = this.tools.misc.createTimer();
         timer.start();
-        timer.add(1000 * 30, function () {
+        timer.add(1000 * this.gameboardConfig.powerDelaySeconds, function () {
             this.isButtonSleeping = false;
         }.bind(this));
     };
@@ -148,20 +128,7 @@ var Gameboard = (function (_super) {
             this.isPaused = false;
         }
         else {
-            this.pausedWindow = new Window_1.default();
-            var group = this.tools.misc.addGroup();
-            var text = this.tools.text.makeXBounded(400, '- PAUSED -', 80, 'center', Config_1.ColorSettings.PRIMARY);
-            var text2 = this.tools.text.make(80, 560, 'Power name:', 50);
-            var text3 = this.tools.text.make(80, 630, 'Description blah blah blah blah', 40, Config_1.ColorSettings.ALT_TEXT);
-            var text4 = this.tools.text.make(80, 800, 'Requirements:', 50);
-            var text5 = this.tools.text.make(80, 860, 'Description blah blah blah blah', 40, Config_1.ColorSettings.ALT_TEXT);
-            group.add(text);
-            group.add(text2);
-            group.add(text3);
-            group.add(text4);
-            group.add(text5);
-            this.pausedWindow.init(group);
-            this.pausedWindow.show();
+            this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile);
             this.isPaused = true;
         }
     };

@@ -17,18 +17,25 @@ var BlackMagicLogic = (function (_super) {
         return _super.call(this, gameboardConfig) || this;
     }
     BlackMagicLogic.prototype.power = function () {
-        var tiles = this.getTilesOrdered();
+        var tiles = this.getTilesOrdered(true);
         if (this.canUsePower()) {
-            var mergeTile = tiles[0];
-            var deleteTile = tiles[1];
-            mergeTile.duplicate();
-            deleteTile.kill();
+            var _loop_1 = function (x) {
+                var value = tiles[x].value;
+                var equalTiles = tiles.filter(function (x) { return x.value === value && x.isAlive; });
+                if (equalTiles.length > 1) {
+                    equalTiles[0].duplicate();
+                    equalTiles[1].kill();
+                }
+            };
+            for (var x = 0; x < tiles.length; x++) {
+                _loop_1(x);
+            }
             this.cleanGrid();
         }
     };
     BlackMagicLogic.prototype.canUsePower = function () {
         var tiles = this.getTilesOrdered();
-        if (tiles.length > 1 && tiles[0].value === tiles[1].value) {
+        if (tiles.length > 5) {
             return true;
         }
         else {

@@ -1,5 +1,7 @@
 import LogicalGrid from './../LogicalGrid';
 import GameboardConfig from './../../Config/GameboardConfig';
+import GridTile from './../../Objects/GridTile';
+import DiamondModel from './../../Models/DiamondModel';
 
 export default class GachaAddictionLogic extends LogicalGrid {
   constructor(gameboardConfig: GameboardConfig) {
@@ -49,5 +51,16 @@ export default class GachaAddictionLogic extends LogicalGrid {
     } else {
       return false;
     }
+  }
+
+  getPowerInfo() {
+    return new DiamondModel('diamond', this.gameboardConfig.requiredDiamonds);
+  }
+
+  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
+    nextTile.value *= 2;
+    previousTile.value = 0;
+    previousTile.nextTile = nextTile;
+    this.gameboardConfig.mergeTileSignal.dispatch();
   }
 }

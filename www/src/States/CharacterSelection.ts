@@ -59,8 +59,6 @@ export default class CharacterSelection extends Phaser.State {
 
     this.preloadBar = this.spriteFactory.makeCentered(300, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
-
-    this.load.image('witch', 'assets/images/witch.jpeg');
   }
 
   create() {
@@ -88,8 +86,8 @@ export default class CharacterSelection extends Phaser.State {
         'Select a random character',
         '',
         'sound.wav',
-        '',
-        '?????',
+        null,
+        null,
         'Decision paralysis? Just click the button and start playing, you fool!'
       )
     );
@@ -174,7 +172,7 @@ export default class CharacterSelection extends Phaser.State {
       return tile.id === this.selectedCharacter.id;
     }.bind(this)) ;
     this.game.sound.play(`${this.selectedCharacter.id}-sfx`, 1);
-    this.state.start('Unranked', true, false, this.gameboardConfig);
+    this.state.start('GameboardLoader', true, false, this.gameboardConfig);
   }
 
   setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {
@@ -211,11 +209,11 @@ export default class CharacterSelection extends Phaser.State {
       this.selectedPower = this.textFactory.make(
         20,
         900,
-        `${char.powerName}`,
+        `${char.power ? char.power : "?????"}`,
         40
       );
     } else {
-      this.selectedPower.setText(`${char.powerName}`);
+      this.selectedPower.setText(`${char.power ? char.power : "?????"}`);
     }
 
     if (!this.selectedSummary) {

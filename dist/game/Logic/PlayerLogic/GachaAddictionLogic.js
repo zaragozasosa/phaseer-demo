@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var LogicalGrid_1 = require("./../LogicalGrid");
+var DiamondModel_1 = require("./../../Models/DiamondModel");
 var GachaAddictionLogic = (function (_super) {
     __extends(GachaAddictionLogic, _super);
     function GachaAddictionLogic(gameboardConfig) {
@@ -49,6 +50,15 @@ var GachaAddictionLogic = (function (_super) {
         else {
             return false;
         }
+    };
+    GachaAddictionLogic.prototype.getPowerInfo = function () {
+        return new DiamondModel_1.default('diamond', this.gameboardConfig.requiredDiamonds);
+    };
+    GachaAddictionLogic.prototype.mergeTile = function (nextTile, previousTile) {
+        nextTile.value *= 2;
+        previousTile.value = 0;
+        previousTile.nextTile = nextTile;
+        this.gameboardConfig.mergeTileSignal.dispatch();
     };
     return GachaAddictionLogic;
 }(LogicalGrid_1.default));

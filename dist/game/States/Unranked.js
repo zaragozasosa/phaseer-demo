@@ -10,14 +10,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Gameboard_1 = require("./../Objects/Gameboard");
+var GameboardFactory_1 = require("./../Objects/GameboardFactory");
 var Unranked = (function (_super) {
     __extends(Unranked, _super);
     function Unranked() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Unranked.prototype.init = function (gameboardConfig) {
-        this.gameboard = new Gameboard_1.default(gameboardConfig);
+        this.gameboard = GameboardFactory_1.default.create(gameboardConfig);
     };
     Unranked.prototype.update = function () {
         this.gameboard.update();

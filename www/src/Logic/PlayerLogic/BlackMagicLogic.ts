@@ -7,19 +7,24 @@ export default class BlackMagicLogic extends LogicalGrid {
   }
 
   power() {
-    var tiles = this.getTilesOrdered();
+    var tiles = this.getTilesOrdered(true);
+
     if (this.canUsePower()) {
-      var mergeTile = tiles[0];
-      var deleteTile = tiles[1];
-      mergeTile.duplicate();
-      deleteTile.kill();
+      for (let x = 0; x < tiles.length; x++) {
+        let value = tiles[x].value;
+        let equalTiles = tiles.filter(x => x.value === value && x.isAlive);
+        if (equalTiles.length > 1) {
+          equalTiles[0].duplicate();
+          equalTiles[1].kill();
+        }
+      }
       this.cleanGrid();
     }
   }
 
   canUsePower() {
     var tiles = this.getTilesOrdered();
-    if (tiles.length > 1 && tiles[0].value === tiles[1].value) {
+    if (tiles.length > 5) {
       return true;
     } else {
       return false;

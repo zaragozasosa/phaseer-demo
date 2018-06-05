@@ -1,9 +1,35 @@
 import Factory from './Base/Factory';
+import GameboardConfig from './../Config/GameboardConfig';
+import { Config } from './../Config/Config';
+
 export default class AudioFactory extends Factory {
   playSound(id: string, loop = false) {
     let config = this.config.sound;
     let vol = config.volumeLevels[config.actualVolumeIndex];
     this.game.sound.play(id, config.sfxVolume * vol, loop);
+  }
+
+  playTwoSounds(gameConfig: GameboardConfig) {
+    let config = this.config.sound;
+    let vol = config.volumeLevels[config.actualVolumeIndex];
+    this.game.sound.play(gameConfig.mainTile.sfxLabel, config.sfxVolume * vol);
+
+    this.game.time.events.add(
+      500,
+      function() {
+        if (gameConfig.mainTile.friendId) {
+          this.game.sound.play(
+            gameConfig.mainTile.friendSfxLabel,
+            config.sfxVolume * vol
+          );
+        } else {
+          this.game.sound.play(
+            gameConfig.mainTile.sfxLabel,
+            config.sfxVolume * vol
+          );
+        }
+      }.bind(this)
+    );
   }
 
   play(id: string, loop = true) {
