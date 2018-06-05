@@ -36,8 +36,8 @@ var ReportedForRPLogic = (function (_super) {
     };
     ReportedForRPLogic.prototype.reportedPower = function () {
         var _this = this;
-        var tiles = this.grid.filter(function (x) { return x && x.value <= 2 * _this.gameboardConfig.minimumValue; });
-        if (tiles.length) {
+        var tiles = this.grid.filter(function (x) { return x && x.value < 4 * _this.gameboardConfig.minimumValue; });
+        if (tiles.length < this.grid.filter(function (x) { return x; }).length) {
             for (var x = 0; x < tiles.length; x++) {
                 if (tiles[x].value < 4 * this.gameboardConfig.minimumValue) {
                     tiles[x].kill();

@@ -28,9 +28,9 @@ export default class ReportedForRPLogic extends LogicalGrid {
 
   reportedPower() {
     var tiles = this.grid.filter(
-      x => x && x.value <= 2 * this.gameboardConfig.minimumValue
+      x => x && x.value < 4 * this.gameboardConfig.minimumValue
     );
-    if (tiles.length) {
+    if (tiles.length < this.grid.filter(x => x).length) {
       for (let x = 0; x < tiles.length; x++) {
         if (tiles[x].value < 4 * this.gameboardConfig.minimumValue) {
           tiles[x].kill();
