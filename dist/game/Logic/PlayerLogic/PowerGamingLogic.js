@@ -18,6 +18,7 @@ var PowerGamingLogic = (function (_super) {
     }
     PowerGamingLogic.prototype.power = function () {
         var tiles = this.getTilesOrdered();
+        debugger;
         if (this.canUsePower()) {
             for (var x = 0; x < tiles.length; x++) {
                 if (tiles[x].value < this.gameboardConfig.minimumValue * 32) {

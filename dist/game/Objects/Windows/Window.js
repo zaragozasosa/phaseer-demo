@@ -13,29 +13,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
 var Window = (function (_super) {
     __extends(Window, _super);
-    function Window() {
-        return _super.call(this) || this;
+    function Window(windowType) {
+        if (windowType === void 0) { windowType = Window.DEFAULT_WINDOW; }
+        var _this = _super.call(this) || this;
+        _this.windowType = windowType;
+        return _this;
     }
-    Window.prototype.init = function (message, sprites, rect) {
+    Window.prototype.init = function (elements, sprites, rect) {
         if (sprites === void 0) { sprites = null; }
         if (rect === void 0) { rect = null; }
         if (!rect) {
             rect = this.tools.graphic.makeWindowRect();
         }
         this.rect = rect;
-        this.background = this.tools.graphic.addWindowBackground();
+        this.background = this.tools.graphic.addWindowBackground(this.backgroundAlpha);
         var background = this.background;
         if (sprites) {
             this.sprites = sprites;
             rect.addChild(sprites);
         }
-        this.message = message;
-        rect.addChild(message);
+        this.elements = elements;
+        rect.addChild(elements);
         background.addChild(rect);
         this.tools.misc.bringToTop(rect);
         background.alpha = 0;
         this.showTween = this.tools.misc.tweenTo(background, { alpha: 1 });
         this.hideTween = this.tools.misc.tweenTo(background, { alpha: 0 });
+    };
+    Window.prototype.makeRect = function () {
     };
     Window.prototype.show = function () {
         this.showTween.start();
@@ -52,6 +57,9 @@ var Window = (function (_super) {
         this.tools.misc.removeTween(this.showTween);
         this.tools.misc.removeTween(this.hideTween);
     };
+    Window.DEFAULT_WINDOW = 1;
+    Window.DEFAULT_HIDE_BACKGROUND = 2;
+    Window.SMALL_CENTER = 3;
     return Window;
 }(Base_1.default));
 exports.default = Window;

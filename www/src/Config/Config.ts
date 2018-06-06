@@ -90,11 +90,14 @@ export class ColorSettings {
   text: string;
   altText: string;
 
+  
+
   static readonly PRIMARY = 1;
   static readonly BACKGROUND = 2;
   static readonly SELECTED = 3;
   static readonly TEXT = 4;
   static readonly ALT_TEXT = 5;
+  static readonly BLACK = 5;
 }
 
 export class SafeZone {

@@ -18,6 +18,8 @@ var Factory = (function () {
                 return this.config.color.selected;
             case Config_1.ColorSettings.BACKGROUND:
                 return this.config.color.background;
+            case Config_1.ColorSettings.BLACK:
+                return '#000000';
         }
         return '#FFFFFF';
     };

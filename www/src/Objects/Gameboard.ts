@@ -79,6 +79,7 @@ export default class Gameboard extends Base {
 
   activatePower() {
     this.actionButton.kill();
+    this.grid.activatePower();
     let window = new PowerWindow(this.gameboardConfig.mainTile);
     this.tools.audio.playTwoSounds(this.gameboardConfig);
   }

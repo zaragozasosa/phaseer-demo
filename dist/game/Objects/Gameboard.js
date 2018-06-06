@@ -60,6 +60,7 @@ var Gameboard = (function (_super) {
     };
     Gameboard.prototype.activatePower = function () {
         this.actionButton.kill();
+        this.grid.activatePower();
         var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
         this.tools.audio.playTwoSounds(this.gameboardConfig);
     };

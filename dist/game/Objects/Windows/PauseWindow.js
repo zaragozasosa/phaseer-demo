@@ -16,9 +16,9 @@ var PauseWindow = (function (_super) {
     __extends(PauseWindow, _super);
     function PauseWindow(character, y) {
         if (y === void 0) { y = 500; }
-        var _this = _super.call(this, character, y, false) || this;
+        var _this = _super.call(this, character, y, false, 1) || this;
         var text = _this.tools.text.makeXBounded(380, '- PAUSED -', 70, 'center', Config_1.ColorSettings.PRIMARY);
-        _this.message.add(text);
+        _this.elements.add(text);
         _this.show();
         return _this;
     }

@@ -48,8 +48,8 @@ var GraphicsFactory = (function (_super) {
         graphics.drawRect(xPad, yPad, safeZone.bgWidth, safeZone.bgHeight);
         return graphics.endFill();
     };
-    GraphicsFactory.prototype.addWindowBackground = function () {
-        return this.addBackground(Config_1.ColorSettings.BACKGROUND, 0.9);
+    GraphicsFactory.prototype.addWindowBackground = function (alpha) {
+        return this.addBackground(Config_1.ColorSettings.BLACK, alpha);
     };
     GraphicsFactory.prototype.makeRect = function (x, y, length, height, lineWidth) {
         if (lineWidth === void 0) { lineWidth = 0; }

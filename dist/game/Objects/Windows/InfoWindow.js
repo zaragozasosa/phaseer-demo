@@ -14,9 +14,10 @@ var Window_1 = require("./Window");
 var Config_1 = require("./../../Config/Config");
 var InfoWindow = (function (_super) {
     __extends(InfoWindow, _super);
-    function InfoWindow(character, y, pressAnyKey) {
+    function InfoWindow(character, y, pressAnyKey, alpha) {
         if (y === void 0) { y = 420; }
         if (pressAnyKey === void 0) { pressAnyKey = true; }
+        if (alpha === void 0) { alpha = 0.9; }
         var _this = _super.call(this) || this;
         var group = _this.tools.misc.addGroup();
         var text = _this.tools.text.make(70, y, 'Power: ' + character.power.name, 50);
@@ -26,7 +27,6 @@ var InfoWindow = (function (_super) {
         if (character.power.requeriments) {
             var newY = y + 70 + 100;
             var descriptionLen = character.power.description.length;
-            debugger;
             var textY = newY + Math.floor(descriptionLen / 35) * 50;
             var text3 = _this.tools.text.make(70, textY, 'Requirements:', 40);
             text2.addChild(text3);
@@ -35,7 +35,7 @@ var InfoWindow = (function (_super) {
             group.add(text4);
         }
         if (pressAnyKey) {
-            var press = _this.tools.text.make(70, 950, 'Press any key to continue.', 50, Config_1.ColorSettings.PRIMARY);
+            var press = _this.tools.text.makeXBounded(950, 'Press any key to continue.', 50, 'center', Config_1.ColorSettings.PRIMARY);
             group.add(press);
         }
         _this.init(group);

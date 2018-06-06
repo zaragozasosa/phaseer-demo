@@ -40,7 +40,6 @@ var CharacterSelection = (function (_super) {
             this.load.audio("" + sprite.sfxLabel, [sfx]);
         }
         this.load.image('random', 'assets/images/tiles/random.png');
-        this.load.audio("random-sfx", 'assets/sfx/random-sound.wav');
         this.preloadBar = this.spriteFactory.makeCentered(300, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
     };

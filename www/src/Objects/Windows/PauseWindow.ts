@@ -4,7 +4,7 @@ import TileModel from './../../Models/TileModel';
 
 export default class PauseWindow extends InfoWindow {
   constructor(character: TileModel, y = 500) {
-    super(character, y, false);
+    super(character, y, false, 1);
 
     let text = this.tools.text.makeXBounded(
       380,
@@ -14,7 +14,7 @@ export default class PauseWindow extends InfoWindow {
       ColorSettings.PRIMARY
     );
 
-    this.message.add(text);
+    this.elements.add(text);
 
     this.show();
   }

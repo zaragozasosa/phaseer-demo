@@ -21,6 +21,8 @@ export default class Factory {
       return this.config.color.selected;
       case ColorSettings.BACKGROUND:
       return this.config.color.background;
+      case ColorSettings.BLACK:
+      return '#000000';
     }
 
     return '#FFFFFF';

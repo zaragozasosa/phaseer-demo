@@ -38,6 +38,9 @@ var GameboardLoader = (function (_super) {
         this.load.image('witch', 'assets/images/witch.jpeg');
         this.cursor = new InputManager_1.default(Config_1.Singleton.get().config);
     };
+    GameboardLoader.prototype.create = function () {
+        this.preloadBar.kill();
+    };
     GameboardLoader.prototype.update = function () {
         if (this.game.input.activePointer.isDown) {
             this.state.start('Unranked', true, false, this.gameboardConfig);

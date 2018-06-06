@@ -16,9 +16,9 @@ var PowerWindow = (function (_super) {
     __extends(PowerWindow, _super);
     function PowerWindow(character) {
         var _this = _super.call(this) || this;
-        var messages = _this.tools.misc.addGroup();
+        var elements = _this.tools.misc.addGroup();
         var message = _this.tools.text.makeXBounded(870, character.power.name + '!', 70, 'center', Config_1.ColorSettings.PRIMARY);
-        messages.add(message);
+        elements.add(message);
         var sprites = _this.tools.misc.addGroup();
         if (character.friendId) {
             sprites.add(_this.tools.sprite.createSprite(70, 440, character.id, 2));
@@ -27,7 +27,7 @@ var PowerWindow = (function (_super) {
         else {
             sprites.add(_this.tools.sprite.makeCentered(200, character.id, 2.5));
         }
-        _this.init(messages, sprites);
+        _this.init(elements, sprites);
         _this.sprites.alpha = 0;
         var spritesTween = _this.tools.misc.tweenTo(_this.sprites, { alpha: 1 }, 300);
         _this.showTween.chain(spritesTween);

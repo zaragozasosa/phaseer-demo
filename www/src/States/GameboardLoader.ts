@@ -36,6 +36,10 @@ export default class GameboardLoader extends Phaser.State {
     this.cursor = new InputManager(Singleton.get().config);    
   }
 
+  create() {
+    this.preloadBar.kill();
+  }
+
   update() {
     if (this.game.input.activePointer.isDown) {
       this.state.start('Unranked', true, false, this.gameboardConfig);

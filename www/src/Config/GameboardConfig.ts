@@ -37,7 +37,7 @@ export default class GameboardConfig {
     this.minimumValue = 1;
     this.bulletAmmo = 6;
     this.diceAmmo = 5;
-    this.requiredDiamonds = 40;
+    this.requiredDiamonds = 50;
     this.createPowers();
     this.createTiles();
   }
@@ -154,7 +154,7 @@ export default class GameboardConfig {
         'B.R.E.N.',
         'brotherhating ridiculously efficient nerd.py',
         'meushijyo',
-        'wow.wav',
+        'yawn.mp3',
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'
@@ -219,7 +219,7 @@ export default class GameboardConfig {
         'Kinjo',
         'Kinjo Goldbar',
         'eleve',
-        'coin.wav',
+        'coin.mp3',
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."

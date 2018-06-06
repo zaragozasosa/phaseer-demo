@@ -91,6 +91,7 @@ var ColorSettings = (function () {
     ColorSettings.SELECTED = 3;
     ColorSettings.TEXT = 4;
     ColorSettings.ALT_TEXT = 5;
+    ColorSettings.BLACK = 5;
     return ColorSettings;
 }());
 exports.ColorSettings = ColorSettings;
