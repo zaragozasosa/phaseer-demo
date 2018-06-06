@@ -208,11 +208,11 @@ export default class CharacterSelection extends Phaser.State {
       this.selectedPower = this.textFactory.make(
         20,
         900,
-        `${char.power ? char.power : "?????"}`,
+        `${char.power ? char.power.name : "?????"}`,
         40
       );
     } else {
-      this.selectedPower.setText(`${char.power ? char.power : "?????"}`);
+      this.selectedPower.setText(`${char.power ? char.power.name : "?????"}`);
     }
 
     if (!this.selectedSummary) {

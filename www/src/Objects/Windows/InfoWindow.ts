@@ -2,8 +2,14 @@ import Window from './Window';
 import { ColorSettings } from './../../Config/Config';
 import TileModel from './../../Models/TileModel';
 export default class InfoWindow extends Window {
-  constructor(character: TileModel, y = 420, pressAnyKey = true, alpha= 0.9) {
-    super();
+  constructor(
+    character: TileModel,
+    y = 280,
+    pressAnyKey = true,
+    window = Window.DEFAULT_WINDOW
+  ) {
+
+    super(window);
     let group = this.tools.misc.addGroup();
     let text = this.tools.text.make(
       70,
@@ -50,7 +56,7 @@ export default class InfoWindow extends Window {
 
     if (pressAnyKey) {
       let press = this.tools.text.makeXBounded(
-        950,
+        y + 550,
         'Press any key to continue.',
         50,
         'center',

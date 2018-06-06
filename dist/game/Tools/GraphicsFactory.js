@@ -65,9 +65,19 @@ var GraphicsFactory = (function (_super) {
         graphics.endFill();
         return rect;
     };
-    GraphicsFactory.prototype.makeWindowRect = function () {
-        var w = this.config.window;
-        return this.makeRect(w.defaultX, w.defaultY, w.defaultWidth, w.defaultHeight, w.defaultLineWidth);
+    GraphicsFactory.prototype.makeWindowRect = function (x, y, w, h, line) {
+        if (x === void 0) { x = null; }
+        if (y === void 0) { y = null; }
+        if (w === void 0) { w = null; }
+        if (h === void 0) { h = null; }
+        if (line === void 0) { line = null; }
+        var win = this.config.window;
+        if (x && y && w && h && w && line) {
+            return this.makeRect(x, y, w, h, line);
+        }
+        else {
+            return this.makeRect(win.defaultX, win.defaultY * 2 / 3, win.defaultWidth, win.defaultHeight, win.defaultLineWidth);
+        }
     };
     return GraphicsFactory;
 }(Factory_1.default));

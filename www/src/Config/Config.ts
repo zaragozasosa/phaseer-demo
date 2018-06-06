@@ -68,6 +68,8 @@ export class Config {
 }
 
 export class WindowSettings {
+  centerHeight: number;
+  centerY: number;
   defaultHeight: number;
   defaultWidth: number;
   defaultLineWidth: number;

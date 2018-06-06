@@ -48,14 +48,18 @@ export default class MultiButtonGameboard extends Gameboard {
     }
   }
 
-  protected toogleButton(disabled: boolean) {
+  protected toogleButton(buttonStatus: number) {
     for (let button of this.buttons.getAll()) {
-      if (disabled || this.isButtonSleeping) {
-        button.tint = Phaser.Color.GRAY;
-        button.inputEnabled = false;
-      } else {
+      if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
         button.tint = Phaser.Color.WHITE;
         button.inputEnabled = true;
+      }
+      if (buttonStatus === GameboardConfig.BUTTON_SLEEP) {
+        button.tint = Phaser.Color.WHITE;
+        button.inputEnabled = false;
+      } else if (buttonStatus === GameboardConfig.BUTTON_SLEEP_DISABLED) {
+        button.tint = Phaser.Color.GRAY;
+        button.inputEnabled = false;
       }
     }
   }

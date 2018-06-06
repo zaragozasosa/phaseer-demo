@@ -19,6 +19,7 @@ var GameboardConfig = (function () {
         this.requiredDiamonds = 50;
         this.createPowers();
         this.createTiles();
+        this.quitSignal = new Phaser.Signal();
     }
     GameboardConfig.prototype.createPowers = function () {
         var powers = [];
@@ -69,6 +70,9 @@ var GameboardConfig = (function () {
         }
         this.tiles = list;
     };
+    GameboardConfig.BUTTON_ACTIVE = 1;
+    GameboardConfig.BUTTON_SLEEP = 2;
+    GameboardConfig.BUTTON_SLEEP_DISABLED = 3;
     return GameboardConfig;
 }());
 exports.default = GameboardConfig;

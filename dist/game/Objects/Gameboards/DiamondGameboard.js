@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
+var GameboardConfig_1 = require("./../../Config/GameboardConfig");
 var PowerWindow_1 = require("./../Windows/PowerWindow");
 var DiamondGameboard = (function (_super) {
     __extends(DiamondGameboard, _super);
@@ -44,12 +45,12 @@ var DiamondGameboard = (function (_super) {
     };
     DiamondGameboard.prototype.tryEnableButton = function () {
         if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-            this.toogleButton(false);
+            this.toogleButton(GameboardConfig_1.default.BUTTON_ACTIVE);
         }
     };
     DiamondGameboard.prototype.tryDisableButton = function () {
         if (this.diamonds < this.diamondModel.requiredDiamonds) {
-            this.toogleButton(true);
+            this.toogleButton(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
         }
     };
     return DiamondGameboard;

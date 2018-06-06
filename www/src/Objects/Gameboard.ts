@@ -17,11 +17,9 @@ export default class Gameboard extends Base {
   header: Phaser.Text;
   points: number;
   movements: number;
-  muteToogleSprite: Phaser.Sprite;
   timer: Phaser.Timer;
   timerSeconds: number;
   actionButton: Phaser.Button;
-  isButtonSleeping: boolean;
 
   isPaused: boolean;
   pausedWindow: PauseWindow;
@@ -42,8 +40,8 @@ export default class Gameboard extends Base {
 
     let toogleButtonSignal = new Phaser.Signal();
     toogleButtonSignal.add(
-      function(disabled) {
-        this.toogleButton(disabled);
+      function(status) {
+        this.toogleButton(status);
       }.bind(this)
     );
 
@@ -53,13 +51,13 @@ export default class Gameboard extends Base {
     this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
     this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
     this.gameboardConfig.chargeSignal = new Phaser.Signal();
-    
+
     this.grid = GridFactory.create(gameboardConfig);
     this.isPaused = false;
     this.movements = 0;
     this.points = this.grid.calculatePoints();
     this.addHeader();
-    this.addVolumeButton();
+    this.addMenuButton();
     this.addPowerButton();
     this.addTimer();
 
@@ -84,14 +82,17 @@ export default class Gameboard extends Base {
     this.tools.audio.playTwoSounds(this.gameboardConfig);
   }
 
-
-  protected toogleButton(disabled: boolean) {
-    if (disabled || this.isButtonSleeping) {
-      this.actionButton.tint = Phaser.Color.GRAY;
-      this.actionButton.inputEnabled = false;
-    } else {
-      this.actionButton.tint = Phaser.Color.WHITE;
+  protected toogleButton(buttonStatus: number) {
+    if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
       this.actionButton.inputEnabled = true;
+      this.actionButton.tint = Phaser.Color.WHITE;
+    }
+    if (buttonStatus === GameboardConfig.BUTTON_SLEEP) {
+      this.actionButton.inputEnabled = false;
+      this.actionButton.tint = Phaser.Color.WHITE;
+    } else if (buttonStatus === GameboardConfig.BUTTON_SLEEP_DISABLED) {
+      this.actionButton.inputEnabled = false;
+      this.actionButton.tint = Phaser.Color.GRAY;
     }
   }
 
@@ -100,11 +101,15 @@ export default class Gameboard extends Base {
     this.updateHeader();
   }
 
-  private addVolumeButton() {
-    this.muteToogleSprite = this.tools.sprite.createVolumeIcon();
-    this.muteToogleSprite.events.onInputDown.add(
+  private addMenuButton() {
+    let menu = this.tools.sprite.createSprite(840, 30, 'menu', 0.8);
+    menu.inputEnabled = true;
+
+    menu.events.onInputDown.add(
       function() {
-        this.tools.audio.changeAudioLevel(this.muteToogleSprite);
+        if (!this.isPaused) {
+          this.pauseToogle();
+        }
       }.bind(this)
     );
   }
@@ -115,24 +120,15 @@ export default class Gameboard extends Base {
       1250,
       ['power'],
       function() {
-        this.activatePower();
+        if (!this.isPaused) {
+          this.activatePower();
+        }
       }.bind(this),
       1.5
     );
 
-    this.isButtonSleeping = true;
-
     this.actionButton.inputEnabled = false;
     this.actionButton.tint = Phaser.Color.GRAY;
-    let timer = this.tools.misc.createTimer();
-
-    timer.start();
-    timer.add(
-      1000 * this.gameboardConfig.powerDelaySeconds,
-      function() {
-        this.isButtonSleeping = false;
-      }.bind(this)
-    );
   }
 
   private updateScore(addToMovement = true) {
@@ -173,24 +169,15 @@ export default class Gameboard extends Base {
       this.pausedWindow.hideAndDestroy();
       this.isPaused = false;
     } else {
-
-      this.pausedWindow = new PauseWindow(this.gameboardConfig.mainTile);
-      // this.pausedWindow = new Window();
-      // let group = this.tools.misc.addGroup();
-      // let text = this.tools.text.makeXBounded(400, '- PAUSED -', 80, 'center', ColorSettings.PRIMARY);
-      // let text2 = this.tools.text.make(80, 560, 'Power name:', 50);
-      // let text3 = this.tools.text.make(80, 630, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
-
-      // let text4 = this.tools.text.make(80, 800, 'Requirements:', 50);
-      // let text5 = this.tools.text.make(80, 860, 'Description blah blah blah blah', 40, ColorSettings.ALT_TEXT);
-      // group.add(text);
-      // group.add(text2);
-      // group.add(text3);
-      // group.add(text4);
-      // group.add(text5);
-
-      // this.pausedWindow.init(group);
-      // this.pausedWindow.show();
+      this.pausedWindow = new PauseWindow(
+        this.gameboardConfig.mainTile,
+        function() {
+          this.pauseToogle();
+        }.bind(this),
+        function() {
+          // this.gameboardConfig.quitSignal.dispatch();
+        }.bind(this)
+      );
       this.isPaused = true;
     }
   }

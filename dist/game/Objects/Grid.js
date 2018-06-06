@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../Base");
+var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var Grid = (function (_super) {
     __extends(Grid, _super);
     function Grid(gameboardConfig, gridLogic) {
@@ -45,10 +46,13 @@ var Grid = (function (_super) {
     };
     Grid.prototype.buttonDisableMightChange = function () {
         if (!this.animating && this.canUsePower()) {
-            this.gameboardConfig.toogleButtonSignal.dispatch(false);
+            this.gameboardConfig.toogleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_ACTIVE);
+        }
+        else if (this.animating && this.canUsePower()) {
+            this.gameboardConfig.toogleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_SLEEP);
         }
         else {
-            this.gameboardConfig.toogleButtonSignal.dispatch(true);
+            this.gameboardConfig.toogleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
         }
     };
     Grid.prototype.manageCollisions = function () {

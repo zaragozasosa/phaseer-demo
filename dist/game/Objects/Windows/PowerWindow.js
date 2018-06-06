@@ -15,22 +15,23 @@ var Config_1 = require("./../../Config/Config");
 var PowerWindow = (function (_super) {
     __extends(PowerWindow, _super);
     function PowerWindow(character) {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, Window_1.default.SMALL_CENTER) || this;
+        var y = _this.config.window.centerY;
         var elements = _this.tools.misc.addGroup();
-        var message = _this.tools.text.makeXBounded(870, character.power.name + '!', 70, 'center', Config_1.ColorSettings.PRIMARY);
-        elements.add(message);
         var sprites = _this.tools.misc.addGroup();
         if (character.friendId) {
-            sprites.add(_this.tools.sprite.createSprite(70, 440, character.id, 2));
-            sprites.add(_this.tools.sprite.createSprite(530, 440, character.friendId, 2));
+            sprites.add(_this.tools.sprite.createSprite(90, y + 250, character.id, 1.8));
+            sprites.add(_this.tools.sprite.createSprite(510, y + 250, character.friendId, 1.8));
         }
         else {
-            sprites.add(_this.tools.sprite.makeCentered(200, character.id, 2.5));
+            sprites.add(_this.tools.sprite.makeCentered(y, character.id, 2));
         }
         _this.init(elements, sprites);
         _this.sprites.alpha = 0;
         var spritesTween = _this.tools.misc.tweenTo(_this.sprites, { alpha: 1 }, 300);
         _this.showTween.chain(spritesTween);
+        var message = _this.tools.text.makeXBounded(y + 600, character.power.name + '!', 60, 'center', Config_1.ColorSettings.PRIMARY);
+        elements.add(message);
         _this.show();
         _this.tools.misc.runLater(2000, function () {
             this.hideAndDestroy();

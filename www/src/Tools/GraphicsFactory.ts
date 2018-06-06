@@ -1,5 +1,5 @@
 import Factory from './Base/Factory';
-import { ColorSettings } from './../Config/Config'
+import { ColorSettings } from './../Config/Config';
 export default class GraphicsFactory extends Factory {
   makeWall(x: number, y: number, long: number, tall: number): Phaser.Sprite {
     let game = this.game;
@@ -31,7 +31,7 @@ export default class GraphicsFactory extends Factory {
 
   addBackground(color = ColorSettings.BACKGROUND, alpha = 1) {
     let safeZone = this.config.safeZone;
-    let colorString  = this.getColor(color);
+    let colorString = this.getColor(color);
     let xPad = safeZone.bgPaddingX;
     let yPad = safeZone.bgPaddingY;
     var graphics = this.game.add.graphics(0, 0);
@@ -60,25 +60,24 @@ export default class GraphicsFactory extends Factory {
     var graphics = this.game.add.graphics(0, 0);
     graphics.lineStyle(lineWidth * config.scaleFactor, Phaser.Color.BLACK);
     graphics.beginFill(Phaser.Color.hexToRGB(color.background), 1);
-    let rect = graphics.drawRect(
-      posX,
-      posY,
-      length,
-      height
-    );
+    let rect = graphics.drawRect(posX, posY, length, height);
     graphics.endFill();
 
     return rect;
   }
 
-  makeWindowRect() {
-    let w = this.config.window;
-    return this.makeRect(
-      w.defaultX,
-      w.defaultY,
-      w.defaultWidth,      
-      w.defaultHeight,
-      w.defaultLineWidth
-    );
+  makeWindowRect(x = null, y = null, w = null, h = null, line = null) {
+    let win = this.config.window;
+    if (x && y && w && h && w && line) {
+      return this.makeRect(x, y, w, h, line);
+    } else {
+      return this.makeRect(
+        win.defaultX,
+        win.defaultY * 2/3,
+        win.defaultWidth,
+        win.defaultHeight,
+        win.defaultLineWidth
+      );
+    }
   }
 }

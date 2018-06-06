@@ -84,11 +84,11 @@ var SpriteFactory = (function (_super) {
         return sprite;
     };
     SpriteFactory.prototype.createVolumeIcon = function (posX, posY) {
-        if (posX === void 0) { posX = 850; }
-        if (posY === void 0) { posY = 10; }
+        if (posX === void 0) { posX = 600; }
+        if (posY === void 0) { posY = 1260; }
         var config = this.config.sound;
         var volId = config.volumeSprite + '-' + config.actualVolumeIndex;
-        var sprite = this.createSprite(posX, posY, volId, 1 / 3);
+        var sprite = this.createSprite(posX, posY, volId, 0.6);
         sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
         sprite.inputEnabled = true;
         return sprite;

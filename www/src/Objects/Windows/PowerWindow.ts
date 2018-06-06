@@ -3,25 +3,39 @@ import { ColorSettings } from './../../Config/Config';
 import TileModel from './../../Models/TileModel';
 export default class PowerWindow extends Window {
   constructor(character: TileModel) {
-    super();
+    super(Window.SMALL_CENTER);
+    let y = this.config.window.centerY;
     let elements = this.tools.misc.addGroup();
-    let message = this.tools.text.makeXBounded(870, character.power.name + '!', 70, 'center', ColorSettings.PRIMARY);
-    elements.add(message);
     let sprites = this.tools.misc.addGroup();
-    if(character.friendId) {
-      sprites.add(this.tools.sprite.createSprite(70, 440, character.id, 2));
-      sprites.add(this.tools.sprite.createSprite(530, 440, character.friendId, 2));  
+    if (character.friendId) {
+      sprites.add(this.tools.sprite.createSprite(90, y + 250, character.id, 1.8));
+      sprites.add(
+        this.tools.sprite.createSprite(510, y + 250, character.friendId, 1.8)
+      );
     } else {
-      sprites.add(this.tools.sprite.makeCentered(200, character.id, 2.5));
+      sprites.add(this.tools.sprite.makeCentered(y, character.id, 2));
     }
     this.init(elements, sprites);
     this.sprites.alpha = 0;
     let spritesTween = this.tools.misc.tweenTo(this.sprites, { alpha: 1 }, 300);
     this.showTween.chain(spritesTween);
+
+    let message = this.tools.text.makeXBounded(
+      y + 600,
+      character.power.name + '!',
+      60,
+      'center',
+      ColorSettings.PRIMARY
+    );
+    elements.add(message);
+
     this.show();
 
-    this.tools.misc.runLater(2000, function() {
-      this.hideAndDestroy();
-    }.bind(this));
+    this.tools.misc.runLater(
+      2000,
+      function() {
+        this.hideAndDestroy();
+      }.bind(this)
+    );
   }
 }

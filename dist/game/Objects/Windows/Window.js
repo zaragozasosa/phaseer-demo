@@ -16,40 +16,56 @@ var Window = (function (_super) {
     function Window(windowType) {
         if (windowType === void 0) { windowType = Window.DEFAULT_WINDOW; }
         var _this = _super.call(this) || this;
+        _this.defaultAlpha = 0.8;
         _this.windowType = windowType;
         return _this;
     }
-    Window.prototype.init = function (elements, sprites, rect) {
+    Window.prototype.init = function (elements, sprites) {
         if (sprites === void 0) { sprites = null; }
-        if (rect === void 0) { rect = null; }
-        if (!rect) {
-            rect = this.tools.graphic.makeWindowRect();
-        }
-        this.rect = rect;
-        this.background = this.tools.graphic.addWindowBackground(this.backgroundAlpha);
-        var background = this.background;
+        var rect = this.makeRect();
+        this.background = this.makeBackground();
         if (sprites) {
             this.sprites = sprites;
             rect.addChild(sprites);
         }
         this.elements = elements;
         rect.addChild(elements);
-        background.addChild(rect);
+        this.background.addChild(rect);
         this.tools.misc.bringToTop(rect);
-        background.alpha = 0;
-        this.showTween = this.tools.misc.tweenTo(background, { alpha: 1 });
-        this.hideTween = this.tools.misc.tweenTo(background, { alpha: 0 });
-    };
-    Window.prototype.makeRect = function () {
+        this.background.alpha = 0;
+        this.showTween = this.tools.misc.tweenTo(this.background, { alpha: 1 });
+        this.hideTween = this.tools.misc.tweenTo(this.background, { alpha: 0 });
     };
     Window.prototype.show = function () {
         this.showTween.start();
     };
-    Window.prototype.hide = function () {
-        this.hideTween.start();
-    };
     Window.prototype.hideAndDestroy = function () {
         this.hideTween.onComplete.add(this.destroy, this);
+        this.hideTween.start();
+    };
+    Window.prototype.makeRect = function () {
+        if (this.windowType === Window.SMALL_CENTER) {
+            var win = this.config.window;
+            var x = win.defaultX;
+            var line = win.defaultLineWidth;
+            var w = win.defaultWidth;
+            var y = win.centerY;
+            var h = win.centerHeight;
+            return this.tools.graphic.makeWindowRect(x, y, w, h, line);
+        }
+        else {
+            return this.tools.graphic.makeWindowRect();
+        }
+    };
+    Window.prototype.makeBackground = function () {
+        if (this.windowType === Window.DEFAULT_HIDE_BACKGROUND) {
+            return this.tools.graphic.addWindowBackground(1);
+        }
+        else {
+            return this.tools.graphic.addWindowBackground(this.defaultAlpha);
+        }
+    };
+    Window.prototype.hide = function () {
         this.hideTween.start();
     };
     Window.prototype.destroy = function () {

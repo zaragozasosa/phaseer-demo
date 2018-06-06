@@ -46,13 +46,13 @@ export default class DiamondGameboard extends Gameboard {
 
   private tryEnableButton() {
     if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-      this.toogleButton(false);
+      this.toogleButton(GameboardConfig.BUTTON_ACTIVE);
     }
   }
 
   private tryDisableButton() {
     if (this.diamonds < this.diamondModel.requiredDiamonds) {
-      this.toogleButton(true);
+      this.toogleButton(GameboardConfig.BUTTON_SLEEP_DISABLED);
     }
   }
 }

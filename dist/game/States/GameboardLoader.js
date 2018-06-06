@@ -36,6 +36,7 @@ var GameboardLoader = (function (_super) {
         this.load.image('volume-2', 'assets/images/volume-2.png');
         this.load.spritesheet('power', 'assets/images/power.png', 249, 93);
         this.load.image('witch', 'assets/images/witch.jpeg');
+        this.load.image('menu', 'assets/images/menu.png');
         this.cursor = new InputManager_1.default(Config_1.Singleton.get().config);
     };
     GameboardLoader.prototype.create = function () {

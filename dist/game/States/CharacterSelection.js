@@ -134,10 +134,10 @@ var CharacterSelection = (function (_super) {
             this.selectedFullName.setText(char.fullName);
         }
         if (!this.selectedPower) {
-            this.selectedPower = this.textFactory.make(20, 900, "" + (char.power ? char.power : "?????"), 40);
+            this.selectedPower = this.textFactory.make(20, 900, "" + (char.power ? char.power.name : "?????"), 40);
         }
         else {
-            this.selectedPower.setText("" + (char.power ? char.power : "?????"));
+            this.selectedPower.setText("" + (char.power ? char.power.name : "?????"));
         }
         if (!this.selectedSummary) {
             this.selectedSummary = this.textFactory.makeXBounded(1040, char.summary, 35, 'left', Config_1.ColorSettings.ALT_TEXT);

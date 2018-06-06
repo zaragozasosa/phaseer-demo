@@ -22,7 +22,13 @@ export default class GameboardConfig {
   mergeTileSignal: Phaser.Signal;
   chargeSignal: Phaser.Signal;
 
+  quitSignal: Phaser.Signal;
+
   powers: Array<PowerModel>;
+
+  static readonly BUTTON_ACTIVE = 1;
+  static readonly BUTTON_SLEEP = 2;
+  static readonly BUTTON_SLEEP_DISABLED = 3;
 
   constructor() {
     this.arraySize = 3;
@@ -40,6 +46,8 @@ export default class GameboardConfig {
     this.requiredDiamonds = 50;
     this.createPowers();
     this.createTiles();
+
+    this.quitSignal = new Phaser.Signal();
   }
 
   createPowers() {

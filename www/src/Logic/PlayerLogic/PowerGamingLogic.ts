@@ -8,7 +8,6 @@ export default class PowerGamingLogic extends LogicalGrid {
 
   power() {
     var tiles = this.getTilesOrdered();
-    debugger;
     if (this.canUsePower()) {
       for (let x = 0; x < tiles.length; x++) {
         if (tiles[x].value < this.gameboardConfig.minimumValue * 32) {

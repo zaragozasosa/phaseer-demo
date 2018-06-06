@@ -95,10 +95,10 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
-  createVolumeIcon(posX = 850, posY = 10) {
+  createVolumeIcon(posX = 600, posY = 1260) {
     let config = this.config.sound;
     let volId = config.volumeSprite + '-' + config.actualVolumeIndex;
-    let sprite = this.createSprite(posX, posY, volId, 1 / 3);
+    let sprite = this.createSprite(posX, posY, volId, 0.6);
     sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
 
     sprite.inputEnabled = true;

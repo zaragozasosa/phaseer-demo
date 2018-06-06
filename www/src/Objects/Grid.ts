@@ -48,9 +48,17 @@ export default abstract class Grid extends Base {
 
   private buttonDisableMightChange() {
     if (!this.animating && this.canUsePower()) {
-      this.gameboardConfig.toogleButtonSignal.dispatch(false);
+      this.gameboardConfig.toogleButtonSignal.dispatch(
+        GameboardConfig.BUTTON_ACTIVE
+      );
+    } else if (this.animating && this.canUsePower()) {
+      this.gameboardConfig.toogleButtonSignal.dispatch(
+        GameboardConfig.BUTTON_SLEEP
+      );
     } else {
-      this.gameboardConfig.toogleButtonSignal.dispatch(true);
+      this.gameboardConfig.toogleButtonSignal.dispatch(
+        GameboardConfig.BUTTON_SLEEP_DISABLED
+      );
     }
   }
 

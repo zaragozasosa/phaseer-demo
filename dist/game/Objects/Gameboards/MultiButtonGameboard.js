@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
+var GameboardConfig_1 = require("./../../Config/GameboardConfig");
 var PowerWindow_1 = require("./../Windows/PowerWindow");
 var MultiButtonGameboard = (function (_super) {
     __extends(MultiButtonGameboard, _super);
@@ -45,16 +46,20 @@ var MultiButtonGameboard = (function (_super) {
             this.buttons.removeAll(true);
         }
     };
-    MultiButtonGameboard.prototype.toogleButton = function (disabled) {
+    MultiButtonGameboard.prototype.toogleButton = function (buttonStatus) {
         for (var _i = 0, _a = this.buttons.getAll(); _i < _a.length; _i++) {
             var button = _a[_i];
-            if (disabled || this.isButtonSleeping) {
-                button.tint = Phaser.Color.GRAY;
-                button.inputEnabled = false;
-            }
-            else {
+            if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE) {
                 button.tint = Phaser.Color.WHITE;
                 button.inputEnabled = true;
+            }
+            if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP) {
+                button.tint = Phaser.Color.WHITE;
+                button.inputEnabled = false;
+            }
+            else if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP_DISABLED) {
+                button.tint = Phaser.Color.GRAY;
+                button.inputEnabled = false;
             }
         }
     };
