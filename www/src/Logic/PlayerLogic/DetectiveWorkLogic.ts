@@ -106,7 +106,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
       );
       this.set(posX, posY, tile);
       this.tilesGroup.add(tile.getGroup);
-
+      this.direction = null;
       this.makeGhost = false;
       this.gameboardConfig.turnsSignal.add(
         function() {

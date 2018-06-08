@@ -104,6 +104,7 @@ var ReportedForRPLogic = (function (_super) {
             var tile_1 = new GridTile_1.default(posX, posY, this.gameboardConfig, null, this.ghostTileValue, true, this.turnsToDisappear);
             this.set(posX, posY, tile_1);
             this.tilesGroup.add(tile_1.getGroup);
+            this.direction = null;
             this.makeGhost = false;
             this.gameboardConfig.turnsSignal.add(function () {
                 if (tile_1.checkTurns()) {
