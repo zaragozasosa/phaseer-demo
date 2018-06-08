@@ -50,6 +50,16 @@ var MiscFactory = (function (_super) {
             functionToCall();
         }.bind(this));
     };
+    MiscFactory.prototype.shuffleUniqueArray = function (list) {
+        var newList = [];
+        while (newList.length !== list.length) {
+            var element = this.game.rnd.pick(list);
+            if (newList.lastIndexOf(element) === -1) {
+                newList.push(element);
+            }
+        }
+        return newList;
+    };
     return MiscFactory;
 }(Factory_1.default));
 exports.default = MiscFactory;

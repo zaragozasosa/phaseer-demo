@@ -9,7 +9,6 @@ export default class DiamondGameboard extends Gameboard {
   private diamondModel: DiamondModel;
   private diamondSprite: Phaser.Sprite;
   private diamondText: Phaser.Text;
-  private showOnce: boolean;
 
   constructor(gameboardConfig: GameboardConfig) {
     super(gameboardConfig);
@@ -27,7 +26,6 @@ export default class DiamondGameboard extends Gameboard {
     this.diamonds= this.diamondModel.requiredDiamonds;
     this.diamondSprite = this.tools.sprite.createSprite(20, 150, this.diamondModel.id);
     this.diamondText = this.tools.text.make(100, 155, `: ${this.diamonds}`, 50);
-    this.showOnce = true;
   }
 
   activatePower() {

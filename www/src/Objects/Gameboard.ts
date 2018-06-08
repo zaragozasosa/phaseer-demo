@@ -11,7 +11,8 @@ export default class Gameboard extends Base {
   protected grid: Grid;
   protected gameboardConfig: GameboardConfig;
   protected input: InputManager;
-  protected mode: number;
+  protected showOnce: boolean;
+  
 
   debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
@@ -51,6 +52,8 @@ export default class Gameboard extends Base {
     this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
     this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
     this.gameboardConfig.chargeSignal = new Phaser.Signal();
+    this.gameboardConfig.cooldownSignal = new Phaser.Signal();
+     
 
     this.grid = GridFactory.create(gameboardConfig);
     this.isPaused = false;
@@ -62,6 +65,7 @@ export default class Gameboard extends Base {
     this.addTimer();
 
     this.input = new InputManager(this.config);
+    this.showOnce = true;
   }
 
   update() {

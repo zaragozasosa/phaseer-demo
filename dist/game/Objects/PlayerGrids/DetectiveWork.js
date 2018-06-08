@@ -20,6 +20,37 @@ var DetectiveWork = (function (_super) {
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
+    DetectiveWork.prototype.activatePower = function () {
+        if (!this.elements) {
+            this.elements = this.makeElements();
+            return this.elements;
+        }
+    };
+    DetectiveWork.prototype.makeElements = function () {
+        var group = this.tools.misc.addGroup();
+        group.inputEnableChildren = true;
+        group.add(this.tools.text.make(50, 1250, 'UP', 60));
+        group.add(this.tools.text.make(200, 1250, 'DOWN', 60));
+        group.add(this.tools.text.make(475, 1250, 'LEFT', 60));
+        group.add(this.tools.text.make(700, 1250, 'RIGHT', 60));
+        group.onChildInputDown.add(function (child) {
+            group.setAllChildren('tint', Phaser.Color.WHITE);
+            child.tint = Phaser.Color.RED;
+            if (child.text === 'UP') {
+                this.gridLogic.investigate(Phaser.Keyboard.UP);
+            }
+            else if (child.text === 'DOWN') {
+                this.gridLogic.investigate(Phaser.Keyboard.DOWN);
+            }
+            if (child.text === 'LEFT') {
+                this.gridLogic.investigate(Phaser.Keyboard.LEFT);
+            }
+            if (child.text === 'RIGHT') {
+                this.gridLogic.investigate(Phaser.Keyboard.RIGHT);
+            }
+        }.bind(this));
+        return group;
+    };
     return DetectiveWork;
 }(Grid_1.default));
 exports.default = DetectiveWork;

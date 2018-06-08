@@ -38,6 +38,7 @@ var Gameboard = (function (_super) {
         _this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
         _this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
         _this.gameboardConfig.chargeSignal = new Phaser.Signal();
+        _this.gameboardConfig.cooldownSignal = new Phaser.Signal();
         _this.grid = GridFactory_1.default.create(gameboardConfig);
         _this.isPaused = false;
         _this.movements = 0;
@@ -47,6 +48,7 @@ var Gameboard = (function (_super) {
         _this.addPowerButton();
         _this.addTimer();
         _this.input = new InputManager_1.default(_this.config);
+        _this.showOnce = true;
         return _this;
     }
     Gameboard.prototype.update = function () {

@@ -3,11 +3,10 @@ import GameboardConfig from './../../Config/GameboardConfig';
 import PowerWindow from './../Windows/PowerWindow';
 import DiamondModel from './../../Models/DiamondModel';
 
-export default class MultiButtonGameboard extends Gameboard {
+export default class ChargeGameboard extends Gameboard {
   private buttons: Phaser.Group;
   private charges: number;
   private chargesText: Phaser.Text;
-  private showOnce: boolean;
 
   constructor(gameboardConfig: GameboardConfig) {
     super(gameboardConfig);

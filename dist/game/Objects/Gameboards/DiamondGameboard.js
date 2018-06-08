@@ -27,7 +27,6 @@ var DiamondGameboard = (function (_super) {
         _this.diamonds = _this.diamondModel.requiredDiamonds;
         _this.diamondSprite = _this.tools.sprite.createSprite(20, 150, _this.diamondModel.id);
         _this.diamondText = _this.tools.text.make(100, 155, ": " + _this.diamonds, 50);
-        _this.showOnce = true;
         return _this;
     }
     DiamondGameboard.prototype.activatePower = function () {

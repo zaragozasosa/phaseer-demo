@@ -43,4 +43,15 @@ export default class MiscFactory extends Factory {
       functionToCall()
     }.bind(this));
   }
+
+  shuffleUniqueArray(list: Array<any>) {
+    let newList = [];
+    while(newList.length !== list.length) {
+      let element = this.game.rnd.pick(list);
+      if(newList.lastIndexOf(element) === -1) {
+        newList.push(element);
+      }      
+    }
+    return newList;
+  }
 }
