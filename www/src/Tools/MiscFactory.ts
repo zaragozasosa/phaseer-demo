@@ -19,7 +19,8 @@ export default class MiscFactory extends Factory {
     ease = 'Linear',
     autoStart = false,
     delay = 0,
-    repeat = 0
+    repeat = 0,
+    yoyo = false
   ): Phaser.Tween {
     return this.game.add
       .tween(obj)

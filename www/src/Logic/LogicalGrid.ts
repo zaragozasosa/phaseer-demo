@@ -162,13 +162,13 @@ export default abstract class LogicalGrid extends Base {
     }
 
     if (allStopped) {
-      this.updateGrid();
+      this.prepareNewTurn();
     }
 
     return allStopped;
   }
 
-  protected updateGrid() {
+  protected prepareNewTurn() {
     if (this.lastMergedTile) {
       let value = this.lastMergedTile.value;
       if (
@@ -187,6 +187,7 @@ export default abstract class LogicalGrid extends Base {
 
     this.cleanGrid();
 
+    this.gameboardConfig.turnsSignal.dispatch();
     if (!this.isFull()) {
       this.add();
     }

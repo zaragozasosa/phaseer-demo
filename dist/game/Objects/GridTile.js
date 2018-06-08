@@ -13,9 +13,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../Base");
 var GridTile = (function (_super) {
     __extends(GridTile, _super);
-    function GridTile(x, y, gameboardConfig, position, value) {
+    function GridTile(x, y, gameboardConfig, position, value, ghost, ghostCooldown) {
         if (position === void 0) { position = 0; }
         if (value === void 0) { value = 0; }
+        if (ghost === void 0) { ghost = false; }
+        if (ghostCooldown === void 0) { ghostCooldown = 0; }
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
         _this.nextTile = null;
@@ -39,11 +41,20 @@ var GridTile = (function (_super) {
         _this.group.alpha = 0;
         _this.group.angle = 0;
         var misc = _this.tools.misc;
-        misc.tweenTo(_this.group, { alpha: 1 }, 500, 'Linear', true);
         var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100, 'Linear');
         var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300, 'Linear');
         _this.mergeTween = t1.chain(t2);
         _this.randomizeTween = _this.tools.misc.tweenTo(_this.sprite, { angle: 360 }, 500);
+        _this.ghostTween = misc.tweenTo(_this.group, { alpha: 0.3 }, 1000, 'Linear', false, 0, -1, true);
+        if (ghost) {
+            _this.group.alpha = 1;
+            _this.ghostCooldown = ghostCooldown;
+            _this.ghostTurns = 0;
+            _this.ghostTween.start();
+        }
+        else {
+            misc.tweenTo(_this.group, { alpha: 1 }, 500, 'Linear', true);
+        }
         _this.sprite.inputEnabled = true;
         _this.sprite.events.onInputDown.add(function () {
             this.gameboardConfig.clickTileSignal.dispatch(this);
@@ -156,6 +167,26 @@ var GridTile = (function (_super) {
             this.value = valuesBetween[random];
         }
         this.randomizeTransform();
+    };
+    GridTile.prototype.isGhost = function () {
+        return this.ghostCooldown !== undefined;
+    };
+    GridTile.prototype.stopGhost = function () {
+        if (this.ghostTween.isRunning) {
+            this.ghostTween.stop();
+        }
+        this.ghostCooldown = undefined;
+    };
+    GridTile.prototype.checkTurns = function () {
+        if (this.ghostCooldown) {
+            this.ghostTurns++;
+            if (this.ghostCooldown === this.ghostTurns) {
+                this.kill();
+                this.ghostCooldown = null;
+                return true;
+            }
+        }
+        return false;
     };
     GridTile.prototype.update = function () {
         for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {

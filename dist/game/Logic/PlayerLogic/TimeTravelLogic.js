@@ -44,7 +44,7 @@ var TimeTravelLogic = (function (_super) {
         }
         if (allStopped) {
             this.onTilesStopped();
-            this.updateGrid();
+            this.prepareNewTurn();
         }
         return allStopped;
     };

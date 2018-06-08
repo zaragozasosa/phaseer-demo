@@ -38,7 +38,7 @@ export default class TimeTravelLogic extends LogicalGrid {
 
     if (allStopped) {
       this.onTilesStopped();
-      this.updateGrid();
+      this.prepareNewTurn();
     }
 
     return allStopped;

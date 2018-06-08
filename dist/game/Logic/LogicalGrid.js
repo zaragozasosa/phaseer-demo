@@ -137,11 +137,11 @@ var LogicalGrid = (function (_super) {
             allStopped = false;
         }
         if (allStopped) {
-            this.updateGrid();
+            this.prepareNewTurn();
         }
         return allStopped;
     };
-    LogicalGrid.prototype.updateGrid = function () {
+    LogicalGrid.prototype.prepareNewTurn = function () {
         if (this.lastMergedTile) {
             var value = this.lastMergedTile.value;
             if ((value === this.gameboardConfig.minimumValue * 2 &&
@@ -156,6 +156,7 @@ var LogicalGrid = (function (_super) {
             }
         }
         this.cleanGrid();
+        this.gameboardConfig.turnsSignal.dispatch();
         if (!this.isFull()) {
             this.add();
         }

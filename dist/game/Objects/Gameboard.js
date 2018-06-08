@@ -39,6 +39,7 @@ var Gameboard = (function (_super) {
         _this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
         _this.gameboardConfig.chargeSignal = new Phaser.Signal();
         _this.gameboardConfig.cooldownSignal = new Phaser.Signal();
+        _this.gameboardConfig.turnsSignal = new Phaser.Signal();
         _this.grid = GridFactory_1.default.create(gameboardConfig);
         _this.isPaused = false;
         _this.movements = 0;

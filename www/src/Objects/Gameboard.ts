@@ -53,6 +53,7 @@ export default class Gameboard extends Base {
     this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
     this.gameboardConfig.chargeSignal = new Phaser.Signal();
     this.gameboardConfig.cooldownSignal = new Phaser.Signal();
+    this.gameboardConfig.turnsSignal = new Phaser.Signal();
      
 
     this.grid = GridFactory.create(gameboardConfig);

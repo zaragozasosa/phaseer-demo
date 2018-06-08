@@ -17,11 +17,23 @@ var ReportedForRPLogic = (function (_super) {
     function ReportedForRPLogic(gameboardConfig) {
         var _this = _super.call(this, gameboardConfig) || this;
         _this.direction = null;
+        _this.makeGhost = false;
         return _this;
     }
-    ReportedForRPLogic.prototype.investigate = function (direction) {
-        this.gameboardConfig.cooldownSignal.dispatch(true);
+    ReportedForRPLogic.prototype.changeFlow = function (direction) {
+        this.gameboardConfig.cooldownSignal.dispatch(false, 5);
         this.direction = direction;
+    };
+    ReportedForRPLogic.prototype.investigate = function () {
+        var turnsToActivate = this.tools.misc.randomBetween(2, 6);
+        this.gameboardConfig.cooldownSignal.dispatch(true, turnsToActivate);
+    };
+    ReportedForRPLogic.prototype.createGhostTile = function () {
+        this.makeGhost = true;
+        this.turnsToDisappear = 5;
+        this.ghostTileValue = this.getTilesOrdered()[0].value;
+        this.add();
+        return this.turnsToDisappear;
     };
     ReportedForRPLogic.prototype.add = function () {
         if (!this.direction) {
@@ -88,10 +100,22 @@ var ReportedForRPLogic = (function (_super) {
         else {
             newTilePos = 0;
         }
-        var value = this.get(posX, posY);
-        var tile = new GridTile_1.default(posX, posY, this.gameboardConfig, newTilePos);
-        this.set(posX, posY, tile);
-        this.tilesGroup.add(tile.getGroup);
+        if (this.makeGhost) {
+            var tile_1 = new GridTile_1.default(posX, posY, this.gameboardConfig, null, this.ghostTileValue, true, this.turnsToDisappear);
+            this.set(posX, posY, tile_1);
+            this.tilesGroup.add(tile_1.getGroup);
+            this.makeGhost = false;
+            this.gameboardConfig.turnsSignal.add(function () {
+                if (tile_1.checkTurns()) {
+                    this.cleanGrid();
+                }
+            }.bind(this));
+        }
+        else {
+            var tile = new GridTile_1.default(posX, posY, this.gameboardConfig, newTilePos);
+            this.set(posX, posY, tile);
+            this.tilesGroup.add(tile.getGroup);
+        }
     };
     ReportedForRPLogic.prototype.randomListBetween = function (min, max) {
         var list = [];
@@ -99,6 +123,17 @@ var ReportedForRPLogic = (function (_super) {
             list.push(i);
         }
         return this.tools.misc.shuffleUniqueArray(list);
+    };
+    ReportedForRPLogic.prototype.mergeTile = function (nextTile, previousTile) {
+        nextTile.value *= 2;
+        previousTile.value = 0;
+        previousTile.nextTile = nextTile;
+        if (nextTile.isGhost() || previousTile.isGhost()) {
+            nextTile.stopGhost();
+            previousTile.stopGhost();
+            debugger;
+            this.gameboardConfig.cooldownSignal.dispatch(false, false, true);
+        }
     };
     ReportedForRPLogic.prototype.canUsePower = function () {
         return true;

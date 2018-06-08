@@ -26,12 +26,13 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.overlap = function (object1, object2, overlapCallback) {
         return this.game.physics.arcade.overlap(object1, object2, overlapCallback);
     };
-    MiscFactory.prototype.tweenTo = function (obj, props, duration, ease, autoStart, delay, repeat) {
+    MiscFactory.prototype.tweenTo = function (obj, props, duration, ease, autoStart, delay, repeat, yoyo) {
         if (duration === void 0) { duration = 200; }
         if (ease === void 0) { ease = 'Linear'; }
         if (autoStart === void 0) { autoStart = false; }
         if (delay === void 0) { delay = 0; }
         if (repeat === void 0) { repeat = 0; }
+        if (yoyo === void 0) { yoyo = false; }
         return this.game.add
             .tween(obj)
             .to(props, duration, ease, autoStart, delay, repeat);

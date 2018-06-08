@@ -4,14 +4,31 @@ import GridTile from './../../Objects/GridTile';
 
 export default class ReportedForRPLogic extends LogicalGrid {
   private direction: number;
+  private makeGhost: boolean;
+  private turnsToDisappear: number;
+  private ghostTileValue: number;
   constructor(gameboardConfig: GameboardConfig) {
     super(gameboardConfig);
     this.direction = null;
+    this.makeGhost = false;
   }
 
-  investigate(direction: number) {
-    this.gameboardConfig.cooldownSignal.dispatch(true);
+  changeFlow(direction: number) {
+    this.gameboardConfig.cooldownSignal.dispatch(false, 5);
     this.direction = direction;
+  }
+
+  investigate() {
+    let turnsToActivate = this.tools.misc.randomBetween(2, 6);
+    this.gameboardConfig.cooldownSignal.dispatch(true, turnsToActivate);
+  }
+
+  createGhostTile() {
+    this.makeGhost = true;
+    this.turnsToDisappear = 5;
+    this.ghostTileValue = this.getTilesOrdered()[0].value;
+    this.add();
+    return this.turnsToDisappear;
   }
 
   protected add() {
@@ -42,7 +59,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
     let max = this.gameboardConfig.arraySize;
     let min = 0;
     if (posX === null) {
-      for(let x of this.randomListBetween(min, max)) {
+      for (let x of this.randomListBetween(min, max)) {
         if (!this.get(x, posY)) {
           return this.makeNewTile(x, posY);
         }
@@ -54,7 +71,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
         return this.makeNewTileAround(null, posY + delta, delta);
       }
     } else if (posY === null) {
-      for(let y of this.randomListBetween(min, max)) {
+      for (let y of this.randomListBetween(min, max)) {
         if (!this.get(posX, y)) {
           return this.makeNewTile(posX, y);
         }
@@ -76,19 +93,53 @@ export default class ReportedForRPLogic extends LogicalGrid {
     } else {
       newTilePos = 0;
     }
-    let value = this.get(posX, posY);
 
-    let tile = new GridTile(posX, posY, this.gameboardConfig, newTilePos);
-    this.set(posX, posY, tile);
-    this.tilesGroup.add(tile.getGroup);
+    if (this.makeGhost) {
+      let tile = new GridTile(
+        posX,
+        posY,
+        this.gameboardConfig,
+        null,
+        this.ghostTileValue,
+        true,
+        this.turnsToDisappear
+      );
+      this.set(posX, posY, tile);
+      this.tilesGroup.add(tile.getGroup);
+
+      this.makeGhost = false;
+      this.gameboardConfig.turnsSignal.add(
+        function() {
+          if (tile.checkTurns()) {
+            this.cleanGrid();
+          }
+        }.bind(this)
+      );
+    } else {
+      let tile = new GridTile(posX, posY, this.gameboardConfig, newTilePos);
+      this.set(posX, posY, tile);
+      this.tilesGroup.add(tile.getGroup);
+    }
   }
 
   private randomListBetween(min: number, max: number) {
-    let list = []
-    for(let i = min; i <= max; i++) {
+    let list = [];
+    for (let i = min; i <= max; i++) {
       list.push(i);
     }
     return this.tools.misc.shuffleUniqueArray(list);
+  }
+
+  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
+    nextTile.value *= 2;
+    previousTile.value = 0;
+    previousTile.nextTile = nextTile;
+    if (nextTile.isGhost() || previousTile.isGhost()) {
+      nextTile.stopGhost();
+      previousTile.stopGhost();
+      debugger;
+      this.gameboardConfig.cooldownSignal.dispatch(false, false, true);
+    }
   }
 
   canUsePower() {

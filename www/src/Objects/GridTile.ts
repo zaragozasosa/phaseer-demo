@@ -17,12 +17,18 @@ export default class GridTile extends Base {
   private mergeTween: Phaser.Tween;
   private randomizeTween: Phaser.Tween;
 
+  private ghostTween: Phaser.Tween;
+  private ghostCooldown: number;
+  private ghostTurns: number;
+
   constructor(
     x: number,
     y: number,
     gameboardConfig: GameboardConfig,
     position = 0,
-    value = 0
+    value = 0,
+    ghost = false,
+    ghostCooldown = 0
   ) {
     super();
     this.gameboardConfig = gameboardConfig;
@@ -56,7 +62,6 @@ export default class GridTile extends Base {
     this.group.angle = 0;
 
     let misc = this.tools.misc;
-    misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);
 
     let t1 = misc.tweenTo(this.group, { alpha: 0.3 }, 100, 'Linear');
     let t2 = misc.tweenTo(this.group, { alpha: 1 }, 300, 'Linear');
@@ -69,6 +74,28 @@ export default class GridTile extends Base {
       500
     );
 
+
+    this.ghostTween = misc.tweenTo(
+      this.group,
+      { alpha: 0.3 },
+      1000,
+      'Linear',
+      false,
+      0,
+      -1,
+      true
+    );
+
+    if(ghost) {
+      this.group.alpha = 1;
+      this.ghostCooldown = ghostCooldown;
+      this.ghostTurns = 0;
+      this.ghostTween.start();
+    } else {
+      misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);      
+    }
+
+
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputDown.add(
       function() {
@@ -80,6 +107,7 @@ export default class GridTile extends Base {
   get isAlive(): boolean {
     return this.sprite && this.sprite.alive;
   }
+
   get isMoving(): boolean {
     if (!this.sprite) {
       return false;
@@ -189,6 +217,29 @@ export default class GridTile extends Base {
     }
 
     this.randomizeTransform();
+  }
+
+  isGhost() {
+    return this.ghostCooldown !== undefined;
+  }
+
+  stopGhost() {
+    if (this.ghostTween.isRunning) {
+      this.ghostTween.stop();
+    }
+    this.ghostCooldown = undefined;
+  }
+
+  checkTurns() {
+    if (this.ghostCooldown) {
+      this.ghostTurns++;
+      if (this.ghostCooldown === this.ghostTurns) {
+        this.kill();
+        this.ghostCooldown = null;
+        return true;
+      }
+    }
+    return false;
   }
 
   private update() {

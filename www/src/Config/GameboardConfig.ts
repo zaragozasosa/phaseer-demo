@@ -22,7 +22,7 @@ export default class GameboardConfig {
   mergeTileSignal: Phaser.Signal;
   chargeSignal: Phaser.Signal;
   cooldownSignal: Phaser.Signal;
-  
+  turnsSignal: Phaser.Signal;
 
   quitSignal: Phaser.Signal;
 
