@@ -20,7 +20,8 @@ export default class AmmoGameboard extends Gameboard {
   activatePower() {
     this.actionButton.kill();
     let window = new PowerWindow(this.gameboardConfig.mainTile);
-
+    this.tools.audio.playTwoSounds(this.gameboardConfig);
+    
     let response = this.grid.activatePower();
     if (response && response instanceof AmmoModel) {
       let model: AmmoModel = response;

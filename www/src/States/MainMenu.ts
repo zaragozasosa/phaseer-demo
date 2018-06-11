@@ -15,7 +15,7 @@ export default class MainMenu extends Phaser.State {
   }
 
   update() {
-    if (this.game.input.activePointer.isDown) {
+    if (this.cursor.checkClick()) {
       this.game.state.start('CharacterSelection');
     }
 

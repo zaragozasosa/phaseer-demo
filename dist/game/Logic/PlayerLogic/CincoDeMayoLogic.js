@@ -18,7 +18,7 @@ var CincoDeMayoLogic = (function (_super) {
         return _super.call(this, gameboardConfig) || this;
     }
     CincoDeMayoLogic.prototype.power = function () {
-        return new AmmoModel_1.default('bullet', this.gameboardConfig.bulletAmmo, 140);
+        return new AmmoModel_1.default('bullet', this.gameboardConfig.bulletAmmo, 175);
     };
     CincoDeMayoLogic.prototype.useAmmo = function (tile) {
         if (this.grid.filter(function (x) { return x; }).length > 1) {

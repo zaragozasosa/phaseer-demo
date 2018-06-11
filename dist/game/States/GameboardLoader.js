@@ -43,7 +43,7 @@ var GameboardLoader = (function (_super) {
         this.preloadBar.kill();
     };
     GameboardLoader.prototype.update = function () {
-        if (this.game.input.activePointer.isDown) {
+        if (this.cursor.checkClick()) {
             this.state.start('Unranked', true, false, this.gameboardConfig);
         }
         if (this.cursor.checkKeys()) {

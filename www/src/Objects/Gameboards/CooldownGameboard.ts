@@ -25,7 +25,6 @@ export default class CooldownGameboard extends Gameboard {
     this.gameboardConfig.cooldownSignal.add(
       function(activatePower, cooldown, success) {
         if (success) {
-          debugger;
           this.cooldownText.setText(`Status: Success!`);
           this.powerFinished = true;
         } else if (activatePower) {

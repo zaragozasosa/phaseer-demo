@@ -4,7 +4,12 @@ import TileModel from './../../Models/TileModel';
 import Window from './Window';
 
 export default class PauseWindow extends InfoWindow {
-  constructor(character: TileModel, contCallback: any, quitCallback: any,  y = 380) {
+  constructor(
+    character: TileModel,
+    contCallback: any,
+    quitCallback: any,
+    y = 380
+  ) {
     super(character, y, false, Window.DEFAULT_HIDE_BACKGROUND);
     let text = this.tools.text.makeXBounded(
       y - 130,
@@ -28,17 +33,10 @@ export default class PauseWindow extends InfoWindow {
         contCallback();
       }.bind(this)
     );
-    
 
-    let quit = this.tools.text.make(
-      620,
-      1050,
-      'Quit',
-      80,
-      ColorSettings.TEXT
-    );
+    let quit = this.tools.text.make(620, 1050, 'Quit', 80, ColorSettings.TEXT);
     quit.inputEnabled = true;
-    
+
     quit.events.onInputDown.add(
       function() {
         quitCallback();
@@ -53,12 +51,20 @@ export default class PauseWindow extends InfoWindow {
       ColorSettings.TEXT
     );
 
-    let muteButton = this.tools.sprite.createVolumeIcon();
+    let volumeButton = this.tools.sprite.createVolumeIcon();
+
+    volumeButton.inputEnabled = true;
+
+    volumeButton.events.onInputDown.add(
+      function() {
+        this.tools.audio.changeAudioLevel(volumeButton);
+      }.bind(this)
+    );
 
     this.elements.add(cont);
     this.elements.add(quit);
     this.elements.add(volume);
-    this.elements.add(muteButton);
+    this.elements.add(volumeButton);
     this.elements.add(text);
 
     this.show();

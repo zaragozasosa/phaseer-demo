@@ -18,7 +18,7 @@ var RollForInitiativeLogic = (function (_super) {
         return _super.call(this, gameboardConfig) || this;
     }
     RollForInitiativeLogic.prototype.power = function () {
-        return new AmmoModel_1.default('dice', this.gameboardConfig.diceAmmo, 170);
+        return new AmmoModel_1.default('dice', this.gameboardConfig.diceAmmo, 140);
     };
     RollForInitiativeLogic.prototype.useAmmo = function (tile) {
         if (this.canUsePower) {

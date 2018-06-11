@@ -30,11 +30,15 @@ var PauseWindow = (function (_super) {
             quitCallback();
         }.bind(_this));
         var volume = _this.tools.text.make(200, 1285, 'Volume: ', 70, Config_1.ColorSettings.TEXT);
-        var muteButton = _this.tools.sprite.createVolumeIcon();
+        var volumeButton = _this.tools.sprite.createVolumeIcon();
+        volumeButton.inputEnabled = true;
+        volumeButton.events.onInputDown.add(function () {
+            this.tools.audio.changeAudioLevel(volumeButton);
+        }.bind(_this));
         _this.elements.add(cont);
         _this.elements.add(quit);
         _this.elements.add(volume);
-        _this.elements.add(muteButton);
+        _this.elements.add(volumeButton);
         _this.elements.add(text);
         _this.show();
         return _this;

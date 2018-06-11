@@ -137,7 +137,6 @@ export default class ReportedForRPLogic extends LogicalGrid {
     if (nextTile.isGhost() || previousTile.isGhost()) {
       nextTile.stopGhost();
       previousTile.stopGhost();
-      debugger;
       this.gameboardConfig.cooldownSignal.dispatch(false, false, true);
     }
   }

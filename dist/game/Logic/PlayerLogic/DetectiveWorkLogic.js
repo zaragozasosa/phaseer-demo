@@ -132,7 +132,6 @@ var ReportedForRPLogic = (function (_super) {
         if (nextTile.isGhost() || previousTile.isGhost()) {
             nextTile.stopGhost();
             previousTile.stopGhost();
-            debugger;
             this.gameboardConfig.cooldownSignal.dispatch(false, false, true);
         }
     };

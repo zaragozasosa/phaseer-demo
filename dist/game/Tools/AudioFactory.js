@@ -19,19 +19,21 @@ var AudioFactory = (function (_super) {
     AudioFactory.prototype.playSound = function (id, loop) {
         if (loop === void 0) { loop = false; }
         var config = this.config.sound;
-        var vol = config.volumeLevels[config.actualVolumeIndex];
-        this.game.sound.play(id, config.sfxVolume * vol, loop);
+        this.game.sound.play(id, config.sfxVolume, loop);
     };
     AudioFactory.prototype.playTwoSounds = function (gameConfig) {
-        var config = this.config.sound;
-        var vol = config.volumeLevels[config.actualVolumeIndex];
-        this.game.sound.play(gameConfig.mainTile.sfxLabel, config.sfxVolume * vol);
+        var audio = this.config.sound;
+        if (audio.sfxVolume === 0) {
+            return false;
+        }
+        debugger;
+        this.playCharacterSound(gameConfig.mainTile);
         this.game.time.events.add(500, function () {
             if (gameConfig.mainTile.friendId) {
-                this.game.sound.play(gameConfig.mainTile.friendSfxLabel, config.sfxVolume * vol);
+                this.playCharacterSound(gameConfig.tiles.find(function (x) { return x.id === gameConfig.mainTile.friendId; }));
             }
             else {
-                this.game.sound.play(gameConfig.mainTile.sfxLabel, config.sfxVolume * vol);
+                this.playCharacterSound(gameConfig.mainTile);
             }
         }.bind(this));
     };
@@ -43,17 +45,30 @@ var AudioFactory = (function (_super) {
             config.bgm.destroy();
         }
         var music = this.game.add.audio(id);
-        var vol = config.volumeLevels[config.actualVolumeIndex];
-        config.bgm = music.play('', 0, config.bgmVolume * vol, loop);
+        config.bgm = music.play('', 0, config.bgmVolume, loop);
     };
     AudioFactory.prototype.changeAudioLevel = function (sprite) {
         var config = this.config.sound;
-        var nextIndex = (config.actualVolumeIndex + 1) % config.volumeLevels.length;
-        config.actualVolumeIndex = nextIndex;
-        sprite.loadTexture(config.volumeSprite + '-' + nextIndex);
-        if (config.bgm) {
-            var vol = config.volumeLevels[config.actualVolumeIndex];
-            config.bgm.volume = config.bgmVolume * vol;
+        if (config.bgmVolume === 1 && config.sfxVolume === 1) {
+            sprite.loadTexture(config.volumeSprite + "-1");
+            config.sfxVolume = 0;
+        }
+        else if (config.bgmVolume === 1) {
+            sprite.loadTexture(config.volumeSprite + "-2");
+            config.bgmVolume = 0;
+            config.bgm.volume = config.bgmVolume;
+        }
+        else {
+            sprite.loadTexture(config.volumeSprite + "-0");
+            config.sfxVolume = 1;
+            config.bgmVolume = 1;
+            config.bgm.volume = config.bgmVolume;
+        }
+    };
+    AudioFactory.prototype.playCharacterSound = function (tile) {
+        var audio = this.config.sound;
+        if (audio.sfxVolume) {
+            this.game.sound.play(tile.sfxLabel, audio.sfxVolume * tile.sfxVolume, false);
         }
     };
     return AudioFactory;

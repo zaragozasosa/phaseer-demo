@@ -25,7 +25,6 @@ var CooldownGameboard = (function (_super) {
         _this.cooldownText = _this.tools.text.make(20, 150, 'Status: Ready!', 50);
         _this.gameboardConfig.cooldownSignal.add(function (activatePower, cooldown, success) {
             if (success) {
-                debugger;
                 this.cooldownText.setText("Status: Success!");
                 this.powerFinished = true;
             }

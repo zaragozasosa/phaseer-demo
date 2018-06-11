@@ -43,7 +43,7 @@ export default class GameboardLoader extends Phaser.State {
   }
 
   update() {
-    if (this.game.input.activePointer.isDown) {
+    if (this.cursor.checkClick()) {
       this.state.start('Unranked', true, false, this.gameboardConfig);
     }
 

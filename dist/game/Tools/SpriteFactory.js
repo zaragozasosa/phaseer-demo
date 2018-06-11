@@ -87,7 +87,8 @@ var SpriteFactory = (function (_super) {
         if (posX === void 0) { posX = 600; }
         if (posY === void 0) { posY = 1260; }
         var config = this.config.sound;
-        var volId = config.volumeSprite + '-' + config.actualVolumeIndex;
+        var volLevel = (config.bgmVolume && config.sfxVolume) ? 0 : config.bgmVolume ? 1 : 2;
+        var volId = config.volumeSprite + "-" + volLevel;
         var sprite = this.createSprite(posX, posY, volId, 0.6);
         sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
         sprite.inputEnabled = true;

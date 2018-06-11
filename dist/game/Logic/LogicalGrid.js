@@ -295,7 +295,7 @@ var LogicalGrid = (function (_super) {
                     this.tools.misc.randomBetween(0, 1) === 0) ||
                 (value === this.gameboardConfig.minimumValue * 16 &&
                     this.tools.misc.randomBetween(0, 1) === 0)) {
-                this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
+                this.tools.audio.playCharacterSound(this.lastMergedTile.model);
             }
         }
     };

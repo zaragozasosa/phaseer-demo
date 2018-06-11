@@ -112,8 +112,6 @@ export default class ConfigSetup {
     config.sound = new SoundSettings();
     config.sound.bgmVolume = 1;
     config.sound.sfxVolume = 1;
-    config.sound.volumeLevels = [1, 0.5, 0];
-    config.sound.actualVolumeIndex = 0;
     config.sound.volumeSprite = 'volume';
   }
 

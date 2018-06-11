@@ -97,7 +97,8 @@ export default class SpriteFactory extends Factory {
 
   createVolumeIcon(posX = 600, posY = 1260) {
     let config = this.config.sound;
-    let volId = config.volumeSprite + '-' + config.actualVolumeIndex;
+    let volLevel = (config.bgmVolume && config.sfxVolume) ? 0 : config.bgmVolume ? 1 : 2;
+    let volId = `${config.volumeSprite}-${volLevel}`;
     let sprite = this.createSprite(posX, posY, volId, 0.6);
     sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
 

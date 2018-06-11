@@ -42,7 +42,7 @@ export default class GameboardConfig {
       }
     }
     this.minimumValue = 1;
-    this.bulletAmmo = 4;
+    this.bulletAmmo = 5;
     this.diceAmmo = 6;
     this.requiredDiamonds = 50;
     this.requiredBugs = 40;
@@ -134,7 +134,7 @@ export default class GameboardConfig {
       new PowerModel(
         'cincoDeMayo',
         'Cinco de Mayo',
-        'Destroy any tile you want by clicking on it! Can be used 6 times.',
+        `Destroy any tile you want by clicking on it! Can be used ${this.bulletAmmo} times.`,
         'Have at least more than one tile on the grid.'
       )
     );
@@ -152,6 +152,7 @@ export default class GameboardConfig {
         'Meushi Jyoji',
         'bren',
         'keyboard.mp3',
+        0.8,
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'
@@ -165,6 +166,7 @@ export default class GameboardConfig {
         'brotherhating ridiculously efficient nerd.py',
         'meushijyo',
         'yawn.mp3',
+        1,
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'
@@ -178,6 +180,7 @@ export default class GameboardConfig {
         'Roxx Ann',
         'choco',
         'page.mp3',
+        1,
         'gachaAddiction',
         this.powers.find(x => x.id === 'gachaAddiction'),
         'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'
@@ -191,6 +194,7 @@ export default class GameboardConfig {
         'Choco Jax',
         'rox',
         'chachin.mp3',
+        0.5,
         'gachaAddiction',
         this.powers.find(x => x.id === 'gachaAddiction'),
         'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'
@@ -204,6 +208,7 @@ export default class GameboardConfig {
         'Codename: S.N.O.W',
         'lily',
         'radio.mp3',
+        0.4,
         'detectiveWork',
         this.powers.find(x => x.id === 'detectiveWork'),
         'Highly-trained FBI agent. Impossible crimes and high profile murder cases are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'
@@ -217,6 +222,7 @@ export default class GameboardConfig {
         'Lily Hast',
         'smith',
         'sweeping.wav',
+        1,
         'detectiveWork',
         this.powers.find(x => x.id === 'detectiveWork'),
         `A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run...`
@@ -230,6 +236,7 @@ export default class GameboardConfig {
         'Kinjo Goldbar',
         'eleve',
         'coin.mp3',
+        0.6,
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."
@@ -243,6 +250,7 @@ export default class GameboardConfig {
         `L'Élève-Avancé-Timide`,
         'kinjo',
         'sorry.wav',
+        0.5,
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         "Canadian pro-gamer online, shy as hell waitress in real life. Being very afraid of social interaction, she's forced to hide her identity on the internet. Number 1 fan of Kinjo's works."
@@ -256,6 +264,7 @@ export default class GameboardConfig {
         'Attarou Lionstar',
         'r1r1',
         'meow.wav',
+        0.5,
         'reportedForRP',
         this.powers.find(x => x.id === 'reportedForRP'),
         "Heir to the Lionstar family headship, owner of a never-ending fortune. This prince, however, rejects his own lineage and indulges in low-budget cosplaying. He's often seen in cons around the world, always accompanied by his cat, Caesar."
@@ -269,6 +278,7 @@ export default class GameboardConfig {
         'Autonomous Socialization Unit',
         'attarou',
         'letsrock.wav',
+        0.5,
         'reportedForRP',
         this.powers.find(x => x.id === 'reportedForRP'),
         'The latest model in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology in the most obvious fashion: roleplaying as a human...'
@@ -282,6 +292,7 @@ export default class GameboardConfig {
         'Dungeon Master Magil',
         'jessy',
         'dice.mp3',
+        1,
         'rollForInitiative',
         this.powers.find(x => x.id === 'rollForInitiative'),
         'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
@@ -295,6 +306,7 @@ export default class GameboardConfig {
         'Ph.D. Jessy',
         'magil',
         'red.mp3',
+        0.5,
         'rollForInitiative',
         this.powers.find(x => x.id === 'rollForInitiative'),
         "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
@@ -308,6 +320,7 @@ export default class GameboardConfig {
         'Black Witch Mira',
         'fancy',
         'ahaha.wav',
+        0.3,
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."
@@ -321,6 +334,7 @@ export default class GameboardConfig {
         'Sir Lord Fancypants',
         'mira',
         'hyehye.mp3',
+        0.5,
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'
@@ -334,6 +348,7 @@ export default class GameboardConfig {
         'Ignacio Zaragoza',
         null,
         'gunshot.mp3',
+        0.5,
         'cincoDeMayo',
         this.powers.find(x => x.id === 'cincoDeMayo'),
         'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'
@@ -347,6 +362,7 @@ export default class GameboardConfig {
         'Chili Bagel',
         null,
         'howl.mp3',
+        0,
         '',
         null,
         "Hey, you shouldn't be able to read this!",

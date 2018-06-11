@@ -9,7 +9,7 @@ export default class CincoDeMayoLogic extends LogicalGrid {
   }
 
   power() {
-    return new AmmoModel('bullet', this.gameboardConfig.bulletAmmo, 140);
+    return new AmmoModel('bullet', this.gameboardConfig.bulletAmmo, 175);
   }
 
   useAmmo(tile: GridTile) {

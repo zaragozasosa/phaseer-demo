@@ -82,6 +82,14 @@ var InputManager = (function (_super) {
             return Phaser.Keyboard.ESC;
         }
     };
+    InputManager.prototype.checkClick = function () {
+        if (this.game.input.activePointer.isDown) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     return InputManager;
 }(Factory_1.default));
 exports.default = InputManager;

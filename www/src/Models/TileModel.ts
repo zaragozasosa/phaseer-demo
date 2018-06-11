@@ -5,6 +5,7 @@ export default class TileModel {
   fullName: string;
   friendId: string;
   sfxId: string;
+  sfxVolume: number;
   summary: string;
   playable: boolean;
   powerId: string;
@@ -32,6 +33,7 @@ export default class TileModel {
     fullName: string,
     friendId: string,
     sfxId: string,
+    sfxVolume: number,
     powerId: string,
     power: PowerModel,
     summary: string,
@@ -44,6 +46,7 @@ export default class TileModel {
     this.fullName = fullName;
     this.friendId = friendId;
     this.sfxId = sfxId;
+    this.sfxVolume = sfxVolume;
     this.powerId = powerId;
     this.power = power;
     this.summary = summary;

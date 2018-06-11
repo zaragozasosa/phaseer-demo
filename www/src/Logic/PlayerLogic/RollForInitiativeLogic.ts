@@ -9,7 +9,7 @@ export default class RollForInitiativeLogic extends LogicalGrid {
   }
 
   power() {
-    return new AmmoModel('dice', this.gameboardConfig.diceAmmo, 170);
+    return new AmmoModel('dice', this.gameboardConfig.diceAmmo, 140);
   }
 
   useAmmo(tile: GridTile) {

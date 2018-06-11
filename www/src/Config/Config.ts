@@ -80,8 +80,6 @@ export class WindowSettings {
 export class SoundSettings {
   bgmVolume: number;
   sfxVolume: number;
-  volumeLevels: Array<number>;
-  actualVolumeIndex: number;
   volumeSprite: string;
   bgm: Phaser.Sound;
 }

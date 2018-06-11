@@ -1,22 +1,14 @@
 import GameboardConfig from './../Config/GameboardConfig';
-import SpriteFactory from './../Tools/SpriteFactory';
-import GraphicsFactory from './../Tools/GraphicsFactory';
-
 import InputManager from './../InputManager';
 import TileModel from './../Models/TileModel';
 
-import TextFactory from './../Tools/TextFactory';
-import { Config, Singleton, ColorSettings } from './../Config/Config';
-import ButtonFactory from './../Tools/ButtonFactory';
+import { Config, Singleton, ColorSettings, Tools } from './../Config/Config';
 
 export default class CharacterSelection extends Phaser.State {
   game: Phaser.Game;
   config: Config;
+  tools: Tools;
   gameboardConfig: GameboardConfig;
-  spriteFactory: SpriteFactory;
-  textFactory: TextFactory;
-  graphicsFactory: GraphicsFactory;
-  buttonFactory: ButtonFactory;
   inputManager: InputManager;
 
   preloadBar: Phaser.Sprite;
@@ -39,12 +31,9 @@ export default class CharacterSelection extends Phaser.State {
   preload() {
     let singleton = Singleton.get();
     this.config = singleton.config;
+    this.tools = singleton.tools;
 
     this.gameboardConfig = new GameboardConfig();
-    this.spriteFactory = new SpriteFactory(this.config);
-    this.textFactory = new TextFactory(this.config);
-    this.graphicsFactory = new GraphicsFactory(this.config);
-    this.buttonFactory = new ButtonFactory(this.config);
     this.inputManager = new InputManager(this.config);
     for (let sprite of this.gameboardConfig.tiles) {
       let path = `assets/images/tiles/${sprite.id}.png`;
@@ -56,7 +45,7 @@ export default class CharacterSelection extends Phaser.State {
 
     this.load.image('random', 'assets/images/tiles/random.png');
 
-    this.preloadBar = this.spriteFactory.makeCentered(300, 'preloadBar', 2);
+    this.preloadBar = this.tools.sprite.makeCentered(300, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
   }
 
@@ -76,7 +65,7 @@ export default class CharacterSelection extends Phaser.State {
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
     displayArray = characters.filter(x => x.playable);
 
-    this.graphicsFactory.addBackground();
+    this.tools.graphic.addBackground();
 
     displayArray.push(
       new TileModel(
@@ -85,6 +74,7 @@ export default class CharacterSelection extends Phaser.State {
         'Select a random character',
         '',
         'sound.wav',
+        0,
         null,
         null,
         'Decision paralysis? Just click the button and start playing, you fool!'
@@ -92,7 +82,7 @@ export default class CharacterSelection extends Phaser.State {
     );
 
     for (let char of displayArray) {
-      let sprite = this.spriteFactory.makeMenuTile(
+      let sprite = this.tools.sprite.makeMenuTile(
         column,
         row,
         char.id,
@@ -130,7 +120,7 @@ export default class CharacterSelection extends Phaser.State {
     this.ratio = ratio;
     this.displayArray = displayArray;
 
-    let select = this.textFactory.makeXBounded(
+    let select = this.tools.text.makeXBounded(
       480,
       'Select your character',
       50,
@@ -138,10 +128,10 @@ export default class CharacterSelection extends Phaser.State {
       ColorSettings.PRIMARY
     );
 
-    let rnd = this.game.rnd.between(0, displayArray.length - 2);
+    let rnd = this.tools.misc.randomBetween(0, displayArray.length - 2);
     this.setSelectedCharacter(this.spriteArray[rnd], displayArray[rnd]);
 
-    this.buttonFactory.make(
+    this.tools.button.make(
       675,
       965,
       ['start-1', 'start-2', 'start-3'],
@@ -151,31 +141,35 @@ export default class CharacterSelection extends Phaser.State {
       1.5
     );
 
-    this.selectedSprite = this.spriteFactory.createSprite(
+    this.selectedSprite = this.tools.sprite.createSprite(
       590,
       580,
       this.selectedCharacter.id,
       2
     );
 
-    this.textFactory.make(20, 860, `Special Power:`, 35);
+    this.tools.text.make(20, 860, `Special Power:`, 35);
   }
 
   gameStart() {
     if (this.selectedCharacter.id === 'random') {
       this.selectedCharacter = this.displayArray[
-        this.game.rnd.between(0, this.displayArray.length - 1)
+        this.tools.misc.randomBetween(0, this.displayArray.length - 1)
       ];
     }
-    this.gameboardConfig.mainTile = this.gameboardConfig.tiles.find(function(tile) {
-      return tile.id === this.selectedCharacter.id;
-    }.bind(this)) ;
-    this.game.sound.play(`${this.selectedCharacter.id}-sfx`, 1);
+    this.gameboardConfig.mainTile = this.gameboardConfig.tiles.find(
+      function(tile) {
+        return tile.id === this.selectedCharacter.id;
+      }.bind(this)
+    );
+    this.tools.audio.playCharacterSound(
+      this.gameboardConfig.tiles.find(x => x.id === this.selectedCharacter.id)
+    );
     this.state.start('GameboardLoader', true, false, this.gameboardConfig);
   }
 
   setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {
-    this.game.sound.play('beep', 1);
+    this.tools.audio.playSound('beep');
     this.spriteArray.forEach(x => (x.tint = Phaser.Color.GRAY));
 
     sprite.tint = Phaser.Color.WHITE;
@@ -185,13 +179,13 @@ export default class CharacterSelection extends Phaser.State {
     }
 
     if (!this.selectedName) {
-      this.selectedName = this.textFactory.make(18, 700, char.name, 50);
+      this.selectedName = this.tools.text.make(18, 700, char.name, 50);
     } else {
       this.selectedName.setText(char.name);
     }
 
     if (!this.selectedFullName) {
-      this.selectedFullName = this.textFactory.makeXBoundedOptions(
+      this.selectedFullName = this.tools.text.makeXBoundedOptions(
         740,
         char.fullName,
         35,
@@ -205,18 +199,18 @@ export default class CharacterSelection extends Phaser.State {
     }
 
     if (!this.selectedPower) {
-      this.selectedPower = this.textFactory.make(
+      this.selectedPower = this.tools.text.make(
         20,
         900,
-        `${char.power ? char.power.name : "?????"}`,
+        `${char.power ? char.power.name : '?????'}`,
         40
       );
     } else {
-      this.selectedPower.setText(`${char.power ? char.power.name : "?????"}`);
+      this.selectedPower.setText(`${char.power ? char.power.name : '?????'}`);
     }
 
     if (!this.selectedSummary) {
-      this.selectedSummary = this.textFactory.makeXBounded(
+      this.selectedSummary = this.tools.text.makeXBounded(
         1040,
         char.summary,
         35,

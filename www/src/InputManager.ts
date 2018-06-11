@@ -78,4 +78,12 @@ export default class InputManager extends Factory {
       return Phaser.Keyboard.ESC;
     }
   }
+
+  checkClick() {
+    if (this.game.input.activePointer.isDown) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

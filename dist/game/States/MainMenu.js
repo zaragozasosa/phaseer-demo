@@ -26,7 +26,7 @@ var MainMenu = (function (_super) {
         tools.text.makeXBounded(600, 'Click to start', 70, 'center', Config_1.ColorSettings.TEXT);
     };
     MainMenu.prototype.update = function () {
-        if (this.game.input.activePointer.isDown) {
+        if (this.cursor.checkClick()) {
             this.game.state.start('CharacterSelection');
         }
         if (this.cursor.checkKeys()) {
