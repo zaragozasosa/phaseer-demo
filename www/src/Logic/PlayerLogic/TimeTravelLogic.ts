@@ -25,11 +25,12 @@ export default class TimeTravelLogic extends LogicalGrid {
 
   getPowerInfo() {
     return new DiamondModel(
-      'diamond',
+      'bug',
       this.gameboardConfig.requiredBugs,
       true,
-      'Hello World! Time Stop!',
-      'And time resumes!'
+      'And time resumes!',
+      2.5,
+      -5
     );
   }
 

@@ -26,7 +26,8 @@ export default class DiamondGameboard extends Gameboard {
     this.diamondSprite = this.tools.sprite.createSprite(
       20,
       150,
-      this.diamondModel.id
+      this.diamondModel.id,
+      this.diamondModel.scale,this.diamondModel.paddingX
     );
     this.diamondText = this.tools.text.make(100, 155, `: ${this.diamonds}`, 50);
 

@@ -17,6 +17,8 @@ export default class TextFactory extends Factory {
     );
     this.game.physics.enable(txt, Phaser.Physics.ARCADE);
 
+    txt.stroke = "#000000";
+    txt.strokeThickness = 10;
     return txt;
   }
 

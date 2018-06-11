@@ -33,8 +33,9 @@ export default class GameboardLoader extends Phaser.State {
 
     this.load.image('witch', 'assets/images/witch.jpeg');
     this.load.image('menu', 'assets/images/menu.png');
+    this.load.image('blue', 'assets/images/blue.png');
+    this.load.image('bug', 'assets/images/bug.png');    
     
-
     this.cursor = new InputManager(Singleton.get().config);    
   }
 

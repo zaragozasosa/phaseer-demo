@@ -1,15 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DiamondModel = (function () {
-    function DiamondModel(id, requiredDiamonds, cooldown, startText, endText) {
+    function DiamondModel(id, requiredDiamonds, cooldown, endText, scale, paddingX) {
         if (cooldown === void 0) { cooldown = false; }
-        if (startText === void 0) { startText = ''; }
         if (endText === void 0) { endText = ''; }
+        if (scale === void 0) { scale = 1; }
+        if (paddingX === void 0) { paddingX = 0; }
         this.id = id;
         this.requiredDiamonds = requiredDiamonds;
         this.cooldown = cooldown;
-        this.startText = startText;
         this.endText = endText;
+        this.scale = scale;
+        this.paddingX = paddingX;
     }
     return DiamondModel;
 }());

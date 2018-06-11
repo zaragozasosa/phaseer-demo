@@ -14,8 +14,6 @@ export default class AudioFactory extends Factory {
     if (audio.sfxVolume === 0) {
       return false;
     }
-
-    debugger;
     
     this.playCharacterSound(gameConfig.mainTile);
 

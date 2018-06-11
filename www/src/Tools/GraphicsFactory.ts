@@ -73,7 +73,7 @@ export default class GraphicsFactory extends Factory {
     } else {
       return this.makeRect(
         win.defaultX,
-        win.defaultY * 2/3,
+        win.defaultY * 2 / 3,
         win.defaultWidth,
         win.defaultHeight,
         win.defaultLineWidth

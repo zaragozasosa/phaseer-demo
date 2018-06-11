@@ -23,6 +23,8 @@ var TextFactory = (function (_super) {
         var yPos = settings.tileNumberPadY + y * settings.tileSize;
         var txt = this.make(xPos, yPos, value.toString(), size, Config_1.ColorSettings.TEXT, settings.gridPaddingX, settings.gridPaddingY);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
+        txt.stroke = "#000000";
+        txt.strokeThickness = 10;
         return txt;
     };
     TextFactory.prototype.updateTileNumber = function (x, y, text) {

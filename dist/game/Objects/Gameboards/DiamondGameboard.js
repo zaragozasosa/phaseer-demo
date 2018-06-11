@@ -25,7 +25,7 @@ var DiamondGameboard = (function (_super) {
         }.bind(_this));
         _this.diamondModel = _this.grid.activatePower();
         _this.diamonds = _this.diamondModel.requiredDiamonds;
-        _this.diamondSprite = _this.tools.sprite.createSprite(20, 150, _this.diamondModel.id);
+        _this.diamondSprite = _this.tools.sprite.createSprite(20, 150, _this.diamondModel.id, _this.diamondModel.scale, _this.diamondModel.paddingX);
         _this.diamondText = _this.tools.text.make(100, 155, ": " + _this.diamonds, 50);
         if (_this.diamondModel.cooldown) {
             _this.gameboardConfig.cooldownSignal.add(function () {

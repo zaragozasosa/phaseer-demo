@@ -10,6 +10,7 @@ export default class GridTile extends Base {
   value: number;
   private frame: Phaser.Sprite;
   private sprite: Phaser.Sprite;
+  private solidLayer: Phaser.Sprite;
   private number: Phaser.Text;
   private group: Phaser.Group;
 
@@ -47,16 +48,18 @@ export default class GridTile extends Base {
     this.posY = y;
     this.frame = this.createFrame();
     this.sprite = this.createSprite();
-
+    this.solidLayer = this.createLayerSprite();
     this.group = this.tools.misc.addGroup();
     this.sprite.anchor.setTo(0, 0);
     this.number = this.tools.text.makeTileNumber(
       this.posX,
       this.posY,
       this.value,
-      40
+      35
     );
+
     this.group.addChild(this.sprite);
+    this.group.addChild(this.solidLayer);
     this.group.addChild(this.number);
     this.group.addChild(this.frame);
 
@@ -243,17 +246,21 @@ export default class GridTile extends Base {
   }
 
   startTimeStop() {
-    this.timeStopTween = this.tools.misc.tweenTint(
-      this.sprite,
-      Phaser.Color.hexToRGB('#FFFFFF'),
-      Phaser.Color.hexToRGB('#87CEFA'),
-      1000
+    this.solidLayer.alpha = 0;    
+    this.timeStopTween = this.tools.misc.tweenTo(
+      this.solidLayer,
+      { alpha: 0.7 },
+      2000,
+      'Linear',
+      false,
+      0,
+      -1
     );
     this.timeStopTween.start();
   }
 
   stopTimeStop() {
-    this.sprite.tint = Phaser.Color.WHITE;
+    this.solidLayer.alpha = 0;
     this.timeStopTween.pause();
   }
 
@@ -312,6 +319,13 @@ export default class GridTile extends Base {
     let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
     sprite.body.collideWorldBounds = true;
 
+    return sprite;
+  }
+
+  private createLayerSprite() {
+    let sprite = this.tools.sprite.makeTile(this.posX, this.posY, 'blue');
+    sprite.body.collideWorldBounds = true;
+    sprite.alpha = 0;
     return sprite;
   }
 

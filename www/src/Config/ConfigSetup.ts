@@ -104,8 +104,8 @@ export default class ConfigSetup {
     grid.gridPaddingY = 250 * scaleFactor;
     grid.tileScale = grid.tileSize / (grid.physicalTileSize + 10);
     grid.font = 'Verdana,Geneva,sans-serif';
-    grid.tileNumberPadX = 20;
-    grid.tileNumberPadY = 15;
+    grid.tileNumberPadX = 15;
+    grid.tileNumberPadY = 10;
 
     config.grid = grid;
 

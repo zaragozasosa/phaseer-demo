@@ -32,10 +32,12 @@ var GridTile = (function (_super) {
         _this.posY = y;
         _this.frame = _this.createFrame();
         _this.sprite = _this.createSprite();
+        _this.solidLayer = _this.createLayerSprite();
         _this.group = _this.tools.misc.addGroup();
         _this.sprite.anchor.setTo(0, 0);
-        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 40);
+        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 35);
         _this.group.addChild(_this.sprite);
+        _this.group.addChild(_this.solidLayer);
         _this.group.addChild(_this.number);
         _this.group.addChild(_this.frame);
         _this.group.alpha = 0;
@@ -189,11 +191,12 @@ var GridTile = (function (_super) {
         return false;
     };
     GridTile.prototype.startTimeStop = function () {
-        this.timeStopTween = this.tools.misc.tweenTint(this.sprite, Phaser.Color.hexToRGB('#FFFFFF'), Phaser.Color.hexToRGB('#87CEFA'), 1000);
+        this.solidLayer.alpha = 0;
+        this.timeStopTween = this.tools.misc.tweenTo(this.solidLayer, { alpha: 0.7 }, 2000, 'Linear', false, 0, -1);
         this.timeStopTween.start();
     };
     GridTile.prototype.stopTimeStop = function () {
-        this.sprite.tint = Phaser.Color.WHITE;
+        this.solidLayer.alpha = 0;
         this.timeStopTween.pause();
     };
     GridTile.prototype.update = function () {
@@ -245,6 +248,12 @@ var GridTile = (function (_super) {
         var tile = this.model;
         var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
         sprite.body.collideWorldBounds = true;
+        return sprite;
+    };
+    GridTile.prototype.createLayerSprite = function () {
+        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, 'blue');
+        sprite.body.collideWorldBounds = true;
+        sprite.alpha = 0;
         return sprite;
     };
     GridTile.prototype.createFrame = function () {

@@ -26,7 +26,6 @@ var AudioFactory = (function (_super) {
         if (audio.sfxVolume === 0) {
             return false;
         }
-        debugger;
         this.playCharacterSound(gameConfig.mainTile);
         this.game.time.events.add(500, function () {
             if (gameConfig.mainTile.friendId) {
