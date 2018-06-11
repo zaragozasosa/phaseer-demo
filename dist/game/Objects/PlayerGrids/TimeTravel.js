@@ -20,6 +20,15 @@ var TimeTravel = (function (_super) {
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
+    TimeTravel.prototype.activatePower = function () {
+        if (this.bugInfo) {
+            this.gridLogic.power();
+        }
+        else {
+            this.bugInfo = this.gridLogic.getPowerInfo();
+            return this.bugInfo;
+        }
+    };
     return TimeTravel;
 }(Grid_1.default));
 exports.default = TimeTravel;

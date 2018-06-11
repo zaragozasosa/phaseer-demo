@@ -1,61 +1,77 @@
 import LogicalGrid from './../LogicalGrid';
 import GameboardConfig from './../../Config/GameboardConfig';
+import GridTile from './../../Objects/GridTile';
+import DiamondModel from './../../Models/DiamondModel';
 
 export default class TimeTravelLogic extends LogicalGrid {
-  private historyArray: Array<string>;
+  private isTimeStopped: boolean;
+  private turnsTimeStop: number;
+  private turnsPassed: number;
   constructor(gameboardConfig: GameboardConfig) {
     super(gameboardConfig);
-    this.historyArray = [];
-    this.addGridToHistory();
+    this.isTimeStopped = false;
   }
 
   power() {
-    if (this.canUsePower()) {
-      let tiles = this.grid;
-      let oldGrid = this.historyArray[this.historyArray.length - 4];
-      this.reconfigureGrid(oldGrid.split(','));
-    }
+    this.isTimeStopped = true;
+    this.turnsTimeStop = this.tools.misc.randomBetween(2, 4);
+    this.turnsPassed = 0;
+    this.tooglePauseTiles(true);
   }
 
   canUsePower() {
-    if (this.historyArray.length > 3) {
-      return true;
+    return !this.isTimeStopped;
+  }
+
+  getPowerInfo() {
+    return new DiamondModel(
+      'diamond',
+      this.gameboardConfig.requiredBugs,
+      true,
+      'Hello World! Time Stop!',
+      'And time resumes!'
+    );
+  }
+
+  protected prepareNewTurn() {
+    this.playHighestMergeSFX();
+    this.cleanGrid();
+    this.gameboardConfig.turnsSignal.dispatch();
+
+    if (this.isTimeStopped) {
+      this.checkTime();
     } else {
-      return false;
+      this.tryToAdd();
     }
   }
 
-  onTilesStopped() {
-    this.addGridToHistory();
+  private checkTime() {
+    if (this.turnsPassed === this.turnsTimeStop) {
+      this.isTimeStopped = false;
+      this.tooglePauseTiles(false);
+      this.gameboardConfig.cooldownSignal.dispatch();
+      for (let i = 0; i < this.turnsTimeStop; i++) {
+        this.tryToAdd();
+      }
+    } else {
+      this.turnsPassed++;
+    }
   }
 
-  protected tilesStopped() {
-    let allStopped = true;
-
-    if (this.grid.filter(x => x && x.isMoving).length) {
-      allStopped = false;
-    }
-
-    if (allStopped) {
-      this.onTilesStopped();
-      this.prepareNewTurn();
-    }
-
-    return allStopped;
-  }
-
-  private addGridToHistory() {
-    let tiles = this.grid;
-    let string = '';
-    for (let tile of tiles) {
-      if (!tile) {
-        string += '0,';
+  private tooglePauseTiles(pause: boolean) {
+    for (let tile of this.getTilesOrdered()) {
+      if (pause) {
+        tile.startTimeStop();
       } else {
-        string += `${tile.value},`;
+        tile.stopTimeStop();
       }
     }
+  }
 
-    let history = string.slice(0, -1);
-    this.historyArray.push(history);
+  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
+    nextTile.value *= 2;
+    previousTile.value = 0;
+    previousTile.nextTile = nextTile;
+    this.gameboardConfig.mergeTileSignal.dispatch();
   }
 }

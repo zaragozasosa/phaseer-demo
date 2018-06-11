@@ -156,11 +156,9 @@ export default abstract class LogicalGrid extends Base {
 
   protected tilesStopped() {
     let allStopped = true;
-
     if (this.grid.filter(x => x && x.isMoving).length) {
       allStopped = false;
     }
-
     if (allStopped) {
       this.prepareNewTurn();
     }
@@ -169,25 +167,10 @@ export default abstract class LogicalGrid extends Base {
   }
 
   protected prepareNewTurn() {
-    if (this.lastMergedTile) {
-      let value = this.lastMergedTile.value;
-      if (
-        (value === this.gameboardConfig.minimumValue * 2 &&
-          this.tools.misc.randomBetween(0, 3) === 0) ||
-        (value === this.gameboardConfig.minimumValue * 4 &&
-          this.tools.misc.randomBetween(0, 2) === 0) ||
-        (value === this.gameboardConfig.minimumValue * 8 &&
-          this.tools.misc.randomBetween(0, 1) === 0) ||
-        (value === this.gameboardConfig.minimumValue * 16 &&
-          this.tools.misc.randomBetween(0, 1) === 0)
-      ) {
-        this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
-      }
-    }
-
+    this.playHighestMergeSFX();
     this.cleanGrid();
-
     this.gameboardConfig.turnsSignal.dispatch();
+    
     if (!this.isFull()) {
       this.add();
     }
@@ -205,6 +188,12 @@ export default abstract class LogicalGrid extends Base {
     nextTile.value *= 2;
     previousTile.value = 0;
     previousTile.nextTile = nextTile;
+  }
+
+  protected tryToAdd() {
+    if (!this.isFull()) {
+      this.add();
+    }
   }
 
   protected add() {
@@ -338,6 +327,24 @@ export default abstract class LogicalGrid extends Base {
       tile.animate(keyboardInput);
     }
     return isDirty;
+  }
+
+  protected playHighestMergeSFX() {
+    if (this.lastMergedTile) {
+      let value = this.lastMergedTile.value;
+      if (
+        (value === this.gameboardConfig.minimumValue * 2 &&
+          this.tools.misc.randomBetween(0, 3) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 4 &&
+          this.tools.misc.randomBetween(0, 2) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 8 &&
+          this.tools.misc.randomBetween(0, 1) === 0) ||
+        (value === this.gameboardConfig.minimumValue * 16 &&
+          this.tools.misc.randomBetween(0, 1) === 0)
+      ) {
+        this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
+      }
+    }
   }
 
   sumTiles() {

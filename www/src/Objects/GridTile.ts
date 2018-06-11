@@ -21,6 +21,8 @@ export default class GridTile extends Base {
   private ghostCooldown: number;
   private ghostTurns: number;
 
+  private timeStopTween: Phaser.Tween;
+
   constructor(
     x: number,
     y: number,
@@ -74,7 +76,6 @@ export default class GridTile extends Base {
       500
     );
 
-
     this.ghostTween = misc.tweenTo(
       this.group,
       { alpha: 0.3 },
@@ -86,15 +87,14 @@ export default class GridTile extends Base {
       true
     );
 
-    if(ghost) {
+    if (ghost) {
       this.group.alpha = 1;
       this.ghostCooldown = ghostCooldown;
       this.ghostTurns = 0;
       this.ghostTween.start();
     } else {
-      misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);      
+      misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);
     }
-
 
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputDown.add(
@@ -230,7 +230,7 @@ export default class GridTile extends Base {
     this.ghostCooldown = undefined;
   }
 
-  checkTurns() {
+  checkGhostTurns() {
     if (this.ghostCooldown) {
       this.ghostTurns++;
       if (this.ghostCooldown === this.ghostTurns) {
@@ -240,6 +240,21 @@ export default class GridTile extends Base {
       }
     }
     return false;
+  }
+
+  startTimeStop() {
+    this.timeStopTween = this.tools.misc.tweenTint(
+      this.sprite,
+      Phaser.Color.hexToRGB('#FFFFFF'),
+      Phaser.Color.hexToRGB('#87CEFA'),
+      1000
+    );
+    this.timeStopTween.start();
+  }
+
+  stopTimeStop() {
+    this.sprite.tint = Phaser.Color.WHITE;
+    this.timeStopTween.pause();
   }
 
   private update() {

@@ -110,7 +110,7 @@ export default class ConfigSetup {
     config.grid = grid;
 
     config.sound = new SoundSettings();
-    config.sound.bgmVolume = 0.5;
+    config.sound.bgmVolume = 1;
     config.sound.sfxVolume = 1;
     config.sound.volumeLevels = [1, 0.5, 0];
     config.sound.actualVolumeIndex = 0;

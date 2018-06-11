@@ -11,7 +11,7 @@ export default class Preloader extends Phaser.State {
     this.preloadBar = tools.sprite.makeCentered(300, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
 
-    this.game.load.audio('bgm', ['assets/audio/Puzzle-Action-2.mp3']);
+    this.game.load.audio('bgm', ['assets/audio/bgm-demo.mp3']);
     this.load.audio('beep', 'assets/sfx/beep.wav');
 
     this.load.image('start-1', 'assets/images/start-1.png');

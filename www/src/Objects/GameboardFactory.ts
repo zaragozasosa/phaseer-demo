@@ -3,6 +3,8 @@ import AmmoGameboard from './Gameboards/AmmoGameboard';
 import ChargeGameboard from './Gameboards/ChargeGameboard';
 import CooldownGameboard from './Gameboards/CooldownGameboard';
 import DiamondGameboard from './Gameboards/DiamondGameboard';
+import SimplePowerGameboard from './Gameboards/SimplePowerGameboard';
+
 
 import GameboardConfig from './../Config/GameboardConfig';
 
@@ -14,6 +16,7 @@ export default class GameboardFactory {
       case 'CincoDeMayo'.toLowerCase():
         return new AmmoGameboard(config);
       case 'GachaAddiction'.toLowerCase():
+      case 'TimeTravel'.toLowerCase():
         return new DiamondGameboard(config);
       case 'ReportedForRP'.toLowerCase():
         return new ChargeGameboard(config);
@@ -21,7 +24,7 @@ export default class GameboardFactory {
         return new CooldownGameboard(config);
 
       default:
-        return new Gameboard(config);
+        return new SimplePowerGameboard(config);
     }
   }
 }

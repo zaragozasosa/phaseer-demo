@@ -14,7 +14,7 @@ export default class InfoWindow extends Window {
     let text = this.tools.text.make(
       70,
       y,
-      'Power: ' + character.power.name,
+      character.power.name,
       50
     );
     let text2 = this.tools.text.makeXBoundedOptions(

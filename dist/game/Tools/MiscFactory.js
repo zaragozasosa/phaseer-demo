@@ -61,6 +61,26 @@ var MiscFactory = (function (_super) {
         }
         return newList;
     };
+    MiscFactory.prototype.tweenVanishAndDestroy = function (obj, props, duration, ease, autoStart, delay) {
+        if (duration === void 0) { duration = 200; }
+        if (ease === void 0) { ease = 'Linear'; }
+        if (autoStart === void 0) { autoStart = false; }
+        if (delay === void 0) { delay = 0; }
+        this.tweenTo(obj, props, duration, ease, true, delay).onComplete.add(function () {
+            obj.destroy();
+        });
+    };
+    MiscFactory.prototype.tweenTint = function (obj, startColor, endColor, time) {
+        var colorBlend = { step: 0 };
+        var colorTween = this.game.add
+            .tween(colorBlend)
+            .to({ step: 100 }, time, 'Linear', false, 0, -1, true);
+        colorTween.onUpdateCallback(function () {
+            obj.tint = Phaser.Color.interpolateColor(Phaser.Color.hexToRGB('#00BFFF'), Phaser.Color.hexToRGB('#87CEFA'), 100, colorBlend.step);
+        });
+        obj.tint = startColor;
+        return colorTween;
+    };
     return MiscFactory;
 }(Factory_1.default));
 exports.default = MiscFactory;

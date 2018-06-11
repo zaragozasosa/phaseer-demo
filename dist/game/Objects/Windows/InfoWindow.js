@@ -20,7 +20,7 @@ var InfoWindow = (function (_super) {
         if (window === void 0) { window = Window_1.default.DEFAULT_WINDOW; }
         var _this = _super.call(this, window) || this;
         var group = _this.tools.misc.addGroup();
-        var text = _this.tools.text.make(70, y, 'Power: ' + character.power.name, 50);
+        var text = _this.tools.text.make(70, y, character.power.name, 50);
         var text2 = _this.tools.text.makeXBoundedOptions(y + 20, character.power.description, 35, 'left', 850, 70, -5, Config_1.ColorSettings.ALT_TEXT);
         group.add(text);
         group.add(text2);

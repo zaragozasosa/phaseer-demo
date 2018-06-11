@@ -7,7 +7,7 @@ import PowerWindow from './Windows/PowerWindow';
 import PauseWindow from './Windows/PauseWindow';
 import { ColorSettings } from './../Config/Config';
 
-export default class Gameboard extends Base {
+export default abstract class Gameboard extends Base {
   protected grid: Grid;
   protected gameboardConfig: GameboardConfig;
   protected input: InputManager;

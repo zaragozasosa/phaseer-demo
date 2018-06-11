@@ -110,7 +110,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
       this.makeGhost = false;
       this.gameboardConfig.turnsSignal.add(
         function() {
-          if (tile.checkTurns()) {
+          if (tile.checkGhostTurns()) {
             this.cleanGrid();
           }
         }.bind(this)

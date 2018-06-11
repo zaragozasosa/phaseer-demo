@@ -142,19 +142,7 @@ var LogicalGrid = (function (_super) {
         return allStopped;
     };
     LogicalGrid.prototype.prepareNewTurn = function () {
-        if (this.lastMergedTile) {
-            var value = this.lastMergedTile.value;
-            if ((value === this.gameboardConfig.minimumValue * 2 &&
-                this.tools.misc.randomBetween(0, 3) === 0) ||
-                (value === this.gameboardConfig.minimumValue * 4 &&
-                    this.tools.misc.randomBetween(0, 2) === 0) ||
-                (value === this.gameboardConfig.minimumValue * 8 &&
-                    this.tools.misc.randomBetween(0, 1) === 0) ||
-                (value === this.gameboardConfig.minimumValue * 16 &&
-                    this.tools.misc.randomBetween(0, 1) === 0)) {
-                this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
-            }
-        }
+        this.playHighestMergeSFX();
         this.cleanGrid();
         this.gameboardConfig.turnsSignal.dispatch();
         if (!this.isFull()) {
@@ -174,6 +162,11 @@ var LogicalGrid = (function (_super) {
         nextTile.value *= 2;
         previousTile.value = 0;
         previousTile.nextTile = nextTile;
+    };
+    LogicalGrid.prototype.tryToAdd = function () {
+        if (!this.isFull()) {
+            this.add();
+        }
     };
     LogicalGrid.prototype.add = function () {
         var newTilePos;
@@ -290,6 +283,21 @@ var LogicalGrid = (function (_super) {
             tile.animate(keyboardInput);
         }
         return isDirty;
+    };
+    LogicalGrid.prototype.playHighestMergeSFX = function () {
+        if (this.lastMergedTile) {
+            var value = this.lastMergedTile.value;
+            if ((value === this.gameboardConfig.minimumValue * 2 &&
+                this.tools.misc.randomBetween(0, 3) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 4 &&
+                    this.tools.misc.randomBetween(0, 2) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 8 &&
+                    this.tools.misc.randomBetween(0, 1) === 0) ||
+                (value === this.gameboardConfig.minimumValue * 16 &&
+                    this.tools.misc.randomBetween(0, 1) === 0)) {
+                this.tools.audio.playSound(this.lastMergedTile.model.id + '-sfx');
+            }
+        }
     };
     LogicalGrid.prototype.sumTiles = function () {
         var points = 0;

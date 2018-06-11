@@ -13,7 +13,7 @@ export default class GameboardConfig {
   bulletAmmo: number;
   diceAmmo: number;
   requiredDiamonds: number;
-  powerDelaySeconds: number;
+  requiredBugs: number;
 
   updateScoreSignal: Phaser.Signal;
   toogleButtonSignal: Phaser.Signal;
@@ -35,7 +35,6 @@ export default class GameboardConfig {
   constructor() {
     this.arraySize = 3;
     this.winningTile = 512;
-    this.powerDelaySeconds = 10;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {
@@ -43,9 +42,10 @@ export default class GameboardConfig {
       }
     }
     this.minimumValue = 1;
-    this.bulletAmmo = 6;
-    this.diceAmmo = 5;
+    this.bulletAmmo = 4;
+    this.diceAmmo = 6;
     this.requiredDiamonds = 50;
+    this.requiredBugs = 40;
     this.createPowers();
     this.createTiles();
 
@@ -87,17 +87,17 @@ export default class GameboardConfig {
       new PowerModel(
         'detectiveWork',
         'Detective Work',
-        'Remove every tile on the grid without a pair.',
-        'Have at least one tile without a pair.'
+        'Control the flow of new tiles. Changing this flow will require you to wait a few turns.\n\n' +
+        'You can also investigate to create a ghost tile. Be careful, the higher your tiles are, the hardest it will be to merge.',
       )
     );
 
     powers.push(
       new PowerModel(
         'timeTravel',
-        'Time Travel',
-        'Go back in time 4 movements ago! Will activate by itself on a game over.',
-        'Have at least 4 previous movements.'
+        'Hello World: Time stops',
+        'Collect bugs! Use this power to stop the new tile from appearing for a few turns. Then, the new tiles will appear all together!',
+        `Have ${this.requiredDiamonds} bugs.`
       )
     );
 

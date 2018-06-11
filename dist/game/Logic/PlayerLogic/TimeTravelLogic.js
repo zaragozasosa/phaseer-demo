@@ -11,57 +11,66 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var LogicalGrid_1 = require("./../LogicalGrid");
+var DiamondModel_1 = require("./../../Models/DiamondModel");
 var TimeTravelLogic = (function (_super) {
     __extends(TimeTravelLogic, _super);
     function TimeTravelLogic(gameboardConfig) {
         var _this = _super.call(this, gameboardConfig) || this;
-        _this.historyArray = [];
-        _this.addGridToHistory();
+        _this.isTimeStopped = false;
         return _this;
     }
     TimeTravelLogic.prototype.power = function () {
-        if (this.canUsePower()) {
-            var tiles = this.grid;
-            var oldGrid = this.historyArray[this.historyArray.length - 4];
-            this.reconfigureGrid(oldGrid.split(','));
-        }
+        this.isTimeStopped = true;
+        this.turnsTimeStop = this.tools.misc.randomBetween(2, 4);
+        this.turnsPassed = 0;
+        this.tooglePauseTiles(true);
     };
     TimeTravelLogic.prototype.canUsePower = function () {
-        if (this.historyArray.length > 3) {
-            return true;
+        return !this.isTimeStopped;
+    };
+    TimeTravelLogic.prototype.getPowerInfo = function () {
+        return new DiamondModel_1.default('diamond', this.gameboardConfig.requiredBugs, true, 'Hello World! Time Stop!', 'And time resumes!');
+    };
+    TimeTravelLogic.prototype.prepareNewTurn = function () {
+        this.playHighestMergeSFX();
+        this.cleanGrid();
+        this.gameboardConfig.turnsSignal.dispatch();
+        if (this.isTimeStopped) {
+            this.checkTime();
         }
         else {
-            return false;
+            this.tryToAdd();
         }
     };
-    TimeTravelLogic.prototype.onTilesStopped = function () {
-        this.addGridToHistory();
-    };
-    TimeTravelLogic.prototype.tilesStopped = function () {
-        var allStopped = true;
-        if (this.grid.filter(function (x) { return x && x.isMoving; }).length) {
-            allStopped = false;
+    TimeTravelLogic.prototype.checkTime = function () {
+        if (this.turnsPassed === this.turnsTimeStop) {
+            this.isTimeStopped = false;
+            this.tooglePauseTiles(false);
+            this.gameboardConfig.cooldownSignal.dispatch();
+            for (var i = 0; i < this.turnsTimeStop; i++) {
+                this.tryToAdd();
+            }
         }
-        if (allStopped) {
-            this.onTilesStopped();
-            this.prepareNewTurn();
+        else {
+            this.turnsPassed++;
         }
-        return allStopped;
     };
-    TimeTravelLogic.prototype.addGridToHistory = function () {
-        var tiles = this.grid;
-        var string = '';
-        for (var _i = 0, tiles_1 = tiles; _i < tiles_1.length; _i++) {
-            var tile = tiles_1[_i];
-            if (!tile) {
-                string += '0,';
+    TimeTravelLogic.prototype.tooglePauseTiles = function (pause) {
+        for (var _i = 0, _a = this.getTilesOrdered(); _i < _a.length; _i++) {
+            var tile = _a[_i];
+            if (pause) {
+                tile.startTimeStop();
             }
             else {
-                string += tile.value + ",";
+                tile.stopTimeStop();
             }
         }
-        var history = string.slice(0, -1);
-        this.historyArray.push(history);
+    };
+    TimeTravelLogic.prototype.mergeTile = function (nextTile, previousTile) {
+        nextTile.value *= 2;
+        previousTile.value = 0;
+        previousTile.nextTile = nextTile;
+        this.gameboardConfig.mergeTileSignal.dispatch();
     };
     return TimeTravelLogic;
 }(LogicalGrid_1.default));

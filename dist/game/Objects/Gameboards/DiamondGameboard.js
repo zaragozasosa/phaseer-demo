@@ -27,6 +27,13 @@ var DiamondGameboard = (function (_super) {
         _this.diamonds = _this.diamondModel.requiredDiamonds;
         _this.diamondSprite = _this.tools.sprite.createSprite(20, 150, _this.diamondModel.id);
         _this.diamondText = _this.tools.text.make(100, 155, ": " + _this.diamonds, 50);
+        if (_this.diamondModel.cooldown) {
+            _this.gameboardConfig.cooldownSignal.add(function () {
+                var text = this.tools.text.makeXBounded(650, this.diamondModel.endText, 75, 'center');
+                this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, 1500, 'Linear', true, 1500);
+                this.actionButton.visible = true;
+            }.bind(_this));
+        }
         return _this;
     }
     DiamondGameboard.prototype.activatePower = function () {
@@ -40,6 +47,9 @@ var DiamondGameboard = (function (_super) {
             this.diamonds -= this.diamondModel.requiredDiamonds;
             this.diamondText.setText(": " + this.diamonds);
             this.tryDisableButton();
+            if (this.diamondModel.cooldown) {
+                this.actionButton.visible = false;
+            }
         }
     };
     DiamondGameboard.prototype.tryEnableButton = function () {
@@ -50,6 +60,22 @@ var DiamondGameboard = (function (_super) {
     DiamondGameboard.prototype.tryDisableButton = function () {
         if (this.diamonds < this.diamondModel.requiredDiamonds) {
             this.toogleButton(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
+        }
+    };
+    DiamondGameboard.prototype.toogleButton = function (buttonStatus) {
+        if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE &&
+            this.diamonds >= this.diamondModel.requiredDiamonds) {
+            this.actionButton.inputEnabled = true;
+            this.actionButton.tint = Phaser.Color.WHITE;
+        }
+        if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP &&
+            this.diamonds >= this.diamondModel.requiredDiamonds) {
+            this.actionButton.inputEnabled = false;
+            this.actionButton.tint = Phaser.Color.WHITE;
+        }
+        else if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP_DISABLED) {
+            this.actionButton.inputEnabled = false;
+            this.actionButton.tint = Phaser.Color.GRAY;
         }
     };
     return DiamondGameboard;

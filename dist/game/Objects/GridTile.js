@@ -177,7 +177,7 @@ var GridTile = (function (_super) {
         }
         this.ghostCooldown = undefined;
     };
-    GridTile.prototype.checkTurns = function () {
+    GridTile.prototype.checkGhostTurns = function () {
         if (this.ghostCooldown) {
             this.ghostTurns++;
             if (this.ghostCooldown === this.ghostTurns) {
@@ -187,6 +187,14 @@ var GridTile = (function (_super) {
             }
         }
         return false;
+    };
+    GridTile.prototype.startTimeStop = function () {
+        this.timeStopTween = this.tools.misc.tweenTint(this.sprite, Phaser.Color.hexToRGB('#FFFFFF'), Phaser.Color.hexToRGB('#87CEFA'), 1000);
+        this.timeStopTween.start();
+    };
+    GridTile.prototype.stopTimeStop = function () {
+        this.sprite.tint = Phaser.Color.WHITE;
+        this.timeStopTween.pause();
     };
     GridTile.prototype.update = function () {
         for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {

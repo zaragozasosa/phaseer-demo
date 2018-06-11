@@ -6,7 +6,6 @@ var GameboardConfig = (function () {
     function GameboardConfig() {
         this.arraySize = 3;
         this.winningTile = 512;
-        this.powerDelaySeconds = 10;
         this.initialArray = [];
         for (var x = 0; x <= this.arraySize; x++) {
             for (var y = 0; y <= this.arraySize; y++) {
@@ -14,9 +13,10 @@ var GameboardConfig = (function () {
             }
         }
         this.minimumValue = 1;
-        this.bulletAmmo = 6;
-        this.diceAmmo = 5;
+        this.bulletAmmo = 4;
+        this.diceAmmo = 6;
         this.requiredDiamonds = 50;
+        this.requiredBugs = 40;
         this.createPowers();
         this.createTiles();
         this.quitSignal = new Phaser.Signal();
@@ -27,8 +27,9 @@ var GameboardConfig = (function () {
         powers.push(new PowerModel_1.default('powerGaming', 'Power Gaming', 'Duplicate the value of every tile in the board below 32.', 'Have at least one tile below 32'));
         powers.push(new PowerModel_1.default('gachaAddiction', 'Gacha Addiction', 'Collect diamonds! Use them to fully randomize your board!', "Have at least 3 different kind of tiles and " + this
             .requiredDiamonds + " diamonds."));
-        powers.push(new PowerModel_1.default('detectiveWork', 'Detective Work', 'Remove every tile on the grid without a pair.', 'Have at least one tile without a pair.'));
-        powers.push(new PowerModel_1.default('timeTravel', 'Time Travel', 'Go back in time 4 movements ago! Will activate by itself on a game over.', 'Have at least 4 previous movements.'));
+        powers.push(new PowerModel_1.default('detectiveWork', 'Detective Work', 'Control the flow of new tiles. Changing this flow will require you to wait a few turns.\n\n' +
+            'You can also investigate to create a ghost tile. Be careful, the higher your tiles are, the hardest it will be to merge.'));
+        powers.push(new PowerModel_1.default('timeTravel', 'Hello World: Time stops', 'Collect bugs! Use this power to stop the new tile from appearing for a few turns. Then, the new tiles will appear all together!', "Have " + this.requiredDiamonds + " bugs."));
         powers.push(new PowerModel_1.default('reportedForRP', 'Reported for RP', '3 charges, 3 different powers! Use them at any time you want.\n\n' +
             '* Sage: Will fill your grid with low value tiles if you have space.\n' +
             '* Report: Will remove low value tiles, if you have any.\n' +

@@ -107,7 +107,7 @@ var ReportedForRPLogic = (function (_super) {
             this.direction = null;
             this.makeGhost = false;
             this.gameboardConfig.turnsSignal.add(function () {
-                if (tile_1.checkTurns()) {
+                if (tile_1.checkGhostTurns()) {
                     this.cleanGrid();
                 }
             }.bind(this));
