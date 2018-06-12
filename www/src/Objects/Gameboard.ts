@@ -19,7 +19,7 @@ export default abstract class Gameboard extends Base {
   points: number;
   movements: number;
   timer: Phaser.Timer;
-  timerSeconds: number;
+  timerMessage: Phaser.Text;
   actionButton: Phaser.Button;
 
   isPaused: boolean;
@@ -70,6 +70,7 @@ export default abstract class Gameboard extends Base {
   }
 
   update() {
+    this.updateTimer();
     var keys = this.input.checkKeys();
     if (keys === Phaser.Keyboard.ESC) {
       this.pauseToogle();
@@ -150,19 +151,15 @@ export default abstract class Gameboard extends Base {
   }
 
   private addTimer() {
-    let message = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-    this.timerSeconds = 0;
+    this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
     this.timer = this.tools.misc.createTimer();
     this.timer.start();
-    this.timer.loop(
-      1000,
-      function() {
-        this.timerSeconds++;
-        let min = Math.floor(this.timerSeconds / 60);
-        let sec = this.timerSeconds - min * 60;
-        message.setText(`Time: ${this.num(min)}:${this.num(sec)}`);
-      }.bind(this)
-    );
+  }
+
+  private updateTimer() {
+    let min = Math.floor(this.timer.seconds / 60);
+    let sec = Math.floor(this.timer.seconds - min * 60);
+    this.timerMessage.setText(`Time: ${this.num(min)}:${this.num(sec)}`);
   }
 
   private num(n) {
@@ -173,6 +170,7 @@ export default abstract class Gameboard extends Base {
     if (this.isPaused) {
       this.pausedWindow.hideAndDestroy();
       this.isPaused = false;
+      this.timer.resume();
     } else {
       this.pausedWindow = new PauseWindow(
         this.gameboardConfig.mainTile,
@@ -184,6 +182,7 @@ export default abstract class Gameboard extends Base {
         }.bind(this)
       );
       this.isPaused = true;
+      this.timer.pause();      
     }
   }
 

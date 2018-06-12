@@ -30,7 +30,8 @@ export default class TimeTravelLogic extends LogicalGrid {
       true,
       'And time resumes!',
       2.5,
-      -5
+      -5,
+      DiamondModel.TIME_TYPE
     );
   }
 

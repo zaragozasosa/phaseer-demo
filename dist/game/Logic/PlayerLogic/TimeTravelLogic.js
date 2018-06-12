@@ -29,7 +29,7 @@ var TimeTravelLogic = (function (_super) {
         return !this.isTimeStopped;
     };
     TimeTravelLogic.prototype.getPowerInfo = function () {
-        return new DiamondModel_1.default('bug', this.gameboardConfig.requiredBugs, true, 'And time resumes!', 2.5, -5);
+        return new DiamondModel_1.default('bug', this.gameboardConfig.requiredBugs, true, 'And time resumes!', 2.5, -5, DiamondModel_1.default.TIME_TYPE);
     };
     TimeTravelLogic.prototype.prepareNewTurn = function () {
         this.playHighestMergeSFX();

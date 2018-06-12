@@ -50,6 +50,10 @@ export default class DiamondGameboard extends Gameboard {
             1500
           );
 
+          if(this.diamondModel.type === DiamondModel.TIME_TYPE) {
+            this.toogleTimer(false);
+          }
+
           this.actionButton.visible = true;
         }.bind(this)
       );
@@ -64,6 +68,9 @@ export default class DiamondGameboard extends Gameboard {
         this.showOnce = false;
       }
       this.grid.activatePower();
+      if(this.diamondModel.type === DiamondModel.TIME_TYPE) {
+        this.toogleTimer(true);
+      }
       this.diamonds -= this.diamondModel.requiredDiamonds;
       this.diamondText.setText(`: ${this.diamonds}`);
       this.tryDisableButton();
@@ -102,6 +109,16 @@ export default class DiamondGameboard extends Gameboard {
     } else if (buttonStatus === GameboardConfig.BUTTON_SLEEP_DISABLED) {
       this.actionButton.inputEnabled = false;
       this.actionButton.tint = Phaser.Color.GRAY;
+    }
+  }
+
+  private toogleTimer(paused = true) {
+    if(paused) {
+      this.timer.pause();
+      this.timerMessage.tint = Phaser.Color.BLUE;      
+    } else {
+      this.timer.resume();
+      this.timerMessage.tint = Phaser.Color.WHITE;
     }
   }
 }

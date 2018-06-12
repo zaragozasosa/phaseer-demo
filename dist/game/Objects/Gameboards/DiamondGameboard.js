@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
 var GameboardConfig_1 = require("./../../Config/GameboardConfig");
 var PowerWindow_1 = require("./../Windows/PowerWindow");
+var DiamondModel_1 = require("./../../Models/DiamondModel");
 var DiamondGameboard = (function (_super) {
     __extends(DiamondGameboard, _super);
     function DiamondGameboard(gameboardConfig) {
@@ -31,6 +32,9 @@ var DiamondGameboard = (function (_super) {
             _this.gameboardConfig.cooldownSignal.add(function () {
                 var text = this.tools.text.makeXBounded(650, this.diamondModel.endText, 75, 'center');
                 this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, 1500, 'Linear', true, 1500);
+                if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
+                    this.toogleTimer(false);
+                }
                 this.actionButton.visible = true;
             }.bind(_this));
         }
@@ -44,6 +48,9 @@ var DiamondGameboard = (function (_super) {
                 this.showOnce = false;
             }
             this.grid.activatePower();
+            if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
+                this.toogleTimer(true);
+            }
             this.diamonds -= this.diamondModel.requiredDiamonds;
             this.diamondText.setText(": " + this.diamonds);
             this.tryDisableButton();
@@ -76,6 +83,17 @@ var DiamondGameboard = (function (_super) {
         else if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP_DISABLED) {
             this.actionButton.inputEnabled = false;
             this.actionButton.tint = Phaser.Color.GRAY;
+        }
+    };
+    DiamondGameboard.prototype.toogleTimer = function (paused) {
+        if (paused === void 0) { paused = true; }
+        if (paused) {
+            this.timer.pause();
+            this.timerMessage.tint = Phaser.Color.BLUE;
+        }
+        else {
+            this.timer.resume();
+            this.timerMessage.tint = Phaser.Color.WHITE;
         }
     };
     return DiamondGameboard;

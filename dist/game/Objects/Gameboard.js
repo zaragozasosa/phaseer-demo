@@ -53,6 +53,7 @@ var Gameboard = (function (_super) {
         return _this;
     }
     Gameboard.prototype.update = function () {
+        this.updateTimer();
         var keys = this.input.checkKeys();
         if (keys === Phaser.Keyboard.ESC) {
             this.pauseToogle();
@@ -116,16 +117,14 @@ var Gameboard = (function (_super) {
         this.header.setText("Score: " + this.points);
     };
     Gameboard.prototype.addTimer = function () {
-        var message = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-        this.timerSeconds = 0;
+        this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
         this.timer = this.tools.misc.createTimer();
         this.timer.start();
-        this.timer.loop(1000, function () {
-            this.timerSeconds++;
-            var min = Math.floor(this.timerSeconds / 60);
-            var sec = this.timerSeconds - min * 60;
-            message.setText("Time: " + this.num(min) + ":" + this.num(sec));
-        }.bind(this));
+    };
+    Gameboard.prototype.updateTimer = function () {
+        var min = Math.floor(this.timer.seconds / 60);
+        var sec = Math.floor(this.timer.seconds - min * 60);
+        this.timerMessage.setText("Time: " + this.num(min) + ":" + this.num(sec));
     };
     Gameboard.prototype.num = function (n) {
         return n > 9 ? '' + n : '0' + n;
@@ -134,6 +133,7 @@ var Gameboard = (function (_super) {
         if (this.isPaused) {
             this.pausedWindow.hideAndDestroy();
             this.isPaused = false;
+            this.timer.resume();
         }
         else {
             this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
@@ -141,6 +141,7 @@ var Gameboard = (function (_super) {
             }.bind(this), function () {
             }.bind(this));
             this.isPaused = true;
+            this.timer.pause();
         }
     };
     return Gameboard;
