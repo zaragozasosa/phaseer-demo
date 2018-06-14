@@ -27,6 +27,7 @@ export default class SpriteFactory extends Factory {
     let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
+    //sprite.loadTexture(this.reverseTexture(sprite));
     return sprite;
   }
 
@@ -97,7 +98,8 @@ export default class SpriteFactory extends Factory {
 
   createVolumeIcon(posX = 600, posY = 1260) {
     let config = this.config.sound;
-    let volLevel = (config.bgmVolume && config.sfxVolume) ? 0 : config.bgmVolume ? 1 : 2;
+    let volLevel =
+      config.bgmVolume && config.sfxVolume ? 0 : config.bgmVolume ? 1 : 2;
     let volId = `${config.volumeSprite}-${volLevel}`;
     let sprite = this.createSprite(posX, posY, volId, 0.6);
     sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
@@ -112,7 +114,22 @@ export default class SpriteFactory extends Factory {
 
     let x = safeZone.bgPaddingX;
     let y = safeZone.bgPaddingY + safeZone.paddingY;
+
     let sprite = this.game.add.sprite(x, y, 'witch');
-    sprite.scale.setTo(config.scaleFactor, config.scaleFactor); 
+    sprite.scale.setTo(config.scaleFactor, config.scaleFactor);
+    return sprite;
+  }
+
+  makeReverseTexture(key: string) {
+    let bmd = this.game.make.bitmapData();
+    bmd.load(key);
+    bmd.processPixelRGB(pixel => {
+      pixel.r = 255 - pixel.r;
+      pixel.g = 255 - pixel.g;
+      pixel.b = 255 - pixel.b;
+      return pixel;
+    });
+
+    return bmd.canvas;
   }
 }

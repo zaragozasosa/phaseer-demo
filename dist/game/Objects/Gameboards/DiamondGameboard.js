@@ -33,11 +33,18 @@ var DiamondGameboard = (function (_super) {
                 var text = this.tools.text.makeXBounded(650, this.diamondModel.endText, 75, 'center');
                 this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, 1500, 'Linear', true, 1500);
                 if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
+                    this.background.loadTexture('witch');
                     this.toogleTimer(false);
                 }
                 this.actionButton.visible = true;
             }.bind(_this));
         }
+        for (var _i = 0, _a = gameboardConfig.tiles; _i < _a.length; _i++) {
+            var sprite = _a[_i];
+            debugger;
+            _this.tools.misc.cacheAddImage(sprite.negativeId, _this.tools.sprite.makeReverseTexture(sprite.id));
+        }
+        _this.tools.misc.cacheAddImage('witch-negative', _this.tools.sprite.makeReverseTexture(_this.background.key.toString()));
         return _this;
     }
     DiamondGameboard.prototype.activatePower = function () {
@@ -49,6 +56,7 @@ var DiamondGameboard = (function (_super) {
             }
             this.grid.activatePower();
             if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
+                this.background.loadTexture('witch-negative');
                 this.toogleTimer(true);
             }
             this.diamonds -= this.diamondModel.requiredDiamonds;

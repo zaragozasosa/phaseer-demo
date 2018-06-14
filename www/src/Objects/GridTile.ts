@@ -10,7 +10,6 @@ export default class GridTile extends Base {
   value: number;
   private frame: Phaser.Sprite;
   private sprite: Phaser.Sprite;
-  private solidLayer: Phaser.Sprite;
   private number: Phaser.Text;
   private group: Phaser.Group;
 
@@ -22,7 +21,7 @@ export default class GridTile extends Base {
   private ghostCooldown: number;
   private ghostTurns: number;
 
-  private timeStopTween: Phaser.Tween;
+  private timeStopped: boolean;
 
   constructor(
     x: number,
@@ -48,7 +47,6 @@ export default class GridTile extends Base {
     this.posY = y;
     this.frame = this.createFrame();
     this.sprite = this.createSprite();
-    this.solidLayer = this.createLayerSprite();
     this.group = this.tools.misc.addGroup();
     this.sprite.anchor.setTo(0, 0);
     this.number = this.tools.text.makeTileNumber(
@@ -59,7 +57,6 @@ export default class GridTile extends Base {
     );
 
     this.group.addChild(this.sprite);
-    this.group.addChild(this.solidLayer);
     this.group.addChild(this.number);
     this.group.addChild(this.frame);
 
@@ -246,22 +243,13 @@ export default class GridTile extends Base {
   }
 
   startTimeStop() {
-    this.solidLayer.alpha = 0;    
-    this.timeStopTween = this.tools.misc.tweenTo(
-      this.solidLayer,
-      { alpha: 0.7 },
-      2000,
-      'Linear',
-      false,
-      0,
-      -1
-    );
-    this.timeStopTween.start();
+    this.timeStopped = true;
+    this.sprite.loadTexture(this.model.negativeId);
   }
 
   stopTimeStop() {
-    this.solidLayer.alpha = 0;
-    this.timeStopTween.pause();
+    this.timeStopped = false;
+    this.sprite.loadTexture(this.model.id);
   }
 
   private update() {
@@ -310,7 +298,11 @@ export default class GridTile extends Base {
       x => x.staticValue === this.value
     );
     this.model = tile;
-    this.sprite.loadTexture(tile.id);
+    if (this.timeStopped) {
+      this.sprite.loadTexture(tile.negativeId);
+    } else {
+      this.sprite.loadTexture(tile.id);
+    }
     this.number.setText(this.value + '');
   }
 
@@ -318,14 +310,6 @@ export default class GridTile extends Base {
     let tile = this.model;
     let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
     sprite.body.collideWorldBounds = true;
-
-    return sprite;
-  }
-
-  private createLayerSprite() {
-    let sprite = this.tools.sprite.makeTile(this.posX, this.posY, 'blue');
-    sprite.body.collideWorldBounds = true;
-    sprite.alpha = 0;
     return sprite;
   }
 

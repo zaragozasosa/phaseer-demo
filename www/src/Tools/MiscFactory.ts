@@ -96,4 +96,8 @@ export default class MiscFactory extends Factory {
     obj.tint = startColor; // start the tween
     return colorTween;
   }
+
+  cacheAddImage(key: string, data: any) {
+    this.game.cache.addImage(key, '', data);
+  }
 }

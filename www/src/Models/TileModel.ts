@@ -19,6 +19,10 @@ export default class TileModel {
     return this.id + '-' + this.sfxId;
   }
 
+  get negativeId(): string {
+    return this.id + '-negative';
+  }
+
   get sfxLabel(): string {
     return this.id + '-sfx';
   }

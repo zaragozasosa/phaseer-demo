@@ -21,7 +21,7 @@ export default abstract class Gameboard extends Base {
   timer: Phaser.Timer;
   timerMessage: Phaser.Text;
   actionButton: Phaser.Button;
-
+  background: Phaser.Sprite;
   isPaused: boolean;
   pausedWindow: PauseWindow;
 
@@ -29,7 +29,7 @@ export default abstract class Gameboard extends Base {
     super();
     this.gameboardConfig = gameboardConfig;
     this.tools.graphic.addBackground();
-    this.tools.sprite.createBackground();
+    this.background = this.tools.sprite.createBackground();
     this.debugArray = [];
 
     let updateScoreSignal = new Phaser.Signal();

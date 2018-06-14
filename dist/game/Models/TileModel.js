@@ -23,6 +23,13 @@ var TileModel = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TileModel.prototype, "negativeId", {
+        get: function () {
+            return this.id + '-negative';
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TileModel.prototype, "sfxLabel", {
         get: function () {
             return this.id + '-sfx';

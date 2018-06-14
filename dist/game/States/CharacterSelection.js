@@ -98,7 +98,6 @@ var CharacterSelection = (function (_super) {
         this.tools.button.make(675, 965, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this), 1.5);
-        debugger;
         this.selectedSprite = this.tools.sprite.createSprite(590, 580, this.selectedCharacter.id, 2);
         this.tools.text.make(20, 860, "Special Power:", 35);
     };

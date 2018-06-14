@@ -22,7 +22,7 @@ var Gameboard = (function (_super) {
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
         _this.tools.graphic.addBackground();
-        _this.tools.sprite.createBackground();
+        _this.background = _this.tools.sprite.createBackground();
         _this.debugArray = [];
         var updateScoreSignal = new Phaser.Signal();
         updateScoreSignal.add(function (addToMovement) {

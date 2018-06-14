@@ -69,8 +69,6 @@ export default class CharacterSelection extends Phaser.State {
     this.selectedName = null;
     this.selectedPower = null;
     this.selectedSummary = null;
-    
-    
 
     this.tools.graphic.addBackground();
 
@@ -148,7 +146,6 @@ export default class CharacterSelection extends Phaser.State {
       1.5
     );
 
-    debugger;
     this.selectedSprite = this.tools.sprite.createSprite(
       590,
       580,

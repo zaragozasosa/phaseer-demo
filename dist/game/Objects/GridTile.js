@@ -32,12 +32,10 @@ var GridTile = (function (_super) {
         _this.posY = y;
         _this.frame = _this.createFrame();
         _this.sprite = _this.createSprite();
-        _this.solidLayer = _this.createLayerSprite();
         _this.group = _this.tools.misc.addGroup();
         _this.sprite.anchor.setTo(0, 0);
         _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 35);
         _this.group.addChild(_this.sprite);
-        _this.group.addChild(_this.solidLayer);
         _this.group.addChild(_this.number);
         _this.group.addChild(_this.frame);
         _this.group.alpha = 0;
@@ -191,13 +189,12 @@ var GridTile = (function (_super) {
         return false;
     };
     GridTile.prototype.startTimeStop = function () {
-        this.solidLayer.alpha = 0;
-        this.timeStopTween = this.tools.misc.tweenTo(this.solidLayer, { alpha: 0.7 }, 2000, 'Linear', false, 0, -1);
-        this.timeStopTween.start();
+        this.timeStopped = true;
+        this.sprite.loadTexture(this.model.negativeId);
     };
     GridTile.prototype.stopTimeStop = function () {
-        this.solidLayer.alpha = 0;
-        this.timeStopTween.pause();
+        this.timeStopped = false;
+        this.sprite.loadTexture(this.model.id);
     };
     GridTile.prototype.update = function () {
         for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
@@ -241,19 +238,18 @@ var GridTile = (function (_super) {
         var _this = this;
         var tile = this.gameboardConfig.tiles.find(function (x) { return x.staticValue === _this.value; });
         this.model = tile;
-        this.sprite.loadTexture(tile.id);
+        if (this.timeStopped) {
+            this.sprite.loadTexture(tile.negativeId);
+        }
+        else {
+            this.sprite.loadTexture(tile.id);
+        }
         this.number.setText(this.value + '');
     };
     GridTile.prototype.createSprite = function () {
         var tile = this.model;
         var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
         sprite.body.collideWorldBounds = true;
-        return sprite;
-    };
-    GridTile.prototype.createLayerSprite = function () {
-        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, 'blue');
-        sprite.body.collideWorldBounds = true;
-        sprite.alpha = 0;
         return sprite;
     };
     GridTile.prototype.createFrame = function () {

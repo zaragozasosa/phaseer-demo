@@ -87,7 +87,7 @@ var SpriteFactory = (function (_super) {
         if (posX === void 0) { posX = 600; }
         if (posY === void 0) { posY = 1260; }
         var config = this.config.sound;
-        var volLevel = (config.bgmVolume && config.sfxVolume) ? 0 : config.bgmVolume ? 1 : 2;
+        var volLevel = config.bgmVolume && config.sfxVolume ? 0 : config.bgmVolume ? 1 : 2;
         var volId = config.volumeSprite + "-" + volLevel;
         var sprite = this.createSprite(posX, posY, volId, 0.6);
         sprite.tint = Phaser.Color.hexToRGB(this.config.color.altText);
@@ -101,6 +101,18 @@ var SpriteFactory = (function (_super) {
         var y = safeZone.bgPaddingY + safeZone.paddingY;
         var sprite = this.game.add.sprite(x, y, 'witch');
         sprite.scale.setTo(config.scaleFactor, config.scaleFactor);
+        return sprite;
+    };
+    SpriteFactory.prototype.makeReverseTexture = function (key) {
+        var bmd = this.game.make.bitmapData();
+        bmd.load(key);
+        bmd.processPixelRGB(function (pixel) {
+            pixel.r = 255 - pixel.r;
+            pixel.g = 255 - pixel.g;
+            pixel.b = 255 - pixel.b;
+            return pixel;
+        });
+        return bmd.canvas;
     };
     return SpriteFactory;
 }(Factory_1.default));

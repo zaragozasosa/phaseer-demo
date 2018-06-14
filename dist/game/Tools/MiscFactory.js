@@ -81,6 +81,9 @@ var MiscFactory = (function (_super) {
         obj.tint = startColor;
         return colorTween;
     };
+    MiscFactory.prototype.cacheAddImage = function (key, data) {
+        this.game.cache.addImage(key, '', data);
+    };
     return MiscFactory;
 }(Factory_1.default));
 exports.default = MiscFactory;
