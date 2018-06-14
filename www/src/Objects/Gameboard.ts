@@ -178,7 +178,7 @@ export default abstract class Gameboard extends Base {
           this.pauseToogle();
         }.bind(this),
         function() {
-          // this.gameboardConfig.quitSignal.dispatch();
+          this.gameboardConfig.quitSignal.dispatch();
         }.bind(this)
       );
       this.isPaused = true;

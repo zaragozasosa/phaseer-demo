@@ -18,7 +18,7 @@ var Unranked = (function (_super) {
     }
     Unranked.prototype.init = function (gameboardConfig) {
         gameboardConfig.quitSignal.add(function () {
-            this.game.state.start('MainMenu', true, false);
+            this.game.state.start('Boot', true, false);
         }.bind(this));
         this.gameboard = GameboardFactory_1.default.create(gameboardConfig);
     };

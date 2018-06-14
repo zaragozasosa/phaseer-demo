@@ -64,6 +64,13 @@ export default class CharacterSelection extends Phaser.State {
     this.menuItems = [];
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
     displayArray = characters.filter(x => x.playable);
+    this.selectedSprite = null;
+    this.selectedFullName = null;
+    this.selectedName = null;
+    this.selectedPower = null;
+    this.selectedSummary = null;
+    
+    
 
     this.tools.graphic.addBackground();
 
@@ -141,6 +148,7 @@ export default class CharacterSelection extends Phaser.State {
       1.5
     );
 
+    debugger;
     this.selectedSprite = this.tools.sprite.createSprite(
       590,
       580,

@@ -51,6 +51,11 @@ var CharacterSelection = (function (_super) {
         this.menuItems = [];
         characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
         displayArray = characters.filter(function (x) { return x.playable; });
+        this.selectedSprite = null;
+        this.selectedFullName = null;
+        this.selectedName = null;
+        this.selectedPower = null;
+        this.selectedSummary = null;
         this.tools.graphic.addBackground();
         displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', 0, null, null, 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
@@ -93,6 +98,7 @@ var CharacterSelection = (function (_super) {
         this.tools.button.make(675, 965, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this), 1.5);
+        debugger;
         this.selectedSprite = this.tools.sprite.createSprite(590, 580, this.selectedCharacter.id, 2);
         this.tools.text.make(20, 860, "Special Power:", 35);
     };

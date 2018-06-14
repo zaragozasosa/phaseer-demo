@@ -139,6 +139,7 @@ var Gameboard = (function (_super) {
             this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
                 this.pauseToogle();
             }.bind(this), function () {
+                this.gameboardConfig.quitSignal.dispatch();
             }.bind(this));
             this.isPaused = true;
             this.timer.pause();
