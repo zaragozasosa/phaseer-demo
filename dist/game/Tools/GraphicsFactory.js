@@ -76,7 +76,7 @@ var GraphicsFactory = (function (_super) {
             return this.makeRect(x, y, w, h, line);
         }
         else {
-            return this.makeRect(win.defaultX, win.defaultY * 2 / 3, win.defaultWidth, win.defaultHeight, win.defaultLineWidth);
+            return this.makeRect(win.defaultX, win.defaultY, win.defaultWidth, win.defaultHeight, win.defaultLineWidth);
         }
     };
     return GraphicsFactory;

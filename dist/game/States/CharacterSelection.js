@@ -27,10 +27,12 @@ var CharacterSelection = (function (_super) {
         this.inputManager = new InputManager_1.default(this.config);
         for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
-            var path = "assets/images/tiles/" + sprite.id + ".png";
+            var path = "assets/images/" + sprite.imagePath;
+            var specialPath = "assets/images/" + sprite.specialImagePath;
             var sfx = "assets/sfx/" + sprite.sfxRoute;
             this.load.image(sprite.id, path);
-            this.load.audio("" + sprite.sfxLabel, [sfx]);
+            this.load.image(sprite.specialId, specialPath);
+            this.load.audio(sprite.sfxLabel, [sfx]);
         }
         this.load.image('random', 'assets/images/tiles/random.png');
         this.preloadBar = this.tools.sprite.makeCentered(300, 'preloadBar', 2);

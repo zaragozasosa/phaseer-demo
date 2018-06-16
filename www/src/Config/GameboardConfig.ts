@@ -24,7 +24,8 @@ export default class GameboardConfig {
   cooldownSignal: Phaser.Signal;
   turnsSignal: Phaser.Signal;
 
-  quitSignal: Phaser.Signal;
+  gameOverSignal: Phaser.Signal;
+  
 
   powers: Array<PowerModel>;
 
@@ -34,7 +35,7 @@ export default class GameboardConfig {
 
   constructor() {
     this.arraySize = 3;
-    this.winningTile = 512;
+    this.winningTile = 64;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {
@@ -48,8 +49,6 @@ export default class GameboardConfig {
     this.requiredBugs = 40;
     this.createPowers();
     this.createTiles();
-
-    this.quitSignal = new Phaser.Signal();
   }
 
   createPowers() {
@@ -147,7 +146,7 @@ export default class GameboardConfig {
 
     list.push(
       new TileModel(
-        'meushijyo',
+        'meushi',
         'Meushi',
         'Meushi Jyoji',
         'bren',

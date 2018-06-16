@@ -4,6 +4,7 @@ import GridFactory from './GridFactory';
 import GameboardConfig from './../Config/GameboardConfig';
 import InputManager from './../InputManager';
 import PowerWindow from './Windows/PowerWindow';
+import GameOverWindow from './Windows/GameOverWindow';
 import PauseWindow from './Windows/PauseWindow';
 import { ColorSettings } from './../Config/Config';
 
@@ -12,9 +13,8 @@ export default abstract class Gameboard extends Base {
   protected gameboardConfig: GameboardConfig;
   protected input: InputManager;
   protected showOnce: boolean;
+  protected gameOver: boolean;
   
-
-  debugArray: Array<Phaser.Text>;
   header: Phaser.Text;
   points: number;
   movements: number;
@@ -30,8 +30,7 @@ export default abstract class Gameboard extends Base {
     this.gameboardConfig = gameboardConfig;
     this.tools.graphic.addBackground();
     this.background = this.tools.sprite.createBackground();
-    this.debugArray = [];
-
+    this.gameOver = false;
     let updateScoreSignal = new Phaser.Signal();
     updateScoreSignal.add(
       function(addToMovement) {
@@ -46,15 +45,23 @@ export default abstract class Gameboard extends Base {
       }.bind(this)
     );
 
+    let gameoverSignal = new Phaser.Signal();
+    gameoverSignal.add(
+      function(win) {
+        debugger;
+        this.gameover(win);
+      }.bind(this)
+    );
+
     this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
     this.gameboardConfig.updateScoreSignal = updateScoreSignal;
+    this.gameboardConfig.gameOverSignal = gameoverSignal;    
     this.gameboardConfig.clickTileSignal = new Phaser.Signal();
     this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
     this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
     this.gameboardConfig.chargeSignal = new Phaser.Signal();
     this.gameboardConfig.cooldownSignal = new Phaser.Signal();
     this.gameboardConfig.turnsSignal = new Phaser.Signal();
-     
 
     this.grid = GridFactory.create(gameboardConfig);
     this.isPaused = false;
@@ -70,6 +77,10 @@ export default abstract class Gameboard extends Base {
   }
 
   update() {
+    if(this.gameOver) {
+      return true;
+    }
+
     this.updateTimer();
     var keys = this.input.checkKeys();
     if (keys === Phaser.Keyboard.ESC) {
@@ -82,13 +93,44 @@ export default abstract class Gameboard extends Base {
   }
 
   activatePower() {
+    if(this.gameOver) {
+      return;
+    }
+    
     this.actionButton.kill();
     this.grid.activatePower();
     let window = new PowerWindow(this.gameboardConfig.mainTile);
     this.tools.audio.playTwoSounds(this.gameboardConfig);
   }
 
+  gameover(win: boolean) {
+    let retryCallback;
+    this.gameOver = true;
+    if(win) {
+      this.showGameOverWindow(win, function() {
+        this.tools.misc.changeState('CharacterSelection')
+      }.bind(this));
+    } else {
+      this.showGameOverWindow(win, function() {
+        this.tools.misc.restartState(this.gameboardConfig);
+      }.bind(this));
+    }
+  }
+
+  protected showGameOverWindow(win: boolean, retryCallback: any) {
+    new GameOverWindow(this.gameboardConfig.mainTile, win, function(){
+      retryCallback();
+    }.bind(this), 
+    function() {
+      this.tools.misc.changeState('Boot')
+    }.bind(this)); 
+  }
+
   protected toogleButton(buttonStatus: number) {
+    if(this.gameOver) {
+      return;
+    }
+
     if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
       this.actionButton.inputEnabled = true;
       this.actionButton.tint = Phaser.Color.WHITE;
@@ -178,7 +220,7 @@ export default abstract class Gameboard extends Base {
           this.pauseToogle();
         }.bind(this),
         function() {
-          this.gameboardConfig.quitSignal.dispatch();
+          this.tools.misc.changeState('Boot')
         }.bind(this)
       );
       this.isPaused = true;

@@ -18,6 +18,10 @@ export default class AmmoGameboard extends Gameboard {
   }
 
   activatePower() {
+    if(this.gameOver) {
+      return true;
+    }
+
     this.actionButton.kill();
     let window = new PowerWindow(this.gameboardConfig.mainTile);
     this.tools.audio.playTwoSounds(this.gameboardConfig);

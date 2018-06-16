@@ -20,11 +20,11 @@ var PowerWindow = (function (_super) {
         var elements = _this.tools.misc.addGroup();
         var sprites = _this.tools.misc.addGroup();
         if (character.friendId) {
-            sprites.add(_this.tools.sprite.createSprite(90, y + 200, character.id, 1.8));
-            sprites.add(_this.tools.sprite.createSprite(510, y + 200, character.friendId, 1.8));
+            sprites.add(_this.tools.sprite.createSprite(90, y + 200, character.specialId, 1.8));
+            sprites.add(_this.tools.sprite.createSprite(510, y + 200, character.friendSpecialId, 1.8));
         }
         else {
-            sprites.add(_this.tools.sprite.makeCentered(y - 50, character.id, 2));
+            sprites.add(_this.tools.sprite.makeCentered(y - 50, character.specialId, 2));
         }
         _this.init(elements, sprites);
         _this.sprites.alpha = 0;

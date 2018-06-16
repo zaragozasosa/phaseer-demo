@@ -148,6 +148,7 @@ var LogicalGrid = (function (_super) {
         if (!this.isFull()) {
             this.add();
         }
+        this.checkGameOver();
     };
     LogicalGrid.prototype.getTilesOrdered = function (asc) {
         if (asc === void 0) { asc = false; }
@@ -297,6 +298,54 @@ var LogicalGrid = (function (_super) {
                     this.tools.misc.randomBetween(0, 1) === 0)) {
                 this.tools.audio.playCharacterSound(this.lastMergedTile.model);
             }
+        }
+    };
+    LogicalGrid.prototype.canKeepPlaying = function () {
+        if (this.isFull()) {
+            for (var x = 0; x < this.gameboardConfig.arraySize; x++) {
+                for (var y = 0; y < this.gameboardConfig.arraySize; y++) {
+                    var tile = this.get(x, y);
+                    if (tile && this.canBeMerged(tile)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        else {
+            return true;
+        }
+        return false;
+    };
+    LogicalGrid.prototype.canBeMerged = function (tile) {
+        if (tile.posX > 0 &&
+            this.get(tile.posX - 1, tile.posY) &&
+            tile.value === this.get(tile.posX - 1, tile.posY).value) {
+            return true;
+        }
+        if (tile.posX < this.gameboardConfig.arraySize &&
+            this.get(tile.posX + 1, tile.posY) &&
+            tile.value === this.get(tile.posX + 1, tile.posY).value) {
+            return true;
+        }
+        if (tile.posY > 0 &&
+            this.get(tile.posX, tile.posY - 1) &&
+            tile.value === this.get(tile.posX, tile.posY - 1).value) {
+            return true;
+        }
+        if (tile.posY < this.gameboardConfig.arraySize &&
+            this.get(tile.posX, tile.posY + 1) &&
+            tile.value === this.get(tile.posX, tile.posY + 1).value) {
+            return true;
+        }
+        return false;
+    };
+    LogicalGrid.prototype.checkGameOver = function () {
+        if (this.getTilesOrdered()[0].value === this.gameboardConfig.winningTile) {
+            debugger;
+            this.gameboardConfig.gameOverSignal.dispatch(false);
+        }
+        else if (!this.canKeepPlaying()) {
+            this.gameboardConfig.gameOverSignal.dispatch(false);
         }
     };
     LogicalGrid.prototype.sumTiles = function () {

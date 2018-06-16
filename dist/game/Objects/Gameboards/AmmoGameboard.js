@@ -24,6 +24,9 @@ var AmmoGameboard = (function (_super) {
         return _this;
     }
     AmmoGameboard.prototype.activatePower = function () {
+        if (this.gameOver) {
+            return true;
+        }
         this.actionButton.kill();
         var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
         this.tools.audio.playTwoSounds(this.gameboardConfig);

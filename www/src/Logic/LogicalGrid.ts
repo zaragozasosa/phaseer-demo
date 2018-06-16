@@ -170,10 +170,11 @@ export default abstract class LogicalGrid extends Base {
     this.playHighestMergeSFX();
     this.cleanGrid();
     this.gameboardConfig.turnsSignal.dispatch();
-    
+
     if (!this.isFull()) {
       this.add();
     }
+    this.checkGameOver();    
   }
 
   protected getTilesOrdered(asc = false) {
@@ -347,6 +348,67 @@ export default abstract class LogicalGrid extends Base {
     }
   }
 
+  private canKeepPlaying() {
+    if (this.isFull()) {
+      for (let x = 0; x < this.gameboardConfig.arraySize; x++) {
+        for (let y = 0; y < this.gameboardConfig.arraySize; y++) {
+          var tile = this.get(x, y);
+          if (tile && this.canBeMerged(tile)) {
+            return true;
+          }
+        }
+      }
+    } else {
+      return true;
+    }
+
+    return false;
+  }
+
+  private canBeMerged(tile: GridTile) {
+    if (
+      tile.posX > 0 &&
+      this.get(tile.posX - 1, tile.posY) &&
+      tile.value === this.get(tile.posX - 1, tile.posY).value
+    ) {
+      return true;
+    }
+    if (
+      tile.posX < this.gameboardConfig.arraySize &&
+      this.get(tile.posX + 1, tile.posY) &&
+      tile.value === this.get(tile.posX + 1, tile.posY).value
+    ) {
+      return true;
+    }
+
+    if (
+      tile.posY > 0 &&
+      this.get(tile.posX, tile.posY - 1) &&
+      tile.value === this.get(tile.posX, tile.posY - 1).value
+    ) {
+      return true;
+    }
+
+    if (
+      tile.posY < this.gameboardConfig.arraySize &&
+      this.get(tile.posX, tile.posY + 1) &&
+      tile.value === this.get(tile.posX, tile.posY + 1).value
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  checkGameOver() {
+    if (this.getTilesOrdered()[0].value === this.gameboardConfig.winningTile) {
+      debugger;
+      this.gameboardConfig.gameOverSignal.dispatch(false);
+    } else if (!this.canKeepPlaying()) {
+      this.gameboardConfig.gameOverSignal.dispatch(false);
+    }
+  }
+
   sumTiles() {
     let points = 0;
     for (let tile of this.grid) {
@@ -355,7 +417,7 @@ export default abstract class LogicalGrid extends Base {
     return points;
   }
 
-  abstract canUsePower()  
+  abstract canUsePower();
 
   abstract power();
 

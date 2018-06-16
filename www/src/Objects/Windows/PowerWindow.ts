@@ -8,12 +8,12 @@ export default class PowerWindow extends Window {
     let elements = this.tools.misc.addGroup();
     let sprites = this.tools.misc.addGroup();
     if (character.friendId) {
-      sprites.add(this.tools.sprite.createSprite(90, y + 200, character.id, 1.8));
+      sprites.add(this.tools.sprite.createSprite(90, y + 200, character.specialId, 1.8));
       sprites.add(
-        this.tools.sprite.createSprite(510, y + 200, character.friendId, 1.8)
+        this.tools.sprite.createSprite(510, y + 200, character.friendSpecialId, 1.8)
       );
     } else {
-      sprites.add(this.tools.sprite.makeCentered(y - 50, character.id, 2));
+      sprites.add(this.tools.sprite.makeCentered(y - 50, character.specialId, 2));
     }
     this.init(elements, sprites);
     this.sprites.alpha = 0;

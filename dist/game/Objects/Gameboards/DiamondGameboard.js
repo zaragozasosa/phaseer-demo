@@ -41,13 +41,15 @@ var DiamondGameboard = (function (_super) {
         }
         for (var _i = 0, _a = gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
-            debugger;
             _this.tools.misc.cacheAddImage(sprite.negativeId, _this.tools.sprite.makeReverseTexture(sprite.id));
         }
         _this.tools.misc.cacheAddImage('witch-negative', _this.tools.sprite.makeReverseTexture(_this.background.key.toString()));
         return _this;
     }
     DiamondGameboard.prototype.activatePower = function () {
+        if (this.gameOver) {
+            return true;
+        }
         if (this.diamonds >= this.diamondModel.requiredDiamonds) {
             this.tools.audio.playTwoSounds(this.gameboardConfig);
             if (this.showOnce) {
@@ -78,6 +80,9 @@ var DiamondGameboard = (function (_super) {
         }
     };
     DiamondGameboard.prototype.toogleButton = function (buttonStatus) {
+        if (this.gameOver) {
+            return true;
+        }
         if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE &&
             this.diamonds >= this.diamondModel.requiredDiamonds) {
             this.actionButton.inputEnabled = true;

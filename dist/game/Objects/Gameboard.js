@@ -15,6 +15,7 @@ var GridFactory_1 = require("./GridFactory");
 var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var InputManager_1 = require("./../InputManager");
 var PowerWindow_1 = require("./Windows/PowerWindow");
+var GameOverWindow_1 = require("./Windows/GameOverWindow");
 var PauseWindow_1 = require("./Windows/PauseWindow");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
@@ -23,7 +24,7 @@ var Gameboard = (function (_super) {
         _this.gameboardConfig = gameboardConfig;
         _this.tools.graphic.addBackground();
         _this.background = _this.tools.sprite.createBackground();
-        _this.debugArray = [];
+        _this.gameOver = false;
         var updateScoreSignal = new Phaser.Signal();
         updateScoreSignal.add(function (addToMovement) {
             this.updateScore(addToMovement);
@@ -32,8 +33,14 @@ var Gameboard = (function (_super) {
         toogleButtonSignal.add(function (status) {
             this.toogleButton(status);
         }.bind(_this));
+        var gameoverSignal = new Phaser.Signal();
+        gameoverSignal.add(function (win) {
+            debugger;
+            this.gameover(win);
+        }.bind(_this));
         _this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
         _this.gameboardConfig.updateScoreSignal = updateScoreSignal;
+        _this.gameboardConfig.gameOverSignal = gameoverSignal;
         _this.gameboardConfig.clickTileSignal = new Phaser.Signal();
         _this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
         _this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
@@ -53,6 +60,9 @@ var Gameboard = (function (_super) {
         return _this;
     }
     Gameboard.prototype.update = function () {
+        if (this.gameOver) {
+            return true;
+        }
         this.updateTimer();
         var keys = this.input.checkKeys();
         if (keys === Phaser.Keyboard.ESC) {
@@ -64,12 +74,39 @@ var Gameboard = (function (_super) {
         }
     };
     Gameboard.prototype.activatePower = function () {
+        if (this.gameOver) {
+            return;
+        }
         this.actionButton.kill();
         this.grid.activatePower();
         var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
         this.tools.audio.playTwoSounds(this.gameboardConfig);
     };
+    Gameboard.prototype.gameover = function (win) {
+        var retryCallback;
+        this.gameOver = true;
+        if (win) {
+            this.showGameOverWindow(win, function () {
+                this.tools.misc.changeState('CharacterSelection');
+            }.bind(this));
+        }
+        else {
+            this.showGameOverWindow(win, function () {
+                this.tools.misc.restartState(this.gameboardConfig);
+            }.bind(this));
+        }
+    };
+    Gameboard.prototype.showGameOverWindow = function (win, retryCallback) {
+        new GameOverWindow_1.default(this.gameboardConfig.mainTile, win, function () {
+            retryCallback();
+        }.bind(this), function () {
+            this.tools.misc.changeState('Boot');
+        }.bind(this));
+    };
     Gameboard.prototype.toogleButton = function (buttonStatus) {
+        if (this.gameOver) {
+            return;
+        }
         if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE) {
             this.actionButton.inputEnabled = true;
             this.actionButton.tint = Phaser.Color.WHITE;
@@ -139,7 +176,7 @@ var Gameboard = (function (_super) {
             this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
                 this.pauseToogle();
             }.bind(this), function () {
-                this.gameboardConfig.quitSignal.dispatch();
+                this.tools.misc.changeState('Boot');
             }.bind(this));
             this.isPaused = true;
             this.timer.pause();

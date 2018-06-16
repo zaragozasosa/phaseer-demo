@@ -16,6 +16,20 @@ var TileModel = (function () {
         this.summary = summary;
         this.playable = playable;
     }
+    Object.defineProperty(TileModel.prototype, "specialId", {
+        get: function () {
+            return this.id + '-special';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "friendSpecialId", {
+        get: function () {
+            return this.friendId + '-special';
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TileModel.prototype, "sfxRoute", {
         get: function () {
             return this.id + '-' + this.sfxId;
@@ -40,6 +54,20 @@ var TileModel = (function () {
     Object.defineProperty(TileModel.prototype, "friendSfxLabel", {
         get: function () {
             return this.friendId + '-sfx';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "imagePath", {
+        get: function () {
+            return "tiles/" + this.id + ".png";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "specialImagePath", {
+        get: function () {
+            return "tiles/" + this.specialId + ".png";
         },
         enumerable: true,
         configurable: true

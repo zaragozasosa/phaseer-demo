@@ -48,6 +48,10 @@ export default class ChargeGameboard extends Gameboard {
   }
 
   protected toogleButton(buttonStatus: number) {
+    if(this.gameOver) {
+      return true;
+    }
+
     for (let button of this.buttons.getAll()) {
       if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
         button.tint = Phaser.Color.WHITE;

@@ -62,7 +62,6 @@ export default class DiamondGameboard extends Gameboard {
     }
 
     for (let sprite of gameboardConfig.tiles) {
-      debugger;
       this.tools.misc.cacheAddImage(
         sprite.negativeId,
         this.tools.sprite.makeReverseTexture(sprite.id)
@@ -76,6 +75,10 @@ export default class DiamondGameboard extends Gameboard {
   }
 
   activatePower() {
+    if(this.gameOver) {
+      return true;
+    }
+
     if (this.diamonds >= this.diamondModel.requiredDiamonds) {
       this.tools.audio.playTwoSounds(this.gameboardConfig);
       if (this.showOnce) {
@@ -109,6 +112,10 @@ export default class DiamondGameboard extends Gameboard {
   }
 
   protected toogleButton(buttonStatus: number) {
+    if(this.gameOver) {
+      return true;
+    }
+
     if (
       buttonStatus === GameboardConfig.BUTTON_ACTIVE &&
       this.diamonds >= this.diamondModel.requiredDiamonds

@@ -47,6 +47,9 @@ var ChargeGameboard = (function (_super) {
         }
     };
     ChargeGameboard.prototype.toogleButton = function (buttonStatus) {
+        if (this.gameOver) {
+            return true;
+        }
         for (var _i = 0, _a = this.buttons.getAll(); _i < _a.length; _i++) {
             var button = _a[_i];
             if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE) {

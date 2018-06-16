@@ -15,6 +15,14 @@ export default class TileModel {
   staticValue: number;
   frame: Phaser.Sprite;
 
+  get specialId(): string {
+    return this.id + '-special';
+  }
+
+  get friendSpecialId(): string {
+    return this.friendId + '-special';
+  }
+
   get sfxRoute(): string {
     return this.id + '-' + this.sfxId;
   }
@@ -29,6 +37,14 @@ export default class TileModel {
 
   get friendSfxLabel(): string {
     return this.friendId + '-sfx';
+  }
+
+  get imagePath(): string {
+    return `tiles/${this.id}.png`;
+  }
+
+  get specialImagePath(): string {
+    return `tiles/${this.specialId}.png`;
   }
 
   constructor(

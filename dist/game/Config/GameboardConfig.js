@@ -5,7 +5,7 @@ var PowerModel_1 = require("./../Models/PowerModel");
 var GameboardConfig = (function () {
     function GameboardConfig() {
         this.arraySize = 3;
-        this.winningTile = 512;
+        this.winningTile = 64;
         this.initialArray = [];
         for (var x = 0; x <= this.arraySize; x++) {
             for (var y = 0; y <= this.arraySize; y++) {
@@ -19,7 +19,6 @@ var GameboardConfig = (function () {
         this.requiredBugs = 40;
         this.createPowers();
         this.createTiles();
-        this.quitSignal = new Phaser.Signal();
     }
     GameboardConfig.prototype.createPowers = function () {
         var powers = [];
@@ -41,7 +40,7 @@ var GameboardConfig = (function () {
     };
     GameboardConfig.prototype.createTiles = function () {
         var list = new Array();
-        list.push(new TileModel_1.default('meushijyo', 'Meushi', 'Meushi Jyoji', 'bren', 'keyboard.mp3', 0.8, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), 'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'));
+        list.push(new TileModel_1.default('meushi', 'Meushi', 'Meushi Jyoji', 'bren', 'keyboard.mp3', 0.8, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), 'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'));
         list.push(new TileModel_1.default('bren', 'B.R.E.N.', 'brotherhating ridiculously efficient nerd.py', 'meushijyo', 'yawn.mp3', 1, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), 'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'));
         list.push(new TileModel_1.default('rox', 'Roxx', 'Roxx Ann', 'choco', 'page.mp3', 1, 'gachaAddiction', this.powers.find(function (x) { return x.id === 'gachaAddiction'; }), 'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'));
         list.push(new TileModel_1.default('choco', 'Choco', 'Choco Jax', 'rox', 'chachin.mp3', 0.5, 'gachaAddiction', this.powers.find(function (x) { return x.id === 'gachaAddiction'; }), 'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'));

@@ -150,7 +150,7 @@ export default class ConfigSetup {
     window.defaultHeight = this.config.safeZone.safeHeight * (1 / 2);
 
     window.defaultX = window.defaultLineWidth * 2 * this.config.scaleFactor;
-    window.defaultY = this.config.safeZone.safeHeight * (1 / 4);
+    window.defaultY = this.config.safeZone.safeHeight * (1 / 4) * (2 / 3);
 
     window.centerHeight = this.config.safeZone.safeHeight * (1 / 3);
     window.centerY = this.config.safeZone.safeHeight * (1 / 3);

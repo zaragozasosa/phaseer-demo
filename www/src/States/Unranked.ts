@@ -6,10 +6,6 @@ export default class Unranked extends Phaser.State {
   private gameboard: Gameboard;
 
   init(gameboardConfig: GameboardConfig) {
-    gameboardConfig.quitSignal.add(function() {
-      this.game.state.start('Boot', true, false);      
-    }.bind(this));
-
     this.gameboard = GameboardFactory.create(gameboardConfig);
   }
 

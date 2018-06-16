@@ -36,11 +36,13 @@ export default class CharacterSelection extends Phaser.State {
     this.gameboardConfig = new GameboardConfig();
     this.inputManager = new InputManager(this.config);
     for (let sprite of this.gameboardConfig.tiles) {
-      let path = `assets/images/tiles/${sprite.id}.png`;
+      let path = `assets/images/${sprite.imagePath}`;
+      let specialPath = `assets/images/${sprite.specialImagePath}`;
       let sfx = `assets/sfx/${sprite.sfxRoute}`;
 
       this.load.image(sprite.id, path);
-      this.load.audio(`${sprite.sfxLabel}`, [sfx]);
+      this.load.image(sprite.specialId, specialPath);
+      this.load.audio(sprite.sfxLabel, [sfx]);
     }
 
     this.load.image('random', 'assets/images/tiles/random.png');
