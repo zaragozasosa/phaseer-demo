@@ -405,7 +405,7 @@ export default abstract class LogicalGrid extends Base {
       debugger;
       this.gameboardConfig.gameOverSignal.dispatch(false);
     } else if (!this.canKeepPlaying()) {
-      this.gameboardConfig.gameOverSignal.dispatch(false);
+      this.gameboardConfig.gameOverSignal.dispatch(true);
     }
   }
 

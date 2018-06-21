@@ -345,7 +345,7 @@ var LogicalGrid = (function (_super) {
             this.gameboardConfig.gameOverSignal.dispatch(false);
         }
         else if (!this.canKeepPlaying()) {
-            this.gameboardConfig.gameOverSignal.dispatch(false);
+            this.gameboardConfig.gameOverSignal.dispatch(true);
         }
     };
     LogicalGrid.prototype.sumTiles = function () {

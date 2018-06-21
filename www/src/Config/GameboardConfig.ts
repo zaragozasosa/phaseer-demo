@@ -35,7 +35,7 @@ export default class GameboardConfig {
 
   constructor() {
     this.arraySize = 3;
-    this.winningTile = 2;
+    this.winningTile = 512;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {
