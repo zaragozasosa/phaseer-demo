@@ -68,7 +68,6 @@ export default class GraphicsFactory extends Factory {
 
   makeWindowRect(x = null, y = null, w = null, h = null, line = null) {
     let win = this.config.window;
-    debugger;
     if (x && y && w && h && w && line) {
       return this.makeRect(x, y, w, h, line);
     } else {

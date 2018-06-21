@@ -9,7 +9,7 @@ export default class GameOverWindow extends Window {
     quitCallback: any
   ) {
     super();
-    let y = this.config.window.defaultY;
+    let y = 150;
     let elements = this.tools.misc.addGroup();
     let sprites = this.tools.misc.addGroup();
     let text;

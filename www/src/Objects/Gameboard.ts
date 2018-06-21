@@ -48,7 +48,6 @@ export default abstract class Gameboard extends Base {
     let gameoverSignal = new Phaser.Signal();
     gameoverSignal.add(
       function(win) {
-        debugger;
         this.gameover(win);
       }.bind(this)
     );

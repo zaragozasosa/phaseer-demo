@@ -8,11 +8,11 @@ export default class PauseWindow extends InfoWindow {
     character: TileModel,
     contCallback: any,
     quitCallback: any,
-    y = 380
+    y = 200
   ) {
-    super(character, y, false, Window.DEFAULT_HIDE_BACKGROUND);
+    super(character, 350, false, Window.DEFAULT_HIDE_BACKGROUND);
     let text = this.tools.text.makeXBounded(
-      y - 130,
+      y + 40,
       '- PAUSE -',
       70,
       'center',

@@ -35,7 +35,6 @@ var Gameboard = (function (_super) {
         }.bind(_this));
         var gameoverSignal = new Phaser.Signal();
         gameoverSignal.add(function (win) {
-            debugger;
             this.gameover(win);
         }.bind(_this));
         _this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;

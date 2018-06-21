@@ -341,11 +341,10 @@ var LogicalGrid = (function (_super) {
     };
     LogicalGrid.prototype.checkGameOver = function () {
         if (this.getTilesOrdered()[0].value === this.gameboardConfig.winningTile) {
-            debugger;
-            this.gameboardConfig.gameOverSignal.dispatch(false);
+            this.gameboardConfig.gameOverSignal.dispatch(true);
         }
         else if (!this.canKeepPlaying()) {
-            this.gameboardConfig.gameOverSignal.dispatch(true);
+            this.gameboardConfig.gameOverSignal.dispatch(false);
         }
     };
     LogicalGrid.prototype.sumTiles = function () {

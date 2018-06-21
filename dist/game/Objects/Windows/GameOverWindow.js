@@ -16,7 +16,7 @@ var GameOverWindow = (function (_super) {
     __extends(GameOverWindow, _super);
     function GameOverWindow(character, win, contCallback, quitCallback) {
         var _this = _super.call(this) || this;
-        var y = _this.config.window.defaultY;
+        var y = 150;
         var elements = _this.tools.misc.addGroup();
         var sprites = _this.tools.misc.addGroup();
         var text;

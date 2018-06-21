@@ -72,7 +72,6 @@ var GraphicsFactory = (function (_super) {
         if (h === void 0) { h = null; }
         if (line === void 0) { line = null; }
         var win = this.config.window;
-        debugger;
         if (x && y && w && h && w && line) {
             return this.makeRect(x, y, w, h, line);
         }

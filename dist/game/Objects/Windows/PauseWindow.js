@@ -16,9 +16,9 @@ var Window_1 = require("./Window");
 var PauseWindow = (function (_super) {
     __extends(PauseWindow, _super);
     function PauseWindow(character, contCallback, quitCallback, y) {
-        if (y === void 0) { y = 380; }
-        var _this = _super.call(this, character, y, false, Window_1.default.DEFAULT_HIDE_BACKGROUND) || this;
-        var text = _this.tools.text.makeXBounded(y - 130, '- PAUSE -', 70, 'center', Config_1.ColorSettings.PRIMARY);
+        if (y === void 0) { y = 200; }
+        var _this = _super.call(this, character, 350, false, Window_1.default.DEFAULT_HIDE_BACKGROUND) || this;
+        var text = _this.tools.text.makeXBounded(y + 40, '- PAUSE -', 70, 'center', Config_1.ColorSettings.PRIMARY);
         var cont = _this.tools.text.make(100, 1050, 'Continue ', 80, Config_1.ColorSettings.TEXT);
         cont.inputEnabled = true;
         cont.events.onInputDown.add(function () {

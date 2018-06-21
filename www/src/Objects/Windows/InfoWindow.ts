@@ -4,24 +4,21 @@ import TileModel from './../../Models/TileModel';
 export default class InfoWindow extends Window {
   constructor(
     character: TileModel,
-    y = null,
+    y = 300,
     pressAnyKey = true,
     window = Window.DEFAULT_WINDOW
   ) {
     super(window);
-    if(y === null) {
-      y = this.config.window.defaultY;
-    }
     
     let group = this.tools.misc.addGroup();
     let text = this.tools.text.make(
       70,
-      y + 150,
+      y,
       character.power.name,
       50
     );
     let text2 = this.tools.text.makeXBoundedOptions(
-      y + 170,
+      y + 20,
       character.power.description,
       35,
       'left',
@@ -35,7 +32,7 @@ export default class InfoWindow extends Window {
     group.add(text2);
 
     if (character.power.requeriments) {
-      let newY = y + 70 + 250;
+      let newY = y + 70 + 100;
       let descriptionLen = character.power.description.length;
       let textY = newY + Math.floor(descriptionLen / 35) * 50;
 
@@ -59,7 +56,7 @@ export default class InfoWindow extends Window {
 
     if (pressAnyKey) {
       let press = this.tools.text.makeXBounded(
-        y + 700,
+        y + 550,
         'Press any key to continue.',
         50,
         'center',

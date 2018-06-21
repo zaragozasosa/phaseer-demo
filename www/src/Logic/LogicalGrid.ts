@@ -402,10 +402,9 @@ export default abstract class LogicalGrid extends Base {
 
   checkGameOver() {
     if (this.getTilesOrdered()[0].value === this.gameboardConfig.winningTile) {
-      debugger;
-      this.gameboardConfig.gameOverSignal.dispatch(false);
-    } else if (!this.canKeepPlaying()) {
       this.gameboardConfig.gameOverSignal.dispatch(true);
+    } else if (!this.canKeepPlaying()) {
+      this.gameboardConfig.gameOverSignal.dispatch(false);
     }
   }
 
