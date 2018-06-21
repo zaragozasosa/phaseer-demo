@@ -59,19 +59,12 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
-  makeCentered(posY: number, id: string, spriteScale = 1) {
-    let y = posY * this.config.scaleFactor;
+  makeCentered(y: number, id: string, spriteScale = 1) {
     let config = this.config;
-    let xPad = config.safeZone.paddingX + this.config.grid.gridPaddingX;
-    let yPad = config.safeZone.paddingY + this.config.grid.gridPaddingY;
-    let sprite = this.game.add.sprite(0, y + yPad, id);
-    sprite.scale.setTo(
-      config.scaleFactor * spriteScale,
-      config.scaleFactor * spriteScale
-    );
+    let sprite = this.createSprite(0, y, id,spriteScale);
 
     let x = (this.config.safeZone.safeWidth - sprite.width) / 2;
-    sprite.x = xPad + x;
+    sprite.x = config.safeZone.paddingX + x;
 
     return sprite;
   }
@@ -112,11 +105,11 @@ export default class SpriteFactory extends Factory {
     let safeZone = this.config.safeZone;
     let config = this.config;
 
-    let x = safeZone.bgPaddingX;
-    let y = safeZone.bgPaddingY + safeZone.paddingY;
+    let x = 0;
+    let y = safeZone.bgPaddingY;
 
-    let sprite = this.game.add.sprite(x, y, 'witch');
-    sprite.scale.setTo(config.scaleFactor, config.scaleFactor);
+    let sprite = this.createSprite(x, y, 'witch');
+
     return sprite;
   }
 

@@ -22,12 +22,12 @@ var GameOverWindow = (function (_super) {
         var text;
         var retryText;
         if (win) {
-            sprites.add(_this.tools.sprite.makeCentered(y - 120, character.specialId, 2));
+            sprites.add(_this.tools.sprite.makeCentered(y + 150, character.specialId, 2));
             text = 'You win!';
             retryText = 'Play again';
         }
         else {
-            sprites.add(_this.tools.sprite.makeCentered(y - 120, character.id, 2));
+            sprites.add(_this.tools.sprite.makeCentered(y + 150, character.id, 2));
             text = 'Game Over...';
             retryText = 'Try again!';
         }

@@ -8,7 +8,7 @@ export default class Preloader extends Phaser.State {
 
     tools.graphic.addBackground();    
 
-    this.preloadBar = tools.sprite.makeCentered(300, 'preloadBar', 2);
+    this.preloadBar = tools.sprite.makeCentered(600, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
 
     this.game.load.audio('bgm', ['assets/audio/bgm-demo.mp3']);

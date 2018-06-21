@@ -20,7 +20,7 @@ var Preloader = (function (_super) {
         var singleton = Config_1.Singleton.get();
         var tools = singleton.tools;
         tools.graphic.addBackground();
-        this.preloadBar = tools.sprite.makeCentered(300, 'preloadBar', 2);
+        this.preloadBar = tools.sprite.makeCentered(600, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
         this.game.load.audio('bgm', ['assets/audio/bgm-demo.mp3']);
         this.load.audio('beep', 'assets/sfx/beep.wav');

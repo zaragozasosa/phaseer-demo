@@ -35,7 +35,7 @@ var CharacterSelection = (function (_super) {
             this.load.audio(sprite.sfxLabel, [sfx]);
         }
         this.load.image('random', 'assets/images/tiles/random.png');
-        this.preloadBar = this.tools.sprite.makeCentered(300, 'preloadBar', 2);
+        this.preloadBar = this.tools.sprite.makeCentered(600, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
     };
     CharacterSelection.prototype.create = function () {

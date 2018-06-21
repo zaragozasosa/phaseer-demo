@@ -5,6 +5,7 @@ export default class PowerWindow extends Window {
   constructor(character: TileModel) {
     super(Window.SMALL_CENTER);
     let y = this.config.window.centerY;
+    debugger;
     let elements = this.tools.misc.addGroup();
     let sprites = this.tools.misc.addGroup();
     if (character.friendId) {
@@ -13,7 +14,7 @@ export default class PowerWindow extends Window {
         this.tools.sprite.createSprite(510, y + 200, character.friendSpecialId, 1.8)
       );
     } else {
-      sprites.add(this.tools.sprite.makeCentered(y - 50, character.specialId, 2));
+      sprites.add(this.tools.sprite.makeCentered(y + 180, character.specialId, 2));
     }
     this.init(elements, sprites);
     this.sprites.alpha = 0;
@@ -21,7 +22,7 @@ export default class PowerWindow extends Window {
     this.showTween.chain(spritesTween);
 
     let message = this.tools.text.makeXBounded(
-      y + 550,
+      y + 520,
       character.power.name + '!',
       60,
       'center',

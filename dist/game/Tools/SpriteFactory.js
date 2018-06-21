@@ -58,16 +58,12 @@ var SpriteFactory = (function (_super) {
         sprite.position.y = posY + padY;
         return sprite;
     };
-    SpriteFactory.prototype.makeCentered = function (posY, id, spriteScale) {
+    SpriteFactory.prototype.makeCentered = function (y, id, spriteScale) {
         if (spriteScale === void 0) { spriteScale = 1; }
-        var y = posY * this.config.scaleFactor;
         var config = this.config;
-        var xPad = config.safeZone.paddingX + this.config.grid.gridPaddingX;
-        var yPad = config.safeZone.paddingY + this.config.grid.gridPaddingY;
-        var sprite = this.game.add.sprite(0, y + yPad, id);
-        sprite.scale.setTo(config.scaleFactor * spriteScale, config.scaleFactor * spriteScale);
+        var sprite = this.createSprite(0, y, id, spriteScale);
         var x = (this.config.safeZone.safeWidth - sprite.width) / 2;
-        sprite.x = xPad + x;
+        sprite.x = config.safeZone.paddingX + x;
         return sprite;
     };
     SpriteFactory.prototype.createSprite = function (posX, posY, id, scale, padX, padY) {
@@ -97,10 +93,9 @@ var SpriteFactory = (function (_super) {
     SpriteFactory.prototype.createBackground = function () {
         var safeZone = this.config.safeZone;
         var config = this.config;
-        var x = safeZone.bgPaddingX;
-        var y = safeZone.bgPaddingY + safeZone.paddingY;
-        var sprite = this.game.add.sprite(x, y, 'witch');
-        sprite.scale.setTo(config.scaleFactor, config.scaleFactor);
+        var x = 0;
+        var y = safeZone.bgPaddingY;
+        var sprite = this.createSprite(x, y, 'witch');
         return sprite;
     };
     SpriteFactory.prototype.makeReverseTexture = function (key) {

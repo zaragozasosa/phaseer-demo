@@ -15,11 +15,11 @@ export default class GameOverWindow extends Window {
     let text;
     let retryText;
     if (win) {
-      sprites.add(this.tools.sprite.makeCentered(y - 120, character.specialId, 2));
+      sprites.add(this.tools.sprite.makeCentered(y + 150, character.specialId, 2));
       text = 'You win!';
       retryText = 'Play again';
     } else {
-      sprites.add(this.tools.sprite.makeCentered(y - 120, character.id, 2));
+      sprites.add(this.tools.sprite.makeCentered(y + 150, character.id, 2));
 
       text = 'Game Over...';
       retryText = 'Try again!';
