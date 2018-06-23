@@ -51,6 +51,11 @@ var MiscFactory = (function (_super) {
             functionToCall();
         }.bind(this));
     };
+    MiscFactory.prototype.repeatEvent = function (time, numberOfCycles, functionToCall) {
+        return this.game.time.events.repeat(time, numberOfCycles, function () {
+            functionToCall();
+        }.bind(this));
+    };
     MiscFactory.prototype.shuffleUniqueArray = function (list) {
         var newList = [];
         while (newList.length !== list.length) {

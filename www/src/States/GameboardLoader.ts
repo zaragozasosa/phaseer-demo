@@ -18,7 +18,7 @@ export default class GameboardLoader extends Phaser.State {
     let window = new InfoWindow(this.gameboardConfig.mainTile);
     window.show();
 
-    this.preloadBar = tools.sprite.makeCentered(900, 'preloadBar', 2);
+    this.preloadBar = tools.sprite.makeCentered(1000, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
 
     this.load.image('bullet', 'assets/images/bullet.png');

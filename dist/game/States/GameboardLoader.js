@@ -26,7 +26,7 @@ var GameboardLoader = (function (_super) {
         var tools = singleton.tools;
         var window = new InfoWindow_1.default(this.gameboardConfig.mainTile);
         window.show();
-        this.preloadBar = tools.sprite.makeCentered(900, 'preloadBar', 2);
+        this.preloadBar = tools.sprite.makeCentered(1000, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.image('dice', 'assets/images/dice.png');

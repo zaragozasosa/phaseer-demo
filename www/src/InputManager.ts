@@ -6,6 +6,7 @@ export default class InputManager extends Factory {
   private cursors: Phaser.CursorKeys;
   private keyPressed: boolean;
   private escapePressed: boolean;
+  private tapped: boolean;
 
   constructor(config) {
     super(config);
@@ -22,6 +23,9 @@ export default class InputManager extends Factory {
     this.game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(() => {
       this.escapePressed = true;
     });
+    this.game.input.onTap.add(function() {
+      this.tapped = true;
+    }.bind(this));
   }
 
   checkCursor() {
@@ -80,7 +84,8 @@ export default class InputManager extends Factory {
   }
 
   checkClick() {
-    if (this.game.input.activePointer.isDown) {
+    if (this.tapped) {
+      this.tapped = false;
       return true;
     } else {
       return false;

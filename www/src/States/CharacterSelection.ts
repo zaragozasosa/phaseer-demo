@@ -172,7 +172,7 @@ export default class CharacterSelection extends Phaser.State {
     this.tools.audio.playCharacterSound(
       this.gameboardConfig.tiles.find(x => x.id === this.selectedCharacter.id)
     );
-    this.state.start('GameboardLoader', true, false, this.gameboardConfig);
+    this.state.start('Story', true, false, this.gameboardConfig);
   }
 
   setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {

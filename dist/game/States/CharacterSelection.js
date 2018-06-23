@@ -112,7 +112,7 @@ var CharacterSelection = (function (_super) {
             return tile.id === this.selectedCharacter.id;
         }.bind(this));
         this.tools.audio.playCharacterSound(this.gameboardConfig.tiles.find(function (x) { return x.id === _this.selectedCharacter.id; }));
-        this.state.start('GameboardLoader', true, false, this.gameboardConfig);
+        this.state.start('Story', true, false, this.gameboardConfig);
     };
     CharacterSelection.prototype.setSelectedCharacter = function (sprite, char) {
         this.tools.audio.playSound('beep');

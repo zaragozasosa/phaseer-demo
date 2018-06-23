@@ -48,6 +48,18 @@ export default class MiscFactory extends Factory {
     );
   }
 
+  repeatEvent(time: number, numberOfCycles: number, functionToCall: any) {
+    return this.game.time.events.repeat(
+      time,
+      numberOfCycles,
+      function() {
+        functionToCall();
+      }.bind(this)
+    );
+  }
+
+
+
   shuffleUniqueArray(list: Array<any>) {
     let newList = [];
     while (newList.length !== list.length) {

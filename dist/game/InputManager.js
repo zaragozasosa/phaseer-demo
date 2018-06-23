@@ -26,6 +26,9 @@ var InputManager = (function (_super) {
         _this.game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(function () {
             _this.escapePressed = true;
         });
+        _this.game.input.onTap.add(function () {
+            this.tapped = true;
+        }.bind(_this));
         return _this;
     }
     InputManager.prototype.checkCursor = function () {
@@ -83,7 +86,8 @@ var InputManager = (function (_super) {
         }
     };
     InputManager.prototype.checkClick = function () {
-        if (this.game.input.activePointer.isDown) {
+        if (this.tapped) {
+            this.tapped = false;
             return true;
         }
         else {
