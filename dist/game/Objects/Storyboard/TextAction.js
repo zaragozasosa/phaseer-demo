@@ -11,18 +11,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseAction_1 = require("./BaseAction");
+var Reader_1 = require("./Reader");
 var TextAction = (function (_super) {
     __extends(TextAction, _super);
-    function TextAction(action, parameters) {
-        var _this = _super.call(this, action, parameters) || this;
+    function TextAction(parameters) {
+        var _this = _super.call(this, Reader_1.default.TEXT_ACTION, parameters) || this;
         _this.words = [];
         _this.word = '';
         _this.letterIndex = 0;
         _this.wordIndex = 0;
         _this.wordDelay = 50;
-        _this.lineDelay = 50;
         _this.content = _this.parameters[0];
-        _this.text = _this.tools.text.makeXBounded(600, '', 40, 'left');
+        _this.text = _this.tools.text.makeXBounded(670, '', 45, 'left');
         return _this;
     }
     TextAction.prototype.play = function () {
@@ -42,7 +42,7 @@ var TextAction = (function (_super) {
             this.isFinished = true;
             return;
         }
-        this.letterLoop = this.tools.misc.repeatEvent(this.lineDelay, this.word.length, function () {
+        this.letterLoop = this.tools.misc.repeatEvent(this.wordDelay, this.word.length, function () {
             this.nextLetter();
         }.bind(this));
         this.wordIndex++;

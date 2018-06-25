@@ -4,7 +4,8 @@ import {
   GridSettings,
   ColorSettings,
   SoundSettings,
-  WindowSettings
+  WindowSettings,
+  StoryboardSettings
 } from './Config';
 
 export default class ConfigSetup {
@@ -16,6 +17,7 @@ export default class ConfigSetup {
     this.colorConfig();
     this.grid();
     this.windowConfig();
+    this.other();
   }
 
   resolutionSetup() {
@@ -154,5 +156,10 @@ export default class ConfigSetup {
 
     window.centerHeight = this.config.safeZone.safeHeight * (1 / 3);
     window.centerY = this.config.safeZone.safeHeight * (1 / 3);
+  }
+
+  other() {
+    this.config.storyboard = new StoryboardSettings();
+    this.config.storyboard.storyboardSignal = new Phaser.Signal();
   }
 }

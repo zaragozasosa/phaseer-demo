@@ -115,6 +115,12 @@ var GridSettings = (function () {
     return GridSettings;
 }());
 exports.GridSettings = GridSettings;
+var StoryboardSettings = (function () {
+    function StoryboardSettings() {
+    }
+    return StoryboardSettings;
+}());
+exports.StoryboardSettings = StoryboardSettings;
 var Tools = (function () {
     function Tools(config) {
         this._text = new TextFactory_1.default(config);

@@ -8,6 +8,7 @@ var ConfigSetup = (function () {
         this.colorConfig();
         this.grid();
         this.windowConfig();
+        this.other();
     }
     ConfigSetup.prototype.resolutionSetup = function () {
         var scaleFactor;
@@ -104,6 +105,10 @@ var ConfigSetup = (function () {
         window.defaultY = this.config.safeZone.safeHeight * (1 / 4) * (2 / 3);
         window.centerHeight = this.config.safeZone.safeHeight * (1 / 3);
         window.centerY = this.config.safeZone.safeHeight * (1 / 3);
+    };
+    ConfigSetup.prototype.other = function () {
+        this.config.storyboard = new Config_1.StoryboardSettings();
+        this.config.storyboard.storyboardSignal = new Phaser.Signal();
     };
     return ConfigSetup;
 }());

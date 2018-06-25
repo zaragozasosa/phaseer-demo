@@ -24,6 +24,11 @@ export default class Preloader extends Phaser.State {
     this.load.image('diamond', 'assets/images/diamond.png');    
     
     this.load.spritesheet('power', 'assets/images/power.png', 249, 93);
+
+    this.load.spritesheet('smith-sheet', 'assets/images/smith.png', 180, 180);
+    this.load.spritesheet('lily-sheet', 'assets/images/lily.png', 180, 180);
+
+
   }
 
   create() {

@@ -1,4 +1,5 @@
 import BaseAction from './BaseAction';
+import Reader from './Reader';
 export default class TextAction extends BaseAction {
   private text: Phaser.Text;
 	private content: string;
@@ -10,12 +11,11 @@ export default class TextAction extends BaseAction {
 	
 
   readonly wordDelay: number = 50;
-  readonly lineDelay: number = 50;
 
-  constructor(action, parameters) {
-    super(action, parameters);
+  constructor(parameters) {
+    super(Reader.TEXT_ACTION, parameters);
     this.content = this.parameters[0];
-    this.text = this.tools.text.makeXBounded(600, '', 40, 'left');
+    this.text = this.tools.text. makeXBounded(670, '', 45, 'left');
   }
 
   play() {
@@ -39,7 +39,7 @@ export default class TextAction extends BaseAction {
 		}
 		
     this.letterLoop = this.tools.misc.repeatEvent(
-      this.lineDelay,
+      this.wordDelay,
       this.word.length,
       function() {
         this.nextLetter();
@@ -55,10 +55,8 @@ export default class TextAction extends BaseAction {
 		}
     this.text.text += this.word[this.letterIndex];
 
-    //  Advance the word index to the next word in the line
     this.letterIndex++;
 
-    //  Last word?
     if (this.letterIndex === this.word.length) {
       this.tools.misc.runLater(
         this.word[this.letterIndex - 1] !== '.'

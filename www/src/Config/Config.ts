@@ -11,7 +11,7 @@ export class Singleton {
   private _config: Config;
   private _tools: Tools;
 
-  private constructor() {}
+  private constructor() { }
   static initialize(config: Config, game: Phaser.Game) {
     if (!Singleton.instance) {
       Singleton.instance = new Singleton();
@@ -37,7 +37,7 @@ export class GameInstance {
   private static instance: GameInstance;
   private _game: Phaser.Game;
 
-  private constructor() {}
+  private constructor() { }
   static initialize(game: Phaser.Game) {
     if (!GameInstance.instance && game) {
       GameInstance.instance = new GameInstance();
@@ -65,6 +65,7 @@ export class Config {
   color: ColorSettings;
   sound: SoundSettings;
   window: WindowSettings;
+  storyboard: StoryboardSettings;
 }
 
 export class WindowSettings {
@@ -90,7 +91,7 @@ export class ColorSettings {
   text: string;
   altText: string;
 
-  
+
 
   static readonly PRIMARY = 1;
   static readonly BACKGROUND = 2;
@@ -144,6 +145,10 @@ export class GridSettings {
   tileNumberPadY: number;
 }
 
+export class StoryboardSettings {
+  storyboardSignal: Phaser.Signal;
+}
+
 export class Tools {
   _text: TextFactory;
   _graphic: GraphicsFactory;
@@ -159,7 +164,7 @@ export class Tools {
     this._button = new ButtonFactory(config);
     this._misc = new MiscFactory(config);
     this._audio = new AudioFactory(config);
-    
+
   }
 
   get text(): TextFactory {
