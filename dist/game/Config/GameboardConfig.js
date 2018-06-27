@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var TileModel_1 = require("./../Models/TileModel");
 var PowerModel_1 = require("./../Models/PowerModel");
+var TextAction_1 = require("./../Objects/Storyboard/Actions/TextAction");
+var SpriteAction_1 = require("./../Objects/Storyboard/Actions/SpriteAction");
+var TitleAction_1 = require("./../Objects/Storyboard/Actions/TitleAction");
 var GameboardConfig = (function () {
     function GameboardConfig() {
         this.arraySize = 3;
@@ -18,6 +21,7 @@ var GameboardConfig = (function () {
         this.requiredDiamonds = 50;
         this.requiredBugs = 40;
         this.createPowers();
+        this.createStories();
         this.createTiles();
     }
     GameboardConfig.prototype.createPowers = function () {
@@ -39,23 +43,24 @@ var GameboardConfig = (function () {
         this.powers = powers;
     };
     GameboardConfig.prototype.createTiles = function () {
+        var _this = this;
         var list = new Array();
-        list.push(new TileModel_1.default('meushi', 'Meushi', 'Meushi Jyoji', 'bren', 'keyboard.mp3', 0.8, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), 'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'));
-        list.push(new TileModel_1.default('bren', 'B.R.E.N.', 'brotherhating ridiculously efficient nerd.py', 'meushijyo', 'yawn.mp3', 1, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), 'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'));
-        list.push(new TileModel_1.default('rox', 'Roxx', 'Roxx Ann', 'choco', 'page.mp3', 1, 'gachaAddiction', this.powers.find(function (x) { return x.id === 'gachaAddiction'; }), 'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'));
-        list.push(new TileModel_1.default('choco', 'Choco', 'Choco Jax', 'rox', 'chachin.mp3', 0.5, 'gachaAddiction', this.powers.find(function (x) { return x.id === 'gachaAddiction'; }), 'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'));
-        list.push(new TileModel_1.default('smith', 'Agent Smith', 'Codename: S.N.O.W', 'lily', 'radio.mp3', 0.4, 'detectiveWork', this.powers.find(function (x) { return x.id === 'detectiveWork'; }), 'Highly-trained FBI agent. Impossible crimes and high profile murder cases are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'));
-        list.push(new TileModel_1.default('lily', 'Lily', 'Lily Hast', 'smith', 'sweeping.wav', 1, 'detectiveWork', this.powers.find(function (x) { return x.id === 'detectiveWork'; }), "A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run..."));
-        list.push(new TileModel_1.default('kinjo', 'Kinjo', 'Kinjo Goldbar', 'eleve', 'coin.mp3', 0.6, 'timeTravel', this.powers.find(function (x) { return x.id === 'timeTravel'; }), "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."));
-        list.push(new TileModel_1.default('eleve', "L'\u00C9l\u00E8ve", "L'\u00C9l\u00E8ve-Avanc\u00E9-Timide", 'kinjo', 'sorry.wav', 0.5, 'timeTravel', this.powers.find(function (x) { return x.id === 'timeTravel'; }), "Canadian pro-gamer online, shy as hell waitress in real life. Being very afraid of social interaction, she's forced to hide her identity on the internet. Number 1 fan of Kinjo's works."));
-        list.push(new TileModel_1.default('attarou', 'Attarou', 'Attarou Lionstar', 'r1r1', 'meow.wav', 0.5, 'reportedForRP', this.powers.find(function (x) { return x.id === 'reportedForRP'; }), "Heir to the Lionstar family headship, owner of a never-ending fortune. This prince, however, rejects his own lineage and indulges in low-budget cosplaying. He's often seen in cons around the world, always accompanied by his cat, Caesar."));
-        list.push(new TileModel_1.default('r1r1', 'R1-R1', 'Autonomous Socialization Unit', 'attarou', 'letsrock.wav', 0.5, 'reportedForRP', this.powers.find(function (x) { return x.id === 'reportedForRP'; }), 'The latest model in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology in the most obvious fashion: roleplaying as a human...'));
-        list.push(new TileModel_1.default('magil', 'Magil', 'Dungeon Master Magil', 'jessy', 'dice.mp3', 1, 'rollForInitiative', this.powers.find(function (x) { return x.id === 'rollForInitiative'; }), 'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'));
-        list.push(new TileModel_1.default('jessy', 'Jessy', 'Ph.D. Jessy', 'magil', 'red.mp3', 0.5, 'rollForInitiative', this.powers.find(function (x) { return x.id === 'rollForInitiative'; }), "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."));
-        list.push(new TileModel_1.default('mira', 'Mira', 'Black Witch Mira', 'fancy', 'ahaha.wav', 0.3, 'blackMagic', this.powers.find(function (x) { return x.id === 'blackMagic'; }), "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."));
-        list.push(new TileModel_1.default('fancy', 'Lord Fancy', 'Sir Lord Fancypants', 'mira', 'hyehye.mp3', 0.5, 'blackMagic', this.powers.find(function (x) { return x.id === 'blackMagic'; }), 'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'));
-        list.push(new TileModel_1.default('nacho', 'Nacho', 'Ignacio Zaragoza', null, 'gunshot.mp3', 0.5, 'cincoDeMayo', this.powers.find(function (x) { return x.id === 'cincoDeMayo'; }), 'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'));
-        list.push(new TileModel_1.default('chili', 'Chili', 'Chili Bagel', null, 'howl.mp3', 0, '', null, "Hey, you shouldn't be able to read this!", false));
+        list.push(new TileModel_1.default('meushi', 'Meushi', 'Meushi Jyoji', 'bren', 'keyboard.mp3', 0.8, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), function () { return _this.detectiveInvestigationStory; }, null, 'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'));
+        list.push(new TileModel_1.default('bren', 'B.R.E.N.', 'brotherhating ridiculously efficient nerd.py', 'meushijyo', 'yawn.mp3', 1, 'powerGaming', this.powers.find(function (x) { return x.id === 'powerGaming'; }), function () { return _this.detectiveInvestigationStory; }, null, 'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'));
+        list.push(new TileModel_1.default('rox', 'Roxx', 'Roxx Ann', 'choco', 'page.mp3', 1, 'gachaAddiction', this.powers.find(function (x) { return x.id === 'gachaAddiction'; }), function () { return _this.detectiveInvestigationStory; }, null, 'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'));
+        list.push(new TileModel_1.default('choco', 'Choco', 'Choco Jax', 'rox', 'chachin.mp3', 0.5, 'gachaAddiction', this.powers.find(function (x) { return x.id === 'gachaAddiction'; }), function () { return _this.detectiveInvestigationStory; }, null, 'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'));
+        list.push(new TileModel_1.default('smith', 'Agent Smith', 'Codename: S.N.O.W', 'lily', 'radio.mp3', 0.4, 'detectiveWork', this.powers.find(function (x) { return x.id === 'detectiveWork'; }), function () { return _this.detectiveInvestigationStory; }, null, 'Highly-trained FBI agent. Impossible crimes and high profile murder cases are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'));
+        list.push(new TileModel_1.default('lily', 'Lily', 'Lily Hast', 'smith', 'sweeping.wav', 1, 'detectiveWork', this.powers.find(function (x) { return x.id === 'detectiveWork'; }), function () { return _this.detectiveInvestigationStory; }, null, "A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run..."));
+        list.push(new TileModel_1.default('kinjo', 'Kinjo', 'Kinjo Goldbar', 'eleve', 'coin.mp3', 0.6, 'timeTravel', this.powers.find(function (x) { return x.id === 'timeTravel'; }), function () { return _this.detectiveInvestigationStory; }, null, "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."));
+        list.push(new TileModel_1.default('eleve', "L'\u00C9l\u00E8ve", "L'\u00C9l\u00E8ve-Avanc\u00E9-Timide", 'kinjo', 'sorry.wav', 0.5, 'timeTravel', this.powers.find(function (x) { return x.id === 'timeTravel'; }), function () { return _this.detectiveInvestigationStory; }, null, "Canadian pro-gamer online, shy as hell waitress in real life. Being very afraid of social interaction, she's forced to hide her identity on the internet. Number 1 fan of Kinjo's works."));
+        list.push(new TileModel_1.default('attarou', 'Attarou', 'Attarou Lionstar', 'r1r1', 'meow.wav', 0.5, 'reportedForRP', this.powers.find(function (x) { return x.id === 'reportedForRP'; }), function () { return _this.detectiveInvestigationStory; }, null, "Heir to the Lionstar family headship, owner of a never-ending fortune. This prince, however, rejects his own lineage and indulges in low-budget cosplaying. He's often seen in cons around the world, always accompanied by his cat, Caesar."));
+        list.push(new TileModel_1.default('r1r1', 'R1-R1', 'Autonomous Socialization Unit', 'attarou', 'letsrock.wav', 0.5, 'reportedForRP', this.powers.find(function (x) { return x.id === 'reportedForRP'; }), function () { return _this.detectiveInvestigationStory; }, null, 'The latest model in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology in the most obvious fashion: roleplaying as a human...'));
+        list.push(new TileModel_1.default('magil', 'Magil', 'Dungeon Master Magil', 'jessy', 'dice.mp3', 1, 'rollForInitiative', this.powers.find(function (x) { return x.id === 'rollForInitiative'; }), function () { return _this.detectiveInvestigationStory; }, null, 'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'));
+        list.push(new TileModel_1.default('jessy', 'Jessy', 'Ph.D. Jessy', 'magil', 'red.mp3', 0.5, 'rollForInitiative', this.powers.find(function (x) { return x.id === 'rollForInitiative'; }), function () { return _this.detectiveInvestigationStory; }, null, "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."));
+        list.push(new TileModel_1.default('mira', 'Mira', 'Black Witch Mira', 'fancy', 'ahaha.wav', 0.3, 'blackMagic', this.powers.find(function (x) { return x.id === 'blackMagic'; }), function () { return _this.detectiveInvestigationStory; }, null, "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."));
+        list.push(new TileModel_1.default('fancy', 'Lord Fancy', 'Sir Lord Fancypants', 'mira', 'hyehye.mp3', 0.5, 'blackMagic', this.powers.find(function (x) { return x.id === 'blackMagic'; }), function () { return _this.detectiveInvestigationStory; }, null, 'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'));
+        list.push(new TileModel_1.default('nacho', 'Nacho', 'Ignacio Zaragoza', null, 'gunshot.mp3', 0.5, 'cincoDeMayo', this.powers.find(function (x) { return x.id === 'cincoDeMayo'; }), function () { return _this.detectiveInvestigationStory; }, null, 'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'));
+        list.push(new TileModel_1.default('chili', 'Chili', 'Chili Bagel', null, 'howl.mp3', 0, '', null, null, null, "Hey, you shouldn't be able to read this!", false));
         this.groups = [];
         var _loop_1 = function (x) {
             if (!this_1.groups.find(function (item) {
@@ -69,6 +74,25 @@ var GameboardConfig = (function () {
             _loop_1(x);
         }
         this.tiles = list;
+    };
+    GameboardConfig.prototype.createStories = function () {
+        this.detectiveInvestigationStory = new Array();
+        var list = this.detectiveInvestigationStory;
+        list.push(new SpriteAction_1.default(['smith-sheet', '0', 'left']));
+        list.push(new TitleAction_1.default(['Agent Smith', 'left']));
+        list.push(new TextAction_1.default(['It was a rainy night. I was asked to come immediately.']));
+        list.push(new TextAction_1.default(['The case was a murder in an old mansion. My squad was already investigating, but something happened.']));
+        list.push(new SpriteAction_1.default(['lily-sheet', '0', 'right', 'black']));
+        list.push(new TextAction_1.default(['One unidentified suspect managed to knock out every police offer on the crime scene. Then they cleaned up the whole place, took all the evidence and left.']));
+        list.push(new TextAction_1.default(['We believe the suspect is armed and trained in hand-to-hand combat.']));
+        list.push(new TextAction_1.default(['The instructions were clear. Detain the suspect and find the evidence regarding the murder case.']));
+        list.push(new TextAction_1.default(["Damn, it's always the difficult cases for me, isn't it?"]));
+        list.push(new SpriteAction_1.default(['lily-sheet', '2', 'right']));
+        list.push(new TitleAction_1.default(['Lily', 'right']));
+        list.push(new TextAction_1.default(["Huh? Who are you? Are you trying to trying to further desacrate the master's propierty?"]));
+        list.push(new TitleAction_1.default(['Agent Smith', 'left']));
+        list.push(new SpriteAction_1.default(['smith-sheet', '3', 'left']));
+        list.push(new TextAction_1.default(['No, wait, stop!']));
     };
     GameboardConfig.BUTTON_ACTIVE = 1;
     GameboardConfig.BUTTON_SLEEP = 2;

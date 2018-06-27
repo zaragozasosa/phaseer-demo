@@ -84,6 +84,8 @@ export default class CharacterSelection extends Phaser.State {
         0,
         null,
         null,
+        null,
+        null,
         'Decision paralysis? Just click the button and start playing, you fool!'
       )
     );
@@ -176,7 +178,7 @@ export default class CharacterSelection extends Phaser.State {
   }
 
   setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {
-    this.tools.audio.playSound('beep');
+    this.tools.audio.playBeep();
     this.spriteArray.forEach(x => (x.tint = Phaser.Color.GRAY));
 
     sprite.tint = Phaser.Color.WHITE;

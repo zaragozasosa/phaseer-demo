@@ -38,8 +38,14 @@ var Window = (function (_super) {
     };
     Window.prototype.show = function () {
         this.showTween.start();
+        if (this.menu) {
+            this.menu.show();
+        }
     };
     Window.prototype.hideAndDestroy = function () {
+        if (this.menu) {
+            this.menu.destroy();
+        }
         this.hideTween.onComplete.add(this.destroy, this);
         this.hideTween.start();
     };

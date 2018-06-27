@@ -15,31 +15,48 @@ var TwoSpritesReader = (function (_super) {
     __extends(TwoSpritesReader, _super);
     function TwoSpritesReader(actionList, endCallback) {
         var _this = _super.call(this, actionList, endCallback) || this;
-        _this.leftSprite = _this.tools.sprite.createSprite(50, 300, null, 1.5);
-        _this.rightSprite = _this.tools.sprite.createSprite(650, 300, null, 1.5);
-        _this.title = _this.tools.text.make(20, 600, '', 60);
+        _this.leftSprite = null;
+        _this.rightSprite = null;
         _this.config.storyboard.storyboardSignal.add(function (type, model) {
-            debugger;
             if (type === Reader_1.default.TITLE_ACTION) {
                 this.updateTitle(model);
             }
-            else {
+            else if (type === Reader_1.default.SPRITE_ACTION) {
                 this.updateSprite(model);
             }
         }.bind(_this));
         return _this;
     }
+    TwoSpritesReader.prototype.start = function () {
+        this.title = this.tools.text.make(20, 600, '', 60);
+        this.actionIndex = 0;
+        this.play();
+    };
     TwoSpritesReader.prototype.updateTitle = function (title) {
         this.title.text = title;
     };
     TwoSpritesReader.prototype.updateSprite = function (model) {
-        var sprite = model.position === Reader_1.default.SPRITE_LEFT ? this.leftSprite : this.rightSprite;
-        if (model.id) {
-            sprite.loadTexture(model.id, model.frame);
-            sprite.tint = model.tint;
+        var sprite = model.position === Reader_1.default.SPRITE_LEFT
+            ? this.leftSprite
+            : this.rightSprite;
+        if (!sprite || !sprite.alive) {
+            if (model.position === Reader_1.default.SPRITE_LEFT) {
+                this.leftSprite = this.tools.sprite.createSprite(50, 300, null, 1.5);
+                sprite = this.leftSprite;
+            }
+            else {
+                this.rightSprite = this.tools.sprite.createSprite(650, 300, null, 1.5);
+                sprite = this.rightSprite;
+            }
         }
-        else {
-            sprite.tint = model.tint;
+        if (sprite) {
+            if (model.id) {
+                sprite.loadTexture(model.id, model.frame);
+                sprite.tint = model.tint;
+            }
+            else {
+                sprite.tint = model.tint;
+            }
         }
     };
     return TwoSpritesReader;

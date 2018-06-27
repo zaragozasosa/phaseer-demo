@@ -78,6 +78,9 @@ var TextFactory = (function (_super) {
         textObj.anchor.set(0.5);
         return textObj;
     };
+    TextFactory.prototype.changeColor = function (text, color) {
+        text.addColor(this.getColor(color), 0);
+    };
     return TextFactory;
 }(Factory_1.default));
 exports.default = TextFactory;

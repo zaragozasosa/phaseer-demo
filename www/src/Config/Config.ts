@@ -147,6 +147,7 @@ export class GridSettings {
 
 export class StoryboardSettings {
   storyboardSignal: Phaser.Signal;
+  menuInputSignal: Phaser.Signal;
 }
 
 export class Tools {

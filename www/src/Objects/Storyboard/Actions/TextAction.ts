@@ -1,43 +1,42 @@
 import BaseAction from './BaseAction';
-import Reader from './Reader';
+import Reader from './../Reader';
 export default class TextAction extends BaseAction {
   private text: Phaser.Text;
-	private content: string;
-	private letterLoop: Phaser.TimerEvent;
+  private content: string;
+  private letterLoop: Phaser.TimerEvent;
   words = [];
   word = '';
   letterIndex: number = 0;
-	wordIndex: number = 0;
-	
+  wordIndex: number = 0;
 
   readonly wordDelay: number = 50;
 
   constructor(parameters) {
     super(Reader.TEXT_ACTION, parameters);
     this.content = this.parameters[0];
-    this.text = this.tools.text. makeXBounded(670, '', 45, 'left');
   }
 
   play() {
+    this.text = this.tools.text.makeXBounded(670, '', 45, 'left');    
     this.words = this.content.split(' ');
     this.nextWord();
-	}
-	
-	stop() {
-		this.isFinished = true;
-		this.letterLoop.loop = false;
-		this.wordIndex = this.words.length;
-		this.text.text = this.content;
-	}
+  }
+
+  stop() {
+    this.isFinished = true;
+    this.letterLoop.loop = false;
+    this.wordIndex = this.words.length;
+    this.text.text = this.content;
+  }
 
   private nextWord() {
     this.letterIndex = 0;
     this.word = this.words[this.wordIndex];
     if (!this.word) {
-			this.isFinished = true;
+      this.isFinished = true;
       return;
-		}
-		
+    }
+
     this.letterLoop = this.tools.misc.repeatEvent(
       this.wordDelay,
       this.word.length,
@@ -50,9 +49,9 @@ export default class TextAction extends BaseAction {
   }
 
   private nextLetter() {
-    if(this.isFinished) {
-			return;
-		}
+    if (this.isFinished) {
+      return;
+    }
     this.text.text += this.word[this.letterIndex];
 
     this.letterIndex++;

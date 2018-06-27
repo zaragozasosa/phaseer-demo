@@ -59,7 +59,7 @@ var CharacterSelection = (function (_super) {
         this.selectedPower = null;
         this.selectedSummary = null;
         this.tools.graphic.addBackground();
-        displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', 0, null, null, 'Decision paralysis? Just click the button and start playing, you fool!'));
+        displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', 0, null, null, null, null, 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
             var sprite = this_1.tools.sprite.makeMenuTile(column, row, char.id, yMenuPad, ratio);
             sprite.tint = Phaser.Color.GRAY;
@@ -115,7 +115,7 @@ var CharacterSelection = (function (_super) {
         this.state.start('Story', true, false, this.gameboardConfig);
     };
     CharacterSelection.prototype.setSelectedCharacter = function (sprite, char) {
-        this.tools.audio.playSound('beep');
+        this.tools.audio.playBeep();
         this.spriteArray.forEach(function (x) { return (x.tint = Phaser.Color.GRAY); });
         sprite.tint = Phaser.Color.WHITE;
         this.selectedCharacter = char;

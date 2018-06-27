@@ -14,7 +14,7 @@ export default abstract class Gameboard extends Base {
   protected input: InputManager;
   protected showOnce: boolean;
   protected gameOver: boolean;
-  
+
   header: Phaser.Text;
   points: number;
   movements: number;
@@ -54,7 +54,7 @@ export default abstract class Gameboard extends Base {
 
     this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
     this.gameboardConfig.updateScoreSignal = updateScoreSignal;
-    this.gameboardConfig.gameOverSignal = gameoverSignal;    
+    this.gameboardConfig.gameOverSignal = gameoverSignal;
     this.gameboardConfig.clickTileSignal = new Phaser.Signal();
     this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
     this.gameboardConfig.updateAmmoSignal = new Phaser.Signal();
@@ -76,26 +76,39 @@ export default abstract class Gameboard extends Base {
   }
 
   update() {
-    if(this.gameOver) {
+    if (this.gameOver) {
       return true;
     }
 
     this.updateTimer();
-    var keys = this.input.checkKeys();
-    if (keys === Phaser.Keyboard.ESC) {
+
+    let cursor = this.input.checkCursor();
+    let enter = this.input.checkEnter();
+    let escape = this.input.checkEscape();
+
+    if (escape) {
       this.pauseToogle();
-    }
-    if (!this.isPaused) {
-      var cursor = this.input.checkCursor();
-      this.grid.update(cursor);
+    } else {
+      if (!this.isPaused) {
+        this.grid.update(cursor);
+      } else {
+        if (cursor) {
+          this.config.storyboard.menuInputSignal.dispatch(cursor);
+        }
+        if (enter) {
+          this.config.storyboard.menuInputSignal.dispatch(
+            Phaser.Keyboard.ENTER
+          );
+        }
+      }
     }
   }
 
   activatePower() {
-    if(this.gameOver) {
+    if (this.gameOver) {
       return;
     }
-    
+
     this.actionButton.kill();
     this.grid.activatePower();
     let window = new PowerWindow(this.gameboardConfig.mainTile);
@@ -105,28 +118,38 @@ export default abstract class Gameboard extends Base {
   gameover(win: boolean) {
     let retryCallback;
     this.gameOver = true;
-    if(win) {
-      this.showGameOverWindow(win, function() {
-        this.tools.misc.changeState('CharacterSelection')
-      }.bind(this));
+    if (win) {
+      this.showGameOverWindow(
+        win,
+        function() {
+          this.tools.misc.changeState('CharacterSelection');
+        }.bind(this)
+      );
     } else {
-      this.showGameOverWindow(win, function() {
-        this.tools.misc.restartState(this.gameboardConfig);
-      }.bind(this));
+      this.showGameOverWindow(
+        win,
+        function() {
+          this.tools.misc.restartState(this.gameboardConfig);
+        }.bind(this)
+      );
     }
   }
 
   protected showGameOverWindow(win: boolean, retryCallback: any) {
-    new GameOverWindow(this.gameboardConfig.mainTile, win, function(){
-      retryCallback();
-    }.bind(this), 
-    function() {
-      this.tools.misc.changeState('Boot')
-    }.bind(this)); 
+    new GameOverWindow(
+      this.gameboardConfig.mainTile,
+      win,
+      function() {
+        retryCallback();
+      }.bind(this),
+      function() {
+        this.tools.misc.changeState('Boot');
+      }.bind(this)
+    );
   }
 
   protected toogleButton(buttonStatus: number) {
-    if(this.gameOver) {
+    if (this.gameOver) {
       return;
     }
 
@@ -219,11 +242,11 @@ export default abstract class Gameboard extends Base {
           this.pauseToogle();
         }.bind(this),
         function() {
-          this.tools.misc.changeState('Boot')
+          this.tools.misc.changeState('Boot');
         }.bind(this)
       );
       this.isPaused = true;
-      this.timer.pause();      
+      this.timer.pause();
     }
   }
 

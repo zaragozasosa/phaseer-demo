@@ -1,4 +1,6 @@
 import PowerModel from './PowerModel';
+import BaseAction from './../Objects/Storyboard/Actions/BaseAction'
+
 export default class TileModel {
   id: string;
   name: string;
@@ -14,6 +16,10 @@ export default class TileModel {
 
   staticValue: number;
   frame: Phaser.Sprite;
+
+  getFirstStory: any;
+  getSecondStory: any;
+  
 
   get specialId(): string {
     return this.id + '-special';
@@ -56,6 +62,8 @@ export default class TileModel {
     sfxVolume: number,
     powerId: string,
     power: PowerModel,
+    firstStory: any,
+    secondStory: any,    
     summary: string,
     playable = true,
     gridX = 0,
@@ -71,5 +79,7 @@ export default class TileModel {
     this.power = power;
     this.summary = summary;
     this.playable = playable;
+    this.getFirstStory = firstStory;
+    this.getSecondStory = secondStory;
   }
 }

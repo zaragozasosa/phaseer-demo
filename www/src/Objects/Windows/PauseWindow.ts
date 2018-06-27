@@ -3,6 +3,10 @@ import { ColorSettings } from './../../Config/Config';
 import TileModel from './../../Models/TileModel';
 import Window from './Window';
 
+import MenuList from './../../Objects/Menu/MenuList';
+import MenuObject from './../../Objects/Menu/MenuObject';
+import Menu from './../../Objects/Menu/Menu';
+
 export default class PauseWindow extends InfoWindow {
   constructor(
     character: TileModel,
@@ -19,52 +23,72 @@ export default class PauseWindow extends InfoWindow {
       ColorSettings.PRIMARY
     );
 
-    let cont = this.tools.text.make(
-      100,
-      1050,
-      'Continue ',
-      80,
-      ColorSettings.TEXT
-    );
-    cont.inputEnabled = true;
 
-    cont.events.onInputDown.add(
-      function() {
-        contCallback();
-      }.bind(this)
+    let menuList = new MenuList('Menu');
+    menuList.addChild(
+      new MenuObject(
+        'Continue',
+        function() {
+          contCallback();
+        }.bind(this)
+      )
     );
 
-    let quit = this.tools.text.make(620, 1050, 'Quit', 80, ColorSettings.TEXT);
-    quit.inputEnabled = true;
+    menuList.addChild(this.tools.audio.makeVolumeMenuOption());
 
-    quit.events.onInputDown.add(
-      function() {
-        quitCallback();
-      }.bind(this)
+    menuList.addChild(
+      new MenuObject(
+        'Quit',
+        function() {
+          quitCallback();
+        }.bind(this)
+      )
     );
 
-    let volume = this.tools.text.make(
-      200,
-      1285,
-      'Volume: ',
-      70,
-      ColorSettings.TEXT
-    );
+    let menu = new Menu(menuList, 1000, 60);
+    this.menu = menu;
+    // let cont = this.tools.text.make(
+    //   100,
+    //   1050,
+    //   'Continue ',
+    //   80,
+    //   ColorSettings.TEXT
+    // );
+    // cont.inputEnabled = true;
 
-    let volumeButton = this.tools.sprite.createVolumeIcon();
+    // cont.events.onInputDown.add(
+    //   function() {
+    //     contCallback();
+    //   }.bind(this)
+    // );
 
-    volumeButton.inputEnabled = true;
+    // let quit = this.tools.text.make(620, 1050, 'Quit', 80, ColorSettings.TEXT);
+    // quit.inputEnabled = true;
 
-    volumeButton.events.onInputDown.add(
-      function() {
-        this.tools.audio.changeAudioLevel(volumeButton);
-      }.bind(this)
-    );
+    // quit.events.onInputDown.add(
+    //   function() {
+    //     quitCallback();
+    //   }.bind(this)
+    // );
 
-    this.elements.add(cont);
-    this.elements.add(quit);
-    this.elements.add(volume);
-    this.elements.add(volumeButton);
+    // let volume = this.tools.text.make(
+    //   200,
+    //   1285,
+    //   'Volume: ',
+    //   70,
+    //   ColorSettings.TEXT
+    // );
+
+    // let volumeButton = this.tools.sprite.createVolumeIcon();
+
+    // volumeButton.inputEnabled = true;
+
+    // volumeButton.events.onInputDown.add(
+    //   function() {
+    //     this.tools.audio.changeAudioLevel(volumeButton);
+    //   }.bind(this)
+    // );
+
     this.elements.add(text);
 
     this.show();

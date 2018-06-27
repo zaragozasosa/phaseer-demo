@@ -1,4 +1,4 @@
-import BaseAction from './BaseAction';
+import BaseAction from './Actions/BaseAction';
 import Base from './../../Base';
 
 export default class Reader extends Base{
@@ -12,9 +12,9 @@ export default class Reader extends Base{
 	static readonly SPRITE_LEFT = 2;
 	static readonly SPRITE_BOTH = 3;
 
-	private actionList: Array<BaseAction>;
-	private actionIndex: number;
-	private endCallback: any;
+	protected actionList: Array<BaseAction>;
+	protected actionIndex: number;
+	protected endCallback: any;
 
 	constructor(actionList: Array<BaseAction>, endCallback) {
 		super();
@@ -42,7 +42,7 @@ export default class Reader extends Base{
 		this.play();
 	}
 
-	private play() {
+	protected play() {
 		let action = this.actionList[this.actionIndex];
 		if (action) {
 			action.actionIsOverSignal.addOnce(function () {

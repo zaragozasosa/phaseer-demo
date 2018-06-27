@@ -44,7 +44,7 @@ var ReportedForRP = (function (_super) {
             this.gameboardConfig.chargeSignal.dispatch();
         }
         else {
-            this.tools.audio.playSound('beep');
+            this.tools.audio.playBeep();
         }
     };
     ReportedForRP.prototype.reportedClick = function () {
@@ -52,7 +52,7 @@ var ReportedForRP = (function (_super) {
             this.gameboardConfig.chargeSignal.dispatch();
         }
         else {
-            this.tools.audio.playSound('beep');
+            this.tools.audio.playBeep();
         }
     };
     ReportedForRP.prototype.bannedClick = function () {
@@ -60,7 +60,7 @@ var ReportedForRP = (function (_super) {
             this.gameboardConfig.chargeSignal.dispatch();
         }
         else {
-            this.tools.audio.playSound('beep');
+            this.tools.audio.playBeep();
         }
     };
     return ReportedForRP;

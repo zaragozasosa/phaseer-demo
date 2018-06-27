@@ -60,7 +60,7 @@ export default class ReportedForRP extends Grid {
     if (this.gridLogic.sagePower()) {
       this.gameboardConfig.chargeSignal.dispatch();
     } else {
-      this.tools.audio.playSound('beep');
+      this.tools.audio.playBeep();
     }
   }
 
@@ -68,7 +68,7 @@ export default class ReportedForRP extends Grid {
     if (this.gridLogic.reportedPower()) {
       this.gameboardConfig.chargeSignal.dispatch();
     } else {
-      this.tools.audio.playSound('beep');
+      this.tools.audio.playBeep();
     }
   }
 
@@ -76,7 +76,7 @@ export default class ReportedForRP extends Grid {
     if (this.gridLogic.bannedPower()) {
       this.gameboardConfig.chargeSignal.dispatch();
     } else {
-      this.tools.audio.playSound('beep');
+      this.tools.audio.playBeep();
     }
   }
 }

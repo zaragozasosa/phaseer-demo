@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Factory_1 = require("./Base/Factory");
+var MenuObject_1 = require("./../Objects/Menu/MenuObject");
 var AudioFactory = (function (_super) {
     __extends(AudioFactory, _super);
     function AudioFactory() {
@@ -47,21 +48,26 @@ var AudioFactory = (function (_super) {
         config.bgm = music.play('', 0, config.bgmVolume, loop);
     };
     AudioFactory.prototype.changeAudioLevel = function (sprite) {
+        if (sprite === void 0) { sprite = null; }
         var config = this.config.sound;
+        var spriteId;
         if (config.bgmVolume === 1 && config.sfxVolume === 1) {
-            sprite.loadTexture(config.volumeSprite + "-1");
+            spriteId = config.volumeSprite + "-1";
             config.sfxVolume = 0;
         }
         else if (config.bgmVolume === 1) {
-            sprite.loadTexture(config.volumeSprite + "-2");
+            spriteId = config.volumeSprite + "-2";
             config.bgmVolume = 0;
             config.bgm.volume = config.bgmVolume;
         }
         else {
-            sprite.loadTexture(config.volumeSprite + "-0");
+            spriteId = config.volumeSprite + "-0";
             config.sfxVolume = 1;
             config.bgmVolume = 1;
             config.bgm.volume = config.bgmVolume;
+        }
+        if (sprite) {
+            sprite.loadTexture(spriteId);
         }
     };
     AudioFactory.prototype.playCharacterSound = function (tile) {
@@ -69,6 +75,28 @@ var AudioFactory = (function (_super) {
         if (audio.sfxVolume) {
             this.game.sound.play(tile.sfxLabel, audio.sfxVolume * tile.sfxVolume, false);
         }
+    };
+    AudioFactory.prototype.playBeep = function () {
+        this.playSound('beep');
+    };
+    AudioFactory.prototype.getAudioConfigLabel = function () {
+        var audio = this.config.sound;
+        if (audio.bgmVolume === 1 && audio.sfxVolume === 1) {
+            return 'Normal';
+        }
+        else if (audio.bgmVolume === 1) {
+            return 'BGM Only';
+        }
+        else {
+            return 'Mute';
+        }
+    };
+    AudioFactory.prototype.makeVolumeMenuOption = function () {
+        var audioTools = this;
+        return new MenuObject_1.default("Audio: " + audioTools.getAudioConfigLabel(), function () {
+            audioTools.changeAudioLevel();
+            this.changeLabel("Audio: " + audioTools.getAudioConfigLabel());
+        });
     };
     return AudioFactory;
 }(Factory_1.default));

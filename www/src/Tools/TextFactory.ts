@@ -120,4 +120,8 @@ export default class TextFactory extends Factory {
 
     return textObj;
   }
+
+  changeColor(text: Phaser.Text, color: number) {
+    text.addColor(this.getColor(color), 0);
+  }
 }

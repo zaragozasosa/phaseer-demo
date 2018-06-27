@@ -63,13 +63,24 @@ var Gameboard = (function (_super) {
             return true;
         }
         this.updateTimer();
-        var keys = this.input.checkKeys();
-        if (keys === Phaser.Keyboard.ESC) {
+        var cursor = this.input.checkCursor();
+        var enter = this.input.checkEnter();
+        var escape = this.input.checkEscape();
+        if (escape) {
             this.pauseToogle();
         }
-        if (!this.isPaused) {
-            var cursor = this.input.checkCursor();
-            this.grid.update(cursor);
+        else {
+            if (!this.isPaused) {
+                this.grid.update(cursor);
+            }
+            else {
+                if (cursor) {
+                    this.config.storyboard.menuInputSignal.dispatch(cursor);
+                }
+                if (enter) {
+                    this.config.storyboard.menuInputSignal.dispatch(Phaser.Keyboard.ENTER);
+                }
+            }
         }
     };
     Gameboard.prototype.activatePower = function () {

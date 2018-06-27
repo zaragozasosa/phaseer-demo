@@ -13,32 +13,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InfoWindow_1 = require("./InfoWindow");
 var Config_1 = require("./../../Config/Config");
 var Window_1 = require("./Window");
+var MenuList_1 = require("./../../Objects/Menu/MenuList");
+var MenuObject_1 = require("./../../Objects/Menu/MenuObject");
+var Menu_1 = require("./../../Objects/Menu/Menu");
 var PauseWindow = (function (_super) {
     __extends(PauseWindow, _super);
     function PauseWindow(character, contCallback, quitCallback, y) {
         if (y === void 0) { y = 200; }
         var _this = _super.call(this, character, 350, false, Window_1.default.DEFAULT_HIDE_BACKGROUND) || this;
         var text = _this.tools.text.makeXBounded(y + 40, '- PAUSE -', 70, 'center', Config_1.ColorSettings.PRIMARY);
-        var cont = _this.tools.text.make(100, 1050, 'Continue ', 80, Config_1.ColorSettings.TEXT);
-        cont.inputEnabled = true;
-        cont.events.onInputDown.add(function () {
+        var menuList = new MenuList_1.default('Menu');
+        menuList.addChild(new MenuObject_1.default('Continue', function () {
             contCallback();
-        }.bind(_this));
-        var quit = _this.tools.text.make(620, 1050, 'Quit', 80, Config_1.ColorSettings.TEXT);
-        quit.inputEnabled = true;
-        quit.events.onInputDown.add(function () {
+        }.bind(_this)));
+        menuList.addChild(_this.tools.audio.makeVolumeMenuOption());
+        menuList.addChild(new MenuObject_1.default('Quit', function () {
             quitCallback();
-        }.bind(_this));
-        var volume = _this.tools.text.make(200, 1285, 'Volume: ', 70, Config_1.ColorSettings.TEXT);
-        var volumeButton = _this.tools.sprite.createVolumeIcon();
-        volumeButton.inputEnabled = true;
-        volumeButton.events.onInputDown.add(function () {
-            this.tools.audio.changeAudioLevel(volumeButton);
-        }.bind(_this));
-        _this.elements.add(cont);
-        _this.elements.add(quit);
-        _this.elements.add(volume);
-        _this.elements.add(volumeButton);
+        }.bind(_this)));
+        var menu = new Menu_1.default(menuList, 1000, 60);
+        _this.menu = menu;
         _this.elements.add(text);
         _this.show();
         return _this;

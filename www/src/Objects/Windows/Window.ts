@@ -1,4 +1,6 @@
 import Base from './../../Base';
+import Menu from './../../Objects/Menu/Menu';
+
 export default class Window extends Base {
   protected rect: Phaser.Graphics;
   protected sprites: Phaser.Group;
@@ -8,6 +10,8 @@ export default class Window extends Base {
   protected hideTween: Phaser.Tween;
   private windowType: number;
   private defaultAlpha = 0.8;
+
+  protected menu: Menu;
 
   static readonly DEFAULT_WINDOW = 1;
   static readonly DEFAULT_HIDE_BACKGROUND = 2;
@@ -36,9 +40,16 @@ export default class Window extends Base {
 
   show() {
     this.showTween.start();
+    if(this.menu) {
+      this.menu.show();
+    }
   }
 
   hideAndDestroy() {
+    if(this.menu) {
+      this.menu.destroy();
+    }
+    
     this.hideTween.onComplete.add(this.destroy, this);
     this.hideTween.start();
   }
