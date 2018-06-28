@@ -46,7 +46,7 @@ var ChargeGameboard = (function (_super) {
             this.buttons.removeAll(true);
         }
     };
-    ChargeGameboard.prototype.toogleButton = function (buttonStatus) {
+    ChargeGameboard.prototype.toggleButton = function (buttonStatus) {
         if (this.gameOver) {
             return true;
         }

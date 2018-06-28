@@ -34,7 +34,7 @@ var DiamondGameboard = (function (_super) {
                 this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, 1500, 'Linear', true, 1500);
                 if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
                     this.background.loadTexture('witch');
-                    this.toogleTimer(false);
+                    this.toggleTimer(false);
                 }
                 this.actionButton.visible = true;
             }.bind(_this));
@@ -59,7 +59,7 @@ var DiamondGameboard = (function (_super) {
             this.grid.activatePower();
             if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
                 this.background.loadTexture('witch-negative');
-                this.toogleTimer(true);
+                this.toggleTimer(true);
             }
             this.diamonds -= this.diamondModel.requiredDiamonds;
             this.diamondText.setText(": " + this.diamonds);
@@ -71,15 +71,15 @@ var DiamondGameboard = (function (_super) {
     };
     DiamondGameboard.prototype.tryEnableButton = function () {
         if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-            this.toogleButton(GameboardConfig_1.default.BUTTON_ACTIVE);
+            this.toggleButton(GameboardConfig_1.default.BUTTON_ACTIVE);
         }
     };
     DiamondGameboard.prototype.tryDisableButton = function () {
         if (this.diamonds < this.diamondModel.requiredDiamonds) {
-            this.toogleButton(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
+            this.toggleButton(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
         }
     };
-    DiamondGameboard.prototype.toogleButton = function (buttonStatus) {
+    DiamondGameboard.prototype.toggleButton = function (buttonStatus) {
         if (this.gameOver) {
             return true;
         }
@@ -98,7 +98,7 @@ var DiamondGameboard = (function (_super) {
             this.actionButton.tint = Phaser.Color.GRAY;
         }
     };
-    DiamondGameboard.prototype.toogleTimer = function (paused) {
+    DiamondGameboard.prototype.toggleTimer = function (paused) {
         if (paused === void 0) { paused = true; }
         if (paused) {
             this.timer.pause();

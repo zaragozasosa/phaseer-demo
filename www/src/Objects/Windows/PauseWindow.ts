@@ -47,48 +47,7 @@ export default class PauseWindow extends InfoWindow {
 
     let menu = new Menu(menuList, 1000, 60);
     this.menu = menu;
-    // let cont = this.tools.text.make(
-    //   100,
-    //   1050,
-    //   'Continue ',
-    //   80,
-    //   ColorSettings.TEXT
-    // );
-    // cont.inputEnabled = true;
-
-    // cont.events.onInputDown.add(
-    //   function() {
-    //     contCallback();
-    //   }.bind(this)
-    // );
-
-    // let quit = this.tools.text.make(620, 1050, 'Quit', 80, ColorSettings.TEXT);
-    // quit.inputEnabled = true;
-
-    // quit.events.onInputDown.add(
-    //   function() {
-    //     quitCallback();
-    //   }.bind(this)
-    // );
-
-    // let volume = this.tools.text.make(
-    //   200,
-    //   1285,
-    //   'Volume: ',
-    //   70,
-    //   ColorSettings.TEXT
-    // );
-
-    // let volumeButton = this.tools.sprite.createVolumeIcon();
-
-    // volumeButton.inputEnabled = true;
-
-    // volumeButton.events.onInputDown.add(
-    //   function() {
-    //     this.tools.audio.changeAudioLevel(volumeButton);
-    //   }.bind(this)
-    // );
-
+  
     this.elements.add(text);
 
     this.show();

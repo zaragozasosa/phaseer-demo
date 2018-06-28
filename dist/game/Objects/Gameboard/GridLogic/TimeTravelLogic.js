@@ -23,7 +23,7 @@ var TimeTravelLogic = (function (_super) {
         this.isTimeStopped = true;
         this.turnsTimeStop = this.tools.misc.randomBetween(2, 4);
         this.turnsPassed = 0;
-        this.tooglePauseTiles(true);
+        this.togglePauseTiles(true);
     };
     TimeTravelLogic.prototype.canUsePower = function () {
         return !this.isTimeStopped;
@@ -45,7 +45,7 @@ var TimeTravelLogic = (function (_super) {
     TimeTravelLogic.prototype.checkTime = function () {
         if (this.turnsPassed === this.turnsTimeStop) {
             this.isTimeStopped = false;
-            this.tooglePauseTiles(false);
+            this.togglePauseTiles(false);
             this.gameboardConfig.cooldownSignal.dispatch();
             for (var i = 0; i < this.turnsTimeStop; i++) {
                 this.tryToAdd();
@@ -55,7 +55,7 @@ var TimeTravelLogic = (function (_super) {
             this.turnsPassed++;
         }
     };
-    TimeTravelLogic.prototype.tooglePauseTiles = function (pause) {
+    TimeTravelLogic.prototype.togglePauseTiles = function (pause) {
         for (var _i = 0, _a = this.getTilesOrdered(); _i < _a.length; _i++) {
             var tile = _a[_i];
             if (pause) {

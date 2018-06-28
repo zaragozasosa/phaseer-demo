@@ -1,10 +1,14 @@
 import Window from './Window';
 import { ColorSettings } from './../../Config/Config';
 import TileModel from './../../Models/TileModel';
+
+import MenuList from './../../Objects/Menu/MenuList';
+import MenuObject from './../../Objects/Menu/MenuObject';
+import Menu from './../../Objects/Menu/Menu';
+
 export default class GameOverWindow extends Window {
   constructor(
     character: TileModel,
-    win: boolean,
     contCallback: any,
     quitCallback: any
   ) {
@@ -12,58 +16,42 @@ export default class GameOverWindow extends Window {
     let y = 150;
     let elements = this.tools.misc.addGroup();
     let sprites = this.tools.misc.addGroup();
-    let text;
-    let retryText;
-    if (win) {
-      sprites.add(this.tools.sprite.makeCentered(y + 150, character.specialId, 2));
-      text = 'You win!';
-      retryText = 'Play again';
-    } else {
-      sprites.add(this.tools.sprite.makeCentered(y + 150, character.id, 2));
 
-      text = 'Game Over...';
-      retryText = 'Try again!';
-    }
+    sprites.add(this.tools.sprite.makeCentered(y + 120, character.id, 2));
 
     elements.add(
       this.tools.text.makeXBounded(
-        y + 520,
-        text,
-        80,
+        y + 470,
+        'Game Over...',
+        70,
         'center',
         ColorSettings.PRIMARY
       )
     );
-
-    let cont = this.tools.text.make(
-      100,
-      800,
-      retryText,
-      70,
-      ColorSettings.TEXT
-    );
-    cont.inputEnabled = true;
-
-    cont.events.onInputDown.add(
-      function() {
-        contCallback();
-      }.bind(this)
+  
+    let menuList = new MenuList('Menu');
+    menuList.addChild(
+      new MenuObject(
+        'Try again!',
+        function() {
+          contCallback();
+        }.bind(this)
+      )
     );
 
-    let quit = this.tools.text.make(650, 800, 'Quit', 70, ColorSettings.TEXT);
-    quit.inputEnabled = true;
-
-    quit.events.onInputDown.add(
-      function() {
-        quitCallback();
-      }.bind(this)
+    menuList.addChild(
+      new MenuObject(
+        'Quit',
+        function() {
+          quitCallback();
+        }.bind(this)
+      )
     );
 
-    elements.add(cont);
-    elements.add(quit);
+    let menu = new Menu(menuList, 740, 50);
+    this.menu = menu;
 
     this.init(elements, sprites);
-
     this.show();
   }
 }

@@ -76,35 +76,20 @@ export default abstract class LogicalGrid extends Base {
 
   randomizeTile(tile: GridTile = null) {
     var tiles = this.getTilesOrdered();
-    let unique = tiles
-      .map(item => item.value)
-      .filter((value, index, self) => self.indexOf(value) === index);
 
     let maxValue = tiles[0].value;
     let minValue = tiles[tiles.length - 1].value;
-    let maxTilePercentage = 20 - (unique.length - 3) * 2.5;
+    let maxTilePercentage = 15;
 
-    if (maxTilePercentage < 10) {
-      maxTilePercentage = 10;
-    }
+    let minTilePercentage = 15;
 
-    let minTilePercentage = 30 - (unique.length - 3) * 2.5;
-    if (minTilePercentage < 20) {
-      minTilePercentage = 20;
-    }
+    let meanIndex = Math.round(tiles.length / 2) - 1;
+    let meanValue = tiles[meanIndex].value;
+    let meanChance = 20;
 
-    if (tile === null) {
-      for (let x = 0; x < tiles.length; x++) {
-        tiles[x].randomize(
-          maxValue,
-          maxTilePercentage,
-          minValue,
-          minTilePercentage
-        );
-      }
-    } else {
-      tile.randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
-    }
+
+    tile.randomize(maxValue, maxTilePercentage, minValue, minTilePercentage, meanValue, meanChance);
+
   }
 
   protected cleanGrid() {
@@ -174,7 +159,7 @@ export default abstract class LogicalGrid extends Base {
     if (!this.isFull()) {
       this.add();
     }
-    this.checkGameOver();    
+    this.checkGameOver();
   }
 
   protected getTilesOrdered(asc = false) {

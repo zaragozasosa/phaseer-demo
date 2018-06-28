@@ -18,15 +18,17 @@ var Story = (function (_super) {
     function Story() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Story.prototype.init = function (gameboardConfig) {
+    Story.prototype.init = function (gameboardConfig, isFirstStory) {
+        if (isFirstStory === void 0) { isFirstStory = true; }
         this.gameboardConfig = gameboardConfig;
+        this.isFirstStory = isFirstStory;
     };
     Story.prototype.create = function () {
         var config = Config_1.Singleton.get().config;
         var tools = Config_1.Singleton.get().tools;
         this.cursor = new InputManager_1.default(config);
         tools.graphic.addBackground();
-        var list = this.gameboardConfig.mainTile.getFirstStory();
+        var list = this.isFirstStory ? this.gameboardConfig.mainTile.getFirstStory() : this.gameboardConfig.mainTile.getSecondStory();
         this.reader = new TwoSpritesReader_1.default(list, function () {
             this.continue();
         }.bind(this));
@@ -49,7 +51,12 @@ var Story = (function (_super) {
         }
     };
     Story.prototype.continue = function () {
-        this.state.start('GameboardLoader', true, false, this.gameboardConfig);
+        if (this.isFirstStory) {
+            this.state.start('GameboardLoader', true, false, this.gameboardConfig);
+        }
+        else {
+            this.state.start('Boot');
+        }
     };
     return Story;
 }(Phaser.State));

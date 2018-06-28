@@ -98,7 +98,7 @@ export default class GridTile extends Base {
 
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputDown.add(
-      function() {
+      function () {
         this.gameboardConfig.clickTileSignal.dispatch(this);
       }.bind(this)
     );
@@ -142,7 +142,7 @@ export default class GridTile extends Base {
       this.tools.misc.overlap(
         this.sprite,
         groupItem.getBottom(),
-        function(s: Phaser.Sprite, g: Phaser.Sprite) {
+        function (s: Phaser.Sprite, g: Phaser.Sprite) {
           if (s && g) {
             if (s.key === g.key) {
               return false;
@@ -163,7 +163,7 @@ export default class GridTile extends Base {
     this.tools.misc.overlap(
       this.sprite,
       wallsGroup,
-      function(a: any, b: any) {
+      function (a: any, b: any) {
         if (a && b) {
           let velocity = this.sprite.body.velocity;
           if (velocity.x || velocity.y) {
@@ -200,7 +200,9 @@ export default class GridTile extends Base {
     maxVal: number,
     maxChance: number,
     minVal: number,
-    minChance: number
+    minChance: number,
+    meanVal: number,
+    meanChance: number
   ) {
     let randomChance = this.tools.misc.randomBetween(0, 99);
     if (randomChance == 0 || randomChance < maxChance) {
@@ -210,6 +212,11 @@ export default class GridTile extends Base {
       randomChance < maxChance + minChance
     ) {
       this.value = minVal;
+    } else if (
+      randomChance == maxChance + minChance ||
+      randomChance < maxChance + minChance + meanChance
+    ) {
+      this.value = meanVal;
     } else {
       let valuesBetween = this.getValuesBetween(maxVal, minVal);
       let random = this.tools.misc.randomBetween(0, valuesBetween.length - 1);
@@ -286,7 +293,7 @@ export default class GridTile extends Base {
     this.sprite.position.y += this.sprite.height / 2;
 
     this.randomizeTween.start().onComplete.add(
-      function() {
+      function () {
         this.sprite.anchor.setTo(0, 0);
         this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
       }.bind(this)

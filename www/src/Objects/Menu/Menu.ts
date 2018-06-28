@@ -16,6 +16,10 @@ export default class Menu extends Base {
     this.list = list;
     this.posY = posY;
     this.fontSize = fontSize;
+
+    if(this.config.storyboard.menuInputSignal) {
+      this.config.storyboard.menuInputSignal.dispose();
+    }
     this.config.storyboard.menuInputSignal = new Phaser.Signal();
     this.config.storyboard.menuInputSignal.add(function(key){
       if(key === Phaser.Keyboard.ENTER) {
@@ -26,6 +30,17 @@ export default class Menu extends Base {
         this.update(key);
       }
     }.bind(this));
+
+    if(this.config.storyboard.optionClickSignal) {
+      this.config.storyboard.optionClickSignal.dispose();
+    }
+    this.config.storyboard.optionClickSignal = new Phaser.Signal();
+    this.config.storyboard.optionClickSignal.add(function(option){
+      this.selectedList.setSelectedOption(option);
+      this.action();
+    }.bind(this));
+
+
   }
 
   show() {
@@ -67,6 +82,8 @@ export default class Menu extends Base {
   }
 
   destroy() {
+    this.config.storyboard.menuInputSignal.dispose();
+    this.config.storyboard.optionClickSignal.dispose();
     this.selectedList.clearAll();
   }
 }

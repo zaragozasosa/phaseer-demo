@@ -13,7 +13,7 @@ export default class PowerWindow extends Window {
         this.tools.sprite.createSprite(510, y, character.friendSpecialId, 1.8)
       );
     } else {
-      sprites.add(this.tools.sprite.makeCentered(y - 20, character.specialId, 2));
+      sprites.add(this.tools.sprite.makeCentered(y, character.specialId, 2));
     }
     this.init(elements, sprites);
     this.sprites.alpha = 0;
@@ -21,7 +21,7 @@ export default class PowerWindow extends Window {
     this.showTween.chain(spritesTween);
 
     let message = this.tools.text.makeXBounded(
-      y + 220,
+      y + 350,
       character.power.name + '!',
       60,
       'center',

@@ -25,8 +25,18 @@ export default class ReportedForRPLogic extends LogicalGrid {
 
   createGhostTile() {
     this.makeGhost = true;
-    this.turnsToDisappear = 5;
     this.ghostTileValue = this.getTilesOrdered()[0].value;
+
+    if(this.ghostTileValue === this.gameboardConfig.winningTile || this.ghostTileValue === this.gameboardConfig.winningTile / 2) {
+      this.turnsToDisappear = 2;
+    } else if(this.ghostTileValue === this.gameboardConfig.winningTile / 4) {
+      this.turnsToDisappear = 3;
+    } else if(this.ghostTileValue === this.gameboardConfig.winningTile / 8) {
+      this.turnsToDisappear = 4;
+    } else {
+      this.turnsToDisappear = 5;
+    }
+
     this.add();
     return this.turnsToDisappear;
   }

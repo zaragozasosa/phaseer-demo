@@ -22,6 +22,9 @@ var Menu = (function (_super) {
         _this.list = list;
         _this.posY = posY;
         _this.fontSize = fontSize;
+        if (_this.config.storyboard.menuInputSignal) {
+            _this.config.storyboard.menuInputSignal.dispose();
+        }
         _this.config.storyboard.menuInputSignal = new Phaser.Signal();
         _this.config.storyboard.menuInputSignal.add(function (key) {
             if (key === Phaser.Keyboard.ENTER) {
@@ -33,6 +36,14 @@ var Menu = (function (_super) {
             else {
                 this.update(key);
             }
+        }.bind(_this));
+        if (_this.config.storyboard.optionClickSignal) {
+            _this.config.storyboard.optionClickSignal.dispose();
+        }
+        _this.config.storyboard.optionClickSignal = new Phaser.Signal();
+        _this.config.storyboard.optionClickSignal.add(function (option) {
+            this.selectedList.setSelectedOption(option);
+            this.action();
         }.bind(_this));
         return _this;
     }
@@ -71,6 +82,8 @@ var Menu = (function (_super) {
         }
     };
     Menu.prototype.destroy = function () {
+        this.config.storyboard.menuInputSignal.dispose();
+        this.config.storyboard.optionClickSignal.dispose();
         this.selectedList.clearAll();
     };
     return Menu;

@@ -91,8 +91,6 @@ export class ColorSettings {
   text: string;
   altText: string;
 
-
-
   static readonly PRIMARY = 1;
   static readonly BACKGROUND = 2;
   static readonly SELECTED = 3;
@@ -148,6 +146,8 @@ export class GridSettings {
 export class StoryboardSettings {
   storyboardSignal: Phaser.Signal;
   menuInputSignal: Phaser.Signal;
+  optionClickSignal: Phaser.Signal;
+  windowActionSignal: Phaser.Signal;
 }
 
 export class Tools {

@@ -39,6 +39,7 @@ var Reader = (function (_super) {
         this.play();
     };
     Reader.prototype.play = function () {
+        debugger;
         var action = this.actionList[this.actionIndex];
         if (action) {
             action.actionIsOverSignal.addOnce(function () {

@@ -113,8 +113,8 @@ export default class MiscFactory extends Factory {
     this.game.cache.addImage(key, '', data);
   }
 
-  changeState(state: string, params = null) {
-    this.game.state.start(state, true, false, params);
+  changeState(state: string, params1 = null, params2 = null, params3 = null) {
+    this.game.state.start(state, true, false, params1, params2, params3);
   }
 
   restartState(params = null) {

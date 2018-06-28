@@ -46,13 +46,13 @@ var Grid = (function (_super) {
     };
     Grid.prototype.buttonDisableMightChange = function () {
         if (!this.animating && this.canUsePower()) {
-            this.gameboardConfig.toogleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_ACTIVE);
+            this.gameboardConfig.toggleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_ACTIVE);
         }
         else if (this.animating && this.canUsePower()) {
-            this.gameboardConfig.toogleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_SLEEP);
+            this.gameboardConfig.toggleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_SLEEP);
         }
         else {
-            this.gameboardConfig.toogleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
+            this.gameboardConfig.toggleButtonSignal.dispatch(GameboardConfig_1.default.BUTTON_SLEEP_DISABLED);
         }
     };
     Grid.prototype.manageCollisions = function () {

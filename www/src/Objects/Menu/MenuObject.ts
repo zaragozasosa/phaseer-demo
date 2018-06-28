@@ -24,6 +24,10 @@ export default class MenuObject extends Base {
   }
 
   print(positionY: number, size: number) {
+    if(this.text) {
+      this.text.destroy(true);
+    }
+
     this.text = this.tools.text.makeXBounded(
       positionY,
       this.label,
@@ -38,14 +42,14 @@ export default class MenuObject extends Base {
     }.bind(this));
 
     tween.start();
-    // if (this.actionCallback) {
-    //   this.text.inputEnabled = true;
-    //   this.text.events.onInputDown.add(
-    //     function() {
-    //       this.action();
-    //     }.bind(this)
-    //   );
-    // }
+    if (this.actionCallback) {
+      this.text.inputEnabled = true;
+      this.text.events.onInputDown.add(
+        function() {
+          this.config.storyboard.optionClickSignal.dispatch(this);
+        }.bind(this)
+      );
+    }
   }
 
   action() {
@@ -58,7 +62,7 @@ export default class MenuObject extends Base {
     this.text.destroy();
   }
 
-  toogleOption() {
+  toggleOption() {
     if (this.text) {
       this.selected = !this.selected;
       if (this.selected) {

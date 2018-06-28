@@ -23,10 +23,11 @@ var GameboardLoader = (function (_super) {
     };
     GameboardLoader.prototype.preload = function () {
         var singleton = Config_1.Singleton.get();
-        var tools = singleton.tools;
+        this.tools = singleton.tools;
         var window = new InfoWindow_1.default(this.gameboardConfig.mainTile);
         window.show();
-        this.preloadBar = tools.sprite.makeCentered(1000, 'preloadBar', 2);
+        this.preloadBar = this.tools.sprite.makeCentered(1000, 'preloadBar', 2);
+        this.game.load.audio('game-bgm', ['assets/audio/number-crunching.mp3']);
         this.load.setPreloadSprite(this.preloadBar);
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.image('dice', 'assets/images/dice.png');
@@ -43,12 +44,11 @@ var GameboardLoader = (function (_super) {
     };
     GameboardLoader.prototype.create = function () {
         this.preloadBar.kill();
+        this.tools.audio.stopBgm();
     };
     GameboardLoader.prototype.update = function () {
-        if (this.cursor.checkClick()) {
-            this.state.start('Unranked', true, false, this.gameboardConfig);
-        }
-        if (this.cursor.checkKeys()) {
+        if (this.cursor.checkClick() || this.cursor.checkKeys()) {
+            this.tools.audio.play('game-bgm', true);
             this.state.start('Unranked', true, false, this.gameboardConfig);
         }
     };

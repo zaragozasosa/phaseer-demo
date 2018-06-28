@@ -26,9 +26,10 @@ var MainMenu = (function (_super) {
         this.cursor = new InputManager_1.default(this.config);
         this.started = false;
         tools.graphic.addBackground();
-        tools.audio.play('bgm', true);
+        tools.audio.play('title-bgm', true);
         var menuList = new MenuList_1.default('Menu');
         menuList.addChild(new MenuObject_1.default('Start game', function () {
+            this.menu.destroy();
             this.game.state.start('CharacterSelection');
         }.bind(this)));
         menuList.addChild(new MenuObject_1.default('Project site', function () {

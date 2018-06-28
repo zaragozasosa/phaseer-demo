@@ -17,6 +17,7 @@ export default class TextAction extends BaseAction {
   }
 
   play() {
+    this.wordIndex = 0;
     this.text = this.tools.text.makeXBounded(670, '', 45, 'left');    
     this.words = this.content.split(' ');
     this.nextWord();

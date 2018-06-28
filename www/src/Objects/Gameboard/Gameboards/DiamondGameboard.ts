@@ -53,7 +53,7 @@ export default class DiamondGameboard extends Gameboard {
 
           if (this.diamondModel.type === DiamondModel.TIME_TYPE) {
             this.background.loadTexture('witch');
-            this.toogleTimer(false);
+            this.toggleTimer(false);
           }
 
           this.actionButton.visible = true;
@@ -88,7 +88,7 @@ export default class DiamondGameboard extends Gameboard {
       this.grid.activatePower();
       if (this.diamondModel.type === DiamondModel.TIME_TYPE) {
         this.background.loadTexture('witch-negative');
-        this.toogleTimer(true);
+        this.toggleTimer(true);
       }
       this.diamonds -= this.diamondModel.requiredDiamonds;
       this.diamondText.setText(`: ${this.diamonds}`);
@@ -101,17 +101,17 @@ export default class DiamondGameboard extends Gameboard {
 
   private tryEnableButton() {
     if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-      this.toogleButton(GameboardConfig.BUTTON_ACTIVE);
+      this.toggleButton(GameboardConfig.BUTTON_ACTIVE);
     }
   }
 
   private tryDisableButton() {
     if (this.diamonds < this.diamondModel.requiredDiamonds) {
-      this.toogleButton(GameboardConfig.BUTTON_SLEEP_DISABLED);
+      this.toggleButton(GameboardConfig.BUTTON_SLEEP_DISABLED);
     }
   }
 
-  protected toogleButton(buttonStatus: number) {
+  protected toggleButton(buttonStatus: number) {
     if(this.gameOver) {
       return true;
     }
@@ -135,7 +135,7 @@ export default class DiamondGameboard extends Gameboard {
     }
   }
 
-  private toogleTimer(paused = true) {
+  private toggleTimer(paused = true) {
     if (paused) {
       this.timer.pause();
       this.timerMessage.tint = Phaser.Color.BLUE;

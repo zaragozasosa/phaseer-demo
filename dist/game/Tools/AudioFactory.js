@@ -38,7 +38,7 @@ var AudioFactory = (function (_super) {
         }.bind(this));
     };
     AudioFactory.prototype.play = function (id, loop) {
-        if (loop === void 0) { loop = true; }
+        if (loop === void 0) { loop = false; }
         var config = this.config.sound;
         if (config.bgm) {
             config.bgm.stop();
@@ -46,6 +46,10 @@ var AudioFactory = (function (_super) {
         }
         var music = this.game.add.audio(id);
         config.bgm = music.play('', 0, config.bgmVolume, loop);
+    };
+    AudioFactory.prototype.stopBgm = function () {
+        var config = this.config.sound;
+        config.bgm.stop();
     };
     AudioFactory.prototype.changeAudioLevel = function (sprite) {
         if (sprite === void 0) { sprite = null; }

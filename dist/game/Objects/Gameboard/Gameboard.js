@@ -16,6 +16,7 @@ var GameboardConfig_1 = require("./../../Config/GameboardConfig");
 var InputManager_1 = require("./../../InputManager");
 var PowerWindow_1 = require("./../Windows/PowerWindow");
 var GameOverWindow_1 = require("./../Windows/GameOverWindow");
+var WinWindow_1 = require("./../Windows/WinWindow");
 var PauseWindow_1 = require("./../Windows/PauseWindow");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
@@ -24,20 +25,31 @@ var Gameboard = (function (_super) {
         _this.gameboardConfig = gameboardConfig;
         _this.tools.graphic.addBackground();
         _this.background = _this.tools.sprite.createBackground();
+        var win = _this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
+        win.inputEnabled = true;
+        win.events.onInputDown.addOnce(function () {
+            this.gameover(true);
+        }.bind(_this));
+        var lose = _this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
+        lose.inputEnabled = true;
+        lose.events.onInputDown.addOnce(function () {
+            this.gameover(false);
+        }.bind(_this));
         _this.gameOver = false;
+        _this.wonGame = false;
         var updateScoreSignal = new Phaser.Signal();
         updateScoreSignal.add(function (addToMovement) {
             this.updateScore(addToMovement);
         }.bind(_this));
-        var toogleButtonSignal = new Phaser.Signal();
-        toogleButtonSignal.add(function (status) {
-            this.toogleButton(status);
+        var toggleButtonSignal = new Phaser.Signal();
+        toggleButtonSignal.add(function (status) {
+            this.toggleButton(status);
         }.bind(_this));
         var gameoverSignal = new Phaser.Signal();
         gameoverSignal.add(function (win) {
             this.gameover(win);
         }.bind(_this));
-        _this.gameboardConfig.toogleButtonSignal = toogleButtonSignal;
+        _this.gameboardConfig.toggleButtonSignal = toggleButtonSignal;
         _this.gameboardConfig.updateScoreSignal = updateScoreSignal;
         _this.gameboardConfig.gameOverSignal = gameoverSignal;
         _this.gameboardConfig.clickTileSignal = new Phaser.Signal();
@@ -46,6 +58,7 @@ var Gameboard = (function (_super) {
         _this.gameboardConfig.chargeSignal = new Phaser.Signal();
         _this.gameboardConfig.cooldownSignal = new Phaser.Signal();
         _this.gameboardConfig.turnsSignal = new Phaser.Signal();
+        _this.config.storyboard.optionClickSignal = new Phaser.Signal();
         _this.grid = GridFactory_1.default.create(gameboardConfig);
         _this.isPaused = false;
         _this.movements = 0;
@@ -59,28 +72,34 @@ var Gameboard = (function (_super) {
         return _this;
     }
     Gameboard.prototype.update = function () {
-        if (this.gameOver) {
-            return true;
-        }
-        this.updateTimer();
-        var cursor = this.input.checkCursor();
-        var enter = this.input.checkEnter();
-        var escape = this.input.checkEscape();
-        if (escape) {
-            this.pauseToogle();
-        }
-        else {
-            if (!this.isPaused) {
+        var cursor;
+        if (!this.gameOver) {
+            this.updateTimer();
+            if (this.input.checkEscape()) {
+                this.pausetoggle();
+                return;
+            }
+            else if (!this.isPaused) {
+                cursor = this.input.checkCursor();
                 this.grid.update(cursor);
+                return;
             }
-            else {
-                if (cursor) {
-                    this.config.storyboard.menuInputSignal.dispatch(cursor);
-                }
-                if (enter) {
-                    this.config.storyboard.menuInputSignal.dispatch(Phaser.Keyboard.ENTER);
+        }
+        var enter = this.input.checkEnter();
+        if (this.wonGame) {
+            if (enter || this.input.checkClick()) {
+                if (this.config.storyboard.windowActionSignal) {
+                    this.config.storyboard.windowActionSignal.dispatch();
                 }
             }
+            return;
+        }
+        cursor = this.input.checkCursor();
+        if (cursor) {
+            this.config.storyboard.menuInputSignal.dispatch(cursor);
+        }
+        else if (enter) {
+            this.config.storyboard.menuInputSignal.dispatch(Phaser.Keyboard.ENTER);
         }
     };
     Gameboard.prototype.activatePower = function () {
@@ -93,27 +112,34 @@ var Gameboard = (function (_super) {
         this.tools.audio.playTwoSounds(this.gameboardConfig);
     };
     Gameboard.prototype.gameover = function (win) {
-        var retryCallback;
         this.gameOver = true;
         if (win) {
+            this.wonGame = true;
             this.showGameOverWindow(win, function () {
-                this.tools.misc.changeState('CharacterSelection');
+                this.tools.misc.changeState('Story', this.gameboardConfig, false);
             }.bind(this));
         }
         else {
             this.showGameOverWindow(win, function () {
-                this.tools.misc.restartState(this.gameboardConfig);
+                this.tools.misc.changeState('CharacterSelection');
             }.bind(this));
         }
     };
-    Gameboard.prototype.showGameOverWindow = function (win, retryCallback) {
-        new GameOverWindow_1.default(this.gameboardConfig.mainTile, win, function () {
-            retryCallback();
-        }.bind(this), function () {
-            this.tools.misc.changeState('Boot');
-        }.bind(this));
+    Gameboard.prototype.showGameOverWindow = function (win, callback) {
+        if (win) {
+            new WinWindow_1.default(this.gameboardConfig.mainTile, function () {
+                callback();
+            }.bind(this));
+        }
+        else {
+            new GameOverWindow_1.default(this.gameboardConfig.mainTile, function () {
+                callback();
+            }.bind(this), function () {
+                this.tools.misc.changeState('Boot');
+            }.bind(this));
+        }
     };
-    Gameboard.prototype.toogleButton = function (buttonStatus) {
+    Gameboard.prototype.toggleButton = function (buttonStatus) {
         if (this.gameOver) {
             return;
         }
@@ -139,7 +165,7 @@ var Gameboard = (function (_super) {
         menu.inputEnabled = true;
         menu.events.onInputDown.add(function () {
             if (!this.isPaused) {
-                this.pauseToogle();
+                this.pausetoggle();
             }
         }.bind(this));
     };
@@ -176,7 +202,7 @@ var Gameboard = (function (_super) {
     Gameboard.prototype.num = function (n) {
         return n > 9 ? '' + n : '0' + n;
     };
-    Gameboard.prototype.pauseToogle = function () {
+    Gameboard.prototype.pausetoggle = function () {
         if (this.isPaused) {
             this.pausedWindow.hideAndDestroy();
             this.isPaused = false;
@@ -184,7 +210,7 @@ var Gameboard = (function (_super) {
         }
         else {
             this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
-                this.pauseToogle();
+                this.pausetoggle();
             }.bind(this), function () {
                 this.tools.misc.changeState('Boot');
             }.bind(this));

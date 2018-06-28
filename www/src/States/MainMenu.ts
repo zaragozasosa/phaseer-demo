@@ -19,13 +19,14 @@ export default class MainMenu extends Phaser.State {
     this.cursor = new InputManager(this.config);
     this.started = false;
     tools.graphic.addBackground();
-    tools.audio.play('bgm', true);
+    tools.audio.play('title-bgm', true);
 
     let menuList = new MenuList('Menu');
     menuList.addChild(
       new MenuObject(
         'Start game',
         function() {
+          this.menu.destroy();
           this.game.state.start('CharacterSelection');
         }.bind(this)
       )

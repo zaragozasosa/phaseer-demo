@@ -22,7 +22,7 @@ var Preloader = (function (_super) {
         tools.graphic.addBackground();
         this.preloadBar = tools.sprite.makeCentered(600, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
-        this.game.load.audio('bgm', ['assets/audio/bgm-demo.mp3']);
+        this.game.load.audio('title-bgm', ['assets/audio/meet-the-cast.mp3']);
         this.load.audio('beep', 'assets/sfx/beep.wav');
         this.load.image('start-1', 'assets/images/start-1.png');
         this.load.image('start-2', 'assets/images/start-2.png');

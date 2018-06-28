@@ -24,13 +24,13 @@ var PowerWindow = (function (_super) {
             sprites.add(_this.tools.sprite.createSprite(510, y, character.friendSpecialId, 1.8));
         }
         else {
-            sprites.add(_this.tools.sprite.makeCentered(y - 20, character.specialId, 2));
+            sprites.add(_this.tools.sprite.makeCentered(y, character.specialId, 2));
         }
         _this.init(elements, sprites);
         _this.sprites.alpha = 0;
         var spritesTween = _this.tools.misc.tweenTo(_this.sprites, { alpha: 1 }, 300);
         _this.showTween.chain(spritesTween);
-        var message = _this.tools.text.makeXBounded(y + 220, character.power.name + '!', 60, 'center', Config_1.ColorSettings.PRIMARY);
+        var message = _this.tools.text.makeXBounded(y + 350, character.power.name + '!', 60, 'center', Config_1.ColorSettings.PRIMARY);
         elements.add(message);
         _this.show();
         _this.tools.misc.runLater(2000, function () {

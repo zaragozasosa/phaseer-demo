@@ -20,21 +20,21 @@ var GachaAddictionLogic = (function (_super) {
     GachaAddictionLogic.prototype.power = function () {
         var tiles = this.getTilesOrdered();
         if (this.canUsePower()) {
-            var unique = tiles
-                .map(function (item) { return item.value; })
-                .filter(function (value, index, self) { return self.indexOf(value) === index; });
             var maxValue = tiles[0].value;
             var minValue = tiles[tiles.length - 1].value;
-            var maxTilePercentage = 20 - (unique.length - 3) * 2.5;
+            var maxTilePercentage = 20 - (tiles.length - 3);
             if (maxTilePercentage < 10) {
                 maxTilePercentage = 10;
             }
-            var minTilePercentage = 30 - (unique.length - 3) * 2.5;
+            var minTilePercentage = 30 - (tiles.length - 3) * 2;
             if (minTilePercentage < 20) {
                 minTilePercentage = 20;
             }
+            var meanIndex = Math.round(tiles.length / 2) - 1;
+            var meanValue = tiles[meanIndex].value;
+            var meanChance = 20;
             for (var x = 0; x < tiles.length; x++) {
-                tiles[x].randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
+                tiles[x].randomize(maxValue, maxTilePercentage, minValue, minTilePercentage, meanValue, meanChance);
             }
             this.cleanGrid();
         }

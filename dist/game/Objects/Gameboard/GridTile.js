@@ -152,7 +152,7 @@ var GridTile = (function (_super) {
         this.value = newValue;
         this.mergeTransform();
     };
-    GridTile.prototype.randomize = function (maxVal, maxChance, minVal, minChance) {
+    GridTile.prototype.randomize = function (maxVal, maxChance, minVal, minChance, meanVal, meanChance) {
         var randomChance = this.tools.misc.randomBetween(0, 99);
         if (randomChance == 0 || randomChance < maxChance) {
             this.value = maxVal;
@@ -160,6 +160,10 @@ var GridTile = (function (_super) {
         else if (randomChance == maxChance ||
             randomChance < maxChance + minChance) {
             this.value = minVal;
+        }
+        else if (randomChance == maxChance + minChance ||
+            randomChance < maxChance + minChance + meanChance) {
+            this.value = meanVal;
         }
         else {
             var valuesBetween = this.getValuesBetween(maxVal, minVal);

@@ -33,7 +33,7 @@ export default class AudioFactory extends Factory {
     );
   }
 
-  play(id: string, loop = true) {
+  play(id: string, loop = false) {
     let config = this.config.sound;
     if (config.bgm) {
       config.bgm.stop();
@@ -42,6 +42,11 @@ export default class AudioFactory extends Factory {
 
     let music = this.game.add.audio(id);
     config.bgm = music.play('', 0, config.bgmVolume, loop);
+  }
+
+  stopBgm(){
+    let config = this.config.sound; 
+    config.bgm.stop();
   }
 
   changeAudioLevel(sprite: Phaser.Sprite = null) {

@@ -62,11 +62,11 @@ export default class MenuList extends MenuObject {
 
   setSelectedOption(obj: MenuObject) {
     if (this.selectedOption) {
-      this.selectedOption.toogleOption();
+      this.selectedOption.toggleOption();
     }
 
     this.selectedOption = obj;
-    obj.toogleOption();
+    obj.toggleOption();
   }
 
   goNext() {

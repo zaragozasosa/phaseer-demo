@@ -24,6 +24,9 @@ var MenuObject = (function (_super) {
         return _this;
     }
     MenuObject.prototype.print = function (positionY, size) {
+        if (this.text) {
+            this.text.destroy(true);
+        }
         this.text = this.tools.text.makeXBounded(positionY, this.label, size, 'center');
         this.text.alpha = 0;
         var tween = this.tools.misc.tweenTo(this.text, { alpha: 1 }, 500);
@@ -31,6 +34,12 @@ var MenuObject = (function (_super) {
             this.tools.misc.removeTween(tween);
         }.bind(this));
         tween.start();
+        if (this.actionCallback) {
+            this.text.inputEnabled = true;
+            this.text.events.onInputDown.add(function () {
+                this.config.storyboard.optionClickSignal.dispatch(this);
+            }.bind(this));
+        }
     };
     MenuObject.prototype.action = function () {
         if (this.actionCallback) {
@@ -40,7 +49,7 @@ var MenuObject = (function (_super) {
     MenuObject.prototype.clear = function () {
         this.text.destroy();
     };
-    MenuObject.prototype.toogleOption = function () {
+    MenuObject.prototype.toggleOption = function () {
         if (this.text) {
             this.selected = !this.selected;
             if (this.selected) {

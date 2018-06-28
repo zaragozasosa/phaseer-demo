@@ -46,7 +46,7 @@ export default class ChargeGameboard extends Gameboard {
     }
   }
 
-  protected toogleButton(buttonStatus: number) {
+  protected toggleButton(buttonStatus: number) {
     if(this.gameOver) {
       return true;
     }

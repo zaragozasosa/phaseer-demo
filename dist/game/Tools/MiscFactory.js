@@ -89,9 +89,11 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.cacheAddImage = function (key, data) {
         this.game.cache.addImage(key, '', data);
     };
-    MiscFactory.prototype.changeState = function (state, params) {
-        if (params === void 0) { params = null; }
-        this.game.state.start(state, true, false, params);
+    MiscFactory.prototype.changeState = function (state, params1, params2, params3) {
+        if (params1 === void 0) { params1 = null; }
+        if (params2 === void 0) { params2 = null; }
+        if (params3 === void 0) { params3 = null; }
+        this.game.state.start(state, true, false, params1, params2, params3);
     };
     MiscFactory.prototype.restartState = function (params) {
         if (params === void 0) { params = null; }

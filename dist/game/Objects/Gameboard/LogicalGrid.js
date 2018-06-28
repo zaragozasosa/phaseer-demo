@@ -70,27 +70,14 @@ var LogicalGrid = (function (_super) {
     LogicalGrid.prototype.randomizeTile = function (tile) {
         if (tile === void 0) { tile = null; }
         var tiles = this.getTilesOrdered();
-        var unique = tiles
-            .map(function (item) { return item.value; })
-            .filter(function (value, index, self) { return self.indexOf(value) === index; });
         var maxValue = tiles[0].value;
         var minValue = tiles[tiles.length - 1].value;
-        var maxTilePercentage = 20 - (unique.length - 3) * 2.5;
-        if (maxTilePercentage < 10) {
-            maxTilePercentage = 10;
-        }
-        var minTilePercentage = 30 - (unique.length - 3) * 2.5;
-        if (minTilePercentage < 20) {
-            minTilePercentage = 20;
-        }
-        if (tile === null) {
-            for (var x = 0; x < tiles.length; x++) {
-                tiles[x].randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
-            }
-        }
-        else {
-            tile.randomize(maxValue, maxTilePercentage, minValue, minTilePercentage);
-        }
+        var maxTilePercentage = 15;
+        var minTilePercentage = 15;
+        var meanIndex = Math.round(tiles.length / 2) - 1;
+        var meanValue = tiles[meanIndex].value;
+        var meanChance = 20;
+        tile.randomize(maxValue, maxTilePercentage, minValue, minTilePercentage, meanValue, meanChance);
     };
     LogicalGrid.prototype.cleanGrid = function () {
         var killed = this.grid.filter(function (x) { return x && !x.isAlive; });

@@ -11,29 +11,32 @@ export default class GachaAddictionLogic extends LogicalGrid {
   power() {
     var tiles = this.getTilesOrdered();
     if (this.canUsePower()) {
-      let unique = tiles
-        .map(item => item.value)
-        .filter((value, index, self) => self.indexOf(value) === index);
 
       let maxValue = tiles[0].value;
       let minValue = tiles[tiles.length - 1].value;
-      let maxTilePercentage = 20 - (unique.length - 3) * 2.5;
+      let maxTilePercentage = 20 - (tiles.length - 3);
 
       if (maxTilePercentage < 10) {
         maxTilePercentage = 10;
       }
 
-      let minTilePercentage = 30 - (unique.length - 3) * 2.5;
+      let minTilePercentage = 30 - (tiles.length - 3) * 2;
       if (minTilePercentage < 20) {
         minTilePercentage = 20;
       }
+
+      let meanIndex = Math.round(tiles.length / 2) -1;
+      let meanValue = tiles[meanIndex].value;
+      let meanChance = 20;
 
       for (let x = 0; x < tiles.length; x++) {
         tiles[x].randomize(
           maxValue,
           maxTilePercentage,
           minValue,
-          minTilePercentage
+          minTilePercentage,
+          meanValue,
+          meanChance
         );
       }
       this.cleanGrid();

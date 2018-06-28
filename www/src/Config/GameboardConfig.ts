@@ -21,7 +21,7 @@ export default class GameboardConfig {
   requiredBugs: number;
 
   updateScoreSignal: Phaser.Signal;
-  toogleButtonSignal: Phaser.Signal;
+  toggleButtonSignal: Phaser.Signal;
   clickTileSignal: Phaser.Signal;
   updateAmmoSignal: Phaser.Signal;
   mergeTileSignal: Phaser.Signal;
@@ -163,7 +163,7 @@ export default class GameboardConfig {
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'
       )
     );
@@ -179,7 +179,7 @@ export default class GameboardConfig {
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'
       )
     );
@@ -195,7 +195,7 @@ export default class GameboardConfig {
         'gachaAddiction',
         this.powers.find(x => x.id === 'gachaAddiction'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'
       )
     );
@@ -211,7 +211,7 @@ export default class GameboardConfig {
         'gachaAddiction',
         this.powers.find(x => x.id === 'gachaAddiction'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'
       )
     );
@@ -227,7 +227,7 @@ export default class GameboardConfig {
         'detectiveWork',
         this.powers.find(x => x.id === 'detectiveWork'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'Highly-trained FBI agent. Impossible crimes and high profile murder cases are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'
       )
     );
@@ -243,7 +243,7 @@ export default class GameboardConfig {
         'detectiveWork',
         this.powers.find(x => x.id === 'detectiveWork'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         `A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run...`
       )
     );
@@ -259,7 +259,7 @@ export default class GameboardConfig {
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."
       )
     );
@@ -275,7 +275,7 @@ export default class GameboardConfig {
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         "Canadian pro-gamer online, shy as hell waitress in real life. Being very afraid of social interaction, she's forced to hide her identity on the internet. Number 1 fan of Kinjo's works."
       )
     );
@@ -291,7 +291,7 @@ export default class GameboardConfig {
         'reportedForRP',
         this.powers.find(x => x.id === 'reportedForRP'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         "Heir to the Lionstar family headship, owner of a never-ending fortune. This prince, however, rejects his own lineage and indulges in low-budget cosplaying. He's often seen in cons around the world, always accompanied by his cat, Caesar."
       )
     );
@@ -307,7 +307,7 @@ export default class GameboardConfig {
         'reportedForRP',
         this.powers.find(x => x.id === 'reportedForRP'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'The latest model in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology in the most obvious fashion: roleplaying as a human...'
       )
     );
@@ -323,7 +323,7 @@ export default class GameboardConfig {
         'rollForInitiative',
         this.powers.find(x => x.id === 'rollForInitiative'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
       )
     );
@@ -339,7 +339,7 @@ export default class GameboardConfig {
         'rollForInitiative',
         this.powers.find(x => x.id === 'rollForInitiative'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
       )
     );
@@ -355,7 +355,7 @@ export default class GameboardConfig {
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."
       )
     );
@@ -371,7 +371,7 @@ export default class GameboardConfig {
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'
       )
     );
@@ -387,7 +387,7 @@ export default class GameboardConfig {
         'cincoDeMayo',
         this.powers.find(x => x.id === 'cincoDeMayo'),
         () => this.detectiveInvestigationStory,
-        null,
+        () => this.detectiveInvestigationStory,
         'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'
       )
     );

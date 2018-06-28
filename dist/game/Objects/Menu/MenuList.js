@@ -61,10 +61,10 @@ var MenuList = (function (_super) {
     };
     MenuList.prototype.setSelectedOption = function (obj) {
         if (this.selectedOption) {
-            this.selectedOption.toogleOption();
+            this.selectedOption.toggleOption();
         }
         this.selectedOption = obj;
-        obj.toogleOption();
+        obj.toggleOption();
     };
     MenuList.prototype.goNext = function () {
         this.setSelectedOption(this.selectedOption.nextMenuObject);

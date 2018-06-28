@@ -25,6 +25,7 @@ var TextAction = (function (_super) {
         return _this;
     }
     TextAction.prototype.play = function () {
+        this.wordIndex = 0;
         this.text = this.tools.text.makeXBounded(670, '', 45, 'left');
         this.words = this.content.split(' ');
         this.nextWord();

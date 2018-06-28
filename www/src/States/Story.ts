@@ -9,9 +9,11 @@ export default class Story extends Phaser.State {
   private cursor: InputManager;
   private reader: TwoSpritesReader;
   private gameboardConfig: GameboardConfig;
+  private isFirstStory: boolean;
 
-  init(gameboardConfig: GameboardConfig) {
+  init(gameboardConfig: GameboardConfig, isFirstStory = true) {
     this.gameboardConfig = gameboardConfig;
+    this.isFirstStory = isFirstStory;
   }
 
   create() {
@@ -20,7 +22,7 @@ export default class Story extends Phaser.State {
     this.cursor = new InputManager(config);
     tools.graphic.addBackground();
 
-    let list = this.gameboardConfig.mainTile.getFirstStory();
+    let list = this.isFirstStory ? this.gameboardConfig.mainTile.getFirstStory() : this.gameboardConfig.mainTile.getSecondStory();
     this.reader = new TwoSpritesReader(list, function () {
       this.continue();
     }.bind(this));
@@ -48,6 +50,10 @@ export default class Story extends Phaser.State {
   }
 
   continue() {
-    this.state.start('GameboardLoader', true, false, this.gameboardConfig);    
+    if(this.isFirstStory) {
+      this.state.start('GameboardLoader', true, false, this.gameboardConfig);
+    } else {
+      this.state.start('Boot');    
+    }
   }
 }

@@ -16,7 +16,7 @@ export default class TimeTravelLogic extends LogicalGrid {
     this.isTimeStopped = true;
     this.turnsTimeStop = this.tools.misc.randomBetween(2, 4);
     this.turnsPassed = 0;
-    this.tooglePauseTiles(true);
+    this.togglePauseTiles(true);
   }
 
   canUsePower() {
@@ -50,7 +50,7 @@ export default class TimeTravelLogic extends LogicalGrid {
   private checkTime() {
     if (this.turnsPassed === this.turnsTimeStop) {
       this.isTimeStopped = false;
-      this.tooglePauseTiles(false);
+      this.togglePauseTiles(false);
       this.gameboardConfig.cooldownSignal.dispatch();
       for (let i = 0; i < this.turnsTimeStop; i++) {
         this.tryToAdd();
@@ -60,7 +60,7 @@ export default class TimeTravelLogic extends LogicalGrid {
     }
   }
 
-  private tooglePauseTiles(pause: boolean) {
+  private togglePauseTiles(pause: boolean) {
     for (let tile of this.getTilesOrdered()) {
       if (pause) {
         tile.startTimeStop();
