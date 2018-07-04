@@ -19,6 +19,8 @@ var Carrousel = (function (_super) {
         array.unshift(array.pop());
         _this.array = array;
         _this.callback = callback;
+        _this.spriteArray = [];
+        _this.updateVisibleArray();
         _this.showCharacters();
         return _this;
     }
@@ -27,17 +29,25 @@ var Carrousel = (function (_super) {
         this.setSelectedCharacter(this.spriteArray[2], this.visibleArray[2]);
     };
     Carrousel.prototype.updateVisibleArray = function () {
-        this.visibleArray = this.array.slice(0, 5);
-        this.spriteArray = [];
+        this.visibleArray = this.array.slice(0, 6);
         var column = 0;
         var _loop_1 = function (char) {
-            var sprite = this_1.tools.sprite.makeMenuTile(column, 0, char.id, 150, 4 / 6);
+            var sprite;
+            if (this_1.spriteArray.length >= 6) {
+                this_1.spriteArray[column].loadTexture(char.id);
+                sprite = this_1.spriteArray[column];
+            }
+            else {
+                sprite = this_1.tools.sprite.makeMenuTile(column, 0, char.id, 35, 4 / 6);
+                this_1.spriteArray.push(sprite);
+                sprite.inputEnabled = true;
+            }
             sprite.tint = Phaser.Color.GRAY;
-            this_1.spriteArray.push(sprite);
-            sprite.inputEnabled = true;
-            sprite.events.onInputDown.add(function () {
+            sprite.events.destroy();
+            sprite.events.onInputDown.addOnce(function () {
                 this.setSelectedCharacter(sprite, char);
             }.bind(this_1));
+            column++;
         };
         var this_1 = this;
         for (var _i = 0, _a = this.visibleArray; _i < _a.length; _i++) {
@@ -46,23 +56,25 @@ var Carrousel = (function (_super) {
         }
     };
     Carrousel.prototype.setSelectedCharacter = function (sprite, char) {
-        if (char.id === this.visibleArray[0].id || char.id === this.visibleArray[0].id) {
-            this.moveLeft();
-        }
-        else if (char.id === this.visibleArray[4].id || char.id === this.visibleArray[5].id) {
+        if (char.id === this.visibleArray[0].id || char.id === this.visibleArray[1].id) {
             this.moveRight();
         }
-        this.callback(char);
+        else if (char.id === this.visibleArray[4].id || char.id === this.visibleArray[5].id) {
+            this.moveLeft();
+        }
+        this.spriteArray[2].tint = Phaser.Color.WHITE;
+        this.spriteArray[3].tint = Phaser.Color.WHITE;
+        this.callback(sprite, char);
     };
     Carrousel.prototype.moveLeft = function () {
         this.array.push(this.array.shift());
         this.array.push(this.array.shift());
-        this.visibleArray = this.array.slice(0, 5);
+        this.updateVisibleArray();
     };
     Carrousel.prototype.moveRight = function () {
         this.array.unshift(this.array.pop());
         this.array.unshift(this.array.pop());
-        this.visibleArray = this.array.slice(0, 5);
+        this.updateVisibleArray();
     };
     return Carrousel;
 }(Base_1.default));

@@ -174,7 +174,7 @@ export default class GameboardConfig {
         'bren',
         'B.R.E.N.',
         'brotherhating ridiculously efficient nerd.py',
-        'meushijyo',
+        'meushi',
         'yawn.mp3',
         1,
         'powerGaming',
