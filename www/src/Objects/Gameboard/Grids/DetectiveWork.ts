@@ -29,7 +29,7 @@ export default class DetectiveWork extends Grid {
     group.add(this.tools.text.make(475, 1200, 'LEFT', 50));
     group.add(this.tools.text.make(700, 1200, 'RIGHT', 50));
 
-    let btn = this.tools.text.make(300, 1280, 'Investigate!', 50);
+    let btn = this.tools.text.makeXBounded(1280, 'Catch the culprit!', 50, 'center');
     btn.tint = Phaser.Color.GRAY;
     group.add(btn);
     btn.inputEnabled = false;

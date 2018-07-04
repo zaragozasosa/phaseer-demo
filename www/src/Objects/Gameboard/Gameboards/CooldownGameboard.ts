@@ -19,7 +19,7 @@ export default class CooldownGameboard extends Gameboard {
     this.powerFinished = false;
     let group: Phaser.Group = this.grid.activatePower();
     this.elements = group;
-    this.cooldownText = this.tools.text.make(20, 150, 'Status: Ready!', 50);
+    this.cooldownText = this.tools.text.make(20, 150, 'Status: Idle', 50);
     this.gameboardConfig.cooldownSignal.add(
       function(activatePower, cooldown, success) {
         if (success) {
@@ -46,16 +46,17 @@ export default class CooldownGameboard extends Gameboard {
     this.passedTurns++;
 
     if (this.powerStarted && this.passedTurns === this.turnsForPower) {
-      this.cooldownText.setText('Status: Culprit ran away...');
+      this.cooldownText.setText('Status: Failure');
       this.powerFinished = true;
     } else if (this.powerStarted) {
       this.cooldownText.setText(
-        `Status: Will escape in ${this.turnsForPower -
-          this.passedTurns}`
+        `Status: ${this.turnsForPower -
+          this.passedTurns} turns left`
       );
     } else if (this.turnsForPower && this.passedTurns === this.turnsForPower) {
       let turns: number = this.grid.activatePower();
-      this.cooldownText.setText(`Status: Will escape in ${turns}`);
+      this.showMessage('You found the culprit!', 65);      
+      this.cooldownText.setText(`Status: ${turns} turns left`);
       this.passedTurns = 0;
       this.powerStarted = true;
     }
@@ -64,30 +65,34 @@ export default class CooldownGameboard extends Gameboard {
       this.unblockElements();
     } else if (this.cooldown) {
       this.cooldownText.setText(
-        `Status: ${this.cooldown - this.passedTurns} turns of cooldown.`
+        `Status: ${this.cooldown - this.passedTurns} turns of cd`
       );
     }
   }
 
   private blockElements(cooldown) {
     this.passedTurns = 0;
-    this.elements.getTop().tint = Phaser.Color.GRAY;
-    this.elements.setAllChildren('inputEnabled', false);
+    let elementsToKill = this.elements.getAll('tint', Phaser.Color.WHITE);
+    for(let e of elementsToKill) {
+      e.kill();
+    }
+
     this.cooldown = cooldown;
-    this.cooldownText.setText(`Status: ${cooldown} turns of cooldown.`);
+    this.cooldownText.setText(`Status: ${cooldown} turns of cd`);
   }
 
   private unblockElements() {
-    this.elements.getTop().tint = Phaser.Color.WHITE;
+    this.elements.callAll('revive', null);
     this.elements.setAllChildren('inputEnabled', true);
     this.cooldown = null;
-    this.cooldownText.setText(`Status: Ready!`);
+    this.cooldownText.setText(`Status: Investigating`);
   }
 
   private cooldownPower(turnsToActivate) {
     this.elements.kill();
     this.turnsForPower = turnsToActivate;
     this.passedTurns = 0;
-    this.cooldownText.setText('Status: Culprit will appear soon!');
+    this.showMessage('The culprit will appear soon!', 55);
+    this.cooldownText.setText('Status: ?');
   }
 }

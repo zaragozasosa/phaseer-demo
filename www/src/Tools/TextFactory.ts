@@ -17,9 +17,7 @@ export default class TextFactory extends Factory {
     );
     this.game.physics.enable(txt, Phaser.Physics.ARCADE);
 
-    txt.stroke = "#000000";
-    txt.strokeThickness = 10;
-    return txt;
+    return this.addStroke(txt, size);
   }
 
   updateTileNumber(x: number, y: number, text: Phaser.Text) {
@@ -41,7 +39,7 @@ export default class TextFactory extends Factory {
     textSize: number,
     color = ColorSettings.TEXT,
     padX = 0,
-    padY = 0,
+    padY = 0
   ) {
     var colorString = this.getColor(color);
     let x =
@@ -63,10 +61,14 @@ export default class TextFactory extends Factory {
     textSize: number,
     align: string,
     color = ColorSettings.TEXT,
+    stroked = false
   ) {
     let safeZone = this.config.safeZone;
     let boundPadding = 15 * this.config.scaleFactor;
-    let textObj = this.make(0, posY, text, textSize, color);
+    let textObj = stroked
+      ? this.makeStroked(0, posY, text, textSize, color)
+      : this.make(0, posY, text, textSize, color);
+
     textObj.wordWrap = true;
     textObj.wordWrapWidth = safeZone.safeWidth;
     textObj.boundsAlignH = align;
@@ -88,10 +90,13 @@ export default class TextFactory extends Factory {
     wordWrapWidth: number,
     padding: number,
     lineHeight: number,
-    color = ColorSettings.TEXT
+    color = ColorSettings.TEXT,
+    stroked = false
   ) {
     let safeZone = this.config.safeZone;
-    let textObj = this.make(0, posY, text, textSize, color);
+    let textObj = stroked
+    ? this.makeStroked(0, posY, text, textSize, color)
+    : this.make(0, posY, text, textSize, color);
     let pad = padding * this.config.scaleFactor;
     textObj.wordWrap = true;
     textObj.wordWrapWidth = wordWrapWidth * this.config.scaleFactor;
@@ -123,5 +128,25 @@ export default class TextFactory extends Factory {
 
   changeColor(text: Phaser.Text, color: number) {
     text.addColor(this.getColor(color), 0);
+  }
+
+  makeStroked(
+    posX: number,
+    posY: number,
+    text: string,
+    textSize: number,
+    color = ColorSettings.TEXT,
+    padX = 0,
+    padY = 0
+  ) {
+    let txt = this.make(posX, posY, text, textSize, color, padX, padY);
+
+    return this.addStroke(txt, textSize);
+  }
+
+  private addStroke(text: Phaser.Text, size: number) {
+    text.stroke = '#000000';
+    text.strokeThickness = size / 7;
+    return text;
   }
 }

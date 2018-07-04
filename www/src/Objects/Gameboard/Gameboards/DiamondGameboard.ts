@@ -35,21 +35,7 @@ export default class DiamondGameboard extends Gameboard {
     if (this.diamondModel.cooldown) {
       this.gameboardConfig.cooldownSignal.add(
         function() {
-          let text = this.tools.text.makeXBounded(
-            650,
-            this.diamondModel.endText,
-            75,
-            'center'
-          );
-
-          this.tools.misc.tweenVanishAndDestroy(
-            text,
-            { alpha: 0 },
-            1500,
-            'Linear',
-            true,
-            1500
-          );
+          this.showMessage(this.diamondModel.endText, 65);
 
           if (this.diamondModel.type === DiamondModel.TIME_TYPE) {
             this.background.loadTexture('witch');

@@ -34,35 +34,39 @@ export default abstract class Gameboard extends Base {
     this.background = this.tools.sprite.createBackground();
     let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
     win.inputEnabled = true;
-    win.events.onInputDown.addOnce(function () {
-      this.gameover(true);
-    }.bind(this))
+    win.events.onInputDown.addOnce(
+      function() {
+        this.gameover(true);
+      }.bind(this)
+    );
 
     let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
     lose.inputEnabled = true;
-    lose.events.onInputDown.addOnce(function () {
-      this.gameover(false);
-    }.bind(this))
+    lose.events.onInputDown.addOnce(
+      function() {
+        this.gameover(false);
+      }.bind(this)
+    );
 
     this.gameOver = false;
     this.wonGame = false;
     let updateScoreSignal = new Phaser.Signal();
     updateScoreSignal.add(
-      function (addToMovement) {
+      function(addToMovement) {
         this.updateScore(addToMovement);
       }.bind(this)
     );
 
     let toggleButtonSignal = new Phaser.Signal();
     toggleButtonSignal.add(
-      function (status) {
+      function(status) {
         this.toggleButton(status);
       }.bind(this)
     );
 
     let gameoverSignal = new Phaser.Signal();
     gameoverSignal.add(
-      function (win) {
+      function(win) {
         this.gameover(win);
       }.bind(this)
     );
@@ -107,9 +111,9 @@ export default abstract class Gameboard extends Base {
     }
 
     let enter = this.input.checkEnter();
-    if(this.wonGame) {
-      if(enter || this.input.checkClick()) {
-        if(this.config.storyboard.windowActionSignal) {
+    if (this.wonGame) {
+      if (enter || this.input.checkClick()) {
+        if (this.config.storyboard.windowActionSignal) {
           this.config.storyboard.windowActionSignal.dispatch();
         }
       }
@@ -120,9 +124,7 @@ export default abstract class Gameboard extends Base {
     if (cursor) {
       this.config.storyboard.menuInputSignal.dispatch(cursor);
     } else if (enter) {
-      this.config.storyboard.menuInputSignal.dispatch(
-        Phaser.Keyboard.ENTER
-      );
+      this.config.storyboard.menuInputSignal.dispatch(Phaser.Keyboard.ENTER);
     }
   }
 
@@ -143,14 +145,14 @@ export default abstract class Gameboard extends Base {
       this.wonGame = true;
       this.showGameOverWindow(
         win,
-        function () {
+        function() {
           this.tools.misc.changeState('Story', this.gameboardConfig, false);
         }.bind(this)
       );
     } else {
       this.showGameOverWindow(
         win,
-        function () {
+        function() {
           this.tools.misc.changeState('CharacterSelection');
         }.bind(this)
       );
@@ -161,25 +163,47 @@ export default abstract class Gameboard extends Base {
     if (win) {
       new WinWindow(
         this.gameboardConfig.mainTile,
-        function () {
+        function() {
           callback();
         }.bind(this)
       );
-
     } else {
       new GameOverWindow(
         this.gameboardConfig.mainTile,
-        function () {
+        function() {
           callback();
         }.bind(this),
-        function () {
+        function() {
           this.tools.misc.changeState('Boot');
         }.bind(this)
       );
     }
   }
 
+  protected showMessage(
+    message: string,
+    size: number,
+    color = ColorSettings.TEXT,
+    delay = 1500
+  ) {
+    let text = this.tools.text.makeXBounded(
+      650,
+      message,
+      size,
+      'center',
+      color,
+      true
+    );
 
+    this.tools.misc.tweenVanishAndDestroy(
+      text,
+      { alpha: 0 },
+      delay,
+      'Linear',
+      true,
+      delay
+    );
+  }
 
   protected toggleButton(buttonStatus: number) {
     if (this.gameOver) {
@@ -209,7 +233,7 @@ export default abstract class Gameboard extends Base {
     menu.inputEnabled = true;
 
     menu.events.onInputDown.add(
-      function () {
+      function() {
         if (!this.isPaused) {
           this.pausetoggle();
         }
@@ -222,7 +246,7 @@ export default abstract class Gameboard extends Base {
       310,
       1250,
       ['power'],
-      function () {
+      function() {
         if (!this.isPaused) {
           this.activatePower();
         }
@@ -271,10 +295,10 @@ export default abstract class Gameboard extends Base {
     } else {
       this.pausedWindow = new PauseWindow(
         this.gameboardConfig.mainTile,
-        function () {
+        function() {
           this.pausetoggle();
         }.bind(this),
-        function () {
+        function() {
           this.tools.misc.changeState('Boot');
         }.bind(this)
       );

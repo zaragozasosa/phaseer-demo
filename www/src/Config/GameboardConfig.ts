@@ -1,10 +1,10 @@
 import TileModel from './../Models/TileModel';
 import PowerModel from './../Models/PowerModel';
 
-import BaseAction from './../Objects/Storyboard/Actions/BaseAction'
-import TextAction from './../Objects/Storyboard/Actions/TextAction'
-import SpriteAction from './../Objects/Storyboard/Actions/SpriteAction'
-import TitleAction from './../Objects/Storyboard/Actions/TitleAction'
+import BaseAction from './../Objects/Storyboard/Actions/BaseAction';
+import TextAction from './../Objects/Storyboard/Actions/TextAction';
+import SpriteAction from './../Objects/Storyboard/Actions/SpriteAction';
+import TitleAction from './../Objects/Storyboard/Actions/TitleAction';
 
 export default class GameboardConfig {
   mainTile: TileModel;
@@ -30,10 +30,11 @@ export default class GameboardConfig {
   turnsSignal: Phaser.Signal;
 
   gameOverSignal: Phaser.Signal;
-  
+
   powers: Array<PowerModel>;
 
   detectiveInvestigationStory: Array<BaseAction>;
+  detectiveInvestigationStory2: Array<BaseAction>;
 
   static readonly BUTTON_ACTIVE = 1;
   static readonly BUTTON_SLEEP = 2;
@@ -41,7 +42,6 @@ export default class GameboardConfig {
 
   constructor() {
     this.arraySize = 3;
-    this.winningTile = 512;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {
@@ -49,6 +49,7 @@ export default class GameboardConfig {
       }
     }
     this.minimumValue = 1;
+    this.winningTile = 512;    
     this.bulletAmmo = 5;
     this.diceAmmo = 6;
     this.requiredDiamonds = 50;
@@ -56,7 +57,6 @@ export default class GameboardConfig {
     this.createPowers();
     this.createStories();
     this.createTiles();
-
   }
 
   createPowers() {
@@ -95,7 +95,7 @@ export default class GameboardConfig {
         'detectiveWork',
         'Detective Work',
         'Control the flow of new tiles. Changing this flow will require you to wait a few turns.\n\n' +
-        'You can also investigate to create a ghost tile. Be careful, the higher your tiles are, the hardest it will be to merge.',
+          'You can also investigate to create a ghost tile. Be careful, the higher your tiles are, the hardest it will be to merge.'
       )
     );
 
@@ -141,7 +141,8 @@ export default class GameboardConfig {
       new PowerModel(
         'cincoDeMayo',
         'Cinco de Mayo',
-        `Destroy any tile you want by clicking on it! Can be used ${this.bulletAmmo} times.`,
+        `Destroy any tile you want by clicking on it! Can be used ${this
+          .bulletAmmo} times.`,
         'Have at least more than one tile on the grid.'
       )
     );
@@ -163,7 +164,7 @@ export default class GameboardConfig {
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'Genius programmer. Created B.R.E.N. trying to code the perfect little sister, but the project backfired and now she refuses to listen to him. Could get a job anywhere he wanted, but prefers the NEET lifestyle.'
       )
     );
@@ -179,7 +180,7 @@ export default class GameboardConfig {
         'powerGaming',
         this.powers.find(x => x.id === 'powerGaming'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'Cutting-edge sentient Artificial Intelligence who even rewrote her own name. Instead of planning the end of the world, or paying any attention to his maker, this script enjoys crunching numbers, playing games and explaining why other players suck.'
       )
     );
@@ -195,7 +196,7 @@ export default class GameboardConfig {
         'gachaAddiction',
         this.powers.find(x => x.id === 'gachaAddiction'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'A kind, reserved fairy who comes from the Land of Fiction. Highly skilled in fire magic. Often visits our world looking for books or Japanese media. Stays in touch with Choco using the interdimensional computer network.'
       )
     );
@@ -211,7 +212,7 @@ export default class GameboardConfig {
         'gachaAddiction',
         this.powers.find(x => x.id === 'gachaAddiction'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'Professional digital artist with a worrisome gambling habit (please join my Patreon!). Close friend of Rox. They met each other years ago through the popular online community “Neon Virtual Pets: Z”.'
       )
     );
@@ -227,7 +228,7 @@ export default class GameboardConfig {
         'detectiveWork',
         this.powers.find(x => x.id === 'detectiveWork'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'Highly-trained FBI agent. Impossible crimes and high profile murder cases are his specialty. Fluently speaks 32 languages, expert cook, master of observation and deduction.'
       )
     );
@@ -243,7 +244,7 @@ export default class GameboardConfig {
         'detectiveWork',
         this.powers.find(x => x.id === 'detectiveWork'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         `A clumsy maid devoted to her master, often teased for not being too quick on the uptake. Nevertheless, she makes for a good Watson. Lily's other passion is cleaning and she likes to do her job thoroughly. Sometimes too thorougly. You should run...`
       )
     );
@@ -259,7 +260,7 @@ export default class GameboardConfig {
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         "Famous indie developer with a vodka addiction. One of his software bugs ripped through the fabric of reality. Now his day isn't complete without some spontaneous time traveling."
       )
     );
@@ -275,7 +276,7 @@ export default class GameboardConfig {
         'timeTravel',
         this.powers.find(x => x.id === 'timeTravel'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         "Canadian pro-gamer online, shy as hell waitress in real life. Being very afraid of social interaction, she's forced to hide her identity on the internet. Number 1 fan of Kinjo's works."
       )
     );
@@ -291,7 +292,7 @@ export default class GameboardConfig {
         'reportedForRP',
         this.powers.find(x => x.id === 'reportedForRP'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         "Heir to the Lionstar family headship, owner of a never-ending fortune. This prince, however, rejects his own lineage and indulges in low-budget cosplaying. He's often seen in cons around the world, always accompanied by his cat, Caesar."
       )
     );
@@ -307,7 +308,7 @@ export default class GameboardConfig {
         'reportedForRP',
         this.powers.find(x => x.id === 'reportedForRP'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'The latest model in state-of-the-art synthetic robotics. After escaping from a hidden lab, this lively robot now makes use of its advanced technology in the most obvious fashion: roleplaying as a human...'
       )
     );
@@ -323,7 +324,7 @@ export default class GameboardConfig {
         'rollForInitiative',
         this.powers.find(x => x.id === 'rollForInitiative'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'Dungeon Master of legend, crafter of a thousand stories. Rumoured to be a dragon. Always looking for a new game; has been trying to get her friend Jessy into roleplaying games for a while without much success.'
       )
     );
@@ -339,7 +340,7 @@ export default class GameboardConfig {
         'rollForInitiative',
         this.powers.find(x => x.id === 'rollForInitiative'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."
       )
     );
@@ -355,7 +356,7 @@ export default class GameboardConfig {
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."
       )
     );
@@ -371,7 +372,7 @@ export default class GameboardConfig {
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'
       )
     );
@@ -387,7 +388,7 @@ export default class GameboardConfig {
         'cincoDeMayo',
         this.powers.find(x => x.id === 'cincoDeMayo'),
         () => this.detectiveInvestigationStory,
-        () => this.detectiveInvestigationStory,
+        () => this.detectiveInvestigationStory2,
         'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'
       )
     );
@@ -429,20 +430,96 @@ export default class GameboardConfig {
 
     list.push(new SpriteAction(['smith-sheet', '0', 'left']));
     list.push(new TitleAction(['Agent Smith', 'left']));
-    list.push(new TextAction(['It was a rainy night. I was asked to come immediately.']));
-    list.push(new TextAction(['The case was a murder in an old mansion. My squad was already investigating, but something happened.']));
+    list.push(
+      new TextAction(['It was a rainy night. I was asked to come immediately.'])
+    );
+    list.push(
+      new TextAction([
+        'The case was a murder in an old mansion. My squad was already investigating, but something happened.'
+      ])
+    );
     list.push(new SpriteAction(['lily-sheet', '0', 'right', 'black']));
-    list.push(new TextAction(['One unidentified suspect managed to knock out every police offer on the crime scene. Then they cleaned up the whole place, took all the evidence and left.']));
-    list.push(new TextAction(['We believe the suspect is armed and trained in hand-to-hand combat.']));
-    list.push(new TextAction(['The instructions were clear. Detain the suspect and find the evidence regarding the murder case.']));
+    list.push(
+      new TextAction([
+        'One unidentified suspect managed to knock out every police offer on the crime scene. Then they cleaned up the whole place, took all the evidence and left.'
+      ])
+    );
+    list.push(
+      new TextAction([
+        'We believe the suspect is armed and trained in hand-to-hand combat.'
+      ])
+    );
+    list.push(
+      new TextAction([
+        'The instructions were clear. Detain the suspect and find the evidence regarding the murder case.'
+      ])
+    );
 
-    list.push(new TextAction([`Damn, it's always the difficult cases for me, isn't it?`]));
+    list.push(
+      new TextAction([
+        `Damn, it's always the difficult cases for me, isn't it?`
+      ])
+    );
     list.push(new SpriteAction(['lily-sheet', '2', 'right']));
     list.push(new TitleAction(['Lily', 'right']));
 
-    list.push(new TextAction([`Huh? Who are you? Are you trying to trying to further desacrate the master's propierty?`]));
+    list.push(
+      new TextAction([
+        `Huh? Who are you? Are you trying to trying to further desacrate the master's propierty?`
+      ])
+    );
     list.push(new TitleAction(['Agent Smith', 'left']));
     list.push(new SpriteAction(['smith-sheet', '3', 'left']));
     list.push(new TextAction(['No, wait, stop!']));
+
+    this.detectiveInvestigationStory2 = new Array<BaseAction>();
+    let story2 = this.detectiveInvestigationStory2;
+
+
+
+
+    story2.push(new SpriteAction(['smith-sheet', '1', 'left']));
+    story2.push(new SpriteAction(['lily-sheet', '1', 'right']));
+    story2.push(new TitleAction(['Agent Smith', 'left']));
+    story2.push(
+      new TextAction([`So, you were only trying to clean the room? You can't do that on a crime scene.`])
+    );
+    story2.push(new TitleAction(['Lily', 'right']));
+    story2.push(
+      new TextAction([`The master's residence must always be perfectly clean. Something trivial like a murder won't stop me from fulfilling my duty.`])
+    );
+    story2.push(new SpriteAction(['lily-sheet', '0', 'right']));    
+    story2.push(
+      new TextAction([`Besides, we already detained the insolent who stained the floor. We even have a confesion, ho.`])
+    );
+    story2.push(new SpriteAction(['smith-sheet', '0', 'left']));
+    story2.push(new TitleAction(['Agent Smith', 'left']));    
+    story2.push(
+      new TextAction([`We? Wasn't it just you?`])
+    );
+    story2.push(new TitleAction(['Lily', 'right']));
+    story2.push(
+      new TextAction([`Of course not. Me and my friend solved it together. She's like a prodigy detective.`])
+    );
+    story2.push(new TitleAction(['Agent Smith', 'left']));    
+    story2.push(new SpriteAction(['smith-sheet', '3', 'left']));
+    story2.push(
+      new TextAction([`(They stopped my whole squad and found the culprit before I arrived? Sick.)`])
+    );
+    story2.push(new SpriteAction(['smith-sheet', '0', 'left']));
+    story2.push(
+      new TextAction([`You will come with me and tell us everything. If everything is as you say, we will fix this misunderstanding.`])
+    );
+    story2.push(new TitleAction(['Lily', 'right']));    
+    story2.push(new SpriteAction(['lily-sheet', '1', 'right']));
+    story2.push(
+      new TextAction([`Sure, but I should return before breakfast. The master won't accept a late meal.`])
+    );
+    story2.push(new TitleAction(['Agent Smith', 'left']));        
+    story2.push(new SpriteAction(['smith-sheet', '3', 'left']));
+    
+    story2.push(
+      new TextAction([`(What a crazy lady... but who knows? Maybe she will be useful later.)`])
+    );
   }
 }

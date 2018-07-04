@@ -18,6 +18,7 @@ var PowerWindow_1 = require("./../Windows/PowerWindow");
 var GameOverWindow_1 = require("./../Windows/GameOverWindow");
 var WinWindow_1 = require("./../Windows/WinWindow");
 var PauseWindow_1 = require("./../Windows/PauseWindow");
+var Config_1 = require("./../../Config/Config");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
     function Gameboard(gameboardConfig) {
@@ -138,6 +139,12 @@ var Gameboard = (function (_super) {
                 this.tools.misc.changeState('Boot');
             }.bind(this));
         }
+    };
+    Gameboard.prototype.showMessage = function (message, size, color, delay) {
+        if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
+        if (delay === void 0) { delay = 1500; }
+        var text = this.tools.text.makeXBounded(650, message, size, 'center', color, true);
+        this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, delay, 'Linear', true, delay);
     };
     Gameboard.prototype.toggleButton = function (buttonStatus) {
         if (this.gameOver) {

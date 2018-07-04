@@ -23,9 +23,7 @@ var TextFactory = (function (_super) {
         var yPos = settings.tileNumberPadY + y * settings.tileSize;
         var txt = this.make(xPos, yPos, value.toString(), size, Config_1.ColorSettings.TEXT, settings.gridPaddingX, settings.gridPaddingY);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
-        txt.stroke = "#000000";
-        txt.strokeThickness = 10;
-        return txt;
+        return this.addStroke(txt, size);
     };
     TextFactory.prototype.updateTileNumber = function (x, y, text) {
         var settings = this.config.grid;
@@ -49,21 +47,27 @@ var TextFactory = (function (_super) {
         textObj.addColor(colorString, 0);
         return textObj;
     };
-    TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, color) {
+    TextFactory.prototype.makeXBounded = function (posY, text, textSize, align, color, stroked) {
         if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
+        if (stroked === void 0) { stroked = false; }
         var safeZone = this.config.safeZone;
         var boundPadding = 15 * this.config.scaleFactor;
-        var textObj = this.make(0, posY, text, textSize, color);
+        var textObj = stroked
+            ? this.makeStroked(0, posY, text, textSize, color)
+            : this.make(0, posY, text, textSize, color);
         textObj.wordWrap = true;
         textObj.wordWrapWidth = safeZone.safeWidth;
         textObj.boundsAlignH = align;
         textObj.setTextBounds(boundPadding, boundPadding, safeZone.safeWidth - boundPadding, safeZone.safeHeight - boundPadding);
         return textObj;
     };
-    TextFactory.prototype.makeXBoundedOptions = function (posY, text, textSize, align, wordWrapWidth, padding, lineHeight, color) {
+    TextFactory.prototype.makeXBoundedOptions = function (posY, text, textSize, align, wordWrapWidth, padding, lineHeight, color, stroked) {
         if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
+        if (stroked === void 0) { stroked = false; }
         var safeZone = this.config.safeZone;
-        var textObj = this.make(0, posY, text, textSize, color);
+        var textObj = stroked
+            ? this.makeStroked(0, posY, text, textSize, color)
+            : this.make(0, posY, text, textSize, color);
         var pad = padding * this.config.scaleFactor;
         textObj.wordWrap = true;
         textObj.wordWrapWidth = wordWrapWidth * this.config.scaleFactor;
@@ -80,6 +84,18 @@ var TextFactory = (function (_super) {
     };
     TextFactory.prototype.changeColor = function (text, color) {
         text.addColor(this.getColor(color), 0);
+    };
+    TextFactory.prototype.makeStroked = function (posX, posY, text, textSize, color, padX, padY) {
+        if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
+        if (padX === void 0) { padX = 0; }
+        if (padY === void 0) { padY = 0; }
+        var txt = this.make(posX, posY, text, textSize, color, padX, padY);
+        return this.addStroke(txt, textSize);
+    };
+    TextFactory.prototype.addStroke = function (text, size) {
+        text.stroke = '#000000';
+        text.strokeThickness = size / 7;
+        return text;
     };
     return TextFactory;
 }(Factory_1.default));

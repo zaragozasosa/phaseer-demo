@@ -30,8 +30,7 @@ var DiamondGameboard = (function (_super) {
         _this.diamondText = _this.tools.text.make(100, 155, ": " + _this.diamonds, 50);
         if (_this.diamondModel.cooldown) {
             _this.gameboardConfig.cooldownSignal.add(function () {
-                var text = this.tools.text.makeXBounded(650, this.diamondModel.endText, 75, 'center');
-                this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, 1500, 'Linear', true, 1500);
+                this.showMessage(this.diamondModel.endText, 65);
                 if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
                     this.background.loadTexture('witch');
                     this.toggleTimer(false);
