@@ -39,9 +39,8 @@ var MainMenu = (function (_super) {
         options.addChild(tools.audio.makeVolumeMenuOption());
         menuList.addChild(options);
         this.menu = new Menu_1.default(menuList);
-        this.startText = tools.text.makeXBounded(600, 'Click to start', 70, 'center', Config_1.ColorSettings.TEXT);
+        this.startText = tools.text.makeXBounded(700, 'Click to start', 70, 'center', Config_1.ColorSettings.TEXT);
         this.logoPlaceholder = tools.text.makeXBounded(350, 'Logo goes here', 80, 'center', Config_1.ColorSettings.PRIMARY);
-        this.logoPlaceholder.alpha = 0;
     };
     MainMenu.prototype.update = function () {
         if (!this.started) {
@@ -49,7 +48,6 @@ var MainMenu = (function (_super) {
                 this.menu.show();
                 this.started = true;
                 this.startText.destroy();
-                this.logoPlaceholder.alpha = 1;
             }
         }
         else {

@@ -49,7 +49,7 @@ export default class MainMenu extends Phaser.State {
     this.menu = new Menu(menuList);
 
     this.startText = tools.text.makeXBounded(
-      600,
+      700,
       'Click to start',
       70,
       'center',
@@ -64,7 +64,6 @@ export default class MainMenu extends Phaser.State {
       ColorSettings.PRIMARY
     );
 
-    this.logoPlaceholder.alpha = 0;
   }
 
   update() {
@@ -73,7 +72,6 @@ export default class MainMenu extends Phaser.State {
         this.menu.show();
         this.started = true;
         this.startText.destroy();
-        this.logoPlaceholder.alpha = 1;
       }
     } else {
       let cursor = this.cursor.checkCursor();

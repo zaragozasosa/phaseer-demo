@@ -96,36 +96,38 @@ var GameboardConfig = (function () {
             'The instructions were clear. Detain the suspect and find the evidence regarding the murder case.'
         ]));
         list.push(new TextAction_1.default([
-            "Damn, it's always the difficult cases for me, isn't it?"
+            "(Damn, it's always the difficult cases for me, isn't it?)"
         ]));
         list.push(new SpriteAction_1.default(['lily-sheet', '2', 'right']));
         list.push(new TitleAction_1.default(['Lily', 'right']));
         list.push(new TextAction_1.default([
-            "Huh? Who are you? Are you trying to trying to further desacrate the master's propierty?"
+            "Huh? Who are you? Are you trying to further desecrate the master's property?"
         ]));
         list.push(new TitleAction_1.default(['Agent Smith', 'left']));
         list.push(new SpriteAction_1.default(['smith-sheet', '3', 'left']));
-        list.push(new TextAction_1.default(['No, wait, stop!']));
+        list.push(new TextAction_1.default(['No, wait! Stop!']));
         this.detectiveInvestigationStory2 = new Array();
         var story2 = this.detectiveInvestigationStory2;
         story2.push(new SpriteAction_1.default(['smith-sheet', '1', 'left']));
         story2.push(new SpriteAction_1.default(['lily-sheet', '1', 'right']));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
-        story2.push(new TextAction_1.default(["So, you were only trying to clean the room? You can't do that on a crime scene."]));
+        story2.push(new TextAction_1.default(["So, you were only trying to clean the room? You can't just clean up a crime scene."]));
         story2.push(new TitleAction_1.default(['Lily', 'right']));
-        story2.push(new TextAction_1.default(["The master's residence must always be perfectly clean. Something trivial like a murder won't stop me from fulfilling my duty."]));
+        story2.push(new SpriteAction_1.default(['lily-sheet', '1', 'right']));
+        story2.push(new TextAction_1.default(["The master's residence must always remain perfectly clean. Something trivial like murder won't stop me from fulfilling my duty."]));
         story2.push(new SpriteAction_1.default(['lily-sheet', '0', 'right']));
-        story2.push(new TextAction_1.default(["Besides, we already detained the insolent who stained the floor. We even have a confesion, ho."]));
+        story2.push(new TextAction_1.default(["Besides, we've already apprehended the insolent who stained the floor. We even have their confession, ho."]));
         story2.push(new SpriteAction_1.default(['smith-sheet', '0', 'left']));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
-        story2.push(new TextAction_1.default(["We? Wasn't it just you?"]));
+        story2.push(new TextAction_1.default(["We? Weren't you working alone?"]));
         story2.push(new TitleAction_1.default(['Lily', 'right']));
-        story2.push(new TextAction_1.default(["Of course not. Me and my friend solved it together. She's like a prodigy detective."]));
+        story2.push(new SpriteAction_1.default(['lily-sheet', '0', 'right']));
+        story2.push(new TextAction_1.default(["Of course not. Me and my master solved it together. She's a young detective prodigy, you know."]));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
         story2.push(new SpriteAction_1.default(['smith-sheet', '3', 'left']));
         story2.push(new TextAction_1.default(["(They stopped my whole squad and found the culprit before I arrived? Sick.)"]));
         story2.push(new SpriteAction_1.default(['smith-sheet', '0', 'left']));
-        story2.push(new TextAction_1.default(["You will come with me and tell us everything. If everything is as you say, we will fix this misunderstanding."]));
+        story2.push(new TextAction_1.default(["You will come with me and tell us what you know. If everything is as you say, we will fix this misunderstanding."]));
         story2.push(new TitleAction_1.default(['Lily', 'right']));
         story2.push(new SpriteAction_1.default(['lily-sheet', '1', 'right']));
         story2.push(new TextAction_1.default(["Sure, but I should return before breakfast. The master won't accept a late meal."]));
