@@ -43,7 +43,7 @@ export default class CharacterSelection extends Phaser.State {
 
     this.tools.button.make(
       675,
-      1300,
+      1250,
       ['start-1', 'start-2', 'start-3'],
       function () {
         this.gameStart();

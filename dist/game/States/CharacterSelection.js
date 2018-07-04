@@ -42,7 +42,7 @@ var CharacterSelection = (function (_super) {
         this.preloadBar.destroy();
         this.tools.graphic.addBackground();
         this.characterMenu = new CharacterMenu_1.default(this.gameboardConfig);
-        this.tools.button.make(675, 1300, ['start-1', 'start-2', 'start-3'], function () {
+        this.tools.button.make(675, 1250, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this), 1.8);
     };

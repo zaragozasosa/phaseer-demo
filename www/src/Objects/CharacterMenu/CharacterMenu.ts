@@ -3,6 +3,7 @@ import TileModel from './../../Models/TileModel';
 import Carrousel from './Carrousel';
 import Base from './../../Base';
 import { ColorSettings, } from './../../Config/Config';
+import { Color } from 'phaser-ce';
 
 export default class CharacterMenu extends Base {
   private gameboardConfig: GameboardConfig;
@@ -77,11 +78,12 @@ export default class CharacterMenu extends Base {
 
   private initializeUI() {
     this.tools.text.makeXBounded(
-      230,
+      210,
       'Select your character',
       50,
       'center',
-      ColorSettings.PRIMARY
+      ColorSettings.TEXT,
+      true
     );
 
 
@@ -89,17 +91,18 @@ export default class CharacterMenu extends Base {
 
     this.selectedFullName = this.tools.text.make(18, 765, '', 35);
 
-    this.tools.text.make(20, 820, `Special Power:`, 35);
+    this.tools.text.make(20, 820, `Special:`, 40);
 
-    this.selectedPower = this.tools.text.make(
-      20,
-      870,
+    this.selectedPower = this.tools.text.makeStroked(
+      205,
+      813,
       '',
-      40
+      45,
+      ColorSettings.PRIMARY
     );
 
     this.selectedSummary = this.tools.text.makeXBounded(
-      950,
+      900,
       '',
       35,
       'left',

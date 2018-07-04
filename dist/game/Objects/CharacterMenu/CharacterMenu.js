@@ -52,12 +52,12 @@ var CharacterMenu = (function (_super) {
         this.selectedSummary.setText(char.summary);
     };
     CharacterMenu.prototype.initializeUI = function () {
-        this.tools.text.makeXBounded(230, 'Select your character', 50, 'center', Config_1.ColorSettings.PRIMARY);
+        this.tools.text.makeXBounded(210, 'Select your character', 50, 'center', Config_1.ColorSettings.TEXT, true);
         this.selectedName = this.tools.text.make(18, 700, '', 50);
         this.selectedFullName = this.tools.text.make(18, 765, '', 35);
-        this.tools.text.make(20, 820, "Special Power:", 35);
-        this.selectedPower = this.tools.text.make(20, 870, '', 40);
-        this.selectedSummary = this.tools.text.makeXBounded(950, '', 35, 'left', Config_1.ColorSettings.ALT_TEXT);
+        this.tools.text.make(20, 820, "Special:", 40);
+        this.selectedPower = this.tools.text.makeStroked(205, 813, '', 45, Config_1.ColorSettings.PRIMARY);
+        this.selectedSummary = this.tools.text.makeXBounded(900, '', 35, 'left', Config_1.ColorSettings.ALT_TEXT);
         this.rightSprite = this.tools.sprite.createSprite(530, 320, null, 2);
         this.leftSprite = this.tools.sprite.createSprite(30, 320, null, 2);
     };
