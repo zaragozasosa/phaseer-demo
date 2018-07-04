@@ -16,35 +16,41 @@ var PowerWindow_1 = require("./../../Windows/PowerWindow");
 var DiamondModel_1 = require("./../../../Models/DiamondModel");
 var DiamondGameboard = (function (_super) {
     __extends(DiamondGameboard, _super);
-    function DiamondGameboard(gameboardConfig) {
-        var _this = _super.call(this, gameboardConfig) || this;
+    function DiamondGameboard() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DiamondGameboard.prototype.start = function () {
+        this.createGrid();
         var mergeTileSignal = new Phaser.Signal();
-        gameboardConfig.mergeTileSignal.add(function () {
+        this.gameboardConfig.mergeTileSignal.add(function () {
             this.diamonds++;
             this.diamondText.setText(": " + this.diamonds);
             this.tryEnableButton();
-        }.bind(_this));
-        _this.diamondModel = _this.grid.activatePower();
-        _this.diamonds = _this.diamondModel.requiredDiamonds;
-        _this.diamondSprite = _this.tools.sprite.createSprite(20, 150, _this.diamondModel.id, _this.diamondModel.scale, _this.diamondModel.paddingX);
-        _this.diamondText = _this.tools.text.make(100, 155, ": " + _this.diamonds, 50);
-        if (_this.diamondModel.cooldown) {
-            _this.gameboardConfig.cooldownSignal.add(function () {
+        }.bind(this));
+        this.diamondModel = this.grid.activatePower();
+        this.diamonds = this.diamondModel.requiredDiamonds;
+        this.diamondSprite = this.tools.sprite.createSprite(20, 150, this.diamondModel.id, this.diamondModel.scale, this.diamondModel.paddingX);
+        this.diamondText = this.tools.text.make(100, 155, ": " + this.diamonds, 50);
+        this.diamondSprite.alpha = 0;
+        this.diamondText.alpha = 0;
+        this.tools.misc.tweenTo(this.diamondSprite, { alpha: 1 }, 500, true);
+        this.tools.misc.tweenTo(this.diamondText, { alpha: 1 }, 500, true);
+        if (this.diamondModel.cooldown) {
+            this.gameboardConfig.cooldownSignal.add(function () {
                 this.showMessage(this.diamondModel.endText, 65);
                 if (this.diamondModel.type === DiamondModel_1.default.TIME_TYPE) {
                     this.background.loadTexture('witch');
                     this.toggleTimer(false);
                 }
                 this.actionButton.visible = true;
-            }.bind(_this));
+            }.bind(this));
         }
-        for (var _i = 0, _a = gameboardConfig.tiles; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
-            _this.tools.misc.cacheAddImage(sprite.negativeId, _this.tools.sprite.makeReverseTexture(sprite.id));
+            this.tools.misc.cacheAddImage(sprite.negativeId, this.tools.sprite.makeReverseTexture(sprite.id));
         }
-        _this.tools.misc.cacheAddImage('witch-negative', _this.tools.sprite.makeReverseTexture(_this.background.key.toString()));
-        return _this;
-    }
+        this.tools.misc.cacheAddImage('witch-negative', this.tools.sprite.makeReverseTexture(this.background.key.toString()));
+    };
     DiamondGameboard.prototype.activatePower = function () {
         if (this.gameOver) {
             return true;

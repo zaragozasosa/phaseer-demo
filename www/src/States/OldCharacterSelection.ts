@@ -65,7 +65,7 @@ export default class OldCharacterSelection extends Phaser.State {
     this.spriteArray = [];
     this.menuItems = [];
     characters = JSON.parse(JSON.stringify(this.gameboardConfig.tiles));
-    displayArray = characters.filter(x => x.playable);
+    displayArray = characters.filter(x => x.isMenuVisible);
     this.selectedSprite = null;
     this.selectedFullName = null;
     this.selectedName = null;

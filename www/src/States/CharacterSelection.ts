@@ -12,7 +12,6 @@ export default class CharacterSelection extends Phaser.State {
   preloadBar: Phaser.Sprite;
   characterMenu: CharacterMenu;
 
-
   preload() {
     let singleton = Singleton.get();
     let config = singleton.config;
@@ -43,40 +42,37 @@ export default class CharacterSelection extends Phaser.State {
 
     this.tools.button.make(
       675,
-      1250,
+      1300,
       ['start-1', 'start-2', 'start-3'],
-      function () {
+      function() {
         this.gameStart();
       }.bind(this),
       1.8
     );
+
+    let returnToMainMenu = this.tools.text.makeStroked(30, 1300, 'Return', 50);
+    returnToMainMenu.inputEnabled = true;
+    returnToMainMenu.events.onInputDown.addOnce(this.returnToMainMenu, this);
   }
 
   update() {
-    if (this.inputManager.checkKeys() === Phaser.Keyboard.ENTER) {
+    if (this.inputManager.checkEnter()) {
       this.gameStart();
     }
+    if (this.inputManager.checkEscape()) {
+      this.returnToMainMenu();
+    }
+    this.characterMenu.update(this.inputManager.checkCursor());
   }
 
   gameStart() {
-    let selected;
-    if (this.characterMenu.selectedCharacter.id === 'random') {
-      selected = this.gameboardConfig.tiles[
-        this.tools.misc.randomBetween(0, this.gameboardConfig.tiles.length - 1)
-      ];
-    } else {
-      selected = this.characterMenu.selectedCharacter;
-    }
-
-    this.gameboardConfig.mainTile = this.gameboardConfig.tiles.find(
-      function (tile) {
-        return tile.id === selected.id;
-      }.bind(this)
-    );
-
-    this.tools.audio.playCharacterSound(
-      this.gameboardConfig.tiles.find(x => x.id === selected.id)
-    );
+    let selected = this.gameboardConfig.getTileModel(this.characterMenu.selectedId);
+    this.gameboardConfig.mainTile = selected;
+    this.tools.audio.playCharacterSound(selected);
     this.state.start('Story', true, false, this.gameboardConfig);
+  }
+
+  returnToMainMenu() {
+    this.state.start('Boot');    
   }
 }

@@ -53,6 +53,9 @@ export default class ReportedForRP extends Grid {
       )
     );
 
+    buttons.alpha = 0;
+    this.tools.misc.tweenTo(buttons, { alpha: 1 }, 500, true);
+
     return buttons;
   }
 

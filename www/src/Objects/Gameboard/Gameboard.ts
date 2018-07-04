@@ -16,6 +16,7 @@ export default abstract class Gameboard extends Base {
   protected showOnce: boolean;
   protected gameOver: boolean;
   protected wonGame: boolean;
+  protected gameStarted: boolean;
 
   header: Phaser.Text;
   points: number;
@@ -29,24 +30,13 @@ export default abstract class Gameboard extends Base {
 
   constructor(gameboardConfig: GameboardConfig) {
     super();
+    this.gameStarted = false;
+    this.isPaused = false;
+    this.movements = 0;
+    this.showOnce = true;
     this.gameboardConfig = gameboardConfig;
     this.tools.graphic.addBackground();
     this.background = this.tools.sprite.createBackground();
-    let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
-    win.inputEnabled = true;
-    win.events.onInputDown.addOnce(
-      function() {
-        this.gameover(true);
-      }.bind(this)
-    );
-
-    let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
-    lose.inputEnabled = true;
-    lose.events.onInputDown.addOnce(
-      function() {
-        this.gameover(false);
-      }.bind(this)
-    );
 
     this.gameOver = false;
     this.wonGame = false;
@@ -81,21 +71,30 @@ export default abstract class Gameboard extends Base {
     this.gameboardConfig.cooldownSignal = new Phaser.Signal();
     this.gameboardConfig.turnsSignal = new Phaser.Signal();
     this.config.storyboard.optionClickSignal = new Phaser.Signal();
+  }
 
-    this.grid = GridFactory.create(gameboardConfig);
-    this.isPaused = false;
-    this.movements = 0;
+  start() {
+    this.createGrid();
+  }
+
+  protected createGrid() {
+    this.grid = GridFactory.create(this.gameboardConfig);
+
     this.points = this.grid.calculatePoints();
     this.addHeader();
     this.addMenuButton();
     this.addPowerButton();
     this.addTimer();
-
     this.input = new InputManager(this.config);
-    this.showOnce = true;
+    this.gameStarted = true;
+    this.debugWin();
   }
 
   update() {
+    if (!this.gameStarted) {
+      return;
+    }
+
     let cursor;
     if (!this.gameOver) {
       this.updateTimer();
@@ -225,6 +224,8 @@ export default abstract class Gameboard extends Base {
 
   private addHeader() {
     this.header = this.tools.text.make(20, 20, '', 50);
+    this.header.alpha = 0;
+    this.tools.misc.tweenTo(this.header, { alpha: 1 }, 500, true);
     this.updateHeader();
   }
 
@@ -239,6 +240,8 @@ export default abstract class Gameboard extends Base {
         }
       }.bind(this)
     );
+    menu.alpha = 0;
+    this.tools.misc.tweenTo(menu, { alpha: 1 }, 500, true);
   }
 
   private addPowerButton() {
@@ -256,6 +259,9 @@ export default abstract class Gameboard extends Base {
 
     this.actionButton.inputEnabled = false;
     this.actionButton.tint = Phaser.Color.GRAY;
+
+    this.actionButton.alpha = 0;
+    this.tools.misc.tweenTo(this.actionButton, { alpha: 1 }, 500, true);
   }
 
   private updateScore(addToMovement = true) {
@@ -307,33 +313,21 @@ export default abstract class Gameboard extends Base {
     }
   }
 
-  // private addDebuggingMatrix() {
-  //   let posX = 250;
-  //   let posY = 1300;
+  private debugWin() {
+    let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
+    win.inputEnabled = true;
+    win.events.onInputDown.addOnce(
+      function() {
+        this.gameover(true);
+      }.bind(this)
+    );
 
-  //   this.debugArray = [];
-
-  //   this.debugArray.push(
-  //     this.tools.text.makeCenteredAnchor(posX, posY, '', 30)
-  //   );
-  //   this.debugArray.push(
-  //     this.tools.text.makeCenteredAnchor(posX + 150, posY, '', 30)
-  //   );
-  //   this.debugArray.push(
-  //     this.tools.text.makeCenteredAnchor(posX + 300, posY, '', 30)
-  //   );
-  //   this.debugArray.push(
-  //     this.tools.text.makeCenteredAnchor(posX + 450, posY, '', 30)
-  //   );
-
-  //   this.updateDebuggingMatrix();
-  // }
-
-  // private updateDebuggingMatrix() {
-  //   this.debugArray.forEach(
-  //     function(text: any, index: number) {
-  //       text.setText(this.grid.getColumnForDebug(index));
-  //     }.bind(this)
-  //   );
-  // }
+    let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
+    lose.inputEnabled = true;
+    lose.events.onInputDown.addOnce(
+      function() {
+        this.gameover(false);
+      }.bind(this)
+    );
+  }
 }

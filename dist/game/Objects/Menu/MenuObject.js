@@ -27,7 +27,7 @@ var MenuObject = (function (_super) {
         if (this.text) {
             this.text.destroy(true);
         }
-        this.text = this.tools.text.makeXBounded(positionY, this.label, size, 'center');
+        this.text = this.tools.text.makeXBounded(positionY, this.label, size, 'center', Config_1.ColorSettings.TEXT, true);
         this.text.alpha = 0;
         var tween = this.tools.misc.tweenTo(this.text, { alpha: 1 }, 500);
         tween.onComplete.addOnce(function () {

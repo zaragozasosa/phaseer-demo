@@ -7,10 +7,9 @@ export default class ChargeGameboard extends Gameboard {
   private charges: number;
   private chargesText: Phaser.Text;
 
-  constructor(gameboardConfig: GameboardConfig) {
-    super(gameboardConfig);
+  start() {
+    this.createGrid();
     this.actionButton.kill();
-
     let group: Phaser.Group = this.grid.activatePower();
     this.buttons = group;
     this.charges = group.getAll().length;
@@ -20,15 +19,13 @@ export default class ChargeGameboard extends Gameboard {
       button.tint = Phaser.Color.GRAY;
     }
 
-    this.tools.text.make(20, 155, 'Charges: ', 50);
-    this.chargesText = this.tools.text.make(280, 155, `${this.charges}`, 50);
-
+    this.tools.text.make(20, 135, 'Charges: ', 50);
+    this.chargesText = this.tools.text.make(280, 135, `${this.charges}`, 50);
     this.gameboardConfig.chargeSignal.add(
       function() {
         this.useCharge();
       }.bind(this)
     );
-
     this.showOnce = true;
   }
 
@@ -47,7 +44,7 @@ export default class ChargeGameboard extends Gameboard {
   }
 
   protected toggleButton(buttonStatus: number) {
-    if(this.gameOver) {
+    if (this.gameOver) {
       return true;
     }
 

@@ -8,15 +8,11 @@ export default class MenuObject extends Base {
   parentObject: MenuObject;
   actionCallback: any;
   isBackOption: boolean;
-  label: string;  
+  label: string;
   protected text: Phaser.Text;
   private selected: boolean;
 
-  constructor(
-    label: string,
-    actionCallback = null,
-    isBackOption = false
-  ) {
+  constructor(label: string, actionCallback = null, isBackOption = false) {
     super();
     this.label = label;
     this.actionCallback = actionCallback;
@@ -24,7 +20,7 @@ export default class MenuObject extends Base {
   }
 
   print(positionY: number, size: number) {
-    if(this.text) {
+    if (this.text) {
       this.text.destroy(true);
     }
 
@@ -32,14 +28,18 @@ export default class MenuObject extends Base {
       positionY,
       this.label,
       size,
-      'center'
+      'center',
+      ColorSettings.TEXT,
+      true
     );
 
     this.text.alpha = 0;
-    let tween = this.tools.misc.tweenTo(this.text, { alpha: 1}, 500);
-    tween.onComplete.addOnce(function() {
-      this.tools.misc.removeTween(tween);
-    }.bind(this));
+    let tween = this.tools.misc.tweenTo(this.text, { alpha: 1 }, 500);
+    tween.onComplete.addOnce(
+      function() {
+        this.tools.misc.removeTween(tween);
+      }.bind(this)
+    );
 
     tween.start();
     if (this.actionCallback) {
@@ -75,7 +75,7 @@ export default class MenuObject extends Base {
 
   changeLabel(label: string) {
     this.label = label;
-    if(this.text) {
+    if (this.text) {
       this.text.text = label;
     }
   }

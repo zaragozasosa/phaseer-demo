@@ -16,8 +16,8 @@ export default class MiscFactory extends Factory {
     obj: any,
     props: any,
     duration = 200,
+    autoStart = false,    
     ease = 'Linear',
-    autoStart = false,
     delay = 0,
     repeat = 0,
     yoyo = false
@@ -83,8 +83,8 @@ export default class MiscFactory extends Factory {
       obj,
       props,
       duration,
-      ease,
       true,
+      ease,
       delay
     ).onComplete.add(function() {
       obj.destroy();

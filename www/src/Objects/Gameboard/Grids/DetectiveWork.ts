@@ -34,6 +34,9 @@ export default class DetectiveWork extends Grid {
     group.add(btn);
     btn.inputEnabled = false;
 
+    group.alpha = 0;
+    this.tools.misc.tweenTo(group, { alpha: 1 }, 500, true);
+
     group.onChildInputDown.add(
       function(child: Phaser.Text) {
         group.setAllChildren('tint', Phaser.Color.WHITE);

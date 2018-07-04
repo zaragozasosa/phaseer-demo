@@ -42,28 +42,30 @@ var CharacterSelection = (function (_super) {
         this.preloadBar.destroy();
         this.tools.graphic.addBackground();
         this.characterMenu = new CharacterMenu_1.default(this.gameboardConfig);
-        this.tools.button.make(675, 1250, ['start-1', 'start-2', 'start-3'], function () {
+        this.tools.button.make(675, 1300, ['start-1', 'start-2', 'start-3'], function () {
             this.gameStart();
         }.bind(this), 1.8);
+        var returnToMainMenu = this.tools.text.makeStroked(30, 1300, 'Return', 50);
+        returnToMainMenu.inputEnabled = true;
+        returnToMainMenu.events.onInputDown.addOnce(this.returnToMainMenu, this);
     };
     CharacterSelection.prototype.update = function () {
-        if (this.inputManager.checkKeys() === Phaser.Keyboard.ENTER) {
+        if (this.inputManager.checkEnter()) {
             this.gameStart();
         }
+        if (this.inputManager.checkEscape()) {
+            this.returnToMainMenu();
+        }
+        this.characterMenu.update(this.inputManager.checkCursor());
     };
     CharacterSelection.prototype.gameStart = function () {
-        var selected;
-        if (this.characterMenu.selectedCharacter.id === 'random') {
-            selected = this.gameboardConfig.tiles[this.tools.misc.randomBetween(0, this.gameboardConfig.tiles.length - 1)];
-        }
-        else {
-            selected = this.characterMenu.selectedCharacter;
-        }
-        this.gameboardConfig.mainTile = this.gameboardConfig.tiles.find(function (tile) {
-            return tile.id === selected.id;
-        }.bind(this));
-        this.tools.audio.playCharacterSound(this.gameboardConfig.tiles.find(function (x) { return x.id === selected.id; }));
+        var selected = this.gameboardConfig.getTileModel(this.characterMenu.selectedId);
+        this.gameboardConfig.mainTile = selected;
+        this.tools.audio.playCharacterSound(selected);
         this.state.start('Story', true, false, this.gameboardConfig);
+    };
+    CharacterSelection.prototype.returnToMainMenu = function () {
+        this.state.start('Boot');
     };
     return CharacterSelection;
 }(Phaser.State));

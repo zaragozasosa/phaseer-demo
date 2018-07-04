@@ -94,7 +94,7 @@ var TextFactory = (function (_super) {
     };
     TextFactory.prototype.addStroke = function (text, size) {
         text.stroke = '#000000';
-        text.strokeThickness = size / 7;
+        text.strokeThickness = this.config.scaleFactor * size / 5;
         return text;
     };
     return TextFactory;

@@ -24,6 +24,15 @@ var GameboardConfig = (function () {
         this.createStories();
         this.createTiles();
     }
+    GameboardConfig.prototype.getTileModel = function (id) {
+        if (id !== 'random') {
+            return this.baseList.find(function (x) { return x.id === id; });
+        }
+        else {
+            var index = this.getRandomInt(0, this.tiles.length);
+            return this.tiles[index];
+        }
+    };
     GameboardConfig.prototype.createPowers = function () {
         var powers = [];
         powers.push(new PowerModel_1.default('powerGaming', 'Power Gaming', 'Duplicate the value of every tile in the board below 32.', 'Have at least one tile below 32'));
@@ -60,21 +69,12 @@ var GameboardConfig = (function () {
         list.push(new TileModel_1.default('jessy', 'Jessy', 'Ph.D. Jessy', 'magil', 'red.mp3', 0.5, 'rollForInitiative', this.powers.find(function (x) { return x.id === 'rollForInitiative'; }), function () { return _this.detectiveInvestigationStory; }, function () { return _this.detectiveInvestigationStory2; }, "Witch Doctor, psychologist, and a compulsive liar. When she's not roaming a distant galaxy, this academic enjoys spending time with Magil, although she's not very fond of all that nerdy stuff."));
         list.push(new TileModel_1.default('mira', 'Mira', 'Black Witch Mira', 'fancy', 'ahaha.wav', 0.3, 'blackMagic', this.powers.find(function (x) { return x.id === 'blackMagic'; }), function () { return _this.detectiveInvestigationStory; }, function () { return _this.detectiveInvestigationStory2; }, "A fickle, cruel witch who enjoys throwing humans inside murder games and watching them lose their sanity. She's also a low-profile mystery and drama writer who only publishes using pen names."));
         list.push(new TileModel_1.default('fancy', 'Lord Fancy', 'Sir Lord Fancypants', 'mira', 'hyehye.mp3', 0.5, 'blackMagic', this.powers.find(function (x) { return x.id === 'blackMagic'; }), function () { return _this.detectiveInvestigationStory; }, function () { return _this.detectiveInvestigationStory2; }, 'Fancy demon by day, even fancier by night. This creature of elegant nature was contracted by Mira to capture humans, fend off witch hunters, and bake cookies.'));
-        list.push(new TileModel_1.default('nacho', 'Nacho', 'Ignacio Zaragoza', null, 'gunshot.mp3', 0.5, 'cincoDeMayo', this.powers.find(function (x) { return x.id === 'cincoDeMayo'; }), function () { return _this.detectiveInvestigationStory; }, function () { return _this.detectiveInvestigationStory2; }, 'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'));
+        list.push(new TileModel_1.default('nacho', 'Nacho', 'Ignacio Zaragoza', null, 'gunshot.mp3', 0.5, 'cincoDeMayo', this.powers.find(function (x) { return x.id === 'cincoDeMayo'; }), function () { return _this.detectiveInvestigationStory; }, function () { return _this.detectiveInvestigationStory2; }, 'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.', true, 'random'));
         list.push(new TileModel_1.default('chili', 'Chili', 'Chili Bagel', null, 'howl.mp3', 0, '', null, null, null, "Hey, you shouldn't be able to read this!", false));
-        this.groups = [];
-        var _loop_1 = function (x) {
-            if (!this_1.groups.find(function (item) {
-                return item === list[x].powerId;
-            })) {
-                this_1.groups.push(list[x].powerId);
-            }
-        };
-        var this_1 = this;
-        for (var x = 0; x < list.length; x++) {
-            _loop_1(x);
-        }
-        this.tiles = list;
+        list.push(new TileModel_1.default('random', 'Random', 'Select a random character', 'nacho', '', 0, null, null, null, null, 'The cast is weird and boring? Just click start and start playing!', true, 'nacho', false));
+        this.baseList = list;
+        this.tiles = list.filter(function (x) { return x.isRealTile; });
+        this.menuTiles = list.filter(function (x) { return x.isMenuVisible; });
     };
     GameboardConfig.prototype.createStories = function () {
         this.detectiveInvestigationStory = new Array();
@@ -111,29 +111,48 @@ var GameboardConfig = (function () {
         story2.push(new SpriteAction_1.default(['smith-sheet', '1', 'left']));
         story2.push(new SpriteAction_1.default(['lily-sheet', '1', 'right']));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
-        story2.push(new TextAction_1.default(["So, you were only trying to clean the room? You can't just clean up a crime scene."]));
+        story2.push(new TextAction_1.default([
+            "So, you were only trying to clean the room? You can't just clean up a crime scene."
+        ]));
         story2.push(new TitleAction_1.default(['Lily', 'right']));
         story2.push(new SpriteAction_1.default(['lily-sheet', '1', 'right']));
-        story2.push(new TextAction_1.default(["The master's residence must always remain perfectly clean. Something trivial like murder won't stop me from fulfilling my duty."]));
+        story2.push(new TextAction_1.default([
+            "The master's residence must always remain perfectly clean. Something trivial like murder won't stop me from fulfilling my duty."
+        ]));
         story2.push(new SpriteAction_1.default(['lily-sheet', '0', 'right']));
-        story2.push(new TextAction_1.default(["Besides, we've already apprehended the insolent who stained the floor. We even have their confession, ho."]));
+        story2.push(new TextAction_1.default([
+            "Besides, we've already apprehended the insolent who stained the floor. We even have their confession, ho."
+        ]));
         story2.push(new SpriteAction_1.default(['smith-sheet', '0', 'left']));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
         story2.push(new TextAction_1.default(["We? Weren't you working alone?"]));
         story2.push(new TitleAction_1.default(['Lily', 'right']));
         story2.push(new SpriteAction_1.default(['lily-sheet', '0', 'right']));
-        story2.push(new TextAction_1.default(["Of course not. Me and my master solved it together. She's a young detective prodigy, you know."]));
+        story2.push(new TextAction_1.default([
+            "Of course not. Me and my master solved it together. She's a young detective prodigy, you know."
+        ]));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
         story2.push(new SpriteAction_1.default(['smith-sheet', '3', 'left']));
-        story2.push(new TextAction_1.default(["(They stopped my whole squad and found the culprit before I arrived? Sick.)"]));
+        story2.push(new TextAction_1.default([
+            "(They stopped my whole squad and found the culprit before I arrived? Sick.)"
+        ]));
         story2.push(new SpriteAction_1.default(['smith-sheet', '0', 'left']));
-        story2.push(new TextAction_1.default(["You will come with me and tell us what you know. If everything is as you say, we will fix this misunderstanding."]));
+        story2.push(new TextAction_1.default([
+            "You will come with me and tell us what you know. If everything is as you say, we will fix this misunderstanding."
+        ]));
         story2.push(new TitleAction_1.default(['Lily', 'right']));
         story2.push(new SpriteAction_1.default(['lily-sheet', '1', 'right']));
-        story2.push(new TextAction_1.default(["Sure, but I should return before breakfast. The master won't accept a late meal."]));
+        story2.push(new TextAction_1.default([
+            "Sure, but I should return before breakfast. The master won't accept a late meal."
+        ]));
         story2.push(new TitleAction_1.default(['Agent Smith', 'left']));
         story2.push(new SpriteAction_1.default(['smith-sheet', '3', 'left']));
-        story2.push(new TextAction_1.default(["(What a crazy lady... but who knows? Maybe she will be useful later.)"]));
+        story2.push(new TextAction_1.default([
+            "(What a crazy lady... but who knows? Maybe she will be useful later.)"
+        ]));
+    };
+    GameboardConfig.prototype.getRandomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
     };
     GameboardConfig.BUTTON_ACTIVE = 1;
     GameboardConfig.BUTTON_SLEEP = 2;

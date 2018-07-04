@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TileModel = (function () {
-    function TileModel(id, name, fullName, friendId, sfxId, sfxVolume, powerId, power, firstStory, secondStory, summary, playable, gridX, gridY) {
-        if (playable === void 0) { playable = true; }
-        if (gridX === void 0) { gridX = 0; }
-        if (gridY === void 0) { gridY = 0; }
+    function TileModel(id, name, fullName, friendId, sfxId, sfxVolume, powerId, power, firstStory, secondStory, summary, isMenuVisible, menuFriendId, isRealTile) {
+        if (isMenuVisible === void 0) { isMenuVisible = true; }
+        if (menuFriendId === void 0) { menuFriendId = null; }
+        if (isRealTile === void 0) { isRealTile = true; }
         this.id = id;
         this.name = name;
         this.fullName = fullName;
@@ -14,13 +14,22 @@ var TileModel = (function () {
         this.powerId = powerId;
         this.power = power;
         this.summary = summary;
-        this.playable = playable;
+        this.isMenuVisible = isMenuVisible;
         this.getFirstStory = firstStory;
         this.getSecondStory = secondStory;
+        this.menuFriendId = menuFriendId;
+        this.isRealTile = isRealTile;
     }
     Object.defineProperty(TileModel.prototype, "specialId", {
         get: function () {
             return this.id + '-special';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "getMenuFriendId", {
+        get: function () {
+            return this.menuFriendId ? this.menuFriendId : this.friendId;
         },
         enumerable: true,
         configurable: true

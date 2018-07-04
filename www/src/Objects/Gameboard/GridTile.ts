@@ -65,8 +65,8 @@ export default class GridTile extends Base {
 
     let misc = this.tools.misc;
 
-    let t1 = misc.tweenTo(this.group, { alpha: 0.3 }, 100, 'Linear');
-    let t2 = misc.tweenTo(this.group, { alpha: 1 }, 300, 'Linear');
+    let t1 = misc.tweenTo(this.group, { alpha: 0.3 }, 100);
+    let t2 = misc.tweenTo(this.group, { alpha: 1 }, 300);
 
     this.mergeTween = t1.chain(t2);
 
@@ -80,8 +80,8 @@ export default class GridTile extends Base {
       this.group,
       { alpha: 0.3 },
       1000,
+      false,      
       'Linear',
-      false,
       0,
       -1,
       true
@@ -93,7 +93,7 @@ export default class GridTile extends Base {
       this.ghostTurns = 0;
       this.ghostTween.start();
     } else {
-      misc.tweenTo(this.group, { alpha: 1 }, 500, 'Linear', true);
+      misc.tweenTo(this.group, { alpha: 1 }, 500, true);
     }
 
     this.sprite.inputEnabled = true;

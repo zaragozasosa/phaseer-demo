@@ -165,7 +165,6 @@ export class Tools {
     this._button = new ButtonFactory(config);
     this._misc = new MiscFactory(config);
     this._audio = new AudioFactory(config);
-
   }
 
   get text(): TextFactory {

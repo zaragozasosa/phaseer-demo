@@ -16,13 +16,15 @@ var PowerWindow_1 = require("./../../Windows/PowerWindow");
 var AmmoBar_1 = require("./../AmmoBar");
 var AmmoGameboard = (function (_super) {
     __extends(AmmoGameboard, _super);
-    function AmmoGameboard(gameboardConfig) {
-        var _this = _super.call(this, gameboardConfig) || this;
-        _this.gameboardConfig.updateAmmoSignal.add(function () {
-            this.updateAmmo();
-        }.bind(_this));
-        return _this;
+    function AmmoGameboard() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    AmmoGameboard.prototype.start = function () {
+        this.createGrid();
+        this.gameboardConfig.updateAmmoSignal.add(function () {
+            this.updateAmmo();
+        }.bind(this));
+    };
     AmmoGameboard.prototype.activatePower = function () {
         if (this.gameOver) {
             return true;

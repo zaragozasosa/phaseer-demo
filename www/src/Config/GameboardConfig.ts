@@ -7,14 +7,15 @@ import SpriteAction from './../Objects/Storyboard/Actions/SpriteAction';
 import TitleAction from './../Objects/Storyboard/Actions/TitleAction';
 
 export default class GameboardConfig {
+  private baseList: Array<TileModel>;
   mainTile: TileModel;
   arraySize: number;
   winningTile: number;
   initialArray: Array<number>;
   minimumValue: number;
   tiles: Array<TileModel>;
-  groups: Array<string>;
-
+  menuTiles: Array<TileModel>;
+  powers: Array<PowerModel>;
   bulletAmmo: number;
   diceAmmo: number;
   requiredDiamonds: number;
@@ -28,10 +29,7 @@ export default class GameboardConfig {
   chargeSignal: Phaser.Signal;
   cooldownSignal: Phaser.Signal;
   turnsSignal: Phaser.Signal;
-
   gameOverSignal: Phaser.Signal;
-
-  powers: Array<PowerModel>;
 
   detectiveInvestigationStory: Array<BaseAction>;
   detectiveInvestigationStory2: Array<BaseAction>;
@@ -49,7 +47,7 @@ export default class GameboardConfig {
       }
     }
     this.minimumValue = 1;
-    this.winningTile = 512;    
+    this.winningTile = 512;
     this.bulletAmmo = 5;
     this.diceAmmo = 6;
     this.requiredDiamonds = 50;
@@ -59,7 +57,16 @@ export default class GameboardConfig {
     this.createTiles();
   }
 
-  createPowers() {
+  getTileModel(id: string) {
+    if (id !== 'random') {
+      return this.baseList.find(x => x.id === id);
+    } else {
+      let index = this.getRandomInt(0, this.tiles.length);
+      return this.tiles[index];
+    }
+  }
+
+  private createPowers() {
     let powers = [];
 
     powers.push(
@@ -150,7 +157,7 @@ export default class GameboardConfig {
     this.powers = powers;
   }
 
-  createTiles() {
+  private createTiles() {
     let list = new Array<TileModel>();
 
     list.push(
@@ -389,7 +396,9 @@ export default class GameboardConfig {
         this.powers.find(x => x.id === 'cincoDeMayo'),
         () => this.detectiveInvestigationStory,
         () => this.detectiveInvestigationStory2,
-        'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.'
+        'A simple guy who claims to be the long-lost descendant of a deceased famous general. Enjoys lazing around his computer and drinking overpriced beer. His dog Chili often gets lost when visiting the park.',
+        true,
+        'random'
       )
     );
 
@@ -410,21 +419,32 @@ export default class GameboardConfig {
       )
     );
 
-    this.groups = [];
-    for (let x = 0; x < list.length; x++) {
-      if (
-        !this.groups.find(function(item) {
-          return item === list[x].powerId;
-        })
-      ) {
-        this.groups.push(list[x].powerId);
-      }
-    }
+    list.push(
+      new TileModel(
+        'random',
+        'Random',
+        'Select a random character',
+        'nacho',
+        '',
+        0,
+        null,
+        null,
+        null,
+        null,
+        'The cast is weird and boring? Just click start and start playing!',
+        true,
+        'nacho',
+        false
+      )
+    );
 
-    this.tiles = list;
+    this.baseList = list;
+
+    this.tiles = list.filter(x => x.isRealTile);
+    this.menuTiles = list.filter(x => x.isMenuVisible);
   }
 
-  createStories() {
+  private createStories() {
     this.detectiveInvestigationStory = new Array<BaseAction>();
     let list = this.detectiveInvestigationStory;
 
@@ -475,53 +495,69 @@ export default class GameboardConfig {
     this.detectiveInvestigationStory2 = new Array<BaseAction>();
     let story2 = this.detectiveInvestigationStory2;
 
-
-
     story2.push(new SpriteAction(['smith-sheet', '1', 'left']));
     story2.push(new SpriteAction(['lily-sheet', '1', 'right']));
     story2.push(new TitleAction(['Agent Smith', 'left']));
 
     story2.push(
-      new TextAction([`So, you were only trying to clean the room? You can't just clean up a crime scene.`])
+      new TextAction([
+        `So, you were only trying to clean the room? You can't just clean up a crime scene.`
+      ])
     );
     story2.push(new TitleAction(['Lily', 'right']));
     story2.push(new SpriteAction(['lily-sheet', '1', 'right']));
     story2.push(
-      new TextAction([`The master's residence must always remain perfectly clean. Something trivial like murder won't stop me from fulfilling my duty.`])
+      new TextAction([
+        `The master's residence must always remain perfectly clean. Something trivial like murder won't stop me from fulfilling my duty.`
+      ])
     );
-    story2.push(new SpriteAction(['lily-sheet', '0', 'right']));    
+    story2.push(new SpriteAction(['lily-sheet', '0', 'right']));
     story2.push(
-      new TextAction([`Besides, we've already apprehended the insolent who stained the floor. We even have their confession, ho.`])
+      new TextAction([
+        `Besides, we've already apprehended the insolent who stained the floor. We even have their confession, ho.`
+      ])
     );
     story2.push(new SpriteAction(['smith-sheet', '0', 'left']));
-    story2.push(new TitleAction(['Agent Smith', 'left']));    
+    story2.push(new TitleAction(['Agent Smith', 'left']));
+    story2.push(new TextAction([`We? Weren't you working alone?`]));
+    story2.push(new TitleAction(['Lily', 'right']));
+    story2.push(new SpriteAction(['lily-sheet', '0', 'right']));
     story2.push(
-      new TextAction([`We? Weren't you working alone?`])
+      new TextAction([
+        `Of course not. Me and my master solved it together. She's a young detective prodigy, you know.`
+      ])
+    );
+    story2.push(new TitleAction(['Agent Smith', 'left']));
+    story2.push(new SpriteAction(['smith-sheet', '3', 'left']));
+    story2.push(
+      new TextAction([
+        `(They stopped my whole squad and found the culprit before I arrived? Sick.)`
+      ])
+    );
+    story2.push(new SpriteAction(['smith-sheet', '0', 'left']));
+    story2.push(
+      new TextAction([
+        `You will come with me and tell us what you know. If everything is as you say, we will fix this misunderstanding.`
+      ])
     );
     story2.push(new TitleAction(['Lily', 'right']));
-    story2.push(new SpriteAction(['lily-sheet', '0', 'right']));    
-    story2.push(
-      new TextAction([`Of course not. Me and my master solved it together. She's a young detective prodigy, you know.`])
-    );
-    story2.push(new TitleAction(['Agent Smith', 'left']));    
-    story2.push(new SpriteAction(['smith-sheet', '3', 'left']));
-    story2.push(
-      new TextAction([`(They stopped my whole squad and found the culprit before I arrived? Sick.)`])
-    );
-    story2.push(new SpriteAction(['smith-sheet', '0', 'left']));
-    story2.push(
-      new TextAction([`You will come with me and tell us what you know. If everything is as you say, we will fix this misunderstanding.`])
-    );
-    story2.push(new TitleAction(['Lily', 'right']));    
     story2.push(new SpriteAction(['lily-sheet', '1', 'right']));
     story2.push(
-      new TextAction([`Sure, but I should return before breakfast. The master won't accept a late meal.`])
+      new TextAction([
+        `Sure, but I should return before breakfast. The master won't accept a late meal.`
+      ])
     );
-    story2.push(new TitleAction(['Agent Smith', 'left']));        
+    story2.push(new TitleAction(['Agent Smith', 'left']));
     story2.push(new SpriteAction(['smith-sheet', '3', 'left']));
-    
+
     story2.push(
-      new TextAction([`(What a crazy lady... but who knows? Maybe she will be useful later.)`])
+      new TextAction([
+        `(What a crazy lady... but who knows? Maybe she will be useful later.)`
+      ])
     );
+  }
+
+  private getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }

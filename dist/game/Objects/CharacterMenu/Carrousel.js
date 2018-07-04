@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
+var Config_1 = require("./../../Config/Config");
 var Carrousel = (function (_super) {
     __extends(Carrousel, _super);
     function Carrousel(array, callback) {
@@ -20,19 +21,30 @@ var Carrousel = (function (_super) {
         _this.array = array;
         _this.callback = callback;
         _this.spriteArray = [];
-        _this.updateVisibleArray();
         _this.showCharacters();
+        var leftSign = _this.tools.text.makeStroked(30, 90, '<', 80, Config_1.ColorSettings.ALT_TEXT);
+        leftSign.alpha = 0.5;
+        var rightSign = _this.tools.text.makeStroked(850, 90, '>', 80, Config_1.ColorSettings.ALT_TEXT);
+        rightSign.alpha = 0.5;
         return _this;
     }
+    Carrousel.prototype.nextCharacter = function (actual) {
+        var index = this.visibleArray.findIndex(function (x) { return x.id === actual.id; });
+        this.setSelectedCharacter(this.visibleArray[index + 1]);
+    };
+    Carrousel.prototype.previousCharacter = function (actual) {
+        var index = this.visibleArray.findIndex(function (x) { return x.id === actual.id; });
+        this.setSelectedCharacter(this.visibleArray[index - 1]);
+    };
     Carrousel.prototype.showCharacters = function () {
         this.updateVisibleArray();
-        this.setSelectedCharacter(this.spriteArray[2], this.visibleArray[2]);
+        this.setSelectedCharacter(this.visibleArray[2]);
     };
     Carrousel.prototype.updateVisibleArray = function () {
         this.visibleArray = this.array.slice(0, 6);
         var column = 0;
         var _loop_1 = function (char) {
-            var sprite;
+            var sprite = void 0;
             if (this_1.spriteArray.length >= 6) {
                 this_1.spriteArray[column].loadTexture(char.id);
                 sprite = this_1.spriteArray[column];
@@ -44,8 +56,8 @@ var Carrousel = (function (_super) {
             }
             sprite.tint = Phaser.Color.GRAY;
             sprite.events.destroy();
-            sprite.events.onInputDown.addOnce(function () {
-                this.setSelectedCharacter(sprite, char);
+            sprite.events.onInputDown.add(function () {
+                this.setSelectedCharacter(char);
             }.bind(this_1));
             column++;
         };
@@ -55,16 +67,18 @@ var Carrousel = (function (_super) {
             _loop_1(char);
         }
     };
-    Carrousel.prototype.setSelectedCharacter = function (sprite, char) {
-        if (char.id === this.visibleArray[0].id || char.id === this.visibleArray[1].id) {
+    Carrousel.prototype.setSelectedCharacter = function (char) {
+        if (char.id === this.visibleArray[0].id ||
+            char.id === this.visibleArray[1].id) {
             this.moveRight();
         }
-        else if (char.id === this.visibleArray[4].id || char.id === this.visibleArray[5].id) {
+        else if (char.id === this.visibleArray[4].id ||
+            char.id === this.visibleArray[5].id) {
             this.moveLeft();
         }
         this.spriteArray[2].tint = Phaser.Color.WHITE;
         this.spriteArray[3].tint = Phaser.Color.WHITE;
-        this.callback(sprite, char);
+        this.callback(char);
     };
     Carrousel.prototype.moveLeft = function () {
         this.array.push(this.array.shift());

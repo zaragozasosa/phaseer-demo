@@ -26,10 +26,10 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.overlap = function (object1, object2, overlapCallback) {
         return this.game.physics.arcade.overlap(object1, object2, overlapCallback);
     };
-    MiscFactory.prototype.tweenTo = function (obj, props, duration, ease, autoStart, delay, repeat, yoyo) {
+    MiscFactory.prototype.tweenTo = function (obj, props, duration, autoStart, ease, delay, repeat, yoyo) {
         if (duration === void 0) { duration = 200; }
-        if (ease === void 0) { ease = 'Linear'; }
         if (autoStart === void 0) { autoStart = false; }
+        if (ease === void 0) { ease = 'Linear'; }
         if (delay === void 0) { delay = 0; }
         if (repeat === void 0) { repeat = 0; }
         if (yoyo === void 0) { yoyo = false; }
@@ -71,7 +71,7 @@ var MiscFactory = (function (_super) {
         if (ease === void 0) { ease = 'Linear'; }
         if (autoStart === void 0) { autoStart = false; }
         if (delay === void 0) { delay = 0; }
-        this.tweenTo(obj, props, duration, ease, true, delay).onComplete.add(function () {
+        this.tweenTo(obj, props, duration, true, ease, delay).onComplete.add(function () {
             obj.destroy();
         });
     };

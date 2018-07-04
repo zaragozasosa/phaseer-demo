@@ -7,8 +7,8 @@ import AmmoBar from './../AmmoBar';
 export default class AmmoGameboard extends Gameboard {
   protected ammoBar: AmmoBar;
 
-  constructor(gameboardConfig: GameboardConfig) {
-    super(gameboardConfig);
+  start() {
+    this.createGrid();
 
     this.gameboardConfig.updateAmmoSignal.add(
       function() {

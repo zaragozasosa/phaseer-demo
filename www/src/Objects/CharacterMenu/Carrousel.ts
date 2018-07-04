@@ -1,6 +1,7 @@
 import GameboardConfig from './../../Config/GameboardConfig';
 import TileModel from './../../Models/TileModel';
 import Base from './../../Base';
+import { ColorSettings } from './../../Config/Config';
 
 export default class Carrousel extends Base {
   private gameboardConfig: GameboardConfig;
@@ -17,13 +18,27 @@ export default class Carrousel extends Base {
     this.array = array;
     this.callback = callback;
     this.spriteArray = [];
-    this.updateVisibleArray();
     this.showCharacters();
+
+    let leftSign = this.tools.text.makeStroked(30, 90, '<', 80, ColorSettings.ALT_TEXT);
+    leftSign.alpha = 0.5;
+    let rightSign = this.tools.text.makeStroked(850, 90, '>', 80, ColorSettings.ALT_TEXT);
+    rightSign.alpha = 0.5;
   }
 
-  showCharacters() {
+  nextCharacter(actual: TileModel) {
+    let index = this.visibleArray.findIndex(x => x.id === actual.id);
+    this.setSelectedCharacter(this.visibleArray[index + 1]);
+  }
+
+  previousCharacter(actual: TileModel) {
+    let index = this.visibleArray.findIndex(x => x.id === actual.id);
+    this.setSelectedCharacter(this.visibleArray[index - 1]);
+  }
+
+  private showCharacters() {
     this.updateVisibleArray();
-    this.setSelectedCharacter(this.spriteArray[2], this.visibleArray[2]);
+    this.setSelectedCharacter(this.visibleArray[2]);
   }
 
   private updateVisibleArray() {
@@ -32,44 +47,42 @@ export default class Carrousel extends Base {
 
     for (let char of this.visibleArray) {
       let sprite: Phaser.Sprite;
-      if(this.spriteArray.length >=6) {
+      if (this.spriteArray.length >= 6) {
         this.spriteArray[column].loadTexture(char.id);
         sprite = this.spriteArray[column];
       } else {
-        sprite = this.tools.sprite.makeMenuTile(
-          column,
-          0,
-          char.id,
-          35,
-          4 / 6
-        );
+        sprite = this.tools.sprite.makeMenuTile(column, 0, char.id, 35, 4 / 6);
         this.spriteArray.push(sprite);
         sprite.inputEnabled = true;
       }
       sprite.tint = Phaser.Color.GRAY;
       sprite.events.destroy();
-      sprite.events.onInputDown.addOnce(
-        function () {
-          this.setSelectedCharacter(sprite, char);
+      sprite.events.onInputDown.add(
+        function() {
+          this.setSelectedCharacter(char);
         }.bind(this)
       );
-
       column++;
     }
   }
 
-
-  private setSelectedCharacter(sprite: Phaser.Sprite, char: TileModel) {
-    if(char.id === this.visibleArray[0].id || char.id === this.visibleArray[1].id) {
+  private setSelectedCharacter(char: TileModel) {
+    if (
+      char.id === this.visibleArray[0].id ||
+      char.id === this.visibleArray[1].id
+    ) {
       this.moveRight();
-    } else if(char.id === this.visibleArray[4].id || char.id === this.visibleArray[5].id) { 
+    } else if (
+      char.id === this.visibleArray[4].id ||
+      char.id === this.visibleArray[5].id
+    ) {
       this.moveLeft();
     }
 
     this.spriteArray[2].tint = Phaser.Color.WHITE;
     this.spriteArray[3].tint = Phaser.Color.WHITE;
 
-    this.callback(sprite, char);
+    this.callback(char);
   }
 
   private moveLeft() {

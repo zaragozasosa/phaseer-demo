@@ -41,11 +41,11 @@ var GridTile = (function (_super) {
         _this.group.alpha = 0;
         _this.group.angle = 0;
         var misc = _this.tools.misc;
-        var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100, 'Linear');
-        var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300, 'Linear');
+        var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100);
+        var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300);
         _this.mergeTween = t1.chain(t2);
         _this.randomizeTween = _this.tools.misc.tweenTo(_this.sprite, { angle: 360 }, 500);
-        _this.ghostTween = misc.tweenTo(_this.group, { alpha: 0.3 }, 1000, 'Linear', false, 0, -1, true);
+        _this.ghostTween = misc.tweenTo(_this.group, { alpha: 0.3 }, 1000, false, 'Linear', 0, -1, true);
         if (ghost) {
             _this.group.alpha = 1;
             _this.ghostCooldown = ghostCooldown;
@@ -53,7 +53,7 @@ var GridTile = (function (_super) {
             _this.ghostTween.start();
         }
         else {
-            misc.tweenTo(_this.group, { alpha: 1 }, 500, 'Linear', true);
+            misc.tweenTo(_this.group, { alpha: 1 }, 500, true);
         }
         _this.sprite.inputEnabled = true;
         _this.sprite.events.onInputDown.add(function () {

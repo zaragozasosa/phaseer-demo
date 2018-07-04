@@ -146,7 +146,7 @@ export default class TextFactory extends Factory {
 
   private addStroke(text: Phaser.Text, size: number) {
     text.stroke = '#000000';
-    text.strokeThickness = size / 7;
+    text.strokeThickness = this.config.scaleFactor * size / 5;
     return text;
   }
 }

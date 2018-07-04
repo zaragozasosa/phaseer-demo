@@ -10,8 +10,9 @@ export default class CooldownGameboard extends Gameboard {
   private powerStarted: boolean;
   private powerFinished: boolean;
 
-  constructor(gameboardConfig: GameboardConfig) {
-    super(gameboardConfig);
+  start() {
+    this.createGrid();
+
     this.actionButton.kill();
     this.passedTurns = 0;
     this.cooldown = 0;
@@ -20,6 +21,8 @@ export default class CooldownGameboard extends Gameboard {
     let group: Phaser.Group = this.grid.activatePower();
     this.elements = group;
     this.cooldownText = this.tools.text.make(20, 150, 'Status: Idle', 50);
+    this.cooldownText.alpha = 0;
+    this.tools.misc.tweenTo(this.cooldownText, { alpha: 1 }, 500, true);
     this.gameboardConfig.cooldownSignal.add(
       function(activatePower, cooldown, success) {
         if (success) {
@@ -50,12 +53,11 @@ export default class CooldownGameboard extends Gameboard {
       this.powerFinished = true;
     } else if (this.powerStarted) {
       this.cooldownText.setText(
-        `Status: ${this.turnsForPower -
-          this.passedTurns} turns left`
+        `Status: ${this.turnsForPower - this.passedTurns} turns left`
       );
     } else if (this.turnsForPower && this.passedTurns === this.turnsForPower) {
       let turns: number = this.grid.activatePower();
-      this.showMessage('You found the culprit!', 65);      
+      this.showMessage('You found the culprit!', 65);
       this.cooldownText.setText(`Status: ${turns} turns left`);
       this.passedTurns = 0;
       this.powerStarted = true;
@@ -73,7 +75,7 @@ export default class CooldownGameboard extends Gameboard {
   private blockElements(cooldown) {
     this.passedTurns = 0;
     let elementsToKill = this.elements.getAll('tint', Phaser.Color.WHITE);
-    for(let e of elementsToKill) {
+    for (let e of elementsToKill) {
       e.kill();
     }
 

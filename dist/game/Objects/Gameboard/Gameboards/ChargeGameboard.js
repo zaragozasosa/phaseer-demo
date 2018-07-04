@@ -15,25 +15,27 @@ var GameboardConfig_1 = require("./../../../Config/GameboardConfig");
 var PowerWindow_1 = require("./../../Windows/PowerWindow");
 var ChargeGameboard = (function (_super) {
     __extends(ChargeGameboard, _super);
-    function ChargeGameboard(gameboardConfig) {
-        var _this = _super.call(this, gameboardConfig) || this;
-        _this.actionButton.kill();
-        var group = _this.grid.activatePower();
-        _this.buttons = group;
-        _this.charges = group.getAll().length;
+    function ChargeGameboard() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ChargeGameboard.prototype.start = function () {
+        this.createGrid();
+        this.actionButton.kill();
+        var group = this.grid.activatePower();
+        this.buttons = group;
+        this.charges = group.getAll().length;
         for (var _i = 0, _a = group.getAll(); _i < _a.length; _i++) {
             var button = _a[_i];
             button.inputEnabled = false;
             button.tint = Phaser.Color.GRAY;
         }
-        _this.tools.text.make(20, 155, 'Charges: ', 50);
-        _this.chargesText = _this.tools.text.make(280, 155, "" + _this.charges, 50);
-        _this.gameboardConfig.chargeSignal.add(function () {
+        this.tools.text.make(20, 135, 'Charges: ', 50);
+        this.chargesText = this.tools.text.make(280, 135, "" + this.charges, 50);
+        this.gameboardConfig.chargeSignal.add(function () {
             this.useCharge();
-        }.bind(_this));
-        _this.showOnce = true;
-        return _this;
-    }
+        }.bind(this));
+        this.showOnce = true;
+    };
     ChargeGameboard.prototype.useCharge = function () {
         this.charges--;
         this.chargesText.setText("" + this.charges);

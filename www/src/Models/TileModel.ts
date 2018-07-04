@@ -6,23 +6,29 @@ export default class TileModel {
   name: string;
   fullName: string;
   friendId: string;
+  menuFriendId: string;
   sfxId: string;
   sfxVolume: number;
   summary: string;
-  playable: boolean;
   powerId: string;
 
   power: PowerModel;
 
   staticValue: number;
   frame: Phaser.Sprite;
-
+  isRealTile: boolean;
+  isMenuVisible: boolean;
+  
   getFirstStory: any;
   getSecondStory: any;
   
 
   get specialId(): string {
     return this.id + '-special';
+  }
+
+  get getMenuFriendId(): string {
+    return this.menuFriendId ? this.menuFriendId : this.friendId;
   }
 
   get friendSpecialId(): string {
@@ -65,9 +71,9 @@ export default class TileModel {
     firstStory: any,
     secondStory: any,    
     summary: string,
-    playable = true,
-    gridX = 0,
-    gridY = 0
+    isMenuVisible = true,
+    menuFriendId = null,
+    isRealTile = true
   ) {
     this.id = id;
     this.name = name;
@@ -78,8 +84,10 @@ export default class TileModel {
     this.powerId = powerId;
     this.power = power;
     this.summary = summary;
-    this.playable = playable;
+    this.isMenuVisible = isMenuVisible;
     this.getFirstStory = firstStory;
     this.getSecondStory = secondStory;
+    this.menuFriendId = menuFriendId;
+    this.isRealTile = isRealTile;
   }
 }

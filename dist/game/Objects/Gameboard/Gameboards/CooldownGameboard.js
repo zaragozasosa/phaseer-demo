@@ -13,17 +13,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
 var CooldownGameboard = (function (_super) {
     __extends(CooldownGameboard, _super);
-    function CooldownGameboard(gameboardConfig) {
-        var _this = _super.call(this, gameboardConfig) || this;
-        _this.actionButton.kill();
-        _this.passedTurns = 0;
-        _this.cooldown = 0;
-        _this.powerStarted = false;
-        _this.powerFinished = false;
-        var group = _this.grid.activatePower();
-        _this.elements = group;
-        _this.cooldownText = _this.tools.text.make(20, 150, 'Status: Idle', 50);
-        _this.gameboardConfig.cooldownSignal.add(function (activatePower, cooldown, success) {
+    function CooldownGameboard() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CooldownGameboard.prototype.start = function () {
+        this.createGrid();
+        this.actionButton.kill();
+        this.passedTurns = 0;
+        this.cooldown = 0;
+        this.powerStarted = false;
+        this.powerFinished = false;
+        var group = this.grid.activatePower();
+        this.elements = group;
+        this.cooldownText = this.tools.text.make(20, 150, 'Status: Idle', 50);
+        this.cooldownText.alpha = 0;
+        this.tools.misc.tweenTo(this.cooldownText, { alpha: 1 }, 500, true);
+        this.gameboardConfig.cooldownSignal.add(function (activatePower, cooldown, success) {
             if (success) {
                 this.cooldownText.setText("Status: Success!");
                 this.powerFinished = true;
@@ -34,14 +39,13 @@ var CooldownGameboard = (function (_super) {
             else {
                 this.blockElements(cooldown);
             }
-        }.bind(_this));
-        _this.gameboardConfig.turnsSignal.add(function () {
+        }.bind(this));
+        this.gameboardConfig.turnsSignal.add(function () {
             if (!this.powerFinished) {
                 this.newTurn();
             }
-        }.bind(_this));
-        return _this;
-    }
+        }.bind(this));
+    };
     CooldownGameboard.prototype.newTurn = function () {
         this.passedTurns++;
         if (this.powerStarted && this.passedTurns === this.turnsForPower) {
@@ -49,8 +53,7 @@ var CooldownGameboard = (function (_super) {
             this.powerFinished = true;
         }
         else if (this.powerStarted) {
-            this.cooldownText.setText("Status: " + (this.turnsForPower -
-                this.passedTurns) + " turns left");
+            this.cooldownText.setText("Status: " + (this.turnsForPower - this.passedTurns) + " turns left");
         }
         else if (this.turnsForPower && this.passedTurns === this.turnsForPower) {
             var turns = this.grid.activatePower();

@@ -43,7 +43,6 @@ export default class Reader extends Base{
 	}
 
 	protected play() {
-		debugger;
 		let action = this.actionList[this.actionIndex];
 		if (action) {
 			action.actionIsOverSignal.addOnce(function () {

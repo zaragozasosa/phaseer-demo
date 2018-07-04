@@ -37,6 +37,8 @@ var ReportedForRP = (function (_super) {
         buttons.add(this.tools.button.make(650, 1250, ['power'], function () {
             this.bannedClick();
         }.bind(this)));
+        buttons.alpha = 0;
+        this.tools.misc.tweenTo(buttons, { alpha: 1 }, 500, true);
         return buttons;
     };
     ReportedForRP.prototype.sageClick = function () {

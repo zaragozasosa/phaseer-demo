@@ -9,10 +9,11 @@ export default class DiamondGameboard extends Gameboard {
   private diamondSprite: Phaser.Sprite;
   private diamondText: Phaser.Text;
 
-  constructor(gameboardConfig: GameboardConfig) {
-    super(gameboardConfig);
+  start() {
+    this.createGrid();
+    
     let mergeTileSignal = new Phaser.Signal();
-    gameboardConfig.mergeTileSignal.add(
+    this.gameboardConfig.mergeTileSignal.add(
       function() {
         this.diamonds++;
         this.diamondText.setText(`: ${this.diamonds}`);
@@ -21,7 +22,6 @@ export default class DiamondGameboard extends Gameboard {
     );
 
     this.diamondModel = this.grid.activatePower();
-
     this.diamonds = this.diamondModel.requiredDiamonds;
     this.diamondSprite = this.tools.sprite.createSprite(
       20,
@@ -31,6 +31,10 @@ export default class DiamondGameboard extends Gameboard {
       this.diamondModel.paddingX
     );
     this.diamondText = this.tools.text.make(100, 155, `: ${this.diamonds}`, 50);
+    this.diamondSprite.alpha = 0;
+    this.diamondText.alpha = 0;
+    this.tools.misc.tweenTo(this.diamondSprite, { alpha: 1 }, 500, true);
+    this.tools.misc.tweenTo(this.diamondText, { alpha: 1 }, 500, true);
 
     if (this.diamondModel.cooldown) {
       this.gameboardConfig.cooldownSignal.add(
@@ -47,7 +51,7 @@ export default class DiamondGameboard extends Gameboard {
       );
     }
 
-    for (let sprite of gameboardConfig.tiles) {
+    for (let sprite of this.gameboardConfig.tiles) {
       this.tools.misc.cacheAddImage(
         sprite.negativeId,
         this.tools.sprite.makeReverseTexture(sprite.id)
