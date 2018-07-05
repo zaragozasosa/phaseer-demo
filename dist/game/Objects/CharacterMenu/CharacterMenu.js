@@ -93,7 +93,9 @@ var CharacterMenu = (function (_super) {
         return i % 2 ? Phaser.RIGHT : Phaser.LEFT;
     };
     CharacterMenu.prototype.initializeUI = function () {
-        this.tools.text.makeXBounded(225, 'Select your character', 50, 'center', Config_1.ColorSettings.TEXT, true);
+        this.tools.text.makeXBounded(225, 'Select your character', 55, 'center', Config_1.ColorSettings.PRIMARY, true);
+        var leftSign = this.tools.text.makeStroked(20, 237, '<', 60, Config_1.ColorSettings.TEXT);
+        var rightSign = this.tools.text.makeStroked(850, 237, '>', 60, Config_1.ColorSettings.TEXT);
         this.selectedName = this.tools.text.make(18, 730, '', 50);
         this.selectedFullName = this.tools.text.make(18, 795, '', 35);
         this.specialLabel = this.tools.text.make(20, 850, "Special:", 40);

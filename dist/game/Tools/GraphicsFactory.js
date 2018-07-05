@@ -46,7 +46,8 @@ var GraphicsFactory = (function (_super) {
         graphics.lineStyle(0);
         graphics.beginFill(Phaser.Color.hexToRGB(colorString), alpha);
         graphics.drawRect(xPad, yPad, safeZone.bgWidth, safeZone.bgHeight);
-        return graphics.endFill();
+        graphics.endFill();
+        return graphics;
     };
     GraphicsFactory.prototype.addWindowBackground = function (alpha) {
         return this.addBackground(Config_1.ColorSettings.BLACK, alpha);

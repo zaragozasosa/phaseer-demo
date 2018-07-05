@@ -21,23 +21,6 @@ export default class Carrousel extends Base {
     this.spriteArray = [];
     this.showCharacters();
     this.addBlinking();
-
-    let leftSign = this.tools.text.makeStroked(
-      30,
-      90,
-      '<',
-      80,
-      ColorSettings.ALT_TEXT
-    );
-    leftSign.alpha = 0.5;
-    let rightSign = this.tools.text.makeStroked(
-      850,
-      90,
-      '>',
-      80,
-      ColorSettings.ALT_TEXT
-    );
-    rightSign.alpha = 0.5;
   }
 
   nextCharacter(actual: TileModel) {

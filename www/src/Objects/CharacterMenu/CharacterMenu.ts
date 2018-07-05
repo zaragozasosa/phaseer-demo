@@ -115,10 +115,25 @@ export default class CharacterMenu extends Base {
     this.tools.text.makeXBounded(
       225,
       'Select your character',
-      50,
+      55,
       'center',
-      ColorSettings.TEXT,
+      ColorSettings.PRIMARY,
       true
+    );
+
+    let leftSign = this.tools.text.makeStroked(
+      20,
+      237,
+      '<',
+      60,
+      ColorSettings.TEXT
+    );
+    let rightSign = this.tools.text.makeStroked(
+      850,
+      237,
+      '>',
+      60,
+      ColorSettings.TEXT
     );
 
     this.selectedName = this.tools.text.make(18, 730, '', 50);

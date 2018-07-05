@@ -11,7 +11,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
-var Config_1 = require("./../../Config/Config");
 var Carrousel = (function (_super) {
     __extends(Carrousel, _super);
     function Carrousel(array, callback) {
@@ -23,10 +22,6 @@ var Carrousel = (function (_super) {
         _this.spriteArray = [];
         _this.showCharacters();
         _this.addBlinking();
-        var leftSign = _this.tools.text.makeStroked(30, 90, '<', 80, Config_1.ColorSettings.ALT_TEXT);
-        leftSign.alpha = 0.5;
-        var rightSign = _this.tools.text.makeStroked(850, 90, '>', 80, Config_1.ColorSettings.ALT_TEXT);
-        rightSign.alpha = 0.5;
         return _this;
     }
     Carrousel.prototype.nextCharacter = function (actual) {

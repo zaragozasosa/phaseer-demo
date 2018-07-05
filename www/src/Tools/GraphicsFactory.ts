@@ -38,7 +38,8 @@ export default class GraphicsFactory extends Factory {
     graphics.lineStyle(0);
     graphics.beginFill(Phaser.Color.hexToRGB(colorString), alpha);
     graphics.drawRect(xPad, yPad, safeZone.bgWidth, safeZone.bgHeight);
-    return graphics.endFill();
+    graphics.endFill();
+    return graphics;
   }
 
   addWindowBackground(alpha: number) {
