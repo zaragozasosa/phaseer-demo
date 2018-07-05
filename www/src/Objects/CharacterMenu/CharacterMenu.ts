@@ -29,6 +29,10 @@ export default class CharacterMenu extends Base {
   }
 
   update(cursor: number) {
+    if(this.carrousel.isBusy){
+      return;
+    }
+
     if (cursor === Phaser.Keyboard.RIGHT) {
       this.carrousel.nextCharacter(this.selectedCharacter);
     } else if (cursor === Phaser.Keyboard.LEFT) {
@@ -136,22 +140,22 @@ export default class CharacterMenu extends Base {
       ColorSettings.TEXT
     );
 
-    this.selectedName = this.tools.text.make(18, 730, '', 50);
+    this.selectedName = this.tools.text.makeStroked(8, 730, '', 65);
 
-    this.selectedFullName = this.tools.text.make(18, 795, '', 35);
+    this.selectedFullName = this.tools.text.make(18, 815, '', 35);
 
-    this.specialLabel = this.tools.text.make(20, 850, `Special:`, 40);
+    this.specialLabel = this.tools.text.make(20, 865, `Special:`, 35);
 
     this.selectedPower = this.tools.text.makeStroked(
-      205,
-      843,
+      185,
+      853,
       '',
       45,
       ColorSettings.PRIMARY
     );
 
     this.selectedSummary = this.tools.text.makeXBounded(
-      930,
+      920,
       '',
       35,
       'left',

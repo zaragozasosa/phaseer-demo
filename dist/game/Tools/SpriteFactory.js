@@ -37,11 +37,9 @@ var SpriteFactory = (function (_super) {
         this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
         return sprite;
     };
-    SpriteFactory.prototype.makeMenuTile = function (x, y, id, padY, ratio) {
-        ratio = ratio * 190 / 180;
+    SpriteFactory.prototype.makeMenuTile = function (x, y, id, padX, padY, ratio) {
         var size = this.config.grid.tileSize * ratio;
         var scale = this.config.grid.tileScale * ratio;
-        var padX = 0;
         return this.createSprite(x * size, y * size, id, scale, padX, padY);
     };
     SpriteFactory.prototype.updateTile = function (x, y, sprite) {

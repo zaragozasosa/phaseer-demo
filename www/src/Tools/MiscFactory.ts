@@ -16,9 +16,9 @@ export default class MiscFactory extends Factory {
     obj: any,
     props: any,
     duration = 200,
-    autoStart = false,    
-    ease = 'Linear',
+    autoStart = false,
     delay = 0,
+    ease = 'Linear',
     repeat = 0,
     yoyo = false
   ): Phaser.Tween {
@@ -37,8 +37,8 @@ export default class MiscFactory extends Factory {
     ease2 = 'Linear',
     
   )  {
-    let t1 = this.tweenTo(obj, props1, duration1, false, ease1);
-    let t2 = this.tweenTo(obj, props2, duration2, false, ease2);
+    let t1 = this.tweenTo(obj, props1, duration1, false, 0, ease1);
+    let t2 = this.tweenTo(obj, props2, duration2, false, 0, ease2);
     t1.onComplete.add(() => t2.start());
     t2.onComplete.add(() => t1.start());
 
@@ -102,8 +102,8 @@ export default class MiscFactory extends Factory {
       props,
       duration,
       true,
+      delay,
       ease,
-      delay
     ).onComplete.add(function() {
       obj.destroy();
     });

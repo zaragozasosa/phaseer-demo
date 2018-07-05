@@ -45,7 +45,7 @@ var GridTile = (function (_super) {
         var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300);
         _this.mergeTween = t1.chain(t2);
         _this.randomizeTween = _this.tools.misc.tweenTo(_this.sprite, { angle: 360 }, 500);
-        _this.ghostTween = misc.tweenTo(_this.group, { alpha: 0.3 }, 1000, false, 'Linear', 0, -1, true);
+        _this.ghostTween = misc.tweenTo(_this.group, { alpha: 0.3 }, 1000, false, 0, 'Linear', -1, true);
         if (ghost) {
             _this.group.alpha = 1;
             _this.ghostCooldown = ghostCooldown;

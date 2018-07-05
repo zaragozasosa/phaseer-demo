@@ -95,6 +95,7 @@ export default class OldCharacterSelection extends Phaser.State {
         column,
         row,
         char.id,
+        0,
         yMenuPad,
         ratio
       );

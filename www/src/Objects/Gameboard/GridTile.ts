@@ -81,8 +81,8 @@ export default class GridTile extends Base {
       { alpha: 0.3 },
       1000,
       false,      
-      'Linear',
       0,
+      'Linear',
       -1,
       true
     );

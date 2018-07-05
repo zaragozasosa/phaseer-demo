@@ -31,11 +31,11 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
-  makeMenuTile(x: number, y: number, id: string, padY: number, ratio: number) {
-    ratio = ratio * 190 / 180;
+  makeMenuTile(x: number, y: number, id: string, padX: number, padY: number, ratio: number) {
+    // ratio = ratio * 190 / 180;
     let size = this.config.grid.tileSize * ratio;
     let scale = this.config.grid.tileScale * ratio;
-    let padX = 0;
+
     return this.createSprite(x * size, y * size, id, scale, padX, padY);
   }
 

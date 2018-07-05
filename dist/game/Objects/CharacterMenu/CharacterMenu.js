@@ -29,6 +29,9 @@ var CharacterMenu = (function (_super) {
         configurable: true
     });
     CharacterMenu.prototype.update = function (cursor) {
+        if (this.carrousel.isBusy) {
+            return;
+        }
         if (cursor === Phaser.Keyboard.RIGHT) {
             this.carrousel.nextCharacter(this.selectedCharacter);
         }
@@ -96,11 +99,11 @@ var CharacterMenu = (function (_super) {
         this.tools.text.makeXBounded(225, 'Select your character', 55, 'center', Config_1.ColorSettings.PRIMARY, true);
         var leftSign = this.tools.text.makeStroked(20, 237, '<', 60, Config_1.ColorSettings.TEXT);
         var rightSign = this.tools.text.makeStroked(850, 237, '>', 60, Config_1.ColorSettings.TEXT);
-        this.selectedName = this.tools.text.make(18, 730, '', 50);
-        this.selectedFullName = this.tools.text.make(18, 795, '', 35);
-        this.specialLabel = this.tools.text.make(20, 850, "Special:", 40);
-        this.selectedPower = this.tools.text.makeStroked(205, 843, '', 45, Config_1.ColorSettings.PRIMARY);
-        this.selectedSummary = this.tools.text.makeXBounded(930, '', 35, 'left', Config_1.ColorSettings.ALT_TEXT);
+        this.selectedName = this.tools.text.makeStroked(8, 730, '', 65);
+        this.selectedFullName = this.tools.text.make(18, 815, '', 35);
+        this.specialLabel = this.tools.text.make(20, 865, "Special:", 35);
+        this.selectedPower = this.tools.text.makeStroked(185, 853, '', 45, Config_1.ColorSettings.PRIMARY);
+        this.selectedSummary = this.tools.text.makeXBounded(920, '', 35, 'left', Config_1.ColorSettings.ALT_TEXT);
         this.rightSprite = this.tools.sprite.createSprite(530, 350, null, 2);
         this.rightSprite.inputEnabled = true;
         this.leftSprite = this.tools.sprite.createSprite(30, 350, null, 2);

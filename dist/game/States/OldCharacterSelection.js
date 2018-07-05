@@ -61,7 +61,7 @@ var OldCharacterSelection = (function (_super) {
         this.tools.graphic.addBackground();
         displayArray.push(new TileModel_1.default('random', 'Random', 'Select a random character', '', 'sound.wav', 0, null, null, null, null, 'Decision paralysis? Just click the button and start playing, you fool!'));
         var _loop_1 = function (char) {
-            var sprite = this_1.tools.sprite.makeMenuTile(column, row, char.id, yMenuPad, ratio);
+            var sprite = this_1.tools.sprite.makeMenuTile(column, row, char.id, 0, yMenuPad, ratio);
             sprite.tint = Phaser.Color.GRAY;
             this_1.spriteArray.push(sprite);
             sprite.inputEnabled = true;

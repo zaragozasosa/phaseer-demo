@@ -26,11 +26,11 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.overlap = function (object1, object2, overlapCallback) {
         return this.game.physics.arcade.overlap(object1, object2, overlapCallback);
     };
-    MiscFactory.prototype.tweenTo = function (obj, props, duration, autoStart, ease, delay, repeat, yoyo) {
+    MiscFactory.prototype.tweenTo = function (obj, props, duration, autoStart, delay, ease, repeat, yoyo) {
         if (duration === void 0) { duration = 200; }
         if (autoStart === void 0) { autoStart = false; }
-        if (ease === void 0) { ease = 'Linear'; }
         if (delay === void 0) { delay = 0; }
+        if (ease === void 0) { ease = 'Linear'; }
         if (repeat === void 0) { repeat = 0; }
         if (yoyo === void 0) { yoyo = false; }
         return this.game.add
@@ -42,8 +42,8 @@ var MiscFactory = (function (_super) {
         if (duration2 === void 0) { duration2 = 200; }
         if (ease1 === void 0) { ease1 = 'Linear'; }
         if (ease2 === void 0) { ease2 = 'Linear'; }
-        var t1 = this.tweenTo(obj, props1, duration1, false, ease1);
-        var t2 = this.tweenTo(obj, props2, duration2, false, ease2);
+        var t1 = this.tweenTo(obj, props1, duration1, false, 0, ease1);
+        var t2 = this.tweenTo(obj, props2, duration2, false, 0, ease2);
         t1.onComplete.add(function () { return t2.start(); });
         t2.onComplete.add(function () { return t1.start(); });
         return t1;
@@ -82,7 +82,7 @@ var MiscFactory = (function (_super) {
         if (ease === void 0) { ease = 'Linear'; }
         if (autoStart === void 0) { autoStart = false; }
         if (delay === void 0) { delay = 0; }
-        this.tweenTo(obj, props, duration, true, ease, delay).onComplete.add(function () {
+        this.tweenTo(obj, props, duration, true, delay, ease).onComplete.add(function () {
             obj.destroy();
         });
     };
