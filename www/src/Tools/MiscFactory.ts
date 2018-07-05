@@ -27,6 +27,24 @@ export default class MiscFactory extends Factory {
       .to(props, duration, ease, autoStart, delay, repeat);
   }
 
+  tweenLoop(
+    obj: any,
+    props1: any,
+    props2: any,    
+    duration1 = 200,
+    duration2 = 200,
+    ease1 = 'Linear',
+    ease2 = 'Linear',
+    
+  )  {
+    let t1 = this.tweenTo(obj, props1, duration1, false, ease1);
+    let t2 = this.tweenTo(obj, props2, duration2, false, ease2);
+    t1.onComplete.add(() => t2.start());
+    t2.onComplete.add(() => t1.start());
+
+    return t1;
+  }
+
   removeTween(tween: Phaser.Tween) {
     this.game.tweens.remove(tween);
   }

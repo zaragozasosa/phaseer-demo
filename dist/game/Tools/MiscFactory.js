@@ -37,6 +37,17 @@ var MiscFactory = (function (_super) {
             .tween(obj)
             .to(props, duration, ease, autoStart, delay, repeat);
     };
+    MiscFactory.prototype.tweenLoop = function (obj, props1, props2, duration1, duration2, ease1, ease2) {
+        if (duration1 === void 0) { duration1 = 200; }
+        if (duration2 === void 0) { duration2 = 200; }
+        if (ease1 === void 0) { ease1 = 'Linear'; }
+        if (ease2 === void 0) { ease2 = 'Linear'; }
+        var t1 = this.tweenTo(obj, props1, duration1, false, ease1);
+        var t2 = this.tweenTo(obj, props2, duration2, false, ease2);
+        t1.onComplete.add(function () { return t2.start(); });
+        t2.onComplete.add(function () { return t1.start(); });
+        return t1;
+    };
     MiscFactory.prototype.removeTween = function (tween) {
         this.game.tweens.remove(tween);
     };

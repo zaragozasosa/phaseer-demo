@@ -39,11 +39,11 @@ var CharacterMenu = (function (_super) {
     CharacterMenu.prototype.create = function () {
         this.initializeUI();
         this.displayArray = this.gameboardConfig.menuTiles;
-        this.carrousel = new Carrousel_1.default(this.displayArray, function (character) {
-            this.setSelectedCharacter(character);
+        this.carrousel = new Carrousel_1.default(this.displayArray, function (character, changePage) {
+            this.setSelectedCharacter(character, changePage);
         }.bind(this));
     };
-    CharacterMenu.prototype.setSelectedCharacter = function (char) {
+    CharacterMenu.prototype.setSelectedCharacter = function (char, changePage) {
         this.tools.audio.playBeep();
         var spritePosition = this.findSpritePosition(char);
         if (spritePosition === Phaser.RIGHT) {
@@ -66,6 +66,22 @@ var CharacterMenu = (function (_super) {
                 this.setSelectedCharacter(this.gameboardConfig.getTileModel(char.getMenuFriendId));
             }.bind(this));
         }
+        if (changePage) {
+            this.rightSprite.alpha = 0;
+            this.tools.misc.tweenTo(this.rightSprite, { alpha: 1 }, 300, true);
+            this.leftSprite.alpha = 0;
+            this.tools.misc.tweenTo(this.leftSprite, { alpha: 1 }, 300, true);
+            this.selectedName.alpha = 0;
+            this.tools.misc.tweenTo(this.selectedName, { alpha: 1 }, 300, true);
+            this.selectedFullName.alpha = 0;
+            this.tools.misc.tweenTo(this.selectedFullName, { alpha: 1 }, 300, true);
+            this.selectedPower.alpha = 0;
+            this.tools.misc.tweenTo(this.selectedPower, { alpha: 1 }, 300, true);
+            this.selectedSummary.alpha = 0;
+            this.tools.misc.tweenTo(this.selectedSummary, { alpha: 1 }, 300, true);
+            this.specialLabel.alpha = 0;
+            this.tools.misc.tweenTo(this.specialLabel, { alpha: 1 }, 300, true);
+        }
         this.selectedCharacter = char;
         this.selectedName.setText(char.name);
         this.selectedFullName.setText(char.fullName);
@@ -80,7 +96,7 @@ var CharacterMenu = (function (_super) {
         this.tools.text.makeXBounded(225, 'Select your character', 50, 'center', Config_1.ColorSettings.TEXT, true);
         this.selectedName = this.tools.text.make(18, 730, '', 50);
         this.selectedFullName = this.tools.text.make(18, 795, '', 35);
-        this.tools.text.make(20, 850, "Special:", 40);
+        this.specialLabel = this.tools.text.make(20, 850, "Special:", 40);
         this.selectedPower = this.tools.text.makeStroked(205, 843, '', 45, Config_1.ColorSettings.PRIMARY);
         this.selectedSummary = this.tools.text.makeXBounded(930, '', 35, 'left', Config_1.ColorSettings.ALT_TEXT);
         this.rightSprite = this.tools.sprite.createSprite(530, 350, null, 2);

@@ -22,6 +22,7 @@ var Carrousel = (function (_super) {
         _this.callback = callback;
         _this.spriteArray = [];
         _this.showCharacters();
+        _this.addBlinking();
         var leftSign = _this.tools.text.makeStroked(30, 90, '<', 80, Config_1.ColorSettings.ALT_TEXT);
         leftSign.alpha = 0.5;
         var rightSign = _this.tools.text.makeStroked(850, 90, '>', 80, Config_1.ColorSettings.ALT_TEXT);
@@ -68,17 +69,29 @@ var Carrousel = (function (_super) {
         }
     };
     Carrousel.prototype.setSelectedCharacter = function (char) {
+        var changePage = false;
         if (char.id === this.visibleArray[0].id ||
             char.id === this.visibleArray[1].id) {
             this.moveRight();
+            this.addBlinking();
+            changePage = true;
         }
         else if (char.id === this.visibleArray[4].id ||
             char.id === this.visibleArray[5].id) {
             this.moveLeft();
+            this.addBlinking();
+            changePage = true;
         }
         this.spriteArray[2].tint = Phaser.Color.WHITE;
         this.spriteArray[3].tint = Phaser.Color.WHITE;
-        this.callback(char);
+        this.callback(char, changePage);
+    };
+    Carrousel.prototype.addBlinking = function () {
+        this.blinkGroup = this.tools.misc.addGroup();
+        this.blinkGroup.add(this.spriteArray[2]);
+        this.blinkGroup.add(this.spriteArray[3]);
+        var tween = this.tools.misc.tweenLoop(this.blinkGroup, { alpha: 0.4 }, { alpha: 1 }, 1000, 1000);
+        tween.start();
     };
     Carrousel.prototype.moveLeft = function () {
         this.array.push(this.array.shift());

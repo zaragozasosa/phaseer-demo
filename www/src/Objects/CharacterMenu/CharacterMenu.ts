@@ -15,7 +15,8 @@ export default class CharacterMenu extends Base {
   private startButton: Phaser.Button;
   private rightSprite: Phaser.Sprite;
   private leftSprite: Phaser.Sprite;
-  private selectedCharacter: TileModel;  
+  private selectedCharacter: TileModel;
+  private specialLabel: Phaser.Text;
 
   constructor(config: GameboardConfig) {
     super();
@@ -28,7 +29,7 @@ export default class CharacterMenu extends Base {
   }
 
   update(cursor: number) {
-    if(cursor === Phaser.Keyboard.RIGHT) {
+    if (cursor === Phaser.Keyboard.RIGHT) {
       this.carrousel.nextCharacter(this.selectedCharacter);
     } else if (cursor === Phaser.Keyboard.LEFT) {
       this.carrousel.previousCharacter(this.selectedCharacter);
@@ -41,13 +42,13 @@ export default class CharacterMenu extends Base {
 
     this.carrousel = new Carrousel(
       this.displayArray,
-      function(character) {
-        this.setSelectedCharacter(character);
+      function(character, changePage) {
+        this.setSelectedCharacter(character, changePage);
       }.bind(this)
     );
   }
 
-  private setSelectedCharacter(char: TileModel) {
+  private setSelectedCharacter(char: TileModel, changePage: boolean) {
     this.tools.audio.playBeep();
 
     let spritePosition = this.findSpritePosition(char);
@@ -80,6 +81,24 @@ export default class CharacterMenu extends Base {
       );
     }
 
+    if (changePage) {
+      this.rightSprite.alpha = 0;
+      this.tools.misc.tweenTo(this.rightSprite, { alpha: 1 }, 300, true);
+      this.leftSprite.alpha = 0;
+      this.tools.misc.tweenTo(this.leftSprite, { alpha: 1 }, 300, true);
+
+      this.selectedName.alpha = 0;
+      this.tools.misc.tweenTo(this.selectedName, { alpha: 1 }, 300, true);
+      this.selectedFullName.alpha = 0;
+      this.tools.misc.tweenTo(this.selectedFullName, { alpha: 1 }, 300, true);
+      this.selectedPower.alpha = 0;
+      this.tools.misc.tweenTo(this.selectedPower, { alpha: 1 }, 300, true);
+      this.selectedSummary.alpha = 0;
+      this.tools.misc.tweenTo(this.selectedSummary, { alpha: 1 }, 300, true);
+      this.specialLabel.alpha = 0;
+      this.tools.misc.tweenTo(this.specialLabel, { alpha: 1 }, 300, true);
+    }
+
     this.selectedCharacter = char;
     this.selectedName.setText(char.name);
     this.selectedFullName.setText(char.fullName);
@@ -106,7 +125,7 @@ export default class CharacterMenu extends Base {
 
     this.selectedFullName = this.tools.text.make(18, 795, '', 35);
 
-    this.tools.text.make(20, 850, `Special:`, 40);
+    this.specialLabel = this.tools.text.make(20, 850, `Special:`, 40);
 
     this.selectedPower = this.tools.text.makeStroked(
       205,

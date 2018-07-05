@@ -10,6 +10,7 @@ export default class Carrousel extends Base {
   private visibleArray: Array<TileModel>;
   private length: number;
   private callback: any;
+  private blinkGroup: Phaser.Group;
 
   constructor(array: Array<TileModel>, callback: any) {
     super();
@@ -19,10 +20,23 @@ export default class Carrousel extends Base {
     this.callback = callback;
     this.spriteArray = [];
     this.showCharacters();
+    this.addBlinking();
 
-    let leftSign = this.tools.text.makeStroked(30, 90, '<', 80, ColorSettings.ALT_TEXT);
+    let leftSign = this.tools.text.makeStroked(
+      30,
+      90,
+      '<',
+      80,
+      ColorSettings.ALT_TEXT
+    );
     leftSign.alpha = 0.5;
-    let rightSign = this.tools.text.makeStroked(850, 90, '>', 80, ColorSettings.ALT_TEXT);
+    let rightSign = this.tools.text.makeStroked(
+      850,
+      90,
+      '>',
+      80,
+      ColorSettings.ALT_TEXT
+    );
     rightSign.alpha = 0.5;
   }
 
@@ -67,22 +81,42 @@ export default class Carrousel extends Base {
   }
 
   private setSelectedCharacter(char: TileModel) {
+    let changePage = false;
     if (
       char.id === this.visibleArray[0].id ||
       char.id === this.visibleArray[1].id
     ) {
       this.moveRight();
+      this.addBlinking();
+      changePage = true;
     } else if (
       char.id === this.visibleArray[4].id ||
       char.id === this.visibleArray[5].id
     ) {
       this.moveLeft();
+      this.addBlinking();
+      changePage = true;
     }
 
     this.spriteArray[2].tint = Phaser.Color.WHITE;
     this.spriteArray[3].tint = Phaser.Color.WHITE;
+    this.callback(char, changePage);
+  }
 
-    this.callback(char);
+  private addBlinking() {
+    this.blinkGroup = this.tools.misc.addGroup();
+    this.blinkGroup.add(this.spriteArray[2]);
+    this.blinkGroup.add(this.spriteArray[3]);
+
+    let tween = this.tools.misc.tweenLoop(
+      this.blinkGroup,
+      { alpha: 0.4 },
+      { alpha: 1 },
+      1000,
+      1000
+    );
+
+    tween.start();
   }
 
   private moveLeft() {
