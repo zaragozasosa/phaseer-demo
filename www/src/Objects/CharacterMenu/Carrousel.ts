@@ -80,6 +80,11 @@ export default class Carrousel extends Base {
     this.spriteArray[8].alpha = 0
     this.spriteArray[9].alpha = 0
 
+    this.spriteArray[0].inputEnabled = false;
+    this.spriteArray[1].inputEnabled = false;
+    this.spriteArray[8].inputEnabled = false;
+    this.spriteArray[9].inputEnabled = false;
+
     this.addBlinking();
   }
 
@@ -137,7 +142,6 @@ export default class Carrousel extends Base {
       sprite.body.moveTo(200, this.distance, Phaser.ANGLE_LEFT);
     }.bind(this));
 
-    debugger;
     this.tools.misc.tweenTo(this.spriteArray[8], { alpha: 1 }, 50, true, 100);
     this.tools.misc.tweenTo(this.spriteArray[9], { alpha: 1 }, 100, true, 200);
 
