@@ -35,13 +35,13 @@ export default class CharacterSelection extends Phaser.State {
     this.characterMenu = new CharacterMenu(this.gameboardConfig);
 
     this.tools.button.make(
-      675,
-      1290,
-      ['start-1', 'start-2', 'start-3'],
+      630,
+      1275,
+      ['start'],
       function() {
         this.gameStart();
       }.bind(this),
-      1.8
+      1.2
     );
 
     let returnToMainMenu = this.tools.text.makeStroked(30, 1290, 'Return', 50);

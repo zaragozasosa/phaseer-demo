@@ -8,12 +8,10 @@ export default class CharacterSelectionLoader {
   }
 
   loadResources(loader: Phaser.Loader) {
-    loader.image('start-1', 'assets/images/start-1.png');
-    loader.image('start-2', 'assets/images/start-2.png');
-    loader.image('start-3', 'assets/images/start-3.png');
     loader.image('frame', 'assets/images/frame.png');
     loader.image('random', 'assets/images/tiles/random.png');
 
+    loader.spritesheet('start', 'assets/images/start.png', 249, 93);
     loader.spritesheet('smith-sheet', 'assets/images/smith.png', 180, 180);
     loader.spritesheet('lily-sheet', 'assets/images/lily.png', 180, 180);
 

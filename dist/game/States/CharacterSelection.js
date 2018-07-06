@@ -35,9 +35,9 @@ var CharacterSelection = (function (_super) {
     CharacterSelection.prototype.create = function () {
         this.tools.graphic.addBackground();
         this.characterMenu = new CharacterMenu_1.default(this.gameboardConfig);
-        this.tools.button.make(675, 1290, ['start-1', 'start-2', 'start-3'], function () {
+        this.tools.button.make(630, 1275, ['start'], function () {
             this.gameStart();
-        }.bind(this), 1.8);
+        }.bind(this), 1.2);
         var returnToMainMenu = this.tools.text.makeStroked(30, 1290, 'Return', 50);
         returnToMainMenu.inputEnabled = true;
         returnToMainMenu.events.onInputDown.addOnce(this.returnToMainMenu, this);

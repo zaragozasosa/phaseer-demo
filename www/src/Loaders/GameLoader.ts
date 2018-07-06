@@ -15,10 +15,9 @@ export default class CharacterSelectionLoader {
     loader.image('dice', 'assets/images/dice.png');
     loader.image('diamond', 'assets/images/diamond.png');
 
-    loader.spritesheet('power', 'assets/images/power.png', 249, 93);
-
     loader.audio('game-bgm', ['assets/audio/number-crunching.mp3']);
     loader.audio('game-bgm-intro', ['assets/audio/number-crunching-intro.mp3']);
 
+    loader.spritesheet('power', 'assets/images/power.png', 249, 93);
   }
 }
