@@ -66,6 +66,10 @@ export default class GameboardConfig {
     }
   }
 
+  getMenuTileModel(id: string) {
+    return this.baseList.find(x => x.id === id);
+  }
+
   private createPowers() {
     let powers = [];
 

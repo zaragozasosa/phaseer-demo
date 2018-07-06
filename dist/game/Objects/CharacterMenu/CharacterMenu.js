@@ -49,24 +49,30 @@ var CharacterMenu = (function (_super) {
     CharacterMenu.prototype.setSelectedCharacter = function (char, changePage) {
         this.tools.audio.playBeep();
         var spritePosition = this.findSpritePosition(char);
+        if (char.id === 'random' || char.id === 'nacho') {
+            debugger;
+        }
         if (spritePosition === Phaser.RIGHT) {
-            this.rightSprite.events.destroy();
             this.rightSprite.loadTexture(char.id);
             this.rightSprite.tint = Phaser.Color.WHITE;
+            this.rightSprite.events.destroy();
             this.leftSprite.loadTexture(char.getMenuFriendId);
+            this.leftSprite.events.destroy();
             this.leftSprite.events.onInputDown.addOnce(function () {
                 this.setSelectedCharacter(this.gameboardConfig.getTileModel(char.getMenuFriendId));
             }.bind(this));
             this.leftSprite.tint = Phaser.Color.GRAY;
         }
         else {
-            this.leftSprite.events.destroy();
             this.leftSprite.loadTexture(char.id);
             this.leftSprite.tint = Phaser.Color.WHITE;
+            this.leftSprite.events.destroy();
             this.rightSprite.loadTexture(char.getMenuFriendId);
             this.rightSprite.tint = Phaser.Color.GRAY;
+            this.rightSprite.events.destroy();
             this.rightSprite.events.onInputDown.addOnce(function () {
-                this.setSelectedCharacter(this.gameboardConfig.getTileModel(char.getMenuFriendId));
+                debugger;
+                this.setSelectedCharacter(this.gameboardConfig.getMenuTileModel(char.getMenuFriendId));
             }.bind(this));
         }
         if (changePage) {
@@ -92,7 +98,7 @@ var CharacterMenu = (function (_super) {
         this.selectedSummary.setText(char.summary);
     };
     CharacterMenu.prototype.findSpritePosition = function (char) {
-        var i = this.gameboardConfig.tiles.findIndex(function (tile) { return tile.id === char.id; });
+        var i = this.gameboardConfig.menuTiles.findIndex(function (tile) { return tile.id === char.id; });
         return i % 2 ? Phaser.RIGHT : Phaser.LEFT;
     };
     CharacterMenu.prototype.initializeUI = function () {

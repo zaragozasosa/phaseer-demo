@@ -54,14 +54,18 @@ export default class CharacterMenu extends Base {
 
   private setSelectedCharacter(char: TileModel, changePage: boolean) {
     this.tools.audio.playBeep();
-
     let spritePosition = this.findSpritePosition(char);
 
+    if(char.id === 'random' || char.id === 'nacho') {
+      debugger;
+    }
     if (spritePosition === Phaser.RIGHT) {
-      this.rightSprite.events.destroy();
       this.rightSprite.loadTexture(char.id);
       this.rightSprite.tint = Phaser.Color.WHITE;
+      this.rightSprite.events.destroy();
+
       this.leftSprite.loadTexture(char.getMenuFriendId);
+      this.leftSprite.events.destroy();
       this.leftSprite.events.onInputDown.addOnce(
         function() {
           this.setSelectedCharacter(
@@ -71,15 +75,18 @@ export default class CharacterMenu extends Base {
       );
       this.leftSprite.tint = Phaser.Color.GRAY;
     } else {
-      this.leftSprite.events.destroy();
       this.leftSprite.loadTexture(char.id);
       this.leftSprite.tint = Phaser.Color.WHITE;
+      this.leftSprite.events.destroy();
+
       this.rightSprite.loadTexture(char.getMenuFriendId);
       this.rightSprite.tint = Phaser.Color.GRAY;
+      this.rightSprite.events.destroy();
       this.rightSprite.events.onInputDown.addOnce(
         function() {
+          debugger;
           this.setSelectedCharacter(
-            this.gameboardConfig.getTileModel(char.getMenuFriendId)
+            this.gameboardConfig.getMenuTileModel(char.getMenuFriendId)
           );
         }.bind(this)
       );
@@ -111,7 +118,7 @@ export default class CharacterMenu extends Base {
   }
 
   private findSpritePosition(char: TileModel) {
-    let i = this.gameboardConfig.tiles.findIndex(tile => tile.id === char.id);
+    let i = this.gameboardConfig.menuTiles.findIndex(tile => tile.id === char.id);
     return i % 2 ? Phaser.RIGHT : Phaser.LEFT;
   }
 

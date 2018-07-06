@@ -33,6 +33,9 @@ var GameboardConfig = (function () {
             return this.tiles[index];
         }
     };
+    GameboardConfig.prototype.getMenuTileModel = function (id) {
+        return this.baseList.find(function (x) { return x.id === id; });
+    };
     GameboardConfig.prototype.createPowers = function () {
         var powers = [];
         powers.push(new PowerModel_1.default('powerGaming', 'Power Gaming', 'Duplicate the value of every tile in the board below 32.', 'Have at least one tile below 32'));

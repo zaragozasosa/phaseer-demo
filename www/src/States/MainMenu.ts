@@ -25,17 +25,22 @@ export default class MainMenu extends Phaser.State {
     this.cursor = new InputManager(this.config);
     this.started = false;
     tools.graphic.addBackground();
+    // tools.audio.playNormal('test-bgm', true);
     tools.audio.playIfSilent('title-bgm', true);
 
     let loader = new CharacterSelectionLoader(this.gameboardConfig.tiles);
-    
+
     let menuList = new MenuList('Menu');
     menuList.addChild(
       new MenuObject(
         'Story mode',
-        function () {
+        function() {
           this.menu.destroy();
-          tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader);
+          tools.transition.smoothLoaderConfig(
+            'CharacterSelection',
+            this.gameboardConfig,
+            loader
+          );
         }.bind(this)
       )
     );
@@ -43,7 +48,7 @@ export default class MainMenu extends Phaser.State {
     menuList.addChild(
       new MenuObject(
         'Project site',
-        function () {
+        function() {
           window.location.href = 'https://github.com/zaragozasosa/phaseer-demo';
         }.bind(this)
       )

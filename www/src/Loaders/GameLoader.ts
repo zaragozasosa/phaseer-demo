@@ -14,7 +14,7 @@ export default class CharacterSelectionLoader {
     loader.image('bullet', 'assets/images/bullet.png');
     loader.image('dice', 'assets/images/dice.png');
     loader.image('diamond', 'assets/images/diamond.png');
-
+    
     loader.audio('game-bgm', ['assets/audio/number-crunching.mp3']);
     loader.audio('game-bgm-intro', ['assets/audio/number-crunching-intro.mp3']);
 

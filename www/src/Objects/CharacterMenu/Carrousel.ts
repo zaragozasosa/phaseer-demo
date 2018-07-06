@@ -72,6 +72,7 @@ export default class Carrousel extends Base {
       sprite.events.destroy();
       sprite.events.onInputDown.add(
         function () {
+          debugger;
           this.setSelectedCharacter(char);
         }.bind(this)
       );

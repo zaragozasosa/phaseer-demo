@@ -14,7 +14,7 @@ export default class TimeTravelLogic extends LogicalGrid {
 
   power() {
     this.isTimeStopped = true;
-    this.turnsTimeStop = this.tools.misc.randomBetween(2, 4);
+    this.turnsTimeStop = this.tools.misc.randomBetween(3, 5);
     this.turnsPassed = 0;
     this.togglePauseTiles(true);
   }
@@ -52,9 +52,7 @@ export default class TimeTravelLogic extends LogicalGrid {
       this.isTimeStopped = false;
       this.togglePauseTiles(false);
       this.gameboardConfig.cooldownSignal.dispatch();
-      for (let i = 0; i < this.turnsTimeStop; i++) {
-        this.tryToAdd();
-      }
+      this.tryToAdd();      
     } else {
       this.turnsPassed++;
     }
