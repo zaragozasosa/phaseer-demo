@@ -18,9 +18,7 @@ var Unranked = (function (_super) {
     }
     Unranked.prototype.init = function (gameboardConfig) {
         this.gameboard = GameboardFactory_1.default.create(gameboardConfig);
-        this.game.time.events.add(50, function () {
-            this.gameboard.start();
-        }.bind(this));
+        this.gameboard.start();
     };
     Unranked.prototype.update = function () {
         this.gameboard.update();

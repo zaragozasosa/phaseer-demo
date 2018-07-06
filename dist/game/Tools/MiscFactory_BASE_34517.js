@@ -26,6 +26,31 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.overlap = function (object1, object2, overlapCallback) {
         return this.game.physics.arcade.overlap(object1, object2, overlapCallback);
     };
+    MiscFactory.prototype.tweenTo = function (obj, props, duration, autoStart, ease, delay, repeat, yoyo) {
+        if (duration === void 0) { duration = 200; }
+        if (autoStart === void 0) { autoStart = false; }
+        if (ease === void 0) { ease = 'Linear'; }
+        if (delay === void 0) { delay = 0; }
+        if (repeat === void 0) { repeat = 0; }
+        if (yoyo === void 0) { yoyo = false; }
+        return this.game.add
+            .tween(obj)
+            .to(props, duration, ease, autoStart, delay, repeat);
+    };
+    MiscFactory.prototype.tweenLoop = function (obj, props1, props2, duration1, duration2, ease1, ease2) {
+        if (duration1 === void 0) { duration1 = 200; }
+        if (duration2 === void 0) { duration2 = 200; }
+        if (ease1 === void 0) { ease1 = 'Linear'; }
+        if (ease2 === void 0) { ease2 = 'Linear'; }
+        var t1 = this.tweenTo(obj, props1, duration1, false, ease1);
+        var t2 = this.tweenTo(obj, props2, duration2, false, ease2);
+        t1.onComplete.add(function () { return t2.start(); });
+        t2.onComplete.add(function () { return t1.start(); });
+        return t1;
+    };
+    MiscFactory.prototype.removeTween = function (tween) {
+        this.game.tweens.remove(tween);
+    };
     MiscFactory.prototype.createTimer = function () {
         return this.game.time.create(false);
     };
@@ -52,34 +77,34 @@ var MiscFactory = (function (_super) {
         }
         return newList;
     };
+    MiscFactory.prototype.tweenVanishAndDestroy = function (obj, props, duration, ease, autoStart, delay) {
+        if (duration === void 0) { duration = 200; }
+        if (ease === void 0) { ease = 'Linear'; }
+        if (autoStart === void 0) { autoStart = false; }
+        if (delay === void 0) { delay = 0; }
+        this.tweenTo(obj, props, duration, true, ease, delay).onComplete.add(function () {
+            obj.destroy();
+        });
+    };
+    MiscFactory.prototype.tweenTint = function (obj, startColor, endColor, time) {
+        var colorBlend = { step: 0 };
+        var colorTween = this.game.add
+            .tween(colorBlend)
+            .to({ step: 100 }, time, 'Linear', false, 0, -1, true);
+        colorTween.onUpdateCallback(function () {
+            obj.tint = Phaser.Color.interpolateColor(Phaser.Color.hexToRGB('#00BFFF'), Phaser.Color.hexToRGB('#87CEFA'), 100, colorBlend.step);
+        });
+        obj.tint = startColor;
+        return colorTween;
+    };
     MiscFactory.prototype.cacheAddImage = function (key, data) {
         this.game.cache.addImage(key, '', data);
     };
-    MiscFactory.prototype.changeState = function (state) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        (_a = this.game.state).start.apply(_a, [state, true, false].concat(args));
-        var _a;
-    };
-    MiscFactory.prototype.transitionToState = function (gameboardConfig, state) {
-        var args = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            args[_i - 2] = arguments[_i];
-        }
-        this.changeState('Transition', gameboardConfig, function () {
-            this.changeState.apply(this, [state].concat(args));
-        }.bind(this));
-    };
-    MiscFactory.prototype.hardTransition = function (gameboardConfig, state, audio) {
-        var args = [];
-        for (var _i = 3; _i < arguments.length; _i++) {
-            args[_i - 3] = arguments[_i];
-        }
-        this.changeState('Transition', gameboardConfig, function () {
-            this.changeState.apply(this, [state].concat(args));
-        }.bind(this), true);
+    MiscFactory.prototype.changeState = function (state, params1, params2, params3) {
+        if (params1 === void 0) { params1 = null; }
+        if (params2 === void 0) { params2 = null; }
+        if (params3 === void 0) { params3 = null; }
+        this.game.state.start(state, true, false, params1, params2, params3);
     };
     MiscFactory.prototype.restartState = function (params) {
         if (params === void 0) { params = null; }

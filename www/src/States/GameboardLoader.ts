@@ -1,4 +1,4 @@
-import { Singleton, Config, Tools } from './../Config/Config';
+import { Singleton, Config, Tools, ColorSettings } from './../Config/Config';
 import GameboardConfig from './../Config/GameboardConfig';
 import InfoWindow from './../Objects/Windows/InfoWindow';
 import InputManager from './../InputManager';
@@ -17,7 +17,6 @@ export default class GameboardLoader extends Phaser.State {
     this.tools = singleton.tools;
     let window = new InfoWindow(this.gameboardConfig.mainTile);
     window.show();
-
     this.preloadBar = this.tools.sprite.makeCentered(1000, 'preloadBar', 2);
     this.game.load.audio('game-bgm', ['assets/audio/number-crunching.mp3']);
 
@@ -43,13 +42,22 @@ export default class GameboardLoader extends Phaser.State {
 
   create() {
     this.preloadBar.kill();
-    this.tools.audio.stopBgm();
+
+    let press = this.tools.text.makeXBounded(
+      850,
+      'Press any key to continue.',
+      50,
+      'center',
+      ColorSettings.PRIMARY
+    );
+
+    this.tools.tween.blinkStart(press);
   }
 
   update() {
     if (this.cursor.checkClick() || this.cursor.checkKeys()) {
       this.tools.audio.play('game-bgm', true);
-      this.state.start('Unranked', true, false, this.gameboardConfig);
+      this.tools.misc.changeState('Unranked', this.gameboardConfig);
     }
   }
 }

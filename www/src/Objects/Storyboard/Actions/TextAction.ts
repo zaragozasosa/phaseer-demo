@@ -1,5 +1,7 @@
 import BaseAction from './BaseAction';
 import Reader from './../Reader';
+import { ColorSettings } from './../../../Config/Config';
+
 export default class TextAction extends BaseAction {
   private text: Phaser.Text;
   private content: string;
@@ -18,7 +20,14 @@ export default class TextAction extends BaseAction {
 
   play() {
     this.wordIndex = 0;
-    this.text = this.tools.text.makeXBounded(670, '', 45, 'left');    
+    this.text = this.tools.text.makeXBounded(
+      670,
+      '',
+      40,
+      'left',
+      ColorSettings.ALT_TEXT,
+      true
+    );
     this.words = this.content.split(' ');
     this.nextWord();
   }

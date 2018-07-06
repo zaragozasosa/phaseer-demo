@@ -4,6 +4,7 @@ import TextFactory from './../Tools/TextFactory';
 import GraphicsFactory from './../Tools/GraphicsFactory';
 import MiscFactory from './../Tools/MiscFactory';
 import AudioFactory from './../Tools/AudioFactory';
+import TweenFactory from './../Tools/TweenFactory';
 
 
 export class Singleton {
@@ -151,12 +152,13 @@ export class StoryboardSettings {
 }
 
 export class Tools {
-  _text: TextFactory;
-  _graphic: GraphicsFactory;
-  _sprite: SpriteFactory;
-  _button: ButtonFactory;
-  _misc: MiscFactory;
-  _audio: AudioFactory;
+  private _text: TextFactory;
+  private _graphic: GraphicsFactory;
+  private _sprite: SpriteFactory;
+  private _button: ButtonFactory;
+  private _misc: MiscFactory;
+  private _audio: AudioFactory;
+  private _tween: TweenFactory;
 
   constructor(config: Config) {
     this._text = new TextFactory(config);
@@ -165,6 +167,7 @@ export class Tools {
     this._button = new ButtonFactory(config);
     this._misc = new MiscFactory(config);
     this._audio = new AudioFactory(config);
+    this._tween = new TweenFactory(config);
   }
 
   get text(): TextFactory {
@@ -189,5 +192,9 @@ export class Tools {
 
   get audio(): AudioFactory {
     return this._audio;
+  }
+
+  get tween(): TweenFactory {
+    return this._tween;
   }
 }

@@ -41,6 +41,10 @@ export default class TextFactory extends Factory {
     padX = 0,
     padY = 0
   ) {
+    if(color === null) {
+      color = ColorSettings.TEXT;
+    } 
+    
     var colorString = this.getColor(color);
     let x =
       this.config.safeZone.paddingX + padX + posX * this.config.scaleFactor;

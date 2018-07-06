@@ -19,7 +19,7 @@ export default class MainMenu extends Phaser.State {
     this.cursor = new InputManager(this.config);
     this.started = false;
     tools.graphic.addBackground();
-    tools.audio.play('title-bgm', true);
+    tools.audio.playIfSilent('title-bgm', true);
 
     let menuList = new MenuList('Menu');
     menuList.addChild(
@@ -48,22 +48,34 @@ export default class MainMenu extends Phaser.State {
     menuList.addChild(options);
     this.menu = new Menu(menuList);
 
-    this.startText = tools.text.makeXBounded(
+    let startText = tools.text.makeXBounded(
       700,
-      'Click to start',
-      70,
+      'Press any key!',
+      60,
       'center',
       ColorSettings.TEXT
     );
 
+    tools.tween.blinkStart(startText);
+    this.startText = startText;
     this.logoPlaceholder = tools.text.makeXBounded(
-      350,
+      100,
       'Logo goes here',
       80,
       'center',
       ColorSettings.PRIMARY
     );
 
+    this.logoPlaceholder.alpha = 0.5;
+
+    tools.tween.moveY(
+      this.logoPlaceholder,
+      350,
+      5000,
+      true,
+      Phaser.Easing.Cubic.Out,
+      { alpha: 1 }
+    );
   }
 
   update() {

@@ -145,14 +145,23 @@ export default abstract class Gameboard extends Base {
       this.showGameOverWindow(
         win,
         function() {
-          this.tools.misc.changeState('Story', this.gameboardConfig, false);
+          this.tools.misc.transitionToState(
+            this.gameboardConfig,
+            'Story',
+            this.gameboardConfig,
+            false
+          );
         }.bind(this)
       );
     } else {
       this.showGameOverWindow(
         win,
         function() {
-          this.tools.misc.changeState('CharacterSelection');
+          this.tools.misc.transitionToState(
+            this.gameboardConfig,
+            'CharacterSelection',
+            true
+          );
         }.bind(this)
       );
     }
@@ -194,12 +203,11 @@ export default abstract class Gameboard extends Base {
       true
     );
 
-    this.tools.misc.tweenVanishAndDestroy(
+    this.tools.tween.vanishAndDestroy(
       text,
       { alpha: 0 },
       delay,
       'Linear',
-      true,
       delay
     );
   }
@@ -224,8 +232,8 @@ export default abstract class Gameboard extends Base {
 
   private addHeader() {
     this.header = this.tools.text.make(20, 20, '', 50);
-    this.header.alpha = 0;
-    this.tools.misc.tweenTo(this.header, { alpha: 1 }, 500, true);
+    this.tools.tween.appear(this.header);
+
     this.updateHeader();
   }
 
@@ -240,8 +248,8 @@ export default abstract class Gameboard extends Base {
         }
       }.bind(this)
     );
-    menu.alpha = 0;
-    this.tools.misc.tweenTo(menu, { alpha: 1 }, 500, true);
+
+    this.tools.tween.appear(menu);
   }
 
   private addPowerButton() {
@@ -260,8 +268,7 @@ export default abstract class Gameboard extends Base {
     this.actionButton.inputEnabled = false;
     this.actionButton.tint = Phaser.Color.GRAY;
 
-    this.actionButton.alpha = 0;
-    this.tools.misc.tweenTo(this.actionButton, { alpha: 1 }, 500, true);
+    this.tools.tween.appear(this.actionButton);
   }
 
   private updateScore(addToMovement = true) {
@@ -279,14 +286,18 @@ export default abstract class Gameboard extends Base {
 
   private addTimer() {
     this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-    this.timer = this.tools.misc.createTimer();
-    this.timer.start();
+    this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function() {
+      this.timer = this.tools.misc.createTimer();
+      this.timer.start();
+    }.bind(this));
   }
 
   private updateTimer() {
-    let min = Math.floor(this.timer.seconds / 60);
-    let sec = Math.floor(this.timer.seconds - min * 60);
-    this.timerMessage.setText(`Time: ${this.num(min)}:${this.num(sec)}`);
+    if(this.timer) {
+      let min = Math.floor(this.timer.seconds / 60);
+      let sec = Math.floor(this.timer.seconds - min * 60);
+      this.timerMessage.setText(`Time: ${this.num(min)}:${this.num(sec)}`);
+    }
   }
 
   private num(n) {
@@ -305,7 +316,11 @@ export default abstract class Gameboard extends Base {
           this.pausetoggle();
         }.bind(this),
         function() {
-          this.tools.misc.changeState('Boot');
+          this.tools.misc.hardTransition(
+            this.gameboardConfig,
+            'Boot',
+            this.tools.audio
+          );
         }.bind(this)
       );
       this.isPaused = true;

@@ -4,7 +4,6 @@ import GameboardConfig from './../Config/GameboardConfig';
 import { Config } from './../Config/Config';
 import MenuObject from './../Objects/Menu/MenuObject';
 
-
 export default class AudioFactory extends Factory {
   playSound(id: string, loop = false) {
     let config = this.config.sound;
@@ -16,7 +15,7 @@ export default class AudioFactory extends Factory {
     if (audio.sfxVolume === 0) {
       return false;
     }
-    
+
     this.playCharacterSound(gameConfig.mainTile);
 
     this.game.time.events.add(
@@ -33,48 +32,67 @@ export default class AudioFactory extends Factory {
     );
   }
 
-  play(id: string, loop = false) {
+  playIfSilent(id: string, loop = false) {
     let config = this.config.sound;
-    if (config.bgm) {
-      config.bgm.stop();
-      config.bgm.destroy();
+    if (!config.bgm || !config.bgm.isPlaying) {
+      config.bgm = this.game.add.audio(id);
+      config.bgm.play('', 0, config.bgmVolume, loop);
     }
-
-    let music = this.game.add.audio(id);
-    config.bgm = music.play('', 0, config.bgmVolume, loop);
   }
 
-  stopBgm(){
-    let config = this.config.sound; 
-    config.bgm.stop();
+  play(id: string, loop = false) {
+    let config = this.config.sound;
+    if (config.bgm && config.bgm.isPlaying) {
+      config.bgm.fadeOut(1000);
+      config.bgm.onFadeComplete.addOnce(
+        function() {
+          config.bgm.destroy(true);
+          config.bgm = null;
+          this.play(id, loop);
+        }.bind(this)
+      );
+      return;
+    }
+
+    config.bgm = this.game.add.audio(id);
+    config.bgm.play('', 0, config.bgmVolume, loop);
+  }
+
+  stopBgm() {
+    let config = this.config.sound;
+    config.bgm.fadeOut(1000);
   }
 
   changeAudioLevel(sprite: Phaser.Sprite = null) {
     let config = this.config.sound;
     let spriteId;
     if (config.bgmVolume === 1 && config.sfxVolume === 1) {
-      spriteId = `${config.volumeSprite}-1`;      
+      spriteId = `${config.volumeSprite}-1`;
       config.sfxVolume = 0;
     } else if (config.bgmVolume === 1) {
-      spriteId = `${config.volumeSprite}-2`;       
+      spriteId = `${config.volumeSprite}-2`;
       config.bgmVolume = 0;
-      config.bgm.volume = config.bgmVolume;      
+      config.bgm.volume = config.bgmVolume;
     } else {
-      spriteId = `${config.volumeSprite}-0`;       
+      spriteId = `${config.volumeSprite}-0`;
       config.sfxVolume = 1;
       config.bgmVolume = 1;
-      config.bgm.volume = config.bgmVolume;      
+      config.bgm.volume = config.bgmVolume;
     }
 
-    if(sprite) {
-      sprite.loadTexture(spriteId); 
+    if (sprite) {
+      sprite.loadTexture(spriteId);
     }
   }
 
   playCharacterSound(tile: TileModel) {
     let audio = this.config.sound;
     if (audio.sfxVolume) {
-      this.game.sound.play(tile.sfxLabel, audio.sfxVolume * tile.sfxVolume, false);
+      this.game.sound.play(
+        tile.sfxLabel,
+        audio.sfxVolume * tile.sfxVolume,
+        false
+      );
     }
   }
 
@@ -84,9 +102,9 @@ export default class AudioFactory extends Factory {
 
   getAudioConfigLabel() {
     let audio = this.config.sound;
-    if(audio.bgmVolume === 1 && audio.sfxVolume === 1) {
+    if (audio.bgmVolume === 1 && audio.sfxVolume === 1) {
       return 'Normal';
-    } else if(audio.bgmVolume === 1) {
+    } else if (audio.bgmVolume === 1) {
       return 'BGM Only';
     } else {
       return 'Mute';
@@ -96,9 +114,12 @@ export default class AudioFactory extends Factory {
   makeVolumeMenuOption() {
     let audioTools = this;
 
-    return new MenuObject(`Audio: ${audioTools.getAudioConfigLabel()}`, function() {
-      audioTools.changeAudioLevel();
-      this.changeLabel(`Audio: ${audioTools.getAudioConfigLabel()}`);
-    })
+    return new MenuObject(
+      `Audio: ${audioTools.getAudioConfigLabel()}`,
+      function() {
+        audioTools.changeAudioLevel();
+        this.changeLabel(`Audio: ${audioTools.getAudioConfigLabel()}`);
+      }
+    );
   }
 }

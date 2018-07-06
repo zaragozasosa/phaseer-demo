@@ -8,6 +8,7 @@ import Unranked from './States/Unranked';
 import Story from './States/Story';
 import GameboardLoader from './States/GameboardLoader';
 import CharacterSelection from './States/CharacterSelection';
+import Transition from './States/Transition';
 
 export default class Game extends Phaser.Game {
   constructor() {
@@ -17,7 +18,7 @@ export default class Game extends Phaser.Game {
     super(width, height, Phaser.CANVAS, 'content', null, true);
     GameInstance.initialize(this);
     Singleton.initialize(setup.config, this);
-    
+
     this.bootGame();
   }
 
@@ -29,6 +30,7 @@ export default class Game extends Phaser.Game {
     this.state.add('Unranked', Unranked, false);
     this.state.add('GameboardLoader', GameboardLoader, false);
     this.state.add('Story', Story, false);
+    this.state.add('Transition', Transition, false);
 
     this.state.start('Boot');
   }

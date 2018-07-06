@@ -34,10 +34,10 @@ export default class MenuObject extends Base {
     );
 
     this.text.alpha = 0;
-    let tween = this.tools.misc.tweenTo(this.text, { alpha: 1 }, 500);
+    let tween = this.tools.tween.to(this.text, { alpha: 1 }, 500);
     tween.onComplete.addOnce(
       function() {
-        this.tools.misc.removeTween(tween);
+        this.tools.tween.remove(tween);
       }.bind(this)
     );
 

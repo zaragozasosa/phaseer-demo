@@ -20,7 +20,7 @@ var PauseWindow = (function (_super) {
     __extends(PauseWindow, _super);
     function PauseWindow(character, contCallback, quitCallback, y) {
         if (y === void 0) { y = 200; }
-        var _this = _super.call(this, character, 350, false, Window_1.default.DEFAULT_HIDE_BACKGROUND) || this;
+        var _this = _super.call(this, character, 350, Window_1.default.DEFAULT_HIDE_BACKGROUND) || this;
         var text = _this.tools.text.makeXBounded(y + 40, '- PAUSE -', 70, 'center', Config_1.ColorSettings.PRIMARY);
         var menuList = new MenuList_1.default('Menu');
         menuList.addChild(new MenuObject_1.default('Continue', function () {

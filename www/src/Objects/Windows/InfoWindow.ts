@@ -5,7 +5,6 @@ export default class InfoWindow extends Window {
   constructor(
     character: TileModel,
     y = 300,
-    pressAnyKey = true,
     window = Window.DEFAULT_WINDOW
   ) {
     super(window);
@@ -52,17 +51,6 @@ export default class InfoWindow extends Window {
 
       group.add(text3);
       group.add(text4);
-    }
-
-    if (pressAnyKey) {
-      let press = this.tools.text.makeXBounded(
-        y + 550,
-        'Press any key to continue.',
-        50,
-        'center',
-        ColorSettings.PRIMARY
-      );
-      group.add(press);
     }
 
     this.init(group);

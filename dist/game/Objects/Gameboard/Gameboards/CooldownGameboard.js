@@ -26,8 +26,7 @@ var CooldownGameboard = (function (_super) {
         var group = this.grid.activatePower();
         this.elements = group;
         this.cooldownText = this.tools.text.make(20, 150, 'Status: Idle', 50);
-        this.cooldownText.alpha = 0;
-        this.tools.misc.tweenTo(this.cooldownText, { alpha: 1 }, 500, true);
+        this.tools.tween.appear(this.cooldownText);
         this.gameboardConfig.cooldownSignal.add(function (activatePower, cooldown, success) {
             if (success) {
                 this.cooldownText.setText("Status: Success!");

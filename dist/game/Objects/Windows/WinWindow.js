@@ -30,6 +30,7 @@ var WinWindow = (function (_super) {
         }.bind(_this));
         elements.add(_this.tools.text.makeXBounded(y + 470, text, 80, 'center', Config_1.ColorSettings.PRIMARY));
         var cont = _this.tools.text.makeXBounded(740, 'Press a key to continue.', 50, 'center', Config_1.ColorSettings.TEXT);
+        _this.tools.tween.blinkStart(cont);
         elements.add(cont);
         _this.init(elements, sprites);
         _this.show();

@@ -19,8 +19,12 @@ export default class ChargeGameboard extends Gameboard {
       button.tint = Phaser.Color.GRAY;
     }
 
-    this.tools.text.make(20, 135, 'Charges: ', 50);
+    let label =this.tools.text.make(20, 135, 'Charges: ', 50);
     this.chargesText = this.tools.text.make(280, 135, `${this.charges}`, 50);
+
+    this.tools.tween.appear(label);
+    this.tools.tween.appear(this.chargesText );
+    
     this.gameboardConfig.chargeSignal.add(
       function() {
         this.useCharge();

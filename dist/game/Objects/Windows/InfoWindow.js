@@ -14,9 +14,8 @@ var Window_1 = require("./Window");
 var Config_1 = require("./../../Config/Config");
 var InfoWindow = (function (_super) {
     __extends(InfoWindow, _super);
-    function InfoWindow(character, y, pressAnyKey, window) {
+    function InfoWindow(character, y, window) {
         if (y === void 0) { y = 300; }
-        if (pressAnyKey === void 0) { pressAnyKey = true; }
         if (window === void 0) { window = Window_1.default.DEFAULT_WINDOW; }
         var _this = _super.call(this, window) || this;
         var group = _this.tools.misc.addGroup();
@@ -33,10 +32,6 @@ var InfoWindow = (function (_super) {
             var text4 = _this.tools.text.makeXBoundedOptions(textY, character.power.requeriments, 35, 'left', 850, 70, -5, Config_1.ColorSettings.ALT_TEXT);
             group.add(text3);
             group.add(text4);
-        }
-        if (pressAnyKey) {
-            var press = _this.tools.text.makeXBounded(y + 550, 'Press any key to continue.', 50, 'center', Config_1.ColorSettings.PRIMARY);
-            group.add(press);
         }
         _this.init(group);
         return _this;

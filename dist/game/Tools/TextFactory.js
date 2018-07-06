@@ -38,6 +38,9 @@ var TextFactory = (function (_super) {
         if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
         if (padX === void 0) { padX = 0; }
         if (padY === void 0) { padY = 0; }
+        if (color === null) {
+            color = Config_1.ColorSettings.TEXT;
+        }
         var colorString = this.getColor(color);
         var x = this.config.safeZone.paddingX + padX + posX * this.config.scaleFactor;
         var y = this.config.safeZone.paddingY + padY + posY * this.config.scaleFactor;

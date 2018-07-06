@@ -33,8 +33,8 @@ var Window = (function (_super) {
         this.background.addChild(rect);
         this.tools.misc.bringToTop(rect);
         this.background.alpha = 0;
-        this.showTween = this.tools.misc.tweenTo(this.background, { alpha: 1 });
-        this.hideTween = this.tools.misc.tweenTo(this.background, { alpha: 0 });
+        this.showTween = this.tools.tween.to(this.background, { alpha: 1 });
+        this.hideTween = this.tools.tween.to(this.background, { alpha: 0 });
     };
     Window.prototype.show = function () {
         this.showTween.start();
@@ -76,8 +76,8 @@ var Window = (function (_super) {
     };
     Window.prototype.destroy = function () {
         this.background.destroy(true);
-        this.tools.misc.removeTween(this.showTween);
-        this.tools.misc.removeTween(this.hideTween);
+        this.tools.tween.remove(this.showTween);
+        this.tools.tween.remove(this.hideTween);
     };
     Window.DEFAULT_WINDOW = 1;
     Window.DEFAULT_HIDE_BACKGROUND = 2;

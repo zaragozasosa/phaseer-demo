@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseAction_1 = require("./BaseAction");
 var Reader_1 = require("./../Reader");
+var Config_1 = require("./../../../Config/Config");
 var TextAction = (function (_super) {
     __extends(TextAction, _super);
     function TextAction(parameters) {
@@ -26,7 +27,7 @@ var TextAction = (function (_super) {
     }
     TextAction.prototype.play = function () {
         this.wordIndex = 0;
-        this.text = this.tools.text.makeXBounded(670, '', 45, 'left');
+        this.text = this.tools.text.makeXBounded(670, '', 40, 'left', Config_1.ColorSettings.ALT_TEXT, true);
         this.words = this.content.split(' ');
         this.nextWord();
     };

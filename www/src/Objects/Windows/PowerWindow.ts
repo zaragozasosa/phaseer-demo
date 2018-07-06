@@ -17,7 +17,7 @@ export default class PowerWindow extends Window {
     }
     this.init(elements, sprites);
     this.sprites.alpha = 0;
-    let spritesTween = this.tools.misc.tweenTo(this.sprites, { alpha: 1 }, 300);
+    let spritesTween = this.tools.tween.to(this.sprites, { alpha: 1 }, 300);
     this.showTween.chain(spritesTween);
 
     let message = this.tools.text.makeXBounded(

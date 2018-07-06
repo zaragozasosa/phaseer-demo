@@ -34,18 +34,18 @@ var GridTile = (function (_super) {
         _this.sprite = _this.createSprite();
         _this.group = _this.tools.misc.addGroup();
         _this.sprite.anchor.setTo(0, 0);
-        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 35);
+        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 45);
         _this.group.addChild(_this.sprite);
         _this.group.addChild(_this.number);
         _this.group.addChild(_this.frame);
         _this.group.alpha = 0;
         _this.group.angle = 0;
-        var misc = _this.tools.misc;
-        var t1 = misc.tweenTo(_this.group, { alpha: 0.3 }, 100);
-        var t2 = misc.tweenTo(_this.group, { alpha: 1 }, 300);
+        var tween = _this.tools.tween;
+        var t1 = tween.to(_this.group, { alpha: 0.3 }, 150);
+        var t2 = tween.to(_this.group, { alpha: 1 }, 350);
         _this.mergeTween = t1.chain(t2);
-        _this.randomizeTween = _this.tools.misc.tweenTo(_this.sprite, { angle: 360 }, 500);
-        _this.ghostTween = misc.tweenTo(_this.group, { alpha: 0.3 }, 1000, false, 0, 'Linear', -1, true);
+        _this.randomizeTween = _this.tools.tween.to(_this.sprite, { angle: 360 }, 500);
+        _this.ghostTween = tween.blink(_this.group);
         if (ghost) {
             _this.group.alpha = 1;
             _this.ghostCooldown = ghostCooldown;
@@ -53,7 +53,7 @@ var GridTile = (function (_super) {
             _this.ghostTween.start();
         }
         else {
-            misc.tweenTo(_this.group, { alpha: 1 }, 500, true);
+            tween.appear(_this.group);
         }
         _this.sprite.inputEnabled = true;
         _this.sprite.events.onInputDown.add(function () {

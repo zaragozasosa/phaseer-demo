@@ -34,8 +34,8 @@ export default class Window extends Base {
     this.background.addChild(rect);
     this.tools.misc.bringToTop(rect);
     this.background.alpha = 0;
-    this.showTween = this.tools.misc.tweenTo(this.background, { alpha: 1 });
-    this.hideTween = this.tools.misc.tweenTo(this.background, { alpha: 0 });
+    this.showTween = this.tools.tween.to(this.background, { alpha: 1 });
+    this.hideTween = this.tools.tween.to(this.background, { alpha: 0 });
   }
 
   show() {
@@ -83,7 +83,7 @@ export default class Window extends Base {
 
   protected destroy() {
     this.background.destroy(true);
-    this.tools.misc.removeTween(this.showTween);
-    this.tools.misc.removeTween(this.hideTween);
+    this.tools.tween.remove(this.showTween);
+    this.tools.tween.remove(this.hideTween);
   }
 }

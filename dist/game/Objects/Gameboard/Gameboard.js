@@ -118,12 +118,12 @@ var Gameboard = (function (_super) {
         if (win) {
             this.wonGame = true;
             this.showGameOverWindow(win, function () {
-                this.tools.misc.changeState('Story', this.gameboardConfig, false);
+                this.tools.misc.transitionToState(this.gameboardConfig, 'Story', this.gameboardConfig, false);
             }.bind(this));
         }
         else {
             this.showGameOverWindow(win, function () {
-                this.tools.misc.changeState('CharacterSelection');
+                this.tools.misc.transitionToState(this.gameboardConfig, 'CharacterSelection', true);
             }.bind(this));
         }
     };
@@ -145,7 +145,7 @@ var Gameboard = (function (_super) {
         if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
         if (delay === void 0) { delay = 1500; }
         var text = this.tools.text.makeXBounded(650, message, size, 'center', color, true);
-        this.tools.misc.tweenVanishAndDestroy(text, { alpha: 0 }, delay, 'Linear', true, delay);
+        this.tools.tween.vanishAndDestroy(text, { alpha: 0 }, delay, 'Linear', delay);
     };
     Gameboard.prototype.toggleButton = function (buttonStatus) {
         if (this.gameOver) {
@@ -166,8 +166,7 @@ var Gameboard = (function (_super) {
     };
     Gameboard.prototype.addHeader = function () {
         this.header = this.tools.text.make(20, 20, '', 50);
-        this.header.alpha = 0;
-        this.tools.misc.tweenTo(this.header, { alpha: 1 }, 500, true);
+        this.tools.tween.appear(this.header);
         this.updateHeader();
     };
     Gameboard.prototype.addMenuButton = function () {
@@ -178,8 +177,7 @@ var Gameboard = (function (_super) {
                 this.pausetoggle();
             }
         }.bind(this));
-        menu.alpha = 0;
-        this.tools.misc.tweenTo(menu, { alpha: 1 }, 500, true);
+        this.tools.tween.appear(menu);
     };
     Gameboard.prototype.addPowerButton = function () {
         this.actionButton = this.tools.button.make(310, 1250, ['power'], function () {
@@ -189,8 +187,7 @@ var Gameboard = (function (_super) {
         }.bind(this), 1.5);
         this.actionButton.inputEnabled = false;
         this.actionButton.tint = Phaser.Color.GRAY;
-        this.actionButton.alpha = 0;
-        this.tools.misc.tweenTo(this.actionButton, { alpha: 1 }, 500, true);
+        this.tools.tween.appear(this.actionButton);
     };
     Gameboard.prototype.updateScore = function (addToMovement) {
         if (addToMovement === void 0) { addToMovement = true; }
@@ -205,13 +202,17 @@ var Gameboard = (function (_super) {
     };
     Gameboard.prototype.addTimer = function () {
         this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-        this.timer = this.tools.misc.createTimer();
-        this.timer.start();
+        this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function () {
+            this.timer = this.tools.misc.createTimer();
+            this.timer.start();
+        }.bind(this));
     };
     Gameboard.prototype.updateTimer = function () {
-        var min = Math.floor(this.timer.seconds / 60);
-        var sec = Math.floor(this.timer.seconds - min * 60);
-        this.timerMessage.setText("Time: " + this.num(min) + ":" + this.num(sec));
+        if (this.timer) {
+            var min = Math.floor(this.timer.seconds / 60);
+            var sec = Math.floor(this.timer.seconds - min * 60);
+            this.timerMessage.setText("Time: " + this.num(min) + ":" + this.num(sec));
+        }
     };
     Gameboard.prototype.num = function (n) {
         return n > 9 ? '' + n : '0' + n;
@@ -226,7 +227,7 @@ var Gameboard = (function (_super) {
             this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
                 this.pausetoggle();
             }.bind(this), function () {
-                this.tools.misc.changeState('Boot');
+                this.tools.misc.hardTransition(this.gameboardConfig, 'Boot', this.tools.audio);
             }.bind(this));
             this.isPaused = true;
             this.timer.pause();

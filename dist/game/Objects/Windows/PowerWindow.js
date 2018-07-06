@@ -28,7 +28,7 @@ var PowerWindow = (function (_super) {
         }
         _this.init(elements, sprites);
         _this.sprites.alpha = 0;
-        var spritesTween = _this.tools.misc.tweenTo(_this.sprites, { alpha: 1 }, 300);
+        var spritesTween = _this.tools.tween.to(_this.sprites, { alpha: 1 }, 300);
         _this.showTween.chain(spritesTween);
         var message = _this.tools.text.makeXBounded(y + 350, character.power.name + '!', 60, 'center', Config_1.ColorSettings.PRIMARY);
         elements.add(message);

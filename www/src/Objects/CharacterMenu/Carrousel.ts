@@ -25,6 +25,9 @@ export default class Carrousel extends Base {
     super();
     array.unshift(array.pop());
     array.unshift(array.pop());
+    array.unshift(array.pop());
+    array.unshift(array.pop());
+
     this.array = array;
     this.callback = callback;
     this.spriteArray = [];
@@ -113,24 +116,13 @@ export default class Carrousel extends Base {
     this.spriteArray[4].tint = Phaser.Color.WHITE;
     this.spriteArray[5].tint = Phaser.Color.WHITE;
 
-    this.leftBlink = this.tools.misc.tweenLoop(
-      this.spriteArray[4],
-      { alpha: 0.4 },
-      { alpha: 1 },
-      1000,
-      1000
+    this.leftBlink = this.tools.tween.blinkStart(
+      this.spriteArray[4]
     );
 
-    this.rightBlink = this.tools.misc.tweenLoop(
-      this.spriteArray[5],
-      { alpha: 0.4 },
-      { alpha: 1 },
-      1000,
-      1000
+    this.rightBlink = this.tools.tween.blinkStart(
+      this.spriteArray[5]
     );
-
-    this.rightBlink.start();
-    this.leftBlink.start();
   }
 
   private moveLeft() {
@@ -142,11 +134,11 @@ export default class Carrousel extends Base {
       sprite.body.moveTo(200, this.distance, Phaser.ANGLE_LEFT);
     }.bind(this));
 
-    this.tools.misc.tweenTo(this.spriteArray[8], { alpha: 1 }, 50, true, 100);
-    this.tools.misc.tweenTo(this.spriteArray[9], { alpha: 1 }, 100, true, 200);
+    this.tools.tween.to(this.spriteArray[8], { alpha: 1 }, 50, true, null, 100);
+    this.tools.tween.to(this.spriteArray[9], { alpha: 1 }, 100, true, null, 200);
 
-    this.tools.misc.tweenTo(this.spriteArray[2], { alpha: 0 }, 25, true);
-    this.tools.misc.tweenTo(this.spriteArray[3], { alpha: 0 }, 100, true);
+    this.tools.tween.to(this.spriteArray[2], { alpha: 0 }, 25, true);
+    this.tools.tween.to(this.spriteArray[3], { alpha: 0 }, 100, true);
 
     this.tools.misc.runLater(200, function () {
       this.isAnimating = false;
@@ -157,18 +149,18 @@ export default class Carrousel extends Base {
   }
 
   private moveRight() {
-    this.tools.misc.removeTween(this.rightBlink);
-    this.tools.misc.removeTween(this.leftBlink);
+    this.tools.tween.remove(this.rightBlink);
+    this.tools.tween.remove(this.leftBlink);
     this.isAnimating = true;
 
     this.spritesGroup.forEach(function (sprite: Phaser.Sprite) {
       sprite.body.moveTo(200, this.distance, Phaser.ANGLE_RIGHT);
     }.bind(this));
-    this.tools.misc.tweenTo(this.spriteArray[1], { alpha: 1 }, 50, true, 100);
-    this.tools.misc.tweenTo(this.spriteArray[0], { alpha: 1 }, 100, true, 200);
+    this.tools.tween.to(this.spriteArray[1], { alpha: 1 }, 50, true, null, 100);
+    this.tools.tween.to(this.spriteArray[0], { alpha: 1 }, 100, true, null, 200);
 
-    this.tools.misc.tweenTo(this.spriteArray[6], { alpha: 0 }, 100, true);
-    this.tools.misc.tweenTo(this.spriteArray[7], { alpha: 0 }, 25, true);
+    this.tools.tween.to(this.spriteArray[6], { alpha: 0 }, 100, true);
+    this.tools.tween.to(this.spriteArray[7], { alpha: 0 }, 25, true);
 
 
     this.tools.misc.runLater(200, function () {

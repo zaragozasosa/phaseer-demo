@@ -19,10 +19,17 @@ var CharacterSelection = (function (_super) {
     function CharacterSelection() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    CharacterSelection.prototype.init = function (playTrack) {
+        if (playTrack === void 0) { playTrack = false; }
+        this.playTrack = playTrack;
+    };
     CharacterSelection.prototype.preload = function () {
         var singleton = Config_1.Singleton.get();
         var config = singleton.config;
         this.tools = singleton.tools;
+        if (this.playTrack) {
+            this.tools.audio.play('title-bgm', true);
+        }
         this.gameboardConfig = new GameboardConfig_1.default();
         this.inputManager = new InputManager_1.default(config);
         for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
@@ -62,10 +69,10 @@ var CharacterSelection = (function (_super) {
         var selected = this.gameboardConfig.getTileModel(this.characterMenu.selectedId);
         this.gameboardConfig.mainTile = selected;
         this.tools.audio.playCharacterSound(selected);
-        this.state.start('Story', true, false, this.gameboardConfig);
+        this.tools.misc.transitionToState(this.gameboardConfig, 'Story', this.gameboardConfig);
     };
     CharacterSelection.prototype.returnToMainMenu = function () {
-        this.state.start('Boot');
+        this.tools.misc.transitionToState(this.gameboardConfig, 'Boot');
     };
     return CharacterSelection;
 }(Phaser.State));

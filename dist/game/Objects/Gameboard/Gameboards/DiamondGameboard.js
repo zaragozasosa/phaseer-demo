@@ -31,10 +31,8 @@ var DiamondGameboard = (function (_super) {
         this.diamonds = this.diamondModel.requiredDiamonds;
         this.diamondSprite = this.tools.sprite.createSprite(20, 150, this.diamondModel.id, this.diamondModel.scale, this.diamondModel.paddingX);
         this.diamondText = this.tools.text.make(100, 155, ": " + this.diamonds, 50);
-        this.diamondSprite.alpha = 0;
-        this.diamondText.alpha = 0;
-        this.tools.misc.tweenTo(this.diamondSprite, { alpha: 1 }, 500, true);
-        this.tools.misc.tweenTo(this.diamondText, { alpha: 1 }, 500, true);
+        this.tools.tween.appear(this.diamondSprite);
+        this.tools.tween.appear(this.diamondText);
         if (this.diamondModel.cooldown) {
             this.gameboardConfig.cooldownSignal.add(function () {
                 this.showMessage(this.diamondModel.endText, 65);

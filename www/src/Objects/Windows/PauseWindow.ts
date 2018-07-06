@@ -14,7 +14,7 @@ export default class PauseWindow extends InfoWindow {
     quitCallback: any,
     y = 200
   ) {
-    super(character, 350, false, Window.DEFAULT_HIDE_BACKGROUND);
+    super(character, 350, Window.DEFAULT_HIDE_BACKGROUND);
     let text = this.tools.text.makeXBounded(
       y + 40,
       '- PAUSE -',

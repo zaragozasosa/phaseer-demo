@@ -29,9 +29,9 @@ var MenuObject = (function (_super) {
         }
         this.text = this.tools.text.makeXBounded(positionY, this.label, size, 'center', Config_1.ColorSettings.TEXT, true);
         this.text.alpha = 0;
-        var tween = this.tools.misc.tweenTo(this.text, { alpha: 1 }, 500);
+        var tween = this.tools.tween.to(this.text, { alpha: 1 }, 500);
         tween.onComplete.addOnce(function () {
-            this.tools.misc.removeTween(tween);
+            this.tools.tween.remove(tween);
         }.bind(this));
         tween.start();
         if (this.actionCallback) {

@@ -44,12 +44,13 @@ var GameboardLoader = (function (_super) {
     };
     GameboardLoader.prototype.create = function () {
         this.preloadBar.kill();
-        this.tools.audio.stopBgm();
+        var press = this.tools.text.makeXBounded(850, 'Press any key to continue.', 50, 'center', Config_1.ColorSettings.PRIMARY);
+        this.tools.tween.blinkStart(press);
     };
     GameboardLoader.prototype.update = function () {
         if (this.cursor.checkClick() || this.cursor.checkKeys()) {
             this.tools.audio.play('game-bgm', true);
-            this.state.start('Unranked', true, false, this.gameboardConfig);
+            this.tools.misc.changeState('Unranked', this.gameboardConfig);
         }
     };
     return GameboardLoader;

@@ -87,20 +87,20 @@ export default class CharacterMenu extends Base {
 
     if (changePage) {
       this.rightSprite.alpha = 0;
-      this.tools.misc.tweenTo(this.rightSprite, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.rightSprite, { alpha: 1 }, 300, true);
       this.leftSprite.alpha = 0;
-      this.tools.misc.tweenTo(this.leftSprite, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.leftSprite, { alpha: 1 }, 300, true);
 
       this.selectedName.alpha = 0;
-      this.tools.misc.tweenTo(this.selectedName, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.selectedName, { alpha: 1 }, 300, true);
       this.selectedFullName.alpha = 0;
-      this.tools.misc.tweenTo(this.selectedFullName, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.selectedFullName, { alpha: 1 }, 300, true);
       this.selectedPower.alpha = 0;
-      this.tools.misc.tweenTo(this.selectedPower, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.selectedPower, { alpha: 1 }, 300, true);
       this.selectedSummary.alpha = 0;
-      this.tools.misc.tweenTo(this.selectedSummary, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.selectedSummary, { alpha: 1 }, 300, true);
       this.specialLabel.alpha = 0;
-      this.tools.misc.tweenTo(this.specialLabel, { alpha: 1 }, 300, true);
+      this.tools.tween.to(this.specialLabel, { alpha: 1 }, 300, true);
     }
 
     this.selectedCharacter = char;

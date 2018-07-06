@@ -53,7 +53,7 @@ export default class GridTile extends Base {
       this.posX,
       this.posY,
       this.value,
-      35
+      45
     );
 
     this.group.addChild(this.sprite);
@@ -63,29 +63,16 @@ export default class GridTile extends Base {
     this.group.alpha = 0;
     this.group.angle = 0;
 
-    let misc = this.tools.misc;
+    let tween = this.tools.tween;
 
-    let t1 = misc.tweenTo(this.group, { alpha: 0.3 }, 100);
-    let t2 = misc.tweenTo(this.group, { alpha: 1 }, 300);
+    let t1 = tween.to(this.group, { alpha: 0.3 }, 150);
+    let t2 = tween.to(this.group, { alpha: 1 }, 350);
 
     this.mergeTween = t1.chain(t2);
 
-    this.randomizeTween = this.tools.misc.tweenTo(
-      this.sprite,
-      { angle: 360 },
-      500
-    );
+    this.randomizeTween = this.tools.tween.to(this.sprite, { angle: 360 }, 500);
 
-    this.ghostTween = misc.tweenTo(
-      this.group,
-      { alpha: 0.3 },
-      1000,
-      false,      
-      0,
-      'Linear',
-      -1,
-      true
-    );
+    this.ghostTween = tween.blink(this.group);
 
     if (ghost) {
       this.group.alpha = 1;
@@ -93,12 +80,12 @@ export default class GridTile extends Base {
       this.ghostTurns = 0;
       this.ghostTween.start();
     } else {
-      misc.tweenTo(this.group, { alpha: 1 }, 500, true);
+      tween.appear(this.group);
     }
 
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputDown.add(
-      function () {
+      function() {
         this.gameboardConfig.clickTileSignal.dispatch(this);
       }.bind(this)
     );
@@ -142,7 +129,7 @@ export default class GridTile extends Base {
       this.tools.misc.overlap(
         this.sprite,
         groupItem.getBottom(),
-        function (s: Phaser.Sprite, g: Phaser.Sprite) {
+        function(s: Phaser.Sprite, g: Phaser.Sprite) {
           if (s && g) {
             if (s.key === g.key) {
               return false;
@@ -163,7 +150,7 @@ export default class GridTile extends Base {
     this.tools.misc.overlap(
       this.sprite,
       wallsGroup,
-      function (a: any, b: any) {
+      function(a: any, b: any) {
         if (a && b) {
           let velocity = this.sprite.body.velocity;
           if (velocity.x || velocity.y) {
@@ -293,7 +280,7 @@ export default class GridTile extends Base {
     this.sprite.position.y += this.sprite.height / 2;
 
     this.randomizeTween.start().onComplete.add(
-      function () {
+      function() {
         this.sprite.anchor.setTo(0, 0);
         this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
       }.bind(this)

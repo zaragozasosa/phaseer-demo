@@ -26,14 +26,17 @@ var Story = (function (_super) {
     Story.prototype.create = function () {
         var config = Config_1.Singleton.get().config;
         var tools = Config_1.Singleton.get().tools;
+        this.tools = tools;
         this.cursor = new InputManager_1.default(config);
         tools.graphic.addBackground();
-        var list = this.isFirstStory ? this.gameboardConfig.mainTile.getFirstStory() : this.gameboardConfig.mainTile.getSecondStory();
+        var list = this.isFirstStory
+            ? this.gameboardConfig.mainTile.getFirstStory()
+            : this.gameboardConfig.mainTile.getSecondStory();
         this.reader = new TwoSpritesReader_1.default(list, function () {
             this.continue();
         }.bind(this));
         this.reader.start();
-        var skip = tools.text.make(700, 1200, 'Skip', 50);
+        var skip = tools.text.makeStroked(680, 1250, 'Skip', 90);
         skip.inputEnabled = true;
         skip.events.onInputDown.addOnce(function () {
             this.continue();
@@ -52,10 +55,11 @@ var Story = (function (_super) {
     };
     Story.prototype.continue = function () {
         if (this.isFirstStory) {
-            this.state.start('GameboardLoader', true, false, this.gameboardConfig);
+            this.tools.misc.hardTransition(this.gameboardConfig, 'GameboardLoader', this.tools.audio, this.gameboardConfig);
         }
         else {
-            this.state.start('Boot');
+            this.tools.audio.stopBgm();
+            this.tools.misc.hardTransition(this.gameboardConfig, 'Boot', this.tools.audio);
         }
     };
     return Story;

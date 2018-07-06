@@ -41,6 +41,8 @@ export default class WinWindow extends Window {
       ColorSettings.TEXT
     );
 
+    this.tools.tween.blinkStart(cont);
+
     elements.add(cont);
     this.init(elements, sprites);
     this.show();

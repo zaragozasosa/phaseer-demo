@@ -11,11 +11,20 @@ export default class CharacterSelection extends Phaser.State {
   inputManager: InputManager;
   preloadBar: Phaser.Sprite;
   characterMenu: CharacterMenu;
+  playTrack: boolean;
+
+  init(playTrack = false) {
+    this.playTrack = playTrack;
+  }
 
   preload() {
     let singleton = Singleton.get();
     let config = singleton.config;
     this.tools = singleton.tools;
+
+    if (this.playTrack) {
+      this.tools.audio.play('title-bgm', true);
+    }
 
     this.gameboardConfig = new GameboardConfig();
     this.inputManager = new InputManager(config);
@@ -66,13 +75,21 @@ export default class CharacterSelection extends Phaser.State {
   }
 
   gameStart() {
-    let selected = this.gameboardConfig.getTileModel(this.characterMenu.selectedId);
+    let selected = this.gameboardConfig.getTileModel(
+      this.characterMenu.selectedId
+    );
     this.gameboardConfig.mainTile = selected;
     this.tools.audio.playCharacterSound(selected);
-    this.state.start('Story', true, false, this.gameboardConfig);
+
+    
+    this.tools.misc.transitionToState(
+      this.gameboardConfig,
+      'Story',
+      this.gameboardConfig
+    );
   }
 
   returnToMainMenu() {
-    this.state.start('Boot');    
+    this.tools.misc.transitionToState(this.gameboardConfig, 'Boot');
   }
 }

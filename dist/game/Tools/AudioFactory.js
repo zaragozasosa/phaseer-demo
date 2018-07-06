@@ -37,19 +37,32 @@ var AudioFactory = (function (_super) {
             }
         }.bind(this));
     };
+    AudioFactory.prototype.playIfSilent = function (id, loop) {
+        if (loop === void 0) { loop = false; }
+        var config = this.config.sound;
+        if (!config.bgm || !config.bgm.isPlaying) {
+            config.bgm = this.game.add.audio(id);
+            config.bgm.play('', 0, config.bgmVolume, loop);
+        }
+    };
     AudioFactory.prototype.play = function (id, loop) {
         if (loop === void 0) { loop = false; }
         var config = this.config.sound;
-        if (config.bgm) {
-            config.bgm.stop();
-            config.bgm.destroy();
+        if (config.bgm && config.bgm.isPlaying) {
+            config.bgm.fadeOut(1000);
+            config.bgm.onFadeComplete.addOnce(function () {
+                config.bgm.destroy(true);
+                config.bgm = null;
+                this.play(id, loop);
+            }.bind(this));
+            return;
         }
-        var music = this.game.add.audio(id);
-        config.bgm = music.play('', 0, config.bgmVolume, loop);
+        config.bgm = this.game.add.audio(id);
+        config.bgm.play('', 0, config.bgmVolume, loop);
     };
     AudioFactory.prototype.stopBgm = function () {
         var config = this.config.sound;
-        config.bgm.stop();
+        config.bgm.fadeOut(1000);
     };
     AudioFactory.prototype.changeAudioLevel = function (sprite) {
         if (sprite === void 0) { sprite = null; }

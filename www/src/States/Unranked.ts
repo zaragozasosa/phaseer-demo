@@ -7,14 +7,7 @@ export default class Unranked extends Phaser.State {
 
   init(gameboardConfig: GameboardConfig) {
     this.gameboard = GameboardFactory.create(gameboardConfig);
-
-    this.game.time.events.add(
-      50,
-      function() {
-        this.gameboard.start();
-      }.bind(this)
-    );
-
+    this.gameboard.start();
   }
 
   update() {

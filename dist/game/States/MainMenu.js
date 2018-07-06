@@ -26,7 +26,7 @@ var MainMenu = (function (_super) {
         this.cursor = new InputManager_1.default(this.config);
         this.started = false;
         tools.graphic.addBackground();
-        tools.audio.play('title-bgm', true);
+        tools.audio.playIfSilent('title-bgm', true);
         var menuList = new MenuList_1.default('Menu');
         menuList.addChild(new MenuObject_1.default('Start game', function () {
             this.menu.destroy();
@@ -39,8 +39,12 @@ var MainMenu = (function (_super) {
         options.addChild(tools.audio.makeVolumeMenuOption());
         menuList.addChild(options);
         this.menu = new Menu_1.default(menuList);
-        this.startText = tools.text.makeXBounded(700, 'Click to start', 70, 'center', Config_1.ColorSettings.TEXT);
-        this.logoPlaceholder = tools.text.makeXBounded(350, 'Logo goes here', 80, 'center', Config_1.ColorSettings.PRIMARY);
+        var startText = tools.text.makeXBounded(700, 'Press any key!', 60, 'center', Config_1.ColorSettings.TEXT);
+        tools.tween.blinkStart(startText);
+        this.startText = startText;
+        this.logoPlaceholder = tools.text.makeXBounded(100, 'Logo goes here', 80, 'center', Config_1.ColorSettings.PRIMARY);
+        this.logoPlaceholder.alpha = 0.5;
+        tools.tween.moveY(this.logoPlaceholder, 350, 5000, true, Phaser.Easing.Cubic.Out, { alpha: 1 });
     };
     MainMenu.prototype.update = function () {
         if (!this.started) {
