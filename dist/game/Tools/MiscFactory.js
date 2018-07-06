@@ -55,36 +55,6 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.cacheAddImage = function (key, data) {
         this.game.cache.addImage(key, '', data);
     };
-    MiscFactory.prototype.changeState = function (state) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        (_a = this.game.state).start.apply(_a, [state, true, false].concat(args));
-        var _a;
-    };
-    MiscFactory.prototype.transitionToState = function (gameboardConfig, state) {
-        var args = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            args[_i - 2] = arguments[_i];
-        }
-        this.changeState('Transition', gameboardConfig, function () {
-            this.changeState.apply(this, [state].concat(args));
-        }.bind(this));
-    };
-    MiscFactory.prototype.hardTransition = function (gameboardConfig, state, audio) {
-        var args = [];
-        for (var _i = 3; _i < arguments.length; _i++) {
-            args[_i - 3] = arguments[_i];
-        }
-        this.changeState('Transition', gameboardConfig, function () {
-            this.changeState.apply(this, [state].concat(args));
-        }.bind(this), true);
-    };
-    MiscFactory.prototype.restartState = function (params) {
-        if (params === void 0) { params = null; }
-        this.game.state.restart(true, false, params);
-    };
     return MiscFactory;
 }(Factory_1.default));
 exports.default = MiscFactory;

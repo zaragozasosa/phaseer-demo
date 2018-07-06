@@ -2,7 +2,7 @@ import InputManager from './../InputManager';
 import { Singleton, Tools } from './../Config/Config';
 import Reader from './../Objects/Storyboard/Reader';
 import TwoSpritesReader from './../Objects/Storyboard/TwoSpritesReader';
-
+import GameLoader from './../Loaders/GameLoader';
 import GameboardConfig from './../Config/GameboardConfig';
 
 export default class Story extends Phaser.State {
@@ -60,18 +60,16 @@ export default class Story extends Phaser.State {
 
   continue() {
     if (this.isFirstStory) {
-      this.tools.misc.hardTransition(
-        this.gameboardConfig,
+      this.tools.transition.toLoaderConfig(
         'GameboardLoader',
-        this.tools.audio,
-        this.gameboardConfig
+        this.gameboardConfig,
+        new GameLoader()
       );
     } else {
       this.tools.audio.stopBgm();
-      this.tools.misc.hardTransition(
+      this.tools.transition.toLoaderConfig(
+        'MainMenu',
         this.gameboardConfig,
-        'Boot',
-        this.tools.audio
       );
     }
   }

@@ -5,6 +5,8 @@ import GraphicsFactory from './../Tools/GraphicsFactory';
 import MiscFactory from './../Tools/MiscFactory';
 import AudioFactory from './../Tools/AudioFactory';
 import TweenFactory from './../Tools/TweenFactory';
+import TransitionFactory from './../Tools/TransitionFactory';
+
 
 
 export class Singleton {
@@ -159,6 +161,7 @@ export class Tools {
   private _misc: MiscFactory;
   private _audio: AudioFactory;
   private _tween: TweenFactory;
+  private _transition: TransitionFactory;
 
   constructor(config: Config) {
     this._text = new TextFactory(config);
@@ -168,6 +171,7 @@ export class Tools {
     this._misc = new MiscFactory(config);
     this._audio = new AudioFactory(config);
     this._tween = new TweenFactory(config);
+    this._transition = new TransitionFactory(config);
   }
 
   get text(): TextFactory {
@@ -196,5 +200,9 @@ export class Tools {
 
   get tween(): TweenFactory {
     return this._tween;
+  }
+  
+  get transition(): TransitionFactory {
+    return this._transition;
   }
 }

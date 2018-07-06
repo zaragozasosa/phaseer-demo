@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var InputManager_1 = require("./../InputManager");
 var Config_1 = require("./../Config/Config");
+var CharacterSelectionLoader_1 = require("./../Loaders/CharacterSelectionLoader");
 var MenuList_1 = require("./../Objects/Menu/MenuList");
 var MenuObject_1 = require("./../Objects/Menu/MenuObject");
 var Menu_1 = require("./../Objects/Menu/Menu");
@@ -20,6 +21,9 @@ var MainMenu = (function (_super) {
     function MainMenu() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    MainMenu.prototype.init = function (gameboardConfig) {
+        this.gameboardConfig = gameboardConfig;
+    };
     MainMenu.prototype.create = function () {
         this.config = Config_1.Singleton.get().config;
         var tools = Config_1.Singleton.get().tools;
@@ -27,10 +31,11 @@ var MainMenu = (function (_super) {
         this.started = false;
         tools.graphic.addBackground();
         tools.audio.playIfSilent('title-bgm', true);
+        var loader = new CharacterSelectionLoader_1.default(this.gameboardConfig.tiles);
         var menuList = new MenuList_1.default('Menu');
-        menuList.addChild(new MenuObject_1.default('Start game', function () {
+        menuList.addChild(new MenuObject_1.default('Story mode', function () {
             this.menu.destroy();
-            this.game.state.start('CharacterSelection');
+            tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader);
         }.bind(this)));
         menuList.addChild(new MenuObject_1.default('Project site', function () {
             window.location.href = 'https://github.com/zaragozasosa/phaseer-demo';

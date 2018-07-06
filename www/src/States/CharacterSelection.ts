@@ -13,8 +13,9 @@ export default class CharacterSelection extends Phaser.State {
   characterMenu: CharacterMenu;
   playTrack: boolean;
 
-  init(playTrack = false) {
+  init(gameboardConfig: GameboardConfig, playTrack = false) {
     this.playTrack = playTrack;
+    this.gameboardConfig = gameboardConfig;
   }
 
   preload() {
@@ -26,26 +27,10 @@ export default class CharacterSelection extends Phaser.State {
       this.tools.audio.play('title-bgm', true);
     }
 
-    this.gameboardConfig = new GameboardConfig();
     this.inputManager = new InputManager(config);
-
-    for (let sprite of this.gameboardConfig.tiles) {
-      let path = `assets/images/${sprite.imagePath}`;
-      let specialPath = `assets/images/${sprite.specialImagePath}`;
-      let sfx = `assets/sfx/${sprite.sfxRoute}`;
-
-      this.load.image(sprite.id, path);
-      this.load.image(sprite.specialId, specialPath);
-      this.load.audio(sprite.sfxLabel, [sfx]);
-    }
-
-    this.load.image('random', 'assets/images/tiles/random.png');
-    this.preloadBar = this.tools.sprite.makeCentered(600, 'preloadBar', 2);
-    this.load.setPreloadSprite(this.preloadBar);
   }
 
   create() {
-    this.preloadBar.destroy();
     this.tools.graphic.addBackground();
     this.characterMenu = new CharacterMenu(this.gameboardConfig);
 
@@ -81,15 +66,13 @@ export default class CharacterSelection extends Phaser.State {
     this.gameboardConfig.mainTile = selected;
     this.tools.audio.playCharacterSound(selected);
 
-    
-    this.tools.misc.transitionToState(
-      this.gameboardConfig,
+    this.tools.transition.toLoaderConfig(
       'Story',
-      this.gameboardConfig
+      this.gameboardConfig,
     );
   }
 
   returnToMainMenu() {
-    this.tools.misc.transitionToState(this.gameboardConfig, 'Boot');
+    this.tools.transition.smoothLoaderConfig('MainMenu', this.gameboardConfig, null);
   }
 }

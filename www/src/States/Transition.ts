@@ -1,53 +1,43 @@
-import { Singleton, Config, Tools, ColorSettings } from './../Config/Config';
+import { Singleton, Tools } from './../Config/Config';
 import GameboardConfig from './../Config/GameboardConfig';
+import LoadingScreen from './../Objects/LoadingScreen';
 
 export default class Transition extends Phaser.State {
   private callback: any;
-	private gameboardConfig: GameboardConfig;
-	private stopTrack: boolean;
+  private gameboardConfig: GameboardConfig;
+  private stopTrack: boolean;
+  private loader: any;
+  private tools: Tools;
+  private timer: Phaser.Timer;
 
-  init(gameboardConfig: any, callback: any, stopTrack = false) {
+  init(gameboardConfig: any, callback: any, stopTrack = false, loader = null) {
     this.callback = callback;
-		this.gameboardConfig = gameboardConfig;
-		this.stopTrack = stopTrack;
+    this.gameboardConfig = gameboardConfig;
+    this.stopTrack = stopTrack;
+    this.loader = loader;
   }
 
-  create() {
+  preload() {
     let singleton = Singleton.get();
-    let tools = singleton.tools;
-    tools.graphic.addBackground();
+    this.tools = singleton.tools;
+    this.tools.graphic.addBackground();
+    this.timer = this.tools.misc.createTimer();
+    this.timer.start();
 
-		if(this.stopTrack) {
-			tools.audio.stopBgm();
-		}
-    for (let tile of this.gameboardConfig.tiles) {
-      let x = tools.misc.randomBetween(150, 750);
-      let y = tools.misc.randomBetween(150, 1400);
-
-      let x2 = tools.misc.randomBetween(150, 750);
-      let y2 = tools.misc.randomBetween(150, 1400);
-
-      let time = tools.misc.randomBetween(500, 1200);
-      let time2 = tools.misc.randomBetween(500, 1200);
-
-      let sprite = tools.sprite.createSprite(x, y, tile.id, 1);
-      let sprite2 = tools.sprite.createSprite(x2, y2, tile.specialId, 1);
-
-      sprite.alpha = 0;
-      sprite2.alpha = 0;
-
-      sprite.angle = tools.misc.randomBetween(0, 9) * 45;
-      sprite2.angle = tools.misc.randomBetween(0, 9) * 45;
-
-      tools.tween.blinkStart(sprite, 0, time);
-      tools.tween.blinkStart(sprite2, 0, time2);
+    if(this.loader) {
+      this.loader.loadResources(this.game.load);
     }
 
-    let t = tools.text.makeXBounded(400, 'Loading', 100, 'center', null, true);
+    if (this.stopTrack) {
+      this.tools.audio.stopBgm();
+    }
 
-    tools.misc.repeatEvent(500, 3, () => (t.text = t.text + '.'));
-    t.alpha = 0;
-    tools.tween.to(t, { alpha: 1 }, 500, true);
-    tools.misc.runLater(2000, () => this.callback());
+    new LoadingScreen(this.gameboardConfig);
+  }
+
+  update() {
+    if(this.timer.ms >= 1500) {
+      this.callback()
+    }
   }
 }

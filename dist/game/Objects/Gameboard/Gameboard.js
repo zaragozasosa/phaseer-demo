@@ -118,12 +118,12 @@ var Gameboard = (function (_super) {
         if (win) {
             this.wonGame = true;
             this.showGameOverWindow(win, function () {
-                this.tools.misc.transitionToState(this.gameboardConfig, 'Story', this.gameboardConfig, false);
+                this.tools.transition.toLoaderConfig('Story', this.gameboardConfig, null, false);
             }.bind(this));
         }
         else {
             this.showGameOverWindow(win, function () {
-                this.tools.misc.transitionToState(this.gameboardConfig, 'CharacterSelection', true);
+                this.tools.transition.restartState(this.gameboardConfig);
             }.bind(this));
         }
     };
@@ -137,7 +137,7 @@ var Gameboard = (function (_super) {
             new GameOverWindow_1.default(this.gameboardConfig.mainTile, function () {
                 callback();
             }.bind(this), function () {
-                this.tools.misc.changeState('Boot');
+                this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
             }.bind(this));
         }
     };
@@ -227,7 +227,7 @@ var Gameboard = (function (_super) {
             this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
                 this.pausetoggle();
             }.bind(this), function () {
-                this.tools.misc.hardTransition(this.gameboardConfig, 'Boot', this.tools.audio);
+                this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
             }.bind(this));
             this.isPaused = true;
             this.timer.pause();

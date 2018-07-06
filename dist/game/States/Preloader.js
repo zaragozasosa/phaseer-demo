@@ -11,6 +11,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("./../Config/Config");
+var GameboardConfig_1 = require("./../Config/GameboardConfig");
+var MainMenuLoader_1 = require("./../Loaders/MainMenuLoader");
 var Preloader = (function (_super) {
     __extends(Preloader, _super);
     function Preloader() {
@@ -19,24 +21,21 @@ var Preloader = (function (_super) {
     Preloader.prototype.preload = function () {
         var singleton = Config_1.Singleton.get();
         var tools = singleton.tools;
+        this.tools = tools;
         tools.graphic.addBackground();
+        this.gameboardConfig = new GameboardConfig_1.default();
         this.preloadBar = tools.sprite.makeCentered(600, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
-        this.game.load.audio('title-bgm', ['assets/audio/meet-the-cast.mp3']);
-        this.load.audio('beep', 'assets/sfx/beep.wav');
-        this.load.image('start-1', 'assets/images/start-1.png');
-        this.load.image('start-2', 'assets/images/start-2.png');
-        this.load.image('start-3', 'assets/images/start-3.png');
-        this.load.image('frame', 'assets/images/frame.png');
-        this.load.image('bullet', 'assets/images/bullet.png');
-        this.load.image('dice', 'assets/images/dice.png');
-        this.load.image('diamond', 'assets/images/diamond.png');
-        this.load.spritesheet('power', 'assets/images/power.png', 249, 93);
-        this.load.spritesheet('smith-sheet', 'assets/images/smith.png', 180, 180);
-        this.load.spritesheet('lily-sheet', 'assets/images/lily.png', 180, 180);
+        for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
+            var sprite = _a[_i];
+            var path = "assets/images/" + sprite.imagePath;
+            var specialPath = "assets/images/" + sprite.specialImagePath;
+            this.load.image(sprite.id, path);
+            this.load.image(sprite.specialId, specialPath);
+        }
     };
     Preloader.prototype.create = function () {
-        this.game.state.start('MainMenu');
+        this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig, new MainMenuLoader_1.default());
     };
     return Preloader;
 }(Phaser.State));

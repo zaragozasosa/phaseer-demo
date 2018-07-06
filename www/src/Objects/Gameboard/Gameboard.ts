@@ -42,21 +42,21 @@ export default abstract class Gameboard extends Base {
     this.wonGame = false;
     let updateScoreSignal = new Phaser.Signal();
     updateScoreSignal.add(
-      function(addToMovement) {
+      function (addToMovement) {
         this.updateScore(addToMovement);
       }.bind(this)
     );
 
     let toggleButtonSignal = new Phaser.Signal();
     toggleButtonSignal.add(
-      function(status) {
+      function (status) {
         this.toggleButton(status);
       }.bind(this)
     );
 
     let gameoverSignal = new Phaser.Signal();
     gameoverSignal.add(
-      function(win) {
+      function (win) {
         this.gameover(win);
       }.bind(this)
     );
@@ -144,11 +144,11 @@ export default abstract class Gameboard extends Base {
       this.wonGame = true;
       this.showGameOverWindow(
         win,
-        function() {
-          this.tools.misc.transitionToState(
-            this.gameboardConfig,
+        function () {
+          this.tools.transition.toLoaderConfig(
             'Story',
             this.gameboardConfig,
+            null,
             false
           );
         }.bind(this)
@@ -156,12 +156,8 @@ export default abstract class Gameboard extends Base {
     } else {
       this.showGameOverWindow(
         win,
-        function() {
-          this.tools.misc.transitionToState(
-            this.gameboardConfig,
-            'CharacterSelection',
-            true
-          );
+        function () {
+          this.tools.transition.restartState(this.gameboardConfig);
         }.bind(this)
       );
     }
@@ -171,18 +167,18 @@ export default abstract class Gameboard extends Base {
     if (win) {
       new WinWindow(
         this.gameboardConfig.mainTile,
-        function() {
+        function () {
           callback();
         }.bind(this)
       );
     } else {
       new GameOverWindow(
         this.gameboardConfig.mainTile,
-        function() {
+        function () {
           callback();
         }.bind(this),
-        function() {
-          this.tools.misc.changeState('Boot');
+        function () {
+          this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
         }.bind(this)
       );
     }
@@ -242,7 +238,7 @@ export default abstract class Gameboard extends Base {
     menu.inputEnabled = true;
 
     menu.events.onInputDown.add(
-      function() {
+      function () {
         if (!this.isPaused) {
           this.pausetoggle();
         }
@@ -257,7 +253,7 @@ export default abstract class Gameboard extends Base {
       310,
       1250,
       ['power'],
-      function() {
+      function () {
         if (!this.isPaused) {
           this.activatePower();
         }
@@ -286,14 +282,14 @@ export default abstract class Gameboard extends Base {
 
   private addTimer() {
     this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-    this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function() {
+    this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function () {
       this.timer = this.tools.misc.createTimer();
       this.timer.start();
     }.bind(this));
   }
 
   private updateTimer() {
-    if(this.timer) {
+    if (this.timer) {
       let min = Math.floor(this.timer.seconds / 60);
       let sec = Math.floor(this.timer.seconds - min * 60);
       this.timerMessage.setText(`Time: ${this.num(min)}:${this.num(sec)}`);
@@ -312,15 +308,11 @@ export default abstract class Gameboard extends Base {
     } else {
       this.pausedWindow = new PauseWindow(
         this.gameboardConfig.mainTile,
-        function() {
+        function () {
           this.pausetoggle();
         }.bind(this),
-        function() {
-          this.tools.misc.hardTransition(
-            this.gameboardConfig,
-            'Boot',
-            this.tools.audio
-          );
+        function () {
+          this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
         }.bind(this)
       );
       this.isPaused = true;
@@ -332,7 +324,7 @@ export default abstract class Gameboard extends Base {
     let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
     win.inputEnabled = true;
     win.events.onInputDown.addOnce(
-      function() {
+      function () {
         this.gameover(true);
       }.bind(this)
     );
@@ -340,7 +332,7 @@ export default abstract class Gameboard extends Base {
     let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
     lose.inputEnabled = true;
     lose.events.onInputDown.addOnce(
-      function() {
+      function () {
         this.gameover(false);
       }.bind(this)
     );

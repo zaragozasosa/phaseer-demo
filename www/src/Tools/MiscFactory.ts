@@ -1,5 +1,4 @@
 import Factory from './Base/Factory';
-import AudioFactory from './AudioFactory';
 
 export default class MiscFactory extends Factory {
   addGroup(name = undefined): Phaser.Group {
@@ -25,7 +24,7 @@ export default class MiscFactory extends Factory {
   runLater(time: number, functionToCall: any) {
     this.game.time.events.add(
       time,
-      function() {
+      function () {
         functionToCall();
       }.bind(this)
     );
@@ -35,7 +34,7 @@ export default class MiscFactory extends Factory {
     return this.game.time.events.repeat(
       time,
       numberOfCycles,
-      function() {
+      function () {
         functionToCall();
       }.bind(this)
     );
@@ -54,39 +53,5 @@ export default class MiscFactory extends Factory {
 
   cacheAddImage(key: string, data: any) {
     this.game.cache.addImage(key, '', data);
-  }
-
-  changeState(state: string, ...args) {
-    this.game.state.start(state, true, false, ...args);
-  }
-
-  transitionToState(gameboardConfig: any, state: string, ...args) {
-    this.changeState(
-      'Transition',
-      gameboardConfig,
-      function() {
-        this.changeState(state, ...args);
-      }.bind(this)
-    );
-  }
-
-  hardTransition(
-    gameboardConfig: any,
-    state: string,
-    audio: AudioFactory,
-    ...args
-  ) {
-    this.changeState(
-      'Transition',
-      gameboardConfig,
-      function() {
-        this.changeState(state, ...args);
-      }.bind(this),
-      true
-    );
-  }
-
-  restartState(params = null) {
-    this.game.state.restart(true, false, params);
   }
 }

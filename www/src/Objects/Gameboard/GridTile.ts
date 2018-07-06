@@ -80,7 +80,7 @@ export default class GridTile extends Base {
       this.ghostTurns = 0;
       this.ghostTween.start();
     } else {
-      tween.appear(this.group);
+      tween.appear(this.group, 750);
     }
 
     this.sprite.inputEnabled = true;

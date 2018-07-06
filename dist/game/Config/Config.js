@@ -7,6 +7,7 @@ var GraphicsFactory_1 = require("./../Tools/GraphicsFactory");
 var MiscFactory_1 = require("./../Tools/MiscFactory");
 var AudioFactory_1 = require("./../Tools/AudioFactory");
 var TweenFactory_1 = require("./../Tools/TweenFactory");
+var TransitionFactory_1 = require("./../Tools/TransitionFactory");
 var Singleton = (function () {
     function Singleton() {
     }
@@ -131,6 +132,7 @@ var Tools = (function () {
         this._misc = new MiscFactory_1.default(config);
         this._audio = new AudioFactory_1.default(config);
         this._tween = new TweenFactory_1.default(config);
+        this._transition = new TransitionFactory_1.default(config);
     }
     Object.defineProperty(Tools.prototype, "text", {
         get: function () {
@@ -177,6 +179,13 @@ var Tools = (function () {
     Object.defineProperty(Tools.prototype, "tween", {
         get: function () {
             return this._tween;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Tools.prototype, "transition", {
+        get: function () {
+            return this._transition;
         },
         enumerable: true,
         configurable: true

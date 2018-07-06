@@ -1,6 +1,7 @@
 import InputManager from './../InputManager';
 import { Singleton, ColorSettings, Config } from './../Config/Config';
-
+import GameboardConfig from './../Config/GameboardConfig';
+import CharacterSelectionLoader from './../Loaders/CharacterSelectionLoader';
 import MenuList from './../Objects/Menu/MenuList';
 import MenuObject from './../Objects/Menu/MenuObject';
 import Menu from './../Objects/Menu/Menu';
@@ -12,6 +13,11 @@ export default class MainMenu extends Phaser.State {
   private startText: Phaser.Text;
   private config: Config;
   private logoPlaceholder: Phaser.Text;
+  private gameboardConfig: GameboardConfig;
+
+  init(gameboardConfig: GameboardConfig) {
+    this.gameboardConfig = gameboardConfig;
+  }
 
   create() {
     this.config = Singleton.get().config;
@@ -21,13 +27,15 @@ export default class MainMenu extends Phaser.State {
     tools.graphic.addBackground();
     tools.audio.playIfSilent('title-bgm', true);
 
+    let loader = new CharacterSelectionLoader(this.gameboardConfig.tiles);
+    
     let menuList = new MenuList('Menu');
     menuList.addChild(
       new MenuObject(
-        'Start game',
-        function() {
+        'Story mode',
+        function () {
           this.menu.destroy();
-          this.game.state.start('CharacterSelection');
+          tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader);
         }.bind(this)
       )
     );
@@ -35,7 +43,7 @@ export default class MainMenu extends Phaser.State {
     menuList.addChild(
       new MenuObject(
         'Project site',
-        function() {
+        function () {
           window.location.href = 'https://github.com/zaragozasosa/phaseer-demo';
         }.bind(this)
       )

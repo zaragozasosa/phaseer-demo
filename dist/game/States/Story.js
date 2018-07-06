@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InputManager_1 = require("./../InputManager");
 var Config_1 = require("./../Config/Config");
 var TwoSpritesReader_1 = require("./../Objects/Storyboard/TwoSpritesReader");
+var GameLoader_1 = require("./../Loaders/GameLoader");
 var Story = (function (_super) {
     __extends(Story, _super);
     function Story() {
@@ -55,11 +56,11 @@ var Story = (function (_super) {
     };
     Story.prototype.continue = function () {
         if (this.isFirstStory) {
-            this.tools.misc.hardTransition(this.gameboardConfig, 'GameboardLoader', this.tools.audio, this.gameboardConfig);
+            this.tools.transition.toLoaderConfig('GameboardLoader', this.gameboardConfig, new GameLoader_1.default());
         }
         else {
             this.tools.audio.stopBgm();
-            this.tools.misc.hardTransition(this.gameboardConfig, 'Boot', this.tools.audio);
+            this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
         }
     };
     return Story;

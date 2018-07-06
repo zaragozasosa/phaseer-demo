@@ -53,7 +53,7 @@ var GridTile = (function (_super) {
             _this.ghostTween.start();
         }
         else {
-            tween.appear(_this.group);
+            tween.appear(_this.group, 750);
         }
         _this.sprite.inputEnabled = true;
         _this.sprite.events.onInputDown.add(function () {

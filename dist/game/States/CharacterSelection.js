@@ -10,7 +10,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var InputManager_1 = require("./../InputManager");
 var CharacterMenu_1 = require("./../Objects/CharacterMenu/CharacterMenu");
 var Config_1 = require("./../Config/Config");
@@ -19,9 +18,10 @@ var CharacterSelection = (function (_super) {
     function CharacterSelection() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CharacterSelection.prototype.init = function (playTrack) {
+    CharacterSelection.prototype.init = function (gameboardConfig, playTrack) {
         if (playTrack === void 0) { playTrack = false; }
         this.playTrack = playTrack;
+        this.gameboardConfig = gameboardConfig;
     };
     CharacterSelection.prototype.preload = function () {
         var singleton = Config_1.Singleton.get();
@@ -30,23 +30,9 @@ var CharacterSelection = (function (_super) {
         if (this.playTrack) {
             this.tools.audio.play('title-bgm', true);
         }
-        this.gameboardConfig = new GameboardConfig_1.default();
         this.inputManager = new InputManager_1.default(config);
-        for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
-            var sprite = _a[_i];
-            var path = "assets/images/" + sprite.imagePath;
-            var specialPath = "assets/images/" + sprite.specialImagePath;
-            var sfx = "assets/sfx/" + sprite.sfxRoute;
-            this.load.image(sprite.id, path);
-            this.load.image(sprite.specialId, specialPath);
-            this.load.audio(sprite.sfxLabel, [sfx]);
-        }
-        this.load.image('random', 'assets/images/tiles/random.png');
-        this.preloadBar = this.tools.sprite.makeCentered(600, 'preloadBar', 2);
-        this.load.setPreloadSprite(this.preloadBar);
     };
     CharacterSelection.prototype.create = function () {
-        this.preloadBar.destroy();
         this.tools.graphic.addBackground();
         this.characterMenu = new CharacterMenu_1.default(this.gameboardConfig);
         this.tools.button.make(675, 1290, ['start-1', 'start-2', 'start-3'], function () {
@@ -69,10 +55,10 @@ var CharacterSelection = (function (_super) {
         var selected = this.gameboardConfig.getTileModel(this.characterMenu.selectedId);
         this.gameboardConfig.mainTile = selected;
         this.tools.audio.playCharacterSound(selected);
-        this.tools.misc.transitionToState(this.gameboardConfig, 'Story', this.gameboardConfig);
+        this.tools.transition.toLoaderConfig('Story', this.gameboardConfig);
     };
     CharacterSelection.prototype.returnToMainMenu = function () {
-        this.tools.misc.transitionToState(this.gameboardConfig, 'Boot');
+        this.tools.transition.smoothLoaderConfig('MainMenu', this.gameboardConfig, null);
     };
     return CharacterSelection;
 }(Phaser.State));

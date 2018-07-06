@@ -20,7 +20,7 @@ export default class AudioFactory extends Factory {
 
     this.game.time.events.add(
       500,
-      function() {
+      function () {
         if (gameConfig.mainTile.friendId) {
           this.playCharacterSound(
             gameConfig.tiles.find(x => x.id === gameConfig.mainTile.friendId)
@@ -35,32 +35,32 @@ export default class AudioFactory extends Factory {
   playIfSilent(id: string, loop = false) {
     let config = this.config.sound;
     if (!config.bgm || !config.bgm.isPlaying) {
-      config.bgm = this.game.add.audio(id);
-      config.bgm.play('', 0, config.bgmVolume, loop);
+      this.play(id, loop);
     }
   }
 
   play(id: string, loop = false) {
     let config = this.config.sound;
     if (config.bgm && config.bgm.isPlaying) {
-      config.bgm.fadeOut(1000);
-      config.bgm.onFadeComplete.addOnce(
-        function() {
-          config.bgm.destroy(true);
-          config.bgm = null;
-          this.play(id, loop);
-        }.bind(this)
-      );
-      return;
+      config.bgm.destroy(true);
+      config.bgm = null;
     }
 
-    config.bgm = this.game.add.audio(id);
-    config.bgm.play('', 0, config.bgmVolume, loop);
+    config.bgm = this.game.add.audio(id + '-intro');
+    config.bgm.play('', 0 , config.bgmVolume).onStop.addOnce(
+      function() {
+        config.bgm = this.game.add.audio(id);
+        config.bgm.play('', 0 , config.bgmVolume, loop);
+      }.bind(this)
+    );
   }
 
   stopBgm() {
     let config = this.config.sound;
-    config.bgm.fadeOut(1000);
+    if (config.bgm) {
+      config.bgm.onStop.removeAll();
+      config.bgm.fadeOut(1000);
+    }
   }
 
   changeAudioLevel(sprite: Phaser.Sprite = null) {
@@ -116,7 +116,7 @@ export default class AudioFactory extends Factory {
 
     return new MenuObject(
       `Audio: ${audioTools.getAudioConfigLabel()}`,
-      function() {
+      function () {
         audioTools.changeAudioLevel();
         this.changeLabel(`Audio: ${audioTools.getAudioConfigLabel()}`);
       }
