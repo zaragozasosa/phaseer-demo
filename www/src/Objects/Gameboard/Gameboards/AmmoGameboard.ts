@@ -9,7 +9,6 @@ export default class AmmoGameboard extends Gameboard {
 
   start() {
     this.createGrid();
-
     this.gameboardConfig.updateAmmoSignal.add(
       function() {
         this.updateAmmo();
@@ -22,8 +21,7 @@ export default class AmmoGameboard extends Gameboard {
       return true;
     }
 
-    this.actionButton.kill();
-    let window = new PowerWindow(this.gameboardConfig.mainTile);
+    this.playerUI.activatePower();
     this.tools.audio.playTwoSounds(this.gameboardConfig);
     
     let response = this.grid.activatePower();

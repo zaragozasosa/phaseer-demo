@@ -109,28 +109,25 @@ export default class DiamondGameboard extends Gameboard {
       buttonStatus === GameboardConfig.BUTTON_ACTIVE &&
       this.diamonds >= this.diamondModel.requiredDiamonds
     ) {
-      this.actionButton.inputEnabled = true;
-      this.actionButton.tint = Phaser.Color.WHITE;
+      this.playerUI.toggleButton(buttonStatus);
     }
     if (
       buttonStatus === GameboardConfig.BUTTON_SLEEP &&
       this.diamonds >= this.diamondModel.requiredDiamonds
     ) {
-      this.actionButton.inputEnabled = false;
-      this.actionButton.tint = Phaser.Color.WHITE;
+      this.playerUI.toggleButton(buttonStatus);      
     } else if (buttonStatus === GameboardConfig.BUTTON_SLEEP_DISABLED) {
-      this.actionButton.inputEnabled = false;
-      this.actionButton.tint = Phaser.Color.GRAY;
+      this.playerUI.toggleButton(buttonStatus);      
     }
   }
 
   private toggleTimer(paused = true) {
     if (paused) {
       this.timer.pause();
-      this.timerMessage.tint = Phaser.Color.BLUE;
+      this.gameboardUI.changeTimerColor(Phaser.Color.BLUE);
     } else {
       this.timer.resume();
-      this.timerMessage.tint = Phaser.Color.WHITE;
+      this.gameboardUI.changeTimerColor(Phaser.Color.WHITE);
     }
   }
 }

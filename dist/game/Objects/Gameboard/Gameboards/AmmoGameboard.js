@@ -12,7 +12,6 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
 var AmmoModel_1 = require("./../../../Models/AmmoModel");
-var PowerWindow_1 = require("./../../Windows/PowerWindow");
 var AmmoBar_1 = require("./../AmmoBar");
 var AmmoGameboard = (function (_super) {
     __extends(AmmoGameboard, _super);
@@ -29,8 +28,7 @@ var AmmoGameboard = (function (_super) {
         if (this.gameOver) {
             return true;
         }
-        this.actionButton.kill();
-        var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
+        this.playerUI.activatePower();
         this.tools.audio.playTwoSounds(this.gameboardConfig);
         var response = this.grid.activatePower();
         if (response && response instanceof AmmoModel_1.default) {

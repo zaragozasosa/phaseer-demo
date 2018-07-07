@@ -42,15 +42,16 @@ export default class ReportedForRPLogic extends LogicalGrid {
   }
 
   protected add() {
+    let maxPosition = this.gameboardConfig.arraySize;
     if (!this.direction) {
+
       do {
-        var ranX = this.tools.misc.randomBetween(0, 3);
-        var ranY = this.tools.misc.randomBetween(0, 3);
+        var ranX = this.tools.misc.randomBetween(0, maxPosition);
+        var ranY = this.tools.misc.randomBetween(0, maxPosition);
       } while (this.get(ranX, ranY));
 
       this.makeNewTile(ranX, ranY);
     } else {
-      let maxPosition = this.gameboardConfig.arraySize;
       if (this.direction === Phaser.Keyboard.UP) {
         this.makeNewTileAround(null, 0, 1);
       } else if (this.direction === Phaser.Keyboard.DOWN) {

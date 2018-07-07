@@ -34,7 +34,8 @@ var GridTile = (function (_super) {
         _this.sprite = _this.createSprite();
         _this.group = _this.tools.misc.addGroup();
         _this.sprite.anchor.setTo(0, 0);
-        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 45);
+        var modeScale = _this.gameboardConfig.gameModeTileScale;
+        _this.number = _this.tools.text.makeTileNumber(_this.posX, _this.posY, _this.value, 50, modeScale);
         _this.group.addChild(_this.sprite);
         _this.group.addChild(_this.number);
         _this.group.addChild(_this.frame);
@@ -213,13 +214,14 @@ var GridTile = (function (_super) {
             this.nextTile.mergeTransform();
         }
         else {
+            var modeScale = this.gameboardConfig.gameModeTileScale;
             for (var _d = 0, _e = this.group.getAll(); _d < _e.length; _d++) {
                 var item = _e[_d];
                 if (item instanceof Phaser.Sprite) {
-                    this.tools.sprite.updateTile(this.posX, this.posY, item);
+                    this.tools.sprite.updateTile(this.posX, this.posY, item, modeScale);
                 }
                 if (item instanceof Phaser.Text) {
-                    this.tools.text.updateTileNumber(this.posX, this.posY, item);
+                    this.tools.text.updateTileNumber(this.posX, this.posY, item, modeScale);
                 }
             }
         }
@@ -234,8 +236,9 @@ var GridTile = (function (_super) {
         this.sprite.position.x += this.sprite.width / 2;
         this.sprite.position.y += this.sprite.height / 2;
         this.randomizeTween.start().onComplete.add(function () {
+            var scale = this.gameboardConfig.gameModeTileScale;
             this.sprite.anchor.setTo(0, 0);
-            this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
+            this.tools.sprite.updateTile(this.posX, this.posY, this.sprite, scale);
         }.bind(this));
     };
     GridTile.prototype.transform = function () {
@@ -252,13 +255,15 @@ var GridTile = (function (_super) {
     };
     GridTile.prototype.createSprite = function () {
         var tile = this.model;
-        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
+        var sca = this.gameboardConfig.gameModeTileScale;
+        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca);
         sprite.body.collideWorldBounds = true;
         return sprite;
     };
     GridTile.prototype.createFrame = function () {
+        var modeScale = this.gameboardConfig.gameModeTileScale;
         var tile = this.model;
-        var sprite = this.tools.sprite.makeFrame(this.posX, this.posY);
+        var sprite = this.tools.sprite.makeFrame(this.posX, this.posY, modeScale);
         sprite.body.collideWorldBounds = true;
         return sprite;
     };

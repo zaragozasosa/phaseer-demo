@@ -1,15 +1,15 @@
 import Factory from './Base/Factory';
 export default class SpriteFactory extends Factory {
-  makeFrame(x: number, y: number, paddingY = null, ratio = 1) {
+  makeFrame(x: number, y: number, modeScale = 1 ) {
     let settings = this.config.grid;
-    let size = settings.tileSize * ratio;
+    let size = settings.tileSize * modeScale
     let padX = settings.gridPaddingX;
-    let padY = paddingY ? paddingY : settings.gridPaddingY;
+    let padY = settings.gridPaddingY;
     let frame = this.createSprite(
       x * size,
       y * size,
       'frame',
-      ratio,
+      modeScale,
       padX,
       padY
     );
@@ -18,32 +18,37 @@ export default class SpriteFactory extends Factory {
     return frame;
   }
 
-  makeTile(x: number, y: number, id: string) {
+  makeTile(x: number, y: number, id: string, modeScale = 1) {
     let grid = this.config.grid;
-    let size = this.config.grid.tileSize;
-    let scale = this.config.grid.tileScale;
+    let size = this.config.grid.tileSize * modeScale;
+    let scale = this.config.grid.tileScale * modeScale;
     let padX = grid.gridPaddingX;
     let padY = grid.gridPaddingY;
     let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
-    //sprite.loadTexture(this.reverseTexture(sprite));
     return sprite;
   }
 
-  makeMenuTile(x: number, y: number, id: string, padX: number, padY: number, ratio: number) {
-    // ratio = ratio * 190 / 180;
+  makeMenuTile(
+    x: number,
+    y: number,
+    id: string,
+    padX: number,
+    padY: number,
+    ratio: number
+  ) {
     let size = this.config.grid.tileSize * ratio;
     let scale = this.config.grid.tileScale * ratio;
 
     return this.createSprite(x * size, y * size, id, scale, padX, padY);
   }
 
-  updateTile(x: number, y: number, sprite: Phaser.Sprite) {
+  updateTile(x: number, y: number, sprite: Phaser.Sprite, modeScale = 1) {
     let grid = this.config.grid;
 
-    let size = this.config.grid.tileSize;
-    let scale = this.config.grid.tileScale;
+    let size = this.config.grid.tileSize * modeScale;
+    let scale = this.config.grid.tileScale * modeScale;
     let xPad = grid.gridPaddingX;
     let yPad = grid.gridPaddingY;
 
@@ -61,7 +66,7 @@ export default class SpriteFactory extends Factory {
 
   makeCentered(y: number, id: string, spriteScale = 1) {
     let config = this.config;
-    let sprite = this.createSprite(0, y, id,spriteScale);
+    let sprite = this.createSprite(0, y, id, spriteScale);
 
     let x = (this.config.safeZone.safeWidth - sprite.width) / 2;
     sprite.x = config.safeZone.paddingX + x;

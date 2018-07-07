@@ -11,19 +11,19 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameboardFactory_1 = require("../Objects/Gameboard/GameboardFactory");
-var Unranked = (function (_super) {
-    __extends(Unranked, _super);
-    function Unranked() {
+var BossFight = (function (_super) {
+    __extends(BossFight, _super);
+    function BossFight() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Unranked.prototype.init = function (gameboardConfig) {
-        gameboardConfig.arraySize = gameboardConfig.defaultArraySize;
+    BossFight.prototype.init = function (gameboardConfig) {
+        gameboardConfig.arraySize = gameboardConfig.bossArraySize;
         this.gameboard = GameboardFactory_1.default.create(gameboardConfig);
         this.gameboard.start();
     };
-    Unranked.prototype.update = function () {
+    BossFight.prototype.update = function () {
         this.gameboard.update();
     };
-    return Unranked;
+    return BossFight;
 }(Phaser.State));
-exports.default = Unranked;
+exports.default = BossFight;

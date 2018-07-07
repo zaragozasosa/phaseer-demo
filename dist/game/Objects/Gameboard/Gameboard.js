@@ -12,17 +12,24 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
 var GridFactory_1 = require("./GridFactory");
-var GameboardConfig_1 = require("./../../Config/GameboardConfig");
+var GameboardUI_1 = require("./GameboardUI");
+var PlayerUI_1 = require("./PlayerUI");
 var InputManager_1 = require("./../../InputManager");
-var PowerWindow_1 = require("./../Windows/PowerWindow");
-var GameOverWindow_1 = require("./../Windows/GameOverWindow");
-var WinWindow_1 = require("./../Windows/WinWindow");
-var PauseWindow_1 = require("./../Windows/PauseWindow");
 var Config_1 = require("./../../Config/Config");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
-    function Gameboard(gameboardConfig) {
+    function Gameboard(gameboardConfig, gameboardUI, playerUI) {
+        if (gameboardUI === void 0) { gameboardUI = null; }
+        if (playerUI === void 0) { playerUI = null; }
         var _this = _super.call(this) || this;
+        _this.gameboardUI = gameboardUI;
+        if (!gameboardUI) {
+            _this.gameboardUI = new GameboardUI_1.default(gameboardConfig);
+        }
+        _this.playerUI = playerUI;
+        if (!playerUI) {
+            _this.playerUI = new PlayerUI_1.default(gameboardConfig);
+        }
         _this.gameStarted = false;
         _this.isPaused = false;
         _this.movements = 0;
@@ -56,16 +63,30 @@ var Gameboard = (function (_super) {
         _this.config.storyboard.optionClickSignal = new Phaser.Signal();
         return _this;
     }
+    Gameboard.prototype.updateScore = function (addToMovement) {
+        if (addToMovement === void 0) { addToMovement = true; }
+        if (addToMovement) {
+            this.movements++;
+        }
+        this.points = this.grid.calculatePoints();
+    };
     Gameboard.prototype.start = function () {
         this.createGrid();
     };
     Gameboard.prototype.createGrid = function () {
         this.grid = GridFactory_1.default.create(this.gameboardConfig);
+        this.timer = this.tools.misc.createTimer();
         this.points = this.grid.calculatePoints();
-        this.addHeader();
-        this.addMenuButton();
-        this.addPowerButton();
-        this.addTimer();
+        this.gameboardUI.create(this.points, this.timer, function () {
+            if (!this.isPaused) {
+                this.pausetoggle();
+            }
+        }.bind(this));
+        this.playerUI.create(function () {
+            if (!this.isPaused) {
+                this.activatePower();
+            }
+        }.bind(this));
         this.input = new InputManager_1.default(this.config);
         this.gameStarted = true;
         this.debugWin();
@@ -76,7 +97,7 @@ var Gameboard = (function (_super) {
         }
         var cursor;
         if (!this.gameOver) {
-            this.updateTimer();
+            this.gameboardUI.update(this.points);
             if (this.input.checkEscape()) {
                 this.pausetoggle();
                 return;
@@ -108,127 +129,40 @@ var Gameboard = (function (_super) {
         if (this.gameOver) {
             return;
         }
-        this.actionButton.kill();
+        this.playerUI.activatePower();
         this.grid.activatePower();
-        var window = new PowerWindow_1.default(this.gameboardConfig.mainTile);
         this.tools.audio.playTwoSounds(this.gameboardConfig);
     };
     Gameboard.prototype.gameover = function (win) {
         this.gameOver = true;
         if (win) {
             this.wonGame = true;
-            this.showGameOverWindow(win, function () {
-                this.tools.transition.toLoaderConfig('Story', this.gameboardConfig, null, false);
-            }.bind(this));
+            this.gameboardUI.winScreen('Story');
         }
         else {
-            this.showGameOverWindow(win, function () {
-                this.tools.transition.restartState(this.gameboardConfig);
-            }.bind(this));
-        }
-    };
-    Gameboard.prototype.showGameOverWindow = function (win, callback) {
-        if (win) {
-            new WinWindow_1.default(this.gameboardConfig.mainTile, function () {
-                callback();
-            }.bind(this));
-        }
-        else {
-            new GameOverWindow_1.default(this.gameboardConfig.mainTile, function () {
-                callback();
-            }.bind(this), function () {
-                this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
-            }.bind(this));
+            this.gameboardUI.gameOverScreen();
         }
     };
     Gameboard.prototype.showMessage = function (message, size, color, delay) {
         if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
         if (delay === void 0) { delay = 1500; }
-        var text = this.tools.text.makeXBounded(650, message, size, 'center', color, true);
-        this.tools.tween.vanishAndDestroy(text, { alpha: 0 }, delay, 'Linear', delay);
+        this.gameboardUI.showMessage(message, size, color, delay);
     };
     Gameboard.prototype.toggleButton = function (buttonStatus) {
         if (this.gameOver) {
             return;
         }
-        if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE) {
-            this.actionButton.inputEnabled = true;
-            this.actionButton.tint = Phaser.Color.WHITE;
-        }
-        if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP) {
-            this.actionButton.inputEnabled = false;
-            this.actionButton.tint = Phaser.Color.WHITE;
-        }
-        else if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP_DISABLED) {
-            this.actionButton.inputEnabled = false;
-            this.actionButton.tint = Phaser.Color.GRAY;
-        }
-    };
-    Gameboard.prototype.addHeader = function () {
-        this.header = this.tools.text.make(20, 20, '', 50);
-        this.tools.tween.appear(this.header);
-        this.updateHeader();
-    };
-    Gameboard.prototype.addMenuButton = function () {
-        var menu = this.tools.sprite.createSprite(840, 30, 'menu', 0.8);
-        menu.inputEnabled = true;
-        menu.events.onInputDown.add(function () {
-            if (!this.isPaused) {
-                this.pausetoggle();
-            }
-        }.bind(this));
-        this.tools.tween.appear(menu);
-    };
-    Gameboard.prototype.addPowerButton = function () {
-        this.actionButton = this.tools.button.make(310, 1250, ['power'], function () {
-            if (!this.isPaused) {
-                this.activatePower();
-            }
-        }.bind(this), 1.5);
-        this.actionButton.inputEnabled = false;
-        this.actionButton.tint = Phaser.Color.GRAY;
-        this.tools.tween.appear(this.actionButton);
-    };
-    Gameboard.prototype.updateScore = function (addToMovement) {
-        if (addToMovement === void 0) { addToMovement = true; }
-        if (addToMovement) {
-            this.movements++;
-        }
-        this.points = this.grid.calculatePoints();
-        this.updateHeader();
-    };
-    Gameboard.prototype.updateHeader = function () {
-        this.header.setText("Score: " + this.points);
-    };
-    Gameboard.prototype.addTimer = function () {
-        this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-        this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function () {
-            this.timer = this.tools.misc.createTimer();
-            this.timer.start();
-        }.bind(this));
-    };
-    Gameboard.prototype.updateTimer = function () {
-        if (this.timer) {
-            var min = Math.floor(this.timer.seconds / 60);
-            var sec = Math.floor(this.timer.seconds - min * 60);
-            this.timerMessage.setText("Time: " + this.num(min) + ":" + this.num(sec));
-        }
-    };
-    Gameboard.prototype.num = function (n) {
-        return n > 9 ? '' + n : '0' + n;
+        this.playerUI.toggleButton(buttonStatus);
     };
     Gameboard.prototype.pausetoggle = function () {
+        var _this = this;
         if (this.isPaused) {
-            this.pausedWindow.hideAndDestroy();
+            this.gameboardUI.unpause();
             this.isPaused = false;
             this.timer.resume();
         }
         else {
-            this.pausedWindow = new PauseWindow_1.default(this.gameboardConfig.mainTile, function () {
-                this.pausetoggle();
-            }.bind(this), function () {
-                this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
-            }.bind(this));
+            this.gameboardUI.pause(function () { return _this.pausetoggle(); });
             this.isPaused = true;
             this.timer.pause();
         }

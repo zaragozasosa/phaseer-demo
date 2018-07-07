@@ -1,16 +1,16 @@
 import Factory from './Base/Factory';
 import { ColorSettings } from './../Config/Config';
 export default class TextFactory extends Factory {
-  makeTileNumber(x: number, y: number, value: number, size: number) {
+  makeTileNumber(x: number, y: number, value: number, size: number, modeScale = 1) {
     let settings = this.config.grid;
-    let xPos = settings.tileNumberPadX + x * settings.tileSize;
-    let yPos = settings.tileNumberPadY + y * settings.tileSize;
+    let xPos = settings.tileNumberPadX + x * settings.tileSize * modeScale;
+    let yPos = settings.tileNumberPadY + y * settings.tileSize * modeScale;
 
     let txt = this.make(
       xPos,
       yPos,
       value.toString(),
-      size,
+      size * modeScale,
       ColorSettings.TEXT,
       settings.gridPaddingX,
       settings.gridPaddingY
@@ -20,10 +20,10 @@ export default class TextFactory extends Factory {
     return this.addStroke(txt, size);
   }
 
-  updateTileNumber(x: number, y: number, text: Phaser.Text) {
+  updateTileNumber(x: number, y: number, text: Phaser.Text, modeScale = 1) {
     let settings = this.config.grid;
-    let xPos = settings.tileNumberPadX + x * settings.tileSize;
-    let yPos = settings.tileNumberPadY + y * settings.tileSize;
+    let xPos = settings.tileNumberPadX + x * settings.tileSize * modeScale;
+    let yPos = settings.tileNumberPadY + y * settings.tileSize * modeScale;
 
     let posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
     let posY = this.config.safeZone.paddingY + yPos * this.config.scaleFactor;

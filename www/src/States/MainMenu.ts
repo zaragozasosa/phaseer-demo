@@ -26,7 +26,9 @@ export default class MainMenu extends Phaser.State {
     this.started = false;
     tools.graphic.addBackground();
     // tools.audio.playNormal('test-bgm', true);
-    tools.audio.playIfSilent('title-bgm', true);
+         tools.audio.playNormal('title-bgm', true);
+
+    // tools.audio.playIfSilent('title-bgm', true);
 
     let loader = new CharacterSelectionLoader(this.gameboardConfig.tiles);
 

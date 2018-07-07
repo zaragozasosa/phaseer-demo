@@ -17,18 +17,20 @@ var TextFactory = (function (_super) {
     function TextFactory() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TextFactory.prototype.makeTileNumber = function (x, y, value, size) {
+    TextFactory.prototype.makeTileNumber = function (x, y, value, size, modeScale) {
+        if (modeScale === void 0) { modeScale = 1; }
         var settings = this.config.grid;
-        var xPos = settings.tileNumberPadX + x * settings.tileSize;
-        var yPos = settings.tileNumberPadY + y * settings.tileSize;
-        var txt = this.make(xPos, yPos, value.toString(), size, Config_1.ColorSettings.TEXT, settings.gridPaddingX, settings.gridPaddingY);
+        var xPos = settings.tileNumberPadX + x * settings.tileSize * modeScale;
+        var yPos = settings.tileNumberPadY + y * settings.tileSize * modeScale;
+        var txt = this.make(xPos, yPos, value.toString(), size * modeScale, Config_1.ColorSettings.TEXT, settings.gridPaddingX, settings.gridPaddingY);
         this.game.physics.enable(txt, Phaser.Physics.ARCADE);
         return this.addStroke(txt, size);
     };
-    TextFactory.prototype.updateTileNumber = function (x, y, text) {
+    TextFactory.prototype.updateTileNumber = function (x, y, text, modeScale) {
+        if (modeScale === void 0) { modeScale = 1; }
         var settings = this.config.grid;
-        var xPos = settings.tileNumberPadX + x * settings.tileSize;
-        var yPos = settings.tileNumberPadY + y * settings.tileSize;
+        var xPos = settings.tileNumberPadX + x * settings.tileSize * modeScale;
+        var yPos = settings.tileNumberPadY + y * settings.tileSize * modeScale;
         var posX = this.config.safeZone.paddingX + xPos * this.config.scaleFactor;
         var posY = this.config.safeZone.paddingY + yPos * this.config.scaleFactor;
         text.position.x = posX + settings.gridPaddingX;

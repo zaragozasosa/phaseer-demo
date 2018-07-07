@@ -56,9 +56,6 @@ export default class CharacterMenu extends Base {
     this.tools.audio.playBeep();
     let spritePosition = this.findSpritePosition(char);
 
-    if(char.id === 'random' || char.id === 'nacho') {
-      debugger;
-    }
     if (spritePosition === Phaser.RIGHT) {
       this.rightSprite.loadTexture(char.id);
       this.rightSprite.tint = Phaser.Color.WHITE;
@@ -84,7 +81,6 @@ export default class CharacterMenu extends Base {
       this.rightSprite.events.destroy();
       this.rightSprite.events.onInputDown.addOnce(
         function() {
-          debugger;
           this.setSelectedCharacter(
             this.gameboardConfig.getMenuTileModel(char.getMenuFriendId)
           );

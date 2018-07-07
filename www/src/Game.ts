@@ -8,6 +8,7 @@ import Unranked from './States/Unranked';
 import Story from './States/Story';
 import GameboardLoader from './States/GameboardLoader';
 import CharacterSelection from './States/CharacterSelection';
+import BossFight from './States/BossFight';
 import Transition from './States/Transition';
 
 export default class Game extends Phaser.Game {
@@ -30,6 +31,7 @@ export default class Game extends Phaser.Game {
     this.state.add('Unranked', Unranked, false);
     this.state.add('GameboardLoader', GameboardLoader, false);
     this.state.add('Story', Story, false);
+    this.state.add('BossFight', BossFight, false);    
     this.state.add('Transition', Transition, false);
 
     this.state.start('Boot');

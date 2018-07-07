@@ -10,6 +10,8 @@ export default class GameboardConfig {
   private baseList: Array<TileModel>;
   mainTile: TileModel;
   arraySize: number;
+  defaultArraySize: number;
+  bossArraySize: number;
   winningTile: number;
   initialArray: Array<number>;
   minimumValue: number;
@@ -39,6 +41,8 @@ export default class GameboardConfig {
   static readonly BUTTON_SLEEP_DISABLED = 3;
 
   constructor() {
+    this.defaultArraySize = 3;
+    this.bossArraySize = 4;    
     this.arraySize = 3;
     this.initialArray = [];
     for (let x = 0; x <= this.arraySize; x++) {
@@ -55,6 +59,10 @@ export default class GameboardConfig {
     this.createPowers();
     this.createStories();
     this.createTiles();
+  }
+
+  get gameModeTileScale() {
+    return (this.defaultArraySize + 1) / (this.arraySize + 1);
   }
 
   getTileModel(id: string) {

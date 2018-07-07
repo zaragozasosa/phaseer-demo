@@ -49,9 +49,6 @@ var CharacterMenu = (function (_super) {
     CharacterMenu.prototype.setSelectedCharacter = function (char, changePage) {
         this.tools.audio.playBeep();
         var spritePosition = this.findSpritePosition(char);
-        if (char.id === 'random' || char.id === 'nacho') {
-            debugger;
-        }
         if (spritePosition === Phaser.RIGHT) {
             this.rightSprite.loadTexture(char.id);
             this.rightSprite.tint = Phaser.Color.WHITE;
@@ -71,7 +68,6 @@ var CharacterMenu = (function (_super) {
             this.rightSprite.tint = Phaser.Color.GRAY;
             this.rightSprite.events.destroy();
             this.rightSprite.events.onInputDown.addOnce(function () {
-                debugger;
                 this.setSelectedCharacter(this.gameboardConfig.getMenuTileModel(char.getMenuFriendId));
             }.bind(this));
         }

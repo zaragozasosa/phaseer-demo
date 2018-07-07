@@ -30,7 +30,7 @@ var MainMenu = (function (_super) {
         this.cursor = new InputManager_1.default(this.config);
         this.started = false;
         tools.graphic.addBackground();
-        tools.audio.playIfSilent('title-bgm', true);
+        tools.audio.playNormal('title-bgm', true);
         var loader = new CharacterSelectionLoader_1.default(this.gameboardConfig.tiles);
         var menuList = new MenuList_1.default('Menu');
         menuList.addChild(new MenuObject_1.default('Story mode', function () {

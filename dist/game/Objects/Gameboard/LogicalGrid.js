@@ -158,9 +158,10 @@ var LogicalGrid = (function (_super) {
     };
     LogicalGrid.prototype.add = function () {
         var newTilePos;
+        var maxPosition = this.gameboardConfig.arraySize;
         do {
-            var ranX = this.tools.misc.randomBetween(0, 3);
-            var ranY = this.tools.misc.randomBetween(0, 3);
+            var ranX = this.tools.misc.randomBetween(0, maxPosition);
+            var ranY = this.tools.misc.randomBetween(0, maxPosition);
         } while (this.get(ranX, ranY));
         if (this.emptyTiles() > 6) {
             var chance = this.tools.misc.randomBetween(0, 99);

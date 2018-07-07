@@ -2,11 +2,9 @@ import Base from './../../Base';
 import Grid from './Grid';
 import GridFactory from './GridFactory';
 import GameboardConfig from './../../Config/GameboardConfig';
+import GameboardUI from './GameboardUI';
+import PlayerUI from './PlayerUI';
 import InputManager from './../../InputManager';
-import PowerWindow from './../Windows/PowerWindow';
-import GameOverWindow from './../Windows/GameOverWindow';
-import WinWindow from './../Windows/WinWindow';
-import PauseWindow from './../Windows/PauseWindow';
 import { ColorSettings } from './../../Config/Config';
 
 export default abstract class Gameboard extends Base {
@@ -17,19 +15,32 @@ export default abstract class Gameboard extends Base {
   protected gameOver: boolean;
   protected wonGame: boolean;
   protected gameStarted: boolean;
+  protected gameboardUI: GameboardUI;
+  protected playerUI: PlayerUI;
 
-  header: Phaser.Text;
   points: number;
   movements: number;
   timer: Phaser.Timer;
-  timerMessage: Phaser.Text;
   actionButton: Phaser.Button;
   background: Phaser.Sprite;
   isPaused: boolean;
-  pausedWindow: PauseWindow;
 
-  constructor(gameboardConfig: GameboardConfig) {
+  constructor(
+    gameboardConfig: GameboardConfig,
+    gameboardUI = null,
+    playerUI = null
+  ) {
     super();
+    this.gameboardUI = gameboardUI;
+    if (!gameboardUI) {
+      this.gameboardUI = new GameboardUI(gameboardConfig);
+    }
+
+    this.playerUI = playerUI;
+    if (!playerUI) {
+      this.playerUI = new PlayerUI(gameboardConfig);
+    }
+
     this.gameStarted = false;
     this.isPaused = false;
     this.movements = 0;
@@ -42,21 +53,21 @@ export default abstract class Gameboard extends Base {
     this.wonGame = false;
     let updateScoreSignal = new Phaser.Signal();
     updateScoreSignal.add(
-      function (addToMovement) {
+      function(addToMovement) {
         this.updateScore(addToMovement);
       }.bind(this)
     );
 
     let toggleButtonSignal = new Phaser.Signal();
     toggleButtonSignal.add(
-      function (status) {
+      function(status) {
         this.toggleButton(status);
       }.bind(this)
     );
 
     let gameoverSignal = new Phaser.Signal();
     gameoverSignal.add(
-      function (win) {
+      function(win) {
         this.gameover(win);
       }.bind(this)
     );
@@ -73,18 +84,41 @@ export default abstract class Gameboard extends Base {
     this.config.storyboard.optionClickSignal = new Phaser.Signal();
   }
 
+  private updateScore(addToMovement = true) {
+    if (addToMovement) {
+      this.movements++;
+    }
+
+    this.points = this.grid.calculatePoints();
+  }
+
   start() {
     this.createGrid();
   }
 
   protected createGrid() {
     this.grid = GridFactory.create(this.gameboardConfig);
-
+    this.timer = this.tools.misc.createTimer();
     this.points = this.grid.calculatePoints();
-    this.addHeader();
-    this.addMenuButton();
-    this.addPowerButton();
-    this.addTimer();
+
+    this.gameboardUI.create(
+      this.points,
+      this.timer,
+      function() {
+        if (!this.isPaused) {
+          this.pausetoggle();
+        }
+      }.bind(this)
+    );
+
+    this.playerUI.create(
+      function() {
+        if (!this.isPaused) {
+          this.activatePower();
+        }
+      }.bind(this)
+    );
+
     this.input = new InputManager(this.config);
     this.gameStarted = true;
     this.debugWin();
@@ -97,7 +131,7 @@ export default abstract class Gameboard extends Base {
 
     let cursor;
     if (!this.gameOver) {
-      this.updateTimer();
+      this.gameboardUI.update(this.points);
 
       if (this.input.checkEscape()) {
         this.pausetoggle();
@@ -131,10 +165,8 @@ export default abstract class Gameboard extends Base {
     if (this.gameOver) {
       return;
     }
-
-    this.actionButton.kill();
+    this.playerUI.activatePower();
     this.grid.activatePower();
-    let window = new PowerWindow(this.gameboardConfig.mainTile);
     this.tools.audio.playTwoSounds(this.gameboardConfig);
   }
 
@@ -142,45 +174,9 @@ export default abstract class Gameboard extends Base {
     this.gameOver = true;
     if (win) {
       this.wonGame = true;
-      this.showGameOverWindow(
-        win,
-        function () {
-          this.tools.transition.toLoaderConfig(
-            'Story',
-            this.gameboardConfig,
-            null,
-            false
-          );
-        }.bind(this)
-      );
+      this.gameboardUI.winScreen('Story');
     } else {
-      this.showGameOverWindow(
-        win,
-        function () {
-          this.tools.transition.restartState(this.gameboardConfig);
-        }.bind(this)
-      );
-    }
-  }
-
-  protected showGameOverWindow(win: boolean, callback: any) {
-    if (win) {
-      new WinWindow(
-        this.gameboardConfig.mainTile,
-        function () {
-          callback();
-        }.bind(this)
-      );
-    } else {
-      new GameOverWindow(
-        this.gameboardConfig.mainTile,
-        function () {
-          callback();
-        }.bind(this),
-        function () {
-          this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
-        }.bind(this)
-      );
+      this.gameboardUI.gameOverScreen();
     }
   }
 
@@ -190,22 +186,7 @@ export default abstract class Gameboard extends Base {
     color = ColorSettings.TEXT,
     delay = 1500
   ) {
-    let text = this.tools.text.makeXBounded(
-      650,
-      message,
-      size,
-      'center',
-      color,
-      true
-    );
-
-    this.tools.tween.vanishAndDestroy(
-      text,
-      { alpha: 0 },
-      delay,
-      'Linear',
-      delay
-    );
+    this.gameboardUI.showMessage(message, size, color, delay);
   }
 
   protected toggleButton(buttonStatus: number) {
@@ -213,108 +194,16 @@ export default abstract class Gameboard extends Base {
       return;
     }
 
-    if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
-      this.actionButton.inputEnabled = true;
-      this.actionButton.tint = Phaser.Color.WHITE;
-    }
-    if (buttonStatus === GameboardConfig.BUTTON_SLEEP) {
-      this.actionButton.inputEnabled = false;
-      this.actionButton.tint = Phaser.Color.WHITE;
-    } else if (buttonStatus === GameboardConfig.BUTTON_SLEEP_DISABLED) {
-      this.actionButton.inputEnabled = false;
-      this.actionButton.tint = Phaser.Color.GRAY;
-    }
-  }
-
-  private addHeader() {
-    this.header = this.tools.text.make(20, 20, '', 50);
-    this.tools.tween.appear(this.header);
-
-    this.updateHeader();
-  }
-
-  private addMenuButton() {
-    let menu = this.tools.sprite.createSprite(840, 30, 'menu', 0.8);
-    menu.inputEnabled = true;
-
-    menu.events.onInputDown.add(
-      function () {
-        if (!this.isPaused) {
-          this.pausetoggle();
-        }
-      }.bind(this)
-    );
-
-    this.tools.tween.appear(menu);
-  }
-
-  private addPowerButton() {
-    this.actionButton = this.tools.button.make(
-      310,
-      1250,
-      ['power'],
-      function () {
-        if (!this.isPaused) {
-          this.activatePower();
-        }
-      }.bind(this),
-      1.5
-    );
-
-    this.actionButton.inputEnabled = false;
-    this.actionButton.tint = Phaser.Color.GRAY;
-
-    this.tools.tween.appear(this.actionButton);
-  }
-
-  private updateScore(addToMovement = true) {
-    if (addToMovement) {
-      this.movements++;
-    }
-
-    this.points = this.grid.calculatePoints();
-    this.updateHeader();
-  }
-
-  private updateHeader() {
-    this.header.setText(`Score: ${this.points}`);
-  }
-
-  private addTimer() {
-    this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
-    this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function () {
-      this.timer = this.tools.misc.createTimer();
-      this.timer.start();
-    }.bind(this));
-  }
-
-  private updateTimer() {
-    if (this.timer) {
-      let min = Math.floor(this.timer.seconds / 60);
-      let sec = Math.floor(this.timer.seconds - min * 60);
-      this.timerMessage.setText(`Time: ${this.num(min)}:${this.num(sec)}`);
-    }
-  }
-
-  private num(n) {
-    return n > 9 ? '' + n : '0' + n;
+    this.playerUI.toggleButton(buttonStatus);
   }
 
   private pausetoggle() {
     if (this.isPaused) {
-      this.pausedWindow.hideAndDestroy();
+      this.gameboardUI.unpause();
       this.isPaused = false;
       this.timer.resume();
     } else {
-      this.pausedWindow = new PauseWindow(
-        this.gameboardConfig.mainTile,
-        function () {
-          this.pausetoggle();
-        }.bind(this),
-        function () {
-          this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig);
-        }.bind(this)
-      );
+      this.gameboardUI.pause(() => this.pausetoggle());
       this.isPaused = true;
       this.timer.pause();
     }
@@ -324,7 +213,7 @@ export default abstract class Gameboard extends Base {
     let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
     win.inputEnabled = true;
     win.events.onInputDown.addOnce(
-      function () {
+      function() {
         this.gameover(true);
       }.bind(this)
     );
@@ -332,7 +221,7 @@ export default abstract class Gameboard extends Base {
     let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
     lose.inputEnabled = true;
     lose.events.onInputDown.addOnce(
-      function () {
+      function() {
         this.gameover(false);
       }.bind(this)
     );

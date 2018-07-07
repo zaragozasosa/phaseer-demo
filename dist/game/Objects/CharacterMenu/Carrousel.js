@@ -64,7 +64,6 @@ var Carrousel = (function (_super) {
             sprite.tint = Phaser.Color.GRAY;
             sprite.events.destroy();
             sprite.events.onInputDown.add(function () {
-                debugger;
                 this.setSelectedCharacter(char);
             }.bind(this_1));
             column++;

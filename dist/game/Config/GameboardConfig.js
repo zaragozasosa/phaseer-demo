@@ -7,6 +7,8 @@ var SpriteAction_1 = require("./../Objects/Storyboard/Actions/SpriteAction");
 var TitleAction_1 = require("./../Objects/Storyboard/Actions/TitleAction");
 var GameboardConfig = (function () {
     function GameboardConfig() {
+        this.defaultArraySize = 3;
+        this.bossArraySize = 4;
         this.arraySize = 3;
         this.initialArray = [];
         for (var x = 0; x <= this.arraySize; x++) {
@@ -24,6 +26,13 @@ var GameboardConfig = (function () {
         this.createStories();
         this.createTiles();
     }
+    Object.defineProperty(GameboardConfig.prototype, "gameModeTileScale", {
+        get: function () {
+            return (this.defaultArraySize + 1) / (this.arraySize + 1);
+        },
+        enumerable: true,
+        configurable: true
+    });
     GameboardConfig.prototype.getTileModel = function (id) {
         if (id !== 'random') {
             return this.baseList.find(function (x) { return x.id === id; });

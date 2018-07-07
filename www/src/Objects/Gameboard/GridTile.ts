@@ -49,11 +49,13 @@ export default class GridTile extends Base {
     this.sprite = this.createSprite();
     this.group = this.tools.misc.addGroup();
     this.sprite.anchor.setTo(0, 0);
+    let modeScale = this.gameboardConfig.gameModeTileScale;    
     this.number = this.tools.text.makeTileNumber(
       this.posX,
       this.posY,
       this.value,
-      45
+      50,
+      modeScale
     );
 
     this.group.addChild(this.sprite);
@@ -256,13 +258,19 @@ export default class GridTile extends Base {
       }
       this.nextTile.mergeTransform();
     } else {
+      let modeScale = this.gameboardConfig.gameModeTileScale;
       for (let item of this.group.getAll()) {
         if (item instanceof Phaser.Sprite) {
-          this.tools.sprite.updateTile(this.posX, this.posY, item);
+          this.tools.sprite.updateTile(this.posX, this.posY, item, modeScale);
         }
 
         if (item instanceof Phaser.Text) {
-          this.tools.text.updateTileNumber(this.posX, this.posY, item);
+          this.tools.text.updateTileNumber(
+            this.posX,
+            this.posY,
+            item,
+            modeScale
+          );
         }
       }
     }
@@ -281,8 +289,9 @@ export default class GridTile extends Base {
 
     this.randomizeTween.start().onComplete.add(
       function() {
+        let scale = this.gameboardConfig.gameModeTileScale;
         this.sprite.anchor.setTo(0, 0);
-        this.tools.sprite.updateTile(this.posX, this.posY, this.sprite);
+        this.tools.sprite.updateTile(this.posX, this.posY, this.sprite, scale);
       }.bind(this)
     );
   }
@@ -302,14 +311,16 @@ export default class GridTile extends Base {
 
   private createSprite() {
     let tile = this.model;
-    let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id);
+    let sca = this.gameboardConfig.gameModeTileScale;
+    let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca);
     sprite.body.collideWorldBounds = true;
     return sprite;
   }
 
   private createFrame() {
+    let modeScale = this.gameboardConfig.gameModeTileScale;
     let tile = this.model;
-    let sprite = this.tools.sprite.makeFrame(this.posX, this.posY);
+    let sprite = this.tools.sprite.makeFrame(this.posX, this.posY, modeScale);
     sprite.body.collideWorldBounds = true;
 
     return sprite;

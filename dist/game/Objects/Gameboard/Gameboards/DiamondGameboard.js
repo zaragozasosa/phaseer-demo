@@ -88,28 +88,25 @@ var DiamondGameboard = (function (_super) {
         }
         if (buttonStatus === GameboardConfig_1.default.BUTTON_ACTIVE &&
             this.diamonds >= this.diamondModel.requiredDiamonds) {
-            this.actionButton.inputEnabled = true;
-            this.actionButton.tint = Phaser.Color.WHITE;
+            this.playerUI.toggleButton(buttonStatus);
         }
         if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP &&
             this.diamonds >= this.diamondModel.requiredDiamonds) {
-            this.actionButton.inputEnabled = false;
-            this.actionButton.tint = Phaser.Color.WHITE;
+            this.playerUI.toggleButton(buttonStatus);
         }
         else if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP_DISABLED) {
-            this.actionButton.inputEnabled = false;
-            this.actionButton.tint = Phaser.Color.GRAY;
+            this.playerUI.toggleButton(buttonStatus);
         }
     };
     DiamondGameboard.prototype.toggleTimer = function (paused) {
         if (paused === void 0) { paused = true; }
         if (paused) {
             this.timer.pause();
-            this.timerMessage.tint = Phaser.Color.BLUE;
+            this.gameboardUI.changeTimerColor(Phaser.Color.BLUE);
         }
         else {
             this.timer.resume();
-            this.timerMessage.tint = Phaser.Color.WHITE;
+            this.gameboardUI.changeTimerColor(Phaser.Color.WHITE);
         }
     };
     return DiamondGameboard;

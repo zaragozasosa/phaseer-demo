@@ -19,6 +19,7 @@ var Unranked_1 = require("./States/Unranked");
 var Story_1 = require("./States/Story");
 var GameboardLoader_1 = require("./States/GameboardLoader");
 var CharacterSelection_1 = require("./States/CharacterSelection");
+var BossFight_1 = require("./States/BossFight");
 var Transition_1 = require("./States/Transition");
 var Game = (function (_super) {
     __extends(Game, _super);
@@ -41,6 +42,7 @@ var Game = (function (_super) {
         this.state.add('Unranked', Unranked_1.default, false);
         this.state.add('GameboardLoader', GameboardLoader_1.default, false);
         this.state.add('Story', Story_1.default, false);
+        this.state.add('BossFight', BossFight_1.default, false);
         this.state.add('Transition', Transition_1.default, false);
         this.state.start('Boot');
     };

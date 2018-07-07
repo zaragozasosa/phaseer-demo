@@ -71,16 +71,6 @@ var Grid = (function (_super) {
         group.add(this.tools.graphic.makeWall(wallLength, 0, 1, wallLength));
         return group;
     };
-    Grid.prototype.makeTileFrames = function () {
-        var group = this.tools.misc.addGroup();
-        var arraySize = this.gameboardConfig.arraySize;
-        for (var x = 0; x <= arraySize; x++) {
-            for (var y = 0; y <= arraySize; y++) {
-                group.add(this.tools.sprite.makeFrame(x, y));
-            }
-        }
-        return group;
-    };
     return Grid;
 }(Base_1.default));
 exports.default = Grid;

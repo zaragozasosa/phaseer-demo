@@ -16,21 +16,21 @@ var SpriteFactory = (function (_super) {
     function SpriteFactory() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    SpriteFactory.prototype.makeFrame = function (x, y, paddingY, ratio) {
-        if (paddingY === void 0) { paddingY = null; }
-        if (ratio === void 0) { ratio = 1; }
+    SpriteFactory.prototype.makeFrame = function (x, y, modeScale) {
+        if (modeScale === void 0) { modeScale = 1; }
         var settings = this.config.grid;
-        var size = settings.tileSize * ratio;
+        var size = settings.tileSize * modeScale;
         var padX = settings.gridPaddingX;
-        var padY = paddingY ? paddingY : settings.gridPaddingY;
-        var frame = this.createSprite(x * size, y * size, 'frame', ratio, padX, padY);
+        var padY = settings.gridPaddingY;
+        var frame = this.createSprite(x * size, y * size, 'frame', modeScale, padX, padY);
         this.game.physics.enable(frame, Phaser.Physics.ARCADE);
         return frame;
     };
-    SpriteFactory.prototype.makeTile = function (x, y, id) {
+    SpriteFactory.prototype.makeTile = function (x, y, id, modeScale) {
+        if (modeScale === void 0) { modeScale = 1; }
         var grid = this.config.grid;
-        var size = this.config.grid.tileSize;
-        var scale = this.config.grid.tileScale;
+        var size = this.config.grid.tileSize * modeScale;
+        var scale = this.config.grid.tileScale * modeScale;
         var padX = grid.gridPaddingX;
         var padY = grid.gridPaddingY;
         var sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
@@ -42,10 +42,11 @@ var SpriteFactory = (function (_super) {
         var scale = this.config.grid.tileScale * ratio;
         return this.createSprite(x * size, y * size, id, scale, padX, padY);
     };
-    SpriteFactory.prototype.updateTile = function (x, y, sprite) {
+    SpriteFactory.prototype.updateTile = function (x, y, sprite, modeScale) {
+        if (modeScale === void 0) { modeScale = 1; }
         var grid = this.config.grid;
-        var size = this.config.grid.tileSize;
-        var scale = this.config.grid.tileScale;
+        var size = this.config.grid.tileSize * modeScale;
+        var scale = this.config.grid.tileScale * modeScale;
         var xPad = grid.gridPaddingX;
         var yPad = grid.gridPaddingY;
         var posX = x * size * this.config.scaleFactor;

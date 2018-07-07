@@ -81,19 +81,4 @@ export default abstract class Grid extends Base {
 
     return group;
   }
-
-  private makeTileFrames(): Phaser.Group {
-    let group = this.tools.misc.addGroup();
-    let arraySize = this.gameboardConfig.arraySize;
-    for (let x = 0; x <= arraySize; x++) {
-      for (let y = 0; y <= arraySize; y++) {
-        group.add(this.tools.sprite.makeFrame(x, y));
-      }
-    }
-    return group;
-  }
-
-  // getColumnForDebug(column: number) {
-  //   return this.gridLogic.getColumnForDebug(column);
-  // }
 }
