@@ -20,10 +20,10 @@ var TimeTravel = (function (_super) {
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
-    TimeTravel.prototype.activatePower = function () {
-        this.ammo = this.gridLogic.power();
+    TimeTravel.prototype.getPowerConfiguration = function () {
+        this.ammo = this.gridLogic.getAmmo();
         this.gameboardConfig.clickTileSignal.add(function (tile) {
-            this.gridLogic.useAmmo(tile);
+            this.gridLogic.power(tile);
         }.bind(this));
         return this.ammo;
     };

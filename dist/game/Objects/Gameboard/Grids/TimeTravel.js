@@ -21,13 +21,11 @@ var TimeTravel = (function (_super) {
         return _this;
     }
     TimeTravel.prototype.activatePower = function () {
-        if (this.bugInfo) {
-            this.gridLogic.power();
-        }
-        else {
-            this.bugInfo = this.gridLogic.getPowerInfo();
-            return this.bugInfo;
-        }
+        this.gridLogic.power();
+    };
+    TimeTravel.prototype.getPowerConfiguration = function () {
+        this.bugInfo = this.gridLogic.getPowerInfo();
+        return this.bugInfo;
     };
     return TimeTravel;
 }(Grid_1.default));

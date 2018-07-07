@@ -1,12 +1,8 @@
 import Base from './../../Base';
 import GameboardConfig from './../../Config/GameboardConfig';
 import PowerWindow from './../Windows/PowerWindow';
-import GameOverWindow from './../Windows/GameOverWindow';
-import WinWindow from './../Windows/WinWindow';
-import PauseWindow from './../Windows/PauseWindow';
-import { ColorSettings } from './../../Config/Config';
 
-export default class PlayerUI extends Base {
+export default abstract class PlayerUI extends Base {
   protected gameboardConfig: GameboardConfig;
   protected actionButton: Phaser.Button;
 
@@ -15,11 +11,11 @@ export default class PlayerUI extends Base {
     this.gameboardConfig = gameboardConfig;
   }
 
-  create(callback: any) {
+  create(callback: any, ...args): any {
     this.addPowerButton(callback);
   }
 
-  private addPowerButton(callbackFunction: any) {
+  addPowerButton(callbackFunction: any) {
     this.actionButton = this.tools.button.make(
       310,
       1250,
@@ -32,14 +28,15 @@ export default class PlayerUI extends Base {
     this.actionButton.tint = Phaser.Color.GRAY;
 
     this.tools.tween.appear(this.actionButton);
-	}
-	
-	public activatePower() {
-		this.actionButton.kill();
-		new PowerWindow(this.gameboardConfig.mainTile);		
-	}
+  }
 
-	toggleButton(buttonStatus: number) {
+  activatePower(...args) {
+    this.tools.audio.playTwoSounds(this.gameboardConfig);
+    this.actionButton.kill();
+    new PowerWindow(this.gameboardConfig.mainTile);
+  }
+
+  toggleButton(buttonStatus: any) {
     if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
       this.actionButton.inputEnabled = true;
       this.actionButton.tint = Phaser.Color.WHITE;
@@ -52,4 +49,10 @@ export default class PlayerUI extends Base {
       this.actionButton.tint = Phaser.Color.GRAY;
     }
   }
+
+  update(...args) { }
+
+  updateSpecialElements(...args) {}
+
+  blockButtons(...args) {}
 }

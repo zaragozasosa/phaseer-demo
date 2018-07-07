@@ -81,4 +81,6 @@ export default abstract class Grid extends Base {
 
     return group;
   }
+
+  getPowerConfiguration(): any {}
 }

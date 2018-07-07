@@ -12,15 +12,10 @@ export default class DetectiveWork extends Grid {
   }
 
   activatePower() {
-    if (!this.elements) {
-      this.elements = this.makeElements();
-      return this.elements;
-    } else {
-      return this.gridLogic.createGhostTile();
-    }
+    return this.gridLogic.createGhostTile();
   }
 
-  private makeElements() {
+  getPowerConfiguration() {
     let group = this.tools.misc.addGroup();
     group.inputEnableChildren = true;
 
@@ -34,11 +29,8 @@ export default class DetectiveWork extends Grid {
     group.add(btn);
     btn.inputEnabled = false;
 
-    group.alpha = 0;
-    this.tools.tween.to(group, { alpha: 1 }, 500, true);
-
     group.onChildInputDown.add(
-      function(child: Phaser.Text) {
+      function (child: Phaser.Text) {
         group.setAllChildren('tint', Phaser.Color.WHITE);
         child.tint = Phaser.Color.RED;
         if (child.text === 'UP') {
@@ -55,6 +47,7 @@ export default class DetectiveWork extends Grid {
       }.bind(this)
     );
 
+    this.elements = group;
     return group;
   }
 }

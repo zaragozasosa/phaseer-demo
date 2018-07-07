@@ -11,14 +11,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameboardFactory_1 = require("../Objects/Gameboard/GameboardFactory");
+var BossGameUI_1 = require("../Objects/Gameboard/GameUI/BossGameUI");
 var BossFight = (function (_super) {
     __extends(BossFight, _super);
     function BossFight() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     BossFight.prototype.init = function (gameboardConfig) {
-        gameboardConfig.arraySize = gameboardConfig.bossArraySize;
-        this.gameboard = GameboardFactory_1.default.create(gameboardConfig);
+        this.gameboard = GameboardFactory_1.default.create(gameboardConfig, new BossGameUI_1.default(gameboardConfig));
         this.gameboard.start();
     };
     BossFight.prototype.update = function () {

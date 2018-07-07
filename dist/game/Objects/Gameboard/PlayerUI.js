@@ -21,6 +21,10 @@ var PlayerUI = (function (_super) {
         return _this;
     }
     PlayerUI.prototype.create = function (callback) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
         this.addPowerButton(callback);
     };
     PlayerUI.prototype.addPowerButton = function (callbackFunction) {
@@ -30,6 +34,11 @@ var PlayerUI = (function (_super) {
         this.tools.tween.appear(this.actionButton);
     };
     PlayerUI.prototype.activatePower = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        this.tools.audio.playTwoSounds(this.gameboardConfig);
         this.actionButton.kill();
         new PowerWindow_1.default(this.gameboardConfig.mainTile);
     };
@@ -45,6 +54,24 @@ var PlayerUI = (function (_super) {
         else if (buttonStatus === GameboardConfig_1.default.BUTTON_SLEEP_DISABLED) {
             this.actionButton.inputEnabled = false;
             this.actionButton.tint = Phaser.Color.GRAY;
+        }
+    };
+    PlayerUI.prototype.update = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+    };
+    PlayerUI.prototype.updateSpecialElements = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+    };
+    PlayerUI.prototype.blockButtons = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
         }
     };
     return PlayerUI;

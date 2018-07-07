@@ -106,14 +106,14 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
-  createBackground() {
+  createBackground(key: string) {
     let safeZone = this.config.safeZone;
     let config = this.config;
 
     let x = 0;
     let y = safeZone.bgPaddingY;
 
-    let sprite = this.createSprite(x, y, 'witch');
+    let sprite = this.createSprite(x, y, key);
 
     return sprite;
   }

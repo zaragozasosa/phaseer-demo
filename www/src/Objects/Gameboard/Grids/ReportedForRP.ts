@@ -1,6 +1,7 @@
 import Grid from './../Grid';
 import ReportedForRPLogic from './../GridLogic/ReportedForRPLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
+import ChargeModel from './../../../Models/ChargeModel';
 
 export default class ReportedForRP extends Grid {
   protected gridLogic: ReportedForRPLogic;
@@ -11,55 +12,16 @@ export default class ReportedForRP extends Grid {
     super(config, gridLogic);
   }
 
-  activatePower() {
-    if (!this.buttons) {
-      this.buttons = this.makeButtons();
-      return this.buttons;
-    }
+  getPowerConfiguration(){
+    let config = [];
+    config.push(new ChargeModel('sage', 50, () => this.sagedClick()));
+    config.push(new ChargeModel('report', 350, () => this.reportedClick()));
+    config.push(new ChargeModel('ban', 650, () => this.bannedClick()));
+
+    return config;
   }
 
-  private makeButtons() {
-    let buttons = this.tools.misc.addGroup();
-    buttons.add(
-      this.tools.button.make(
-        50,
-        1250,
-        ['power'],
-        function() {
-          this.sageClick();
-        }.bind(this)
-      )
-    );
-
-    buttons.add(
-      this.tools.button.make(
-        350,
-        1250,
-        ['power'],
-        function() {
-          this.reportedClick();
-        }.bind(this)
-      )
-    );
-
-    buttons.add(
-      this.tools.button.make(
-        650,
-        1250,
-        ['power'],
-        function() {
-          this.bannedClick();
-        }.bind(this)
-      )
-    );
-
-    buttons.alpha = 0;
-    this.tools.tween.to(buttons, { alpha: 1 }, 500, true);
-
-    return buttons;
-  }
-
-  private sageClick() {
+  private sagedClick() {
     if (this.gridLogic.sagePower()) {
       this.gameboardConfig.chargeSignal.dispatch();
     } else {

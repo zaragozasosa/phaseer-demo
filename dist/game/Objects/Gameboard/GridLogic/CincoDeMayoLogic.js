@@ -17,10 +17,10 @@ var CincoDeMayoLogic = (function (_super) {
     function CincoDeMayoLogic(gameboardConfig) {
         return _super.call(this, gameboardConfig) || this;
     }
-    CincoDeMayoLogic.prototype.power = function () {
+    CincoDeMayoLogic.prototype.getAmmo = function () {
         return new AmmoModel_1.default('bullet', this.gameboardConfig.bulletAmmo, 175);
     };
-    CincoDeMayoLogic.prototype.useAmmo = function (tile) {
+    CincoDeMayoLogic.prototype.power = function (tile) {
         if (this.grid.filter(function (x) { return x; }).length > 1) {
             tile.kill();
             this.cleanGrid();

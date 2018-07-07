@@ -71,6 +71,7 @@ var Grid = (function (_super) {
         group.add(this.tools.graphic.makeWall(wallLength, 0, 1, wallLength));
         return group;
     };
+    Grid.prototype.getPowerConfiguration = function () { };
     return Grid;
 }(Base_1.default));
 exports.default = Grid;

@@ -8,11 +8,11 @@ export default class CincoDeMayoLogic extends LogicalGrid {
     super(gameboardConfig);
   }
 
-  power() {
+  getAmmo() {
     return new AmmoModel('bullet', this.gameboardConfig.bulletAmmo, 175);
   }
 
-  useAmmo(tile: GridTile) {
+  power(tile: GridTile) {
     if (this.grid.filter(x => x).length > 1) {
       tile.kill();
       this.cleanGrid();

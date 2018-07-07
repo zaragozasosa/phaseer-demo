@@ -1,49 +1,26 @@
 import Gameboard from './../Gameboard';
-import GameboardConfig from './../../../Config/GameboardConfig';
-import PowerWindow from './../../Windows/PowerWindow';
 
 export default class ChargeGameboard extends Gameboard {
-  private buttons: Phaser.Group;
-  private charges: number;
-  private chargesText: Phaser.Text;
 
   start() {
     this.createGrid();
-    this.actionButton.kill();
-    let group: Phaser.Group = this.grid.activatePower();
-    this.buttons = group;
-    this.charges = group.getAll().length;
+    let buttonsInfo = this.grid.getPowerConfiguration();
+    this.playerUI.create(buttonsInfo);
+    this.showOnce = true;
 
-    for (let button of group.getAll()) {
-      button.inputEnabled = false;
-      button.tint = Phaser.Color.GRAY;
-    }
-
-    let label =this.tools.text.make(20, 135, 'Charges: ', 50);
-    this.chargesText = this.tools.text.make(280, 135, `${this.charges}`, 50);
-
-    this.tools.tween.appear(label);
-    this.tools.tween.appear(this.chargesText );
-    
     this.gameboardConfig.chargeSignal.add(
       function() {
         this.useCharge();
       }.bind(this)
     );
-    this.showOnce = true;
   }
 
   private useCharge() {
-    this.charges--;
-    this.chargesText.setText(`${this.charges}`);
-    this.tools.audio.playTwoSounds(this.gameboardConfig);
+    this.playerUI.update();
+    
     if (this.showOnce) {
-      let window = new PowerWindow(this.gameboardConfig.mainTile);
+      this.playerUI.activatePower();
       this.showOnce = false;
-    }
-
-    if (!this.charges) {
-      this.buttons.removeAll(true);
     }
   }
 
@@ -52,18 +29,6 @@ export default class ChargeGameboard extends Gameboard {
       return true;
     }
 
-    for (let button of this.buttons.getAll()) {
-      if (buttonStatus === GameboardConfig.BUTTON_ACTIVE) {
-        button.tint = Phaser.Color.WHITE;
-        button.inputEnabled = true;
-      }
-      if (buttonStatus === GameboardConfig.BUTTON_SLEEP) {
-        button.tint = Phaser.Color.WHITE;
-        button.inputEnabled = false;
-      } else if (buttonStatus === GameboardConfig.BUTTON_SLEEP_DISABLED) {
-        button.tint = Phaser.Color.GRAY;
-        button.inputEnabled = false;
-      }
-    }
+    this.playerUI.toggleButton(buttonStatus);
   }
 }

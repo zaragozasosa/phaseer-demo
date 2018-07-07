@@ -21,25 +21,17 @@ export default abstract class Gameboard extends Base {
   points: number;
   movements: number;
   timer: Phaser.Timer;
-  actionButton: Phaser.Button;
   background: Phaser.Sprite;
   isPaused: boolean;
 
   constructor(
     gameboardConfig: GameboardConfig,
-    gameboardUI = null,
-    playerUI = null
+    gameboardUI: GameboardUI,
+    playerUI: PlayerUI
   ) {
     super();
     this.gameboardUI = gameboardUI;
-    if (!gameboardUI) {
-      this.gameboardUI = new GameboardUI(gameboardConfig);
-    }
-
     this.playerUI = playerUI;
-    if (!playerUI) {
-      this.playerUI = new PlayerUI(gameboardConfig);
-    }
 
     this.gameStarted = false;
     this.isPaused = false;
@@ -47,27 +39,28 @@ export default abstract class Gameboard extends Base {
     this.showOnce = true;
     this.gameboardConfig = gameboardConfig;
     this.tools.graphic.addBackground();
-    this.background = this.tools.sprite.createBackground();
+    let backId = this.gameboardConfig.mainTile.power.backgroundId;
+    this.background = this.tools.sprite.createBackground(backId);
 
     this.gameOver = false;
     this.wonGame = false;
     let updateScoreSignal = new Phaser.Signal();
     updateScoreSignal.add(
-      function(addToMovement) {
+      function (addToMovement) {
         this.updateScore(addToMovement);
       }.bind(this)
     );
 
     let toggleButtonSignal = new Phaser.Signal();
     toggleButtonSignal.add(
-      function(status) {
+      function (status) {
         this.toggleButton(status);
       }.bind(this)
     );
 
     let gameoverSignal = new Phaser.Signal();
     gameoverSignal.add(
-      function(win) {
+      function (win) {
         this.gameover(win);
       }.bind(this)
     );
@@ -94,34 +87,40 @@ export default abstract class Gameboard extends Base {
 
   start() {
     this.createGrid();
+    this.createPlayerUI();  
+  }
+
+  protected createGameboardUI() {
+    this.gameboardUI.create(
+      this.points,
+      this.timer,
+      function () {
+        if (!this.isPaused) {
+          this.pausetoggle();
+        }
+      }.bind(this)
+    );
+  }
+
+  protected createPlayerUI() {
+    this.playerUI.create(
+      function () {
+        if (!this.isPaused) {
+          this.activatePower();
+        }
+      }.bind(this)
+    );
   }
 
   protected createGrid() {
     this.grid = GridFactory.create(this.gameboardConfig);
     this.timer = this.tools.misc.createTimer();
     this.points = this.grid.calculatePoints();
-
-    this.gameboardUI.create(
-      this.points,
-      this.timer,
-      function() {
-        if (!this.isPaused) {
-          this.pausetoggle();
-        }
-      }.bind(this)
-    );
-
-    this.playerUI.create(
-      function() {
-        if (!this.isPaused) {
-          this.activatePower();
-        }
-      }.bind(this)
-    );
-
     this.input = new InputManager(this.config);
     this.gameStarted = true;
     this.debugWin();
+
+    this.createGameboardUI();
   }
 
   update() {
@@ -167,7 +166,6 @@ export default abstract class Gameboard extends Base {
     }
     this.playerUI.activatePower();
     this.grid.activatePower();
-    this.tools.audio.playTwoSounds(this.gameboardConfig);
   }
 
   gameover(win: boolean) {
@@ -213,7 +211,7 @@ export default abstract class Gameboard extends Base {
     let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
     win.inputEnabled = true;
     win.events.onInputDown.addOnce(
-      function() {
+      function () {
         this.gameover(true);
       }.bind(this)
     );
@@ -221,7 +219,7 @@ export default abstract class Gameboard extends Base {
     let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
     lose.inputEnabled = true;
     lose.events.onInputDown.addOnce(
-      function() {
+      function () {
         this.gameover(false);
       }.bind(this)
     );

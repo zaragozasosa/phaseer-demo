@@ -13,8 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
 var SimplePowerGameboard = (function (_super) {
     __extends(SimplePowerGameboard, _super);
-    function SimplePowerGameboard(gameboardConfig) {
-        return _super.call(this, gameboardConfig) || this;
+    function SimplePowerGameboard() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return SimplePowerGameboard;
 }(Gameboard_1.default));

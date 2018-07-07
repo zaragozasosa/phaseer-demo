@@ -12,31 +12,22 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
 var GridFactory_1 = require("./GridFactory");
-var GameboardUI_1 = require("./GameboardUI");
-var PlayerUI_1 = require("./PlayerUI");
 var InputManager_1 = require("./../../InputManager");
 var Config_1 = require("./../../Config/Config");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
     function Gameboard(gameboardConfig, gameboardUI, playerUI) {
-        if (gameboardUI === void 0) { gameboardUI = null; }
-        if (playerUI === void 0) { playerUI = null; }
         var _this = _super.call(this) || this;
         _this.gameboardUI = gameboardUI;
-        if (!gameboardUI) {
-            _this.gameboardUI = new GameboardUI_1.default(gameboardConfig);
-        }
         _this.playerUI = playerUI;
-        if (!playerUI) {
-            _this.playerUI = new PlayerUI_1.default(gameboardConfig);
-        }
         _this.gameStarted = false;
         _this.isPaused = false;
         _this.movements = 0;
         _this.showOnce = true;
         _this.gameboardConfig = gameboardConfig;
         _this.tools.graphic.addBackground();
-        _this.background = _this.tools.sprite.createBackground();
+        var backId = _this.gameboardConfig.mainTile.power.backgroundId;
+        _this.background = _this.tools.sprite.createBackground(backId);
         _this.gameOver = false;
         _this.wonGame = false;
         var updateScoreSignal = new Phaser.Signal();
@@ -72,24 +63,30 @@ var Gameboard = (function (_super) {
     };
     Gameboard.prototype.start = function () {
         this.createGrid();
+        this.createPlayerUI();
     };
-    Gameboard.prototype.createGrid = function () {
-        this.grid = GridFactory_1.default.create(this.gameboardConfig);
-        this.timer = this.tools.misc.createTimer();
-        this.points = this.grid.calculatePoints();
+    Gameboard.prototype.createGameboardUI = function () {
         this.gameboardUI.create(this.points, this.timer, function () {
             if (!this.isPaused) {
                 this.pausetoggle();
             }
         }.bind(this));
+    };
+    Gameboard.prototype.createPlayerUI = function () {
         this.playerUI.create(function () {
             if (!this.isPaused) {
                 this.activatePower();
             }
         }.bind(this));
+    };
+    Gameboard.prototype.createGrid = function () {
+        this.grid = GridFactory_1.default.create(this.gameboardConfig);
+        this.timer = this.tools.misc.createTimer();
+        this.points = this.grid.calculatePoints();
         this.input = new InputManager_1.default(this.config);
         this.gameStarted = true;
         this.debugWin();
+        this.createGameboardUI();
     };
     Gameboard.prototype.update = function () {
         if (!this.gameStarted) {
@@ -131,7 +128,6 @@ var Gameboard = (function (_super) {
         }
         this.playerUI.activatePower();
         this.grid.activatePower();
-        this.tools.audio.playTwoSounds(this.gameboardConfig);
     };
     Gameboard.prototype.gameover = function (win) {
         this.gameOver = true;

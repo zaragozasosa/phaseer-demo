@@ -11,7 +11,7 @@ export default class TileModel {
   sfxVolume: number;
   summary: string;
   powerId: string;
-
+  
   power: PowerModel;
 
   staticValue: number;

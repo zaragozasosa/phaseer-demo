@@ -12,11 +12,11 @@ export default class GachaAddiction extends Grid {
   }
 
   activatePower() {
-    if(this.diamondInfo) {
-      this.gridLogic.power();
-    } else {
-      this.diamondInfo = this.gridLogic.getPowerInfo();
-      return this.diamondInfo;
-    }
+    this.gridLogic.power();
+  }
+
+  getPowerConfiguration() {
+    this.diamondInfo = this.gridLogic.getPowerInfo();
+    return this.diamondInfo;
   }
 }

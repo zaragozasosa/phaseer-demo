@@ -1,13 +1,13 @@
 import Gameboard from '../Objects/Gameboard/Gameboard';
 import GameboardFactory from '../Objects/Gameboard/GameboardFactory';
 import GameboardConfig from './../Config/GameboardConfig';
+import SimpleGameUI from '../Objects/Gameboard/GameUI/SimpleGameUI';
 
 export default class Unranked extends Phaser.State {
   private gameboard: Gameboard;
 
   init(gameboardConfig: GameboardConfig) {
-    gameboardConfig.arraySize = gameboardConfig.defaultArraySize;
-    this.gameboard = GameboardFactory.create(gameboardConfig);
+    this.gameboard = GameboardFactory.create(gameboardConfig, new SimpleGameUI(gameboardConfig));
     this.gameboard.start();
   }
 

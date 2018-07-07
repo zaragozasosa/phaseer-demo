@@ -89,12 +89,12 @@ var SpriteFactory = (function (_super) {
         sprite.inputEnabled = true;
         return sprite;
     };
-    SpriteFactory.prototype.createBackground = function () {
+    SpriteFactory.prototype.createBackground = function (key) {
         var safeZone = this.config.safeZone;
         var config = this.config;
         var x = 0;
         var y = safeZone.bgPaddingY;
-        var sprite = this.createSprite(x, y, 'witch');
+        var sprite = this.createSprite(x, y, key);
         return sprite;
     };
     SpriteFactory.prototype.makeReverseTexture = function (key) {

@@ -1,12 +1,11 @@
 import Base from './../../Base';
 import GameboardConfig from './../../Config/GameboardConfig';
-import PowerWindow from './../Windows/PowerWindow';
 import GameOverWindow from './../Windows/GameOverWindow';
 import WinWindow from './../Windows/WinWindow';
 import PauseWindow from './../Windows/PauseWindow';
 import { ColorSettings } from './../../Config/Config';
 
-export default class GameboardUI extends Base {
+export default abstract class GameboardUI extends Base {
   protected gameboardConfig: GameboardConfig;
   protected header: Phaser.Text;
   protected points: number;

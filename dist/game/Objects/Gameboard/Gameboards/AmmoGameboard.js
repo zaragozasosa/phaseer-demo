@@ -11,8 +11,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Gameboard_1 = require("./../Gameboard");
-var AmmoModel_1 = require("./../../../Models/AmmoModel");
-var AmmoBar_1 = require("./../AmmoBar");
 var AmmoGameboard = (function (_super) {
     __extends(AmmoGameboard, _super);
     function AmmoGameboard() {
@@ -20,26 +18,17 @@ var AmmoGameboard = (function (_super) {
     }
     AmmoGameboard.prototype.start = function () {
         this.createGrid();
+        this.createPlayerUI();
         this.gameboardConfig.updateAmmoSignal.add(function () {
-            this.updateAmmo();
+            this.playerUI.update();
         }.bind(this));
     };
     AmmoGameboard.prototype.activatePower = function () {
         if (this.gameOver) {
             return true;
         }
-        this.playerUI.activatePower();
-        this.tools.audio.playTwoSounds(this.gameboardConfig);
-        var response = this.grid.activatePower();
-        if (response && response instanceof AmmoModel_1.default) {
-            var model = response;
-            this.ammoBar = new AmmoBar_1.default(model);
-        }
-    };
-    AmmoGameboard.prototype.updateAmmo = function () {
-        if (this.ammoBar.update() === 0) {
-            this.gameboardConfig.clickTileSignal.removeAll();
-        }
+        var response = this.grid.getPowerConfiguration();
+        this.playerUI.activatePower(response);
     };
     return AmmoGameboard;
 }(Gameboard_1.default));

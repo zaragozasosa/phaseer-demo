@@ -21,13 +21,11 @@ var GachaAddiction = (function (_super) {
         return _this;
     }
     GachaAddiction.prototype.activatePower = function () {
-        if (this.diamondInfo) {
-            this.gridLogic.power();
-        }
-        else {
-            this.diamondInfo = this.gridLogic.getPowerInfo();
-            return this.diamondInfo;
-        }
+        this.gridLogic.power();
+    };
+    GachaAddiction.prototype.getPowerConfiguration = function () {
+        this.diamondInfo = this.gridLogic.getPowerInfo();
+        return this.diamondInfo;
     };
     return GachaAddiction;
 }(Grid_1.default));

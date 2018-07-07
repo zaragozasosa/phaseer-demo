@@ -12,11 +12,11 @@ export default class TimeTravel extends Grid {
   }
 
   activatePower() {
-    if(this.bugInfo) {
-      this.gridLogic.power();
-    } else {
-      this.bugInfo = this.gridLogic.getPowerInfo();
-      return this.bugInfo;
-    }
+    this.gridLogic.power();
+  }
+
+  getPowerConfiguration() {
+    this.bugInfo = this.gridLogic.getPowerInfo();
+    return this.bugInfo;
   }
 }

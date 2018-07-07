@@ -21,15 +21,9 @@ var DetectiveWork = (function (_super) {
         return _this;
     }
     DetectiveWork.prototype.activatePower = function () {
-        if (!this.elements) {
-            this.elements = this.makeElements();
-            return this.elements;
-        }
-        else {
-            return this.gridLogic.createGhostTile();
-        }
+        return this.gridLogic.createGhostTile();
     };
-    DetectiveWork.prototype.makeElements = function () {
+    DetectiveWork.prototype.getPowerConfiguration = function () {
         var group = this.tools.misc.addGroup();
         group.inputEnableChildren = true;
         group.add(this.tools.text.make(50, 1200, 'UP', 50));
@@ -40,8 +34,6 @@ var DetectiveWork = (function (_super) {
         btn.tint = Phaser.Color.GRAY;
         group.add(btn);
         btn.inputEnabled = false;
-        group.alpha = 0;
-        this.tools.tween.to(group, { alpha: 1 }, 500, true);
         group.onChildInputDown.add(function (child) {
             group.setAllChildren('tint', Phaser.Color.WHITE);
             child.tint = Phaser.Color.RED;
@@ -61,6 +53,7 @@ var DetectiveWork = (function (_super) {
                 this.gridLogic.investigate();
             }
         }.bind(this));
+        this.elements = group;
         return group;
     };
     return DetectiveWork;

@@ -404,7 +404,7 @@ export default abstract class LogicalGrid extends Base {
 
   abstract canUsePower();
 
-  abstract power();
+  abstract power(...args);
 
   // getColumnForDebug(row: number) {
   //   let val1 = this.get(row, 0) ? this.get(row, 0).value : 0;

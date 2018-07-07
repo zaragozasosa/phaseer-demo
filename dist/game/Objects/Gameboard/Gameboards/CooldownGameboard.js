@@ -18,18 +18,15 @@ var CooldownGameboard = (function (_super) {
     }
     CooldownGameboard.prototype.start = function () {
         this.createGrid();
-        this.actionButton.kill();
         this.passedTurns = 0;
         this.cooldown = 0;
         this.powerStarted = false;
         this.powerFinished = false;
-        var group = this.grid.activatePower();
-        this.elements = group;
-        this.cooldownText = this.tools.text.make(20, 150, 'Status: Idle', 50);
-        this.tools.tween.appear(this.cooldownText);
+        var group = this.grid.getPowerConfiguration();
+        this.playerUI.create(group);
         this.gameboardConfig.cooldownSignal.add(function (activatePower, cooldown, success) {
             if (success) {
-                this.cooldownText.setText("Status: Success!");
+                this.playerUI.updateSpecialElements('Status: Success!');
                 this.powerFinished = true;
             }
             else if (activatePower) {
@@ -48,16 +45,16 @@ var CooldownGameboard = (function (_super) {
     CooldownGameboard.prototype.newTurn = function () {
         this.passedTurns++;
         if (this.powerStarted && this.passedTurns === this.turnsForPower) {
-            this.cooldownText.setText('Status: Failure');
+            this.playerUI.updateSpecialElements('Status: Failure!');
             this.powerFinished = true;
         }
         else if (this.powerStarted) {
-            this.cooldownText.setText("Status: " + (this.turnsForPower - this.passedTurns) + " turns left");
+            this.playerUI.updateSpecialElements("Status: " + (this.turnsForPower - this.passedTurns) + " turns left");
         }
         else if (this.turnsForPower && this.passedTurns === this.turnsForPower) {
             var turns = this.grid.activatePower();
             this.showMessage('You found the culprit!', 65);
-            this.cooldownText.setText("Status: " + turns + " turns left");
+            this.playerUI.updateSpecialElements("Status: " + turns + " turns left");
             this.passedTurns = 0;
             this.powerStarted = true;
         }
@@ -65,31 +62,23 @@ var CooldownGameboard = (function (_super) {
             this.unblockElements();
         }
         else if (this.cooldown) {
-            this.cooldownText.setText("Status: " + (this.cooldown - this.passedTurns) + " turns of cd");
+            this.playerUI.updateSpecialElements("Status: " + (this.cooldown - this.passedTurns) + " turns of cd");
         }
     };
     CooldownGameboard.prototype.blockElements = function (cooldown) {
         this.passedTurns = 0;
-        var elementsToKill = this.elements.getAll('tint', Phaser.Color.WHITE);
-        for (var _i = 0, elementsToKill_1 = elementsToKill; _i < elementsToKill_1.length; _i++) {
-            var e = elementsToKill_1[_i];
-            e.kill();
-        }
         this.cooldown = cooldown;
-        this.cooldownText.setText("Status: " + cooldown + " turns of cd");
+        this.playerUI.blockButtons(true);
+        this.playerUI.updateSpecialElements("Status: " + cooldown + " turns of cd");
     };
     CooldownGameboard.prototype.unblockElements = function () {
-        this.elements.callAll('revive', null);
-        this.elements.setAllChildren('inputEnabled', true);
         this.cooldown = null;
-        this.cooldownText.setText("Status: Investigating");
+        this.playerUI.blockButtons(false);
     };
     CooldownGameboard.prototype.cooldownPower = function (turnsToActivate) {
-        this.elements.kill();
         this.turnsForPower = turnsToActivate;
         this.passedTurns = 0;
-        this.showMessage('The culprit will appear soon!', 55);
-        this.cooldownText.setText('Status: ?');
+        this.playerUI.activatePower();
     };
     return CooldownGameboard;
 }(Gameboard_1.default));

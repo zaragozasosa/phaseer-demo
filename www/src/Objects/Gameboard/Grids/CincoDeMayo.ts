@@ -13,10 +13,10 @@ export default class TimeTravel extends Grid {
     super(config, gridLogic);
   }
 
-  activatePower() {
-    this.ammo = this.gridLogic.power();
+  getPowerConfiguration() {
+    this.ammo = this.gridLogic.getAmmo();
     this.gameboardConfig.clickTileSignal.add(function(tile: any) {
-      this.gridLogic.useAmmo(tile);
+      this.gridLogic.power(tile);
     }.bind(this));
     return this.ammo;
   }

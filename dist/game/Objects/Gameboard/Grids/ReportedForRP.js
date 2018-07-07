@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
 var ReportedForRPLogic_1 = require("./../GridLogic/ReportedForRPLogic");
+var ChargeModel_1 = require("./../../../Models/ChargeModel");
 var ReportedForRP = (function (_super) {
     __extends(ReportedForRP, _super);
     function ReportedForRP(config) {
@@ -20,28 +21,15 @@ var ReportedForRP = (function (_super) {
         _this = _super.call(this, config, gridLogic) || this;
         return _this;
     }
-    ReportedForRP.prototype.activatePower = function () {
-        if (!this.buttons) {
-            this.buttons = this.makeButtons();
-            return this.buttons;
-        }
+    ReportedForRP.prototype.getPowerConfiguration = function () {
+        var _this = this;
+        var config = [];
+        config.push(new ChargeModel_1.default('sage', 50, function () { return _this.sagedClick(); }));
+        config.push(new ChargeModel_1.default('report', 350, function () { return _this.reportedClick(); }));
+        config.push(new ChargeModel_1.default('ban', 650, function () { return _this.bannedClick(); }));
+        return config;
     };
-    ReportedForRP.prototype.makeButtons = function () {
-        var buttons = this.tools.misc.addGroup();
-        buttons.add(this.tools.button.make(50, 1250, ['power'], function () {
-            this.sageClick();
-        }.bind(this)));
-        buttons.add(this.tools.button.make(350, 1250, ['power'], function () {
-            this.reportedClick();
-        }.bind(this)));
-        buttons.add(this.tools.button.make(650, 1250, ['power'], function () {
-            this.bannedClick();
-        }.bind(this)));
-        buttons.alpha = 0;
-        this.tools.tween.to(buttons, { alpha: 1 }, 500, true);
-        return buttons;
-    };
-    ReportedForRP.prototype.sageClick = function () {
+    ReportedForRP.prototype.sagedClick = function () {
         if (this.gridLogic.sagePower()) {
             this.gameboardConfig.chargeSignal.dispatch();
         }
