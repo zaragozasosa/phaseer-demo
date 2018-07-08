@@ -60,6 +60,7 @@ var GridTile = (function (_super) {
         _this.sprite.events.onInputDown.add(function () {
             this.gameboardConfig.clickTileSignal.dispatch(this);
         }.bind(_this));
+        _this.prepareForAnimation();
         return _this;
     }
     Object.defineProperty(GridTile.prototype, "isAlive", {
@@ -287,6 +288,25 @@ var GridTile = (function (_super) {
     };
     GridTile.prototype.toString = function () {
         return this.sprite.key + "  " + this.value + " -  " + this.posX + ":" + this.posY;
+    };
+    GridTile.prototype.prepareForAnimation = function () {
+        var _this = this;
+        var tile = this.model;
+        debugger;
+        this.sprite.animations.add('hey', tile.animationFrames, tile.animationSpeed);
+        var animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
+        this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(animationLoopTime); });
+    };
+    GridTile.prototype.animateTile = function (animationLoopTime) {
+        var _this = this;
+        if (animationLoopTime === void 0) { animationLoopTime = 0; }
+        if (!this.sprite.alive) {
+            return;
+        }
+        var animation = this.sprite.animations.play('hey');
+        if (animationLoopTime) {
+            this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(animationLoopTime); });
+        }
     };
     return GridTile;
 }(Base_1.default));

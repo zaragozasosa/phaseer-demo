@@ -65,6 +65,14 @@ var SpriteFactory = (function (_super) {
         sprite.x = config.safeZone.paddingX + x;
         return sprite;
     };
+    SpriteFactory.prototype.makeCenteredFromSpriteSheet = function (y, id, frame, spriteScale) {
+        if (spriteScale === void 0) { spriteScale = 1; }
+        var config = this.config;
+        var sprite = this.createFromSpriteSheet(0, y, id, frame, spriteScale);
+        var x = (this.config.safeZone.safeWidth - sprite.width) / 2;
+        sprite.x = config.safeZone.paddingX + x;
+        return sprite;
+    };
     SpriteFactory.prototype.createSprite = function (posX, posY, id, scale, padX, padY) {
         if (scale === void 0) { scale = 1; }
         if (padX === void 0) { padX = 0; }
@@ -75,6 +83,20 @@ var SpriteFactory = (function (_super) {
         var xPad = config.safeZone.paddingX + padX;
         var yPad = config.safeZone.paddingY + padY;
         var sprite = this.game.add.sprite(x + xPad, y + yPad, id);
+        sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
+        return sprite;
+    };
+    SpriteFactory.prototype.createFromSpriteSheet = function (posX, posY, id, frame, scale, padX, padY) {
+        if (frame === void 0) { frame = 1; }
+        if (scale === void 0) { scale = 1; }
+        if (padX === void 0) { padX = 0; }
+        if (padY === void 0) { padY = 0; }
+        var x = posX * this.config.scaleFactor;
+        var y = posY * this.config.scaleFactor;
+        var config = this.config;
+        var xPad = config.safeZone.paddingX + padX;
+        var yPad = config.safeZone.paddingY + padY;
+        var sprite = this.game.add.sprite(x + xPad, y + yPad, id, frame);
         sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
         return sprite;
     };

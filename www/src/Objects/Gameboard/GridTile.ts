@@ -91,6 +91,8 @@ export default class GridTile extends Base {
         this.gameboardConfig.clickTileSignal.dispatch(this);
       }.bind(this)
     );
+
+    this.prepareForAnimation();
   }
 
   get isAlive(): boolean {
@@ -314,6 +316,7 @@ export default class GridTile extends Base {
     let sca = this.gameboardConfig.gameModeTileScale;
     let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca);
     sprite.body.collideWorldBounds = true;
+
     return sprite;
   }
 
@@ -350,5 +353,25 @@ export default class GridTile extends Base {
 
   toString() {
     return `${this.sprite.key}  ${this.value} -  ${this.posX}:${this.posY}`;
+  }
+
+  prepareForAnimation() {
+    let tile = this.model;
+    debugger;
+    this.sprite.animations.add('hey', tile.animationFrames, tile.animationSpeed);
+
+    let animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
+    this.tools.misc.runLater(animationLoopTime, () => this.animateTile(animationLoopTime));
+  }
+
+  animateTile(animationLoopTime = 0) {
+    if(!this.sprite.alive) {
+      return;
+    }
+
+    let animation = this.sprite.animations.play('hey');
+    if(animationLoopTime) {
+      this.tools.misc.runLater(animationLoopTime, () => this.animateTile(animationLoopTime));
+    }
   }
 }

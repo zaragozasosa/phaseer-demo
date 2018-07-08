@@ -74,6 +74,17 @@ export default class SpriteFactory extends Factory {
     return sprite;
   }
 
+
+  makeCenteredFromSpriteSheet(y: number, id: string, frame: number, spriteScale = 1) {
+    let config = this.config;
+    let sprite = this.createFromSpriteSheet(0, y, id, frame, spriteScale);
+
+    let x = (this.config.safeZone.safeWidth - sprite.width) / 2;
+    sprite.x = config.safeZone.paddingX + x;
+
+    return sprite;
+  }
+
   createSprite(
     posX: number,
     posY: number,
@@ -89,6 +100,27 @@ export default class SpriteFactory extends Factory {
     let xPad = config.safeZone.paddingX + padX;
     let yPad = config.safeZone.paddingY + padY;
     let sprite = this.game.add.sprite(x + xPad, y + yPad, id);
+    sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
+
+    return sprite;
+  }
+
+  createFromSpriteSheet(
+    posX: number,
+    posY: number,
+    id: string,
+    frame = 1,
+    scale = 1,
+    padX = 0,
+    padY = 0
+  ) {
+    let x = posX * this.config.scaleFactor;
+    let y = posY * this.config.scaleFactor;
+
+    let config = this.config;
+    let xPad = config.safeZone.paddingX + padX;
+    let yPad = config.safeZone.paddingY + padY;
+    let sprite = this.game.add.sprite(x + xPad, y + yPad, id, frame);
     sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
 
     return sprite;

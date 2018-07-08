@@ -1,6 +1,7 @@
 import { Singleton, Tools } from './../Config/Config';
 import GameboardConfig from './../Config/GameboardConfig';
 import MainMenuLoader from './../Loaders/MainMenuLoader';
+import SpritesLoader from './../Loaders/SpritesLoader';
 
 export default class Preloader extends Phaser.State {
   preloadBar: Phaser.Sprite;
@@ -17,13 +18,8 @@ export default class Preloader extends Phaser.State {
     this.preloadBar = tools.sprite.makeCentered(600, 'preloadBar', 2);
     this.load.setPreloadSprite(this.preloadBar);
 
-    for (let sprite of this.gameboardConfig.tiles) {
-      let path = `assets/images/${sprite.imagePath}`;
-      let specialPath = `assets/images/${sprite.specialImagePath}`;
-
-      this.load.image(sprite.id, path);
-      this.load.image(sprite.specialId, specialPath);
-    }
+    let loader = new SpritesLoader();
+    loader.loadResources(this.load, this.gameboardConfig);
   }
 
   create() {

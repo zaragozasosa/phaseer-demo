@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("./../Config/Config");
 var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var MainMenuLoader_1 = require("./../Loaders/MainMenuLoader");
+var SpritesLoader_1 = require("./../Loaders/SpritesLoader");
 var Preloader = (function (_super) {
     __extends(Preloader, _super);
     function Preloader() {
@@ -26,13 +27,8 @@ var Preloader = (function (_super) {
         this.gameboardConfig = new GameboardConfig_1.default();
         this.preloadBar = tools.sprite.makeCentered(600, 'preloadBar', 2);
         this.load.setPreloadSprite(this.preloadBar);
-        for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
-            var sprite = _a[_i];
-            var path = "assets/images/" + sprite.imagePath;
-            var specialPath = "assets/images/" + sprite.specialImagePath;
-            this.load.image(sprite.id, path);
-            this.load.image(sprite.specialId, specialPath);
-        }
+        var loader = new SpritesLoader_1.default();
+        loader.loadResources(this.load, this.gameboardConfig);
     };
     Preloader.prototype.create = function () {
         this.tools.transition.toLoaderConfig('MainMenu', this.gameboardConfig, new MainMenuLoader_1.default());

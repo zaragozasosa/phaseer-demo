@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TileModel = (function () {
-    function TileModel(id, name, fullName, friendId, sfxId, sfxVolume, powerId, power, firstStory, secondStory, summary, isMenuVisible, menuFriendId, isRealTile) {
+    function TileModel(id, name, fullName, friendId, sfxId, sfxVolume, powerId, power, animationFrames, firstStory, secondStory, summary, isMenuVisible, menuFriendId, isRealTile) {
         if (isMenuVisible === void 0) { isMenuVisible = true; }
         if (menuFriendId === void 0) { menuFriendId = null; }
         if (isRealTile === void 0) { isRealTile = true; }
@@ -19,10 +19,12 @@ var TileModel = (function () {
         this.getSecondStory = secondStory;
         this.menuFriendId = menuFriendId;
         this.isRealTile = isRealTile;
+        this.animationFrames = animationFrames;
+        this.animationSpeed = 1.5;
     }
-    Object.defineProperty(TileModel.prototype, "specialId", {
+    Object.defineProperty(TileModel.prototype, "specialSpriteFrame", {
         get: function () {
-            return this.id + '-special';
+            return 4;
         },
         enumerable: true,
         configurable: true
@@ -30,13 +32,6 @@ var TileModel = (function () {
     Object.defineProperty(TileModel.prototype, "getMenuFriendId", {
         get: function () {
             return this.menuFriendId ? this.menuFriendId : this.friendId;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TileModel.prototype, "friendSpecialId", {
-        get: function () {
-            return this.friendId + '-special';
         },
         enumerable: true,
         configurable: true
@@ -71,14 +66,7 @@ var TileModel = (function () {
     });
     Object.defineProperty(TileModel.prototype, "imagePath", {
         get: function () {
-            return "tiles/" + this.id + ".png";
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TileModel.prototype, "specialImagePath", {
-        get: function () {
-            return "tiles/" + this.specialId + ".png";
+            return "characters/" + this.id + ".png";
         },
         enumerable: true,
         configurable: true

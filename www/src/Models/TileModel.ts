@@ -21,18 +21,16 @@ export default class TileModel {
   
   getFirstStory: any;
   getSecondStory: any;
-  
 
-  get specialId(): string {
-    return this.id + '-special';
+  animationFrames: Array<number>;
+  animationSpeed: number;
+
+  get specialSpriteFrame() {
+    return 4;
   }
-
+  
   get getMenuFriendId(): string {
     return this.menuFriendId ? this.menuFriendId : this.friendId;
-  }
-
-  get friendSpecialId(): string {
-    return this.friendId + '-special';
   }
 
   get sfxRoute(): string {
@@ -52,11 +50,7 @@ export default class TileModel {
   }
 
   get imagePath(): string {
-    return `tiles/${this.id}.png`;
-  }
-
-  get specialImagePath(): string {
-    return `tiles/${this.specialId}.png`;
+    return `characters/${this.id}.png`;
   }
 
   constructor(
@@ -68,6 +62,7 @@ export default class TileModel {
     sfxVolume: number,
     powerId: string,
     power: PowerModel,
+    animationFrames: Array<number>,
     firstStory: any,
     secondStory: any,    
     summary: string,
@@ -89,5 +84,8 @@ export default class TileModel {
     this.getSecondStory = secondStory;
     this.menuFriendId = menuFriendId;
     this.isRealTile = isRealTile;
+
+    this.animationFrames = animationFrames;
+    this.animationSpeed = 1.5;
   }
 }

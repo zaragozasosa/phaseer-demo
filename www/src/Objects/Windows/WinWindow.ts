@@ -11,7 +11,7 @@ export default class WinWindow extends Window {
     let elements = this.tools.misc.addGroup();
     let sprites = this.tools.misc.addGroup();
     let text;
-    sprites.add(this.tools.sprite.makeCentered(y + 120, character.specialId, 2));
+    sprites.add(this.tools.sprite.makeCenteredFromSpriteSheet(y + 120, character.id, character.specialSpriteFrame, 2));
     text = 'You win!';
 
     this.config.storyboard.windowActionSignal = new Phaser.Signal();
