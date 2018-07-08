@@ -7,7 +7,7 @@ import SpriteAction from './../Objects/Storyboard/Actions/SpriteAction';
 import TitleAction from './../Objects/Storyboard/Actions/TitleAction';
 
 export default class GameboardConfig {
-  private baseList: Array<TileModel>;
+  baseList: Array<TileModel>;
   mainTile: TileModel;
   arraySize: number;
   defaultArraySize: number;

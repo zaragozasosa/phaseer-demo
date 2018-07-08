@@ -292,20 +292,19 @@ var GridTile = (function (_super) {
     GridTile.prototype.prepareForAnimation = function () {
         var _this = this;
         var tile = this.model;
-        debugger;
         this.sprite.animations.add('hey', tile.animationFrames, tile.animationSpeed);
         var animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
-        this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(animationLoopTime); });
+        this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(); });
     };
-    GridTile.prototype.animateTile = function (animationLoopTime) {
+    GridTile.prototype.animateTile = function () {
         var _this = this;
-        if (animationLoopTime === void 0) { animationLoopTime = 0; }
         if (!this.sprite.alive) {
             return;
         }
         var animation = this.sprite.animations.play('hey');
+        var animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
         if (animationLoopTime) {
-            this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(animationLoopTime); });
+            this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(); });
         }
     };
     return GridTile;

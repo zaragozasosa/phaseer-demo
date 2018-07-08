@@ -357,21 +357,21 @@ export default class GridTile extends Base {
 
   prepareForAnimation() {
     let tile = this.model;
-    debugger;
     this.sprite.animations.add('hey', tile.animationFrames, tile.animationSpeed);
 
     let animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
-    this.tools.misc.runLater(animationLoopTime, () => this.animateTile(animationLoopTime));
+    this.tools.misc.runLater(animationLoopTime, () => this.animateTile());
   }
 
-  animateTile(animationLoopTime = 0) {
+  animateTile() {
     if(!this.sprite.alive) {
       return;
     }
 
     let animation = this.sprite.animations.play('hey');
+    let animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
     if(animationLoopTime) {
-      this.tools.misc.runLater(animationLoopTime, () => this.animateTile(animationLoopTime));
+      this.tools.misc.runLater(animationLoopTime, () => this.animateTile());
     }
   }
 }

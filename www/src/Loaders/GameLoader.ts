@@ -14,10 +14,10 @@ export default class CharacterSelectionLoader {
     loader.audio('game-bgm', ['assets/audio/number-crunching.mp3']);
     loader.audio('game-bgm-intro', ['assets/audio/number-crunching-intro.mp3']);
 
-    loader.spritesheet('power', 'assets/images/power.png', 249, 93);
-    loader.spritesheet('sage', 'assets/images/sage.png', 249, 93);
-    loader.spritesheet('ban', 'assets/images/ban.png', 249, 93);
-    loader.spritesheet('report', 'assets/images/report.png', 249, 93);
+    loader.spritesheet('power', 'assets/images/buttons/power.png', 249, 93);
+    loader.spritesheet('sage', 'assets/images/buttons/sage.png', 249, 93);
+    loader.spritesheet('ban', 'assets/images/buttons/ban.png', 249, 93);
+    loader.spritesheet('report', 'assets/images/buttons/report.png', 249, 93);
 
   }
 }
