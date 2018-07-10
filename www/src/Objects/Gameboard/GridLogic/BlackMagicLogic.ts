@@ -7,7 +7,7 @@ export default class BlackMagicLogic extends LogicalGrid {
   }
 
   power() {
-    var tiles = this.getTilesOrdered(true);
+    var tiles = this.grid.getOrdered(true);
 
     if (this.canUsePower()) {
       for (let x = 0; x < tiles.length; x++) {
@@ -23,7 +23,7 @@ export default class BlackMagicLogic extends LogicalGrid {
   }
 
   canUsePower() {
-    var tiles = this.getTilesOrdered();
+    var tiles = this.grid.getOrdered();
     if (tiles.length > 5) {
       return true;
     } else {

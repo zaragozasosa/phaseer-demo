@@ -11,6 +11,7 @@ var GameboardConfig = (function () {
         this.bossArraySize = 4;
         this.arraySize = 3;
         this.initialArray = [];
+        this.gameMode = GameboardConfig.GAME_MODE_SINGLE_PLAYER;
         for (var x = 0; x <= this.arraySize; x++) {
             for (var y = 0; y <= this.arraySize; y++) {
                 this.initialArray.push(0);
@@ -25,6 +26,7 @@ var GameboardConfig = (function () {
         this.createPowers();
         this.createStories();
         this.createTiles();
+        this.playStory = true;
     }
     Object.defineProperty(GameboardConfig.prototype, "fullList", {
         get: function () {
@@ -178,6 +180,8 @@ var GameboardConfig = (function () {
     GameboardConfig.BUTTON_ACTIVE = 1;
     GameboardConfig.BUTTON_SLEEP = 2;
     GameboardConfig.BUTTON_SLEEP_DISABLED = 3;
+    GameboardConfig.GAME_MODE_SINGLE_PLAYER = 1;
+    GameboardConfig.GAME_MODE_BOSS_FIGHT = 2;
     return GameboardConfig;
 }());
 exports.default = GameboardConfig;

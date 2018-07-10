@@ -50,7 +50,7 @@ export default class AudioFactory extends Factory {
     config.bgm.play('', 0 , config.bgmVolume).onStop.addOnce(
       function() {
         config.bgm = this.game.add.audio(id);
-        config.bgm.play('', 3000 , config.bgmVolume, loop);
+        config.bgm.play('', 0 , config.bgmVolume, loop);
       }.bind(this)
     );
   }

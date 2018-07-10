@@ -1,6 +1,7 @@
 import LogicalGrid from './../LogicalGrid';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import GridTile from './../GridTile';
+import GhostTile from './../Tiles/GhostTile';
 
 export default class ReportedForRPLogic extends LogicalGrid {
   private direction: number;
@@ -25,10 +26,10 @@ export default class ReportedForRPLogic extends LogicalGrid {
 
   createGhostTile() {
     this.makeGhost = true;
-    this.ghostTileValue = this.getTilesOrdered()[0].value;
+    this.ghostTileValue = this.grid.getOrdered()[0].value;
 
     if(this.ghostTileValue === this.gameboardConfig.winningTile || this.ghostTileValue === this.gameboardConfig.winningTile / 2) {
-      this.turnsToDisappear = 2;
+      this.turnsToDisappear = 3;
     } else if(this.ghostTileValue === this.gameboardConfig.winningTile / 4) {
       this.turnsToDisappear = 3;
     } else if(this.ghostTileValue === this.gameboardConfig.winningTile / 8) {
@@ -41,38 +42,35 @@ export default class ReportedForRPLogic extends LogicalGrid {
     return this.turnsToDisappear;
   }
 
-  protected add() {
+
+
+  protected getTileNewPosition() {
     let maxPosition = this.gameboardConfig.arraySize;
     if (!this.direction) {
-
-      do {
-        var ranX = this.tools.misc.randomBetween(0, maxPosition);
-        var ranY = this.tools.misc.randomBetween(0, maxPosition);
-      } while (this.get(ranX, ranY));
-
-      this.makeNewTile(ranX, ranY);
+      return super.getTileNewPosition();
     } else {
       if (this.direction === Phaser.Keyboard.UP) {
-        this.makeNewTileAround(null, 0, 1);
+        return this.makeNewTileAround(null, 0, 1);
       } else if (this.direction === Phaser.Keyboard.DOWN) {
-        this.makeNewTileAround(null, maxPosition, -1);
+        return this.makeNewTileAround(null, maxPosition, -1);
       }
       if (this.direction === Phaser.Keyboard.LEFT) {
-        this.makeNewTileAround(0, null, 1);
+        return this.makeNewTileAround(0, null, 1);
       }
       if (this.direction === Phaser.Keyboard.RIGHT) {
-        this.makeNewTileAround(maxPosition, null, -1);
+        return this.makeNewTileAround(maxPosition, null, -1);
       }
     }
   }
+
 
   private makeNewTileAround(posX: number, posY: number, delta: number) {
     let max = this.gameboardConfig.arraySize;
     let min = 0;
     if (posX === null) {
       for (let x of this.randomListBetween(min, max)) {
-        if (!this.get(x, posY)) {
-          return this.makeNewTile(x, posY);
+        if (!this.grid.get(x, posY)) {
+          return new Phaser.Point(x, posY);
         }
       }
 
@@ -83,8 +81,8 @@ export default class ReportedForRPLogic extends LogicalGrid {
       }
     } else if (posY === null) {
       for (let y of this.randomListBetween(min, max)) {
-        if (!this.get(posX, y)) {
-          return this.makeNewTile(posX, y);
+        if (!this.grid.get(posX, y)) {
+          return new Phaser.Point(posX, y);
         }
       }
 
@@ -96,26 +94,23 @@ export default class ReportedForRPLogic extends LogicalGrid {
     }
   }
 
-  private makeNewTile(posX: number, posY: number) {
-    var newTilePos;
-    if (this.emptyTiles() > 6) {
-      var chance = this.tools.misc.randomBetween(0, 99);
-      (newTilePos = posX), posY, chance === 98 ? 2 : chance >= 90 ? 1 : 0;
-    } else {
-      newTilePos = 0;
+  add() {
+    if (!this.grid.isFull()) {
+      return;
     }
 
+    let pos = this.getTileNewPosition();
+
     if (this.makeGhost) {
-      let tile = new GridTile(
-        posX,
-        posY,
+      let tile = new GhostTile(
+        pos.x,
+        pos.y,
         this.gameboardConfig,
         null,
         this.ghostTileValue,
-        true,
         this.turnsToDisappear
       );
-      this.set(posX, posY, tile);
+      this.grid.set(pos.x, pos.y, tile);
       this.tilesGroup.add(tile.getGroup);
       this.direction = null;
       this.makeGhost = false;
@@ -127,9 +122,9 @@ export default class ReportedForRPLogic extends LogicalGrid {
         }.bind(this)
       );
     } else {
-      let tile = new GridTile(posX, posY, this.gameboardConfig, newTilePos);
-      this.set(posX, posY, tile);
-      this.tilesGroup.add(tile.getGroup);
+    let tile = new GridTile(pos.x, pos.y, this.gameboardConfig);
+    this.grid.set(pos.x, pos.y, tile);
+    this.tilesGroup.add(tile.getGroup);
     }
   }
 
@@ -139,17 +134,6 @@ export default class ReportedForRPLogic extends LogicalGrid {
       list.push(i);
     }
     return this.tools.misc.shuffleUniqueArray(list);
-  }
-
-  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
-    nextTile.value *= 2;
-    previousTile.value = 0;
-    previousTile.nextTile = nextTile;
-    if (nextTile.isGhost() || previousTile.isGhost()) {
-      nextTile.stopGhost();
-      previousTile.stopGhost();
-      this.gameboardConfig.cooldownSignal.dispatch(false, false, true);
-    }
   }
 
   canUsePower() {

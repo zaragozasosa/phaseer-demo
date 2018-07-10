@@ -30,12 +30,18 @@ var MainMenu = (function (_super) {
         this.cursor = new InputManager_1.default(this.config);
         this.started = false;
         tools.graphic.addBackground();
-        tools.audio.playNormal('title-bgm', true);
+        tools.audio.playIfSilent('title-bgm', true);
         var loader = new CharacterSelectionLoader_1.default(this.gameboardConfig.tiles);
+        this.gameboardConfig.playStory = true;
         var menuList = new MenuList_1.default('Menu');
+        menuList.addChild(new MenuObject_1.default('Free mode', function () {
+            this.gameboardConfig.playStory = false;
+            this.menu.destroy();
+            tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader, 'Unranked');
+        }.bind(this)));
         menuList.addChild(new MenuObject_1.default('Story mode', function () {
             this.menu.destroy();
-            tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader);
+            tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader, 'Story');
         }.bind(this)));
         menuList.addChild(new MenuObject_1.default('Project site', function () {
             window.location.href = 'https://github.com/zaragozasosa/phaseer-demo';

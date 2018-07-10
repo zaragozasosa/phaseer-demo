@@ -41,7 +41,7 @@ export default class Story extends Phaser.State {
       function() {
         this.continue();
       }.bind(this)
-    );
+    );  
   }
 
   update() {

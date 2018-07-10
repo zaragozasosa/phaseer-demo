@@ -8,37 +8,32 @@ export default class GridTile extends Base {
   posX: number;
   posY: number;
   value: number;
-  private frame: Phaser.Sprite;
-  private sprite: Phaser.Sprite;
-  private number: Phaser.Text;
-  private group: Phaser.Group;
+  protected frame: Phaser.Sprite;
+  protected sprite: Phaser.Sprite;
+  protected number: Phaser.Text;
+  protected group: Phaser.Group;
 
-  private gameboardConfig: GameboardConfig;
-  private mergeTween: Phaser.Tween;
-  private randomizeTween: Phaser.Tween;
-
-  private ghostTween: Phaser.Tween;
-  private ghostCooldown: number;
-  private ghostTurns: number;
-
-  private timeStopped: boolean;
+  protected gameboardConfig: GameboardConfig;
+  protected mergeTween: Phaser.Tween;
+  protected randomizeTween: Phaser.Tween;
+  protected timeStopped: boolean;
 
   constructor(
     x: number,
     y: number,
     gameboardConfig: GameboardConfig,
-    position = 0,
-    value = 0,
-    ghost = false,
-    ghostCooldown = 0
+    newTile = true,
+    value = 0
   ) {
     super();
+    let tween = this.tools.tween;
     this.gameboardConfig = gameboardConfig;
     this.nextTile = null;
 
-    if (value === 0) {
-      this.model = gameboardConfig.tiles[position];
-    } else {
+    if (newTile) {
+      this.model = gameboardConfig.tiles[0];
+    }
+    else {
       this.model = gameboardConfig.tiles.find(x => x.staticValue === value);
     }
     this.value = this.model.staticValue;
@@ -49,7 +44,7 @@ export default class GridTile extends Base {
     this.sprite = this.createSprite();
     this.group = this.tools.misc.addGroup();
     this.sprite.anchor.setTo(0, 0);
-    let modeScale = this.gameboardConfig.gameModeTileScale;    
+    let modeScale = this.gameboardConfig.gameModeTileScale;
     this.number = this.tools.text.makeTileNumber(
       this.posX,
       this.posY,
@@ -61,38 +56,25 @@ export default class GridTile extends Base {
     this.group.addChild(this.sprite);
     this.group.addChild(this.number);
     this.group.addChild(this.frame);
-
-    this.group.alpha = 0;
     this.group.angle = 0;
-
-    let tween = this.tools.tween;
-
     let t1 = tween.to(this.group, { alpha: 0.3 }, 150);
     let t2 = tween.to(this.group, { alpha: 1 }, 350);
-
     this.mergeTween = t1.chain(t2);
-
     this.randomizeTween = this.tools.tween.to(this.sprite, { angle: 360 }, 500);
-
-    this.ghostTween = tween.blink(this.group);
-
-    if (ghost) {
-      this.group.alpha = 1;
-      this.ghostCooldown = ghostCooldown;
-      this.ghostTurns = 0;
-      this.ghostTween.start();
-    } else {
-      tween.appear(this.group, 750);
-    }
-
+    tween.appear(this.group, 750);
     this.sprite.inputEnabled = true;
+
     this.sprite.events.onInputDown.add(
-      function() {
+      function () {
         this.gameboardConfig.clickTileSignal.dispatch(this);
       }.bind(this)
     );
 
-    this.prepareForAnimation();
+    this.sprite.animations.add('hey', this.model.animationFrames, this.model.animationSpeed);
+
+    if(newTile && this.tools.misc.randomBetween(0,6) === 0) {
+      this.sprite.play('hey');
+    }
   }
 
   get isAlive(): boolean {
@@ -133,7 +115,7 @@ export default class GridTile extends Base {
       this.tools.misc.overlap(
         this.sprite,
         groupItem.getBottom(),
-        function(s: Phaser.Sprite, g: Phaser.Sprite) {
+        function (s: Phaser.Sprite, g: Phaser.Sprite) {
           if (s && g) {
             if (s.key === g.key) {
               return false;
@@ -154,7 +136,7 @@ export default class GridTile extends Base {
     this.tools.misc.overlap(
       this.sprite,
       wallsGroup,
-      function(a: any, b: any) {
+      function (a: any, b: any) {
         if (a && b) {
           let velocity = this.sprite.body.velocity;
           if (velocity.x || velocity.y) {
@@ -217,29 +199,6 @@ export default class GridTile extends Base {
     this.randomizeTransform();
   }
 
-  isGhost() {
-    return this.ghostCooldown !== undefined;
-  }
-
-  stopGhost() {
-    if (this.ghostTween.isRunning) {
-      this.ghostTween.stop();
-    }
-    this.ghostCooldown = undefined;
-  }
-
-  checkGhostTurns() {
-    if (this.ghostCooldown) {
-      this.ghostTurns++;
-      if (this.ghostCooldown === this.ghostTurns) {
-        this.kill();
-        this.ghostCooldown = null;
-        return true;
-      }
-    }
-    return false;
-  }
-
   startTimeStop() {
     this.timeStopped = true;
     this.sprite.loadTexture(this.model.negativeId);
@@ -281,6 +240,7 @@ export default class GridTile extends Base {
   private mergeTransform() {
     this.transform();
     this.mergeTween.start();
+    this.sprite.play('hey');
   }
 
   private randomizeTransform() {
@@ -290,7 +250,7 @@ export default class GridTile extends Base {
     this.sprite.position.y += this.sprite.height / 2;
 
     this.randomizeTween.start().onComplete.add(
-      function() {
+      function () {
         let scale = this.gameboardConfig.gameModeTileScale;
         this.sprite.anchor.setTo(0, 0);
         this.tools.sprite.updateTile(this.posX, this.posY, this.sprite, scale);
@@ -355,23 +315,11 @@ export default class GridTile extends Base {
     return `${this.sprite.key}  ${this.value} -  ${this.posX}:${this.posY}`;
   }
 
-  prepareForAnimation() {
-    let tile = this.model;
-    this.sprite.animations.add('hey', tile.animationFrames, tile.animationSpeed);
-
-    let animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
-    this.tools.misc.runLater(animationLoopTime, () => this.animateTile());
-  }
-
   animateTile() {
-    if(!this.sprite.alive) {
+    if (!this.sprite.alive) {
       return;
     }
 
     let animation = this.sprite.animations.play('hey');
-    let animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
-    if(animationLoopTime) {
-      this.tools.misc.runLater(animationLoopTime, () => this.animateTile());
-    }
   }
 }

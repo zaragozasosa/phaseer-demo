@@ -35,15 +35,14 @@ export default class TimeTravelLogic extends LogicalGrid {
     );
   }
 
-  protected prepareNewTurn() {
-    this.playHighestMergeSFX();
+  protected newTurn() {
     this.cleanGrid();
     this.gameboardConfig.turnsSignal.dispatch();
 
     if (this.isTimeStopped) {
       this.checkTime();
     } else {
-      this.tryToAdd();
+      this.gameRules.newTurn(this, this.grid);
     }
   }
 
@@ -52,26 +51,19 @@ export default class TimeTravelLogic extends LogicalGrid {
       this.isTimeStopped = false;
       this.togglePauseTiles(false);
       this.gameboardConfig.cooldownSignal.dispatch();
-      this.tryToAdd();      
+      this.gameRules.newTurn(this, this.grid);
     } else {
       this.turnsPassed++;
     }
   }
 
   private togglePauseTiles(pause: boolean) {
-    for (let tile of this.getTilesOrdered()) {
+    for (let tile of this.grid.getOrdered()) {
       if (pause) {
         tile.startTimeStop();
       } else {
         tile.stopTimeStop();
       }
     }
-  }
-
-  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
-    nextTile.value *= 2;
-    previousTile.value = 0;
-    previousTile.nextTile = nextTile;
-    this.gameboardConfig.mergeTileSignal.dispatch();
   }
 }

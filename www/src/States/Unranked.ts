@@ -1,5 +1,5 @@
 import Gameboard from '../Objects/Gameboard/Gameboard';
-import GameboardFactory from '../Objects/Gameboard/GameboardFactory';
+import GameboardFactory from '../Objects/Gameboard/Factories/GameboardFactory';
 import GameboardConfig from './../Config/GameboardConfig';
 import SimpleGameUI from '../Objects/Gameboard/GameUI/SimpleGameUI';
 

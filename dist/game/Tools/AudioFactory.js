@@ -54,7 +54,7 @@ var AudioFactory = (function (_super) {
         config.bgm = this.game.add.audio(id + '-intro');
         config.bgm.play('', 0, config.bgmVolume).onStop.addOnce(function () {
             config.bgm = this.game.add.audio(id);
-            config.bgm.play('', 3000, config.bgmVolume, loop);
+            config.bgm.play('', 0, config.bgmVolume, loop);
         }.bind(this));
     };
     AudioFactory.prototype.playNormal = function (id, loop) {

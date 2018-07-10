@@ -9,7 +9,7 @@ export default class GachaAddictionLogic extends LogicalGrid {
   }
 
   power() {
-    var tiles = this.getTilesOrdered();
+    var tiles = this.grid.getOrdered();
     if (this.canUsePower()) {
 
       let maxValue = tiles[0].value;
@@ -44,7 +44,7 @@ export default class GachaAddictionLogic extends LogicalGrid {
   }
 
   canUsePower() {
-    var tiles = this.getTilesOrdered();
+    var tiles = this.grid.getOrdered();
     let unique = tiles
       .map(item => item.value)
       .filter((value, index, self) => self.indexOf(value) === index);
@@ -58,12 +58,5 @@ export default class GachaAddictionLogic extends LogicalGrid {
 
   getPowerInfo() {
     return new DiamondModel('diamond', this.gameboardConfig.requiredDiamonds);
-  }
-
-  protected mergeTile(nextTile: GridTile, previousTile: GridTile) {
-    nextTile.value *= 2;
-    previousTile.value = 0;
-    previousTile.nextTile = nextTile;
-    this.gameboardConfig.mergeTileSignal.dispatch();
   }
 }

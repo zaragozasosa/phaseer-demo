@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var GameboardFactory_1 = require("../Objects/Gameboard/GameboardFactory");
+var GameboardFactory_1 = require("../Objects/Gameboard/Factories/GameboardFactory");
 var BossGameUI_1 = require("../Objects/Gameboard/GameUI/BossGameUI");
 var BossFight = (function (_super) {
     __extends(BossFight, _super);

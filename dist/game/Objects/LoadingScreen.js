@@ -18,18 +18,18 @@ var LoadingScreen = (function (_super) {
         var tools = _this.tools;
         for (var _i = 0, _a = gameboardConfig.tiles; _i < _a.length; _i++) {
             var tile = _a[_i];
-            var x = tools.misc.randomBetween(150, 800);
+            var x = tools.misc.randomBetween(150, 850);
             var y = tools.misc.randomBetween(150, 1400);
-            var x2 = tools.misc.randomBetween(150, 800);
+            var x2 = tools.misc.randomBetween(150, 850);
             var y2 = tools.misc.randomBetween(150, 1400);
             var time = tools.misc.randomBetween(500, 1200);
             var time2 = tools.misc.randomBetween(500, 1200);
-            var scale = tools.misc.randomBetween(5, 10);
-            var scale2 = tools.misc.randomBetween(5, 10);
+            var scale = tools.misc.randomBetween(6, 10);
+            var scale2 = tools.misc.randomBetween(6, 10);
             var sprite = tools.sprite.createFromSpriteSheet(x, y, tile.id, 1, scale / 10);
             var sprite2 = tools.sprite.createFromSpriteSheet(x2, y2, tile.id, 2, scale2 / 10);
-            sprite.angle = tools.misc.randomBetween(0, 9) * 45;
-            sprite2.angle = tools.misc.randomBetween(0, 9) * 45;
+            sprite.angle = tools.misc.randomBetween(0, 4) * 90;
+            sprite2.angle = tools.misc.randomBetween(0, 4) * 90;
             tools.tween.blinkStart(sprite, 0, time);
             tools.tween.blinkStart(sprite2, 0, time2);
         }

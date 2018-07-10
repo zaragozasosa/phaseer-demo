@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
-var GridFactory_1 = require("./GridFactory");
+var GridFactory_1 = require("./Factories/GridFactory");
 var InputManager_1 = require("./../../InputManager");
 var Config_1 = require("./../../Config/Config");
 var Gameboard = (function (_super) {
@@ -85,7 +85,6 @@ var Gameboard = (function (_super) {
         this.points = this.grid.calculatePoints();
         this.input = new InputManager_1.default(this.config);
         this.gameStarted = true;
-        this.debugWin();
         this.createGameboardUI();
     };
     Gameboard.prototype.update = function () {
@@ -133,7 +132,8 @@ var Gameboard = (function (_super) {
         this.gameOver = true;
         if (win) {
             this.wonGame = true;
-            this.gameboardUI.winScreen('Story');
+            var nextState = this.gameboardConfig.playStory ? 'Story' : 'MainMenu';
+            this.gameboardUI.winScreen(nextState);
         }
         else {
             this.gameboardUI.gameOverScreen();
@@ -162,18 +162,6 @@ var Gameboard = (function (_super) {
             this.isPaused = true;
             this.timer.pause();
         }
-    };
-    Gameboard.prototype.debugWin = function () {
-        var win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
-        win.inputEnabled = true;
-        win.events.onInputDown.addOnce(function () {
-            this.gameover(true);
-        }.bind(this));
-        var lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
-        lose.inputEnabled = true;
-        lose.events.onInputDown.addOnce(function () {
-            this.gameover(false);
-        }.bind(this));
     };
     return Gameboard;
 }(Base_1.default));

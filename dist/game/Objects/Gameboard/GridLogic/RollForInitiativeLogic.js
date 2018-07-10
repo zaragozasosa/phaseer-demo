@@ -30,7 +30,7 @@ var RollForInitiativeLogic = (function (_super) {
         }
     };
     RollForInitiativeLogic.prototype.canUsePower = function () {
-        var tiles = this.getTilesOrdered();
+        var tiles = this.grid.getOrdered();
         var unique = tiles
             .map(function (item) { return item.value; })
             .filter(function (value, index, self) { return self.indexOf(value) === index; });

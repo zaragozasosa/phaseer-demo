@@ -7,7 +7,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
   }
 
   sagePower() {
-    if (!this.isFull()) {
+    if (!this.grid.isFull()) {
 
       var tiles = this.grid.filter(
         x => x && x.value == 1 * this.gameboardConfig.minimumValue
@@ -16,7 +16,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
         tile.duplicate();
       }
 
-      while(!this.isFull()) {
+      while(!this.grid.isFull()) {
         this.add();        
       }
       this.cleanGrid();
@@ -47,8 +47,8 @@ export default class ReportedForRPLogic extends LogicalGrid {
     let tilesNum =
       (this.gameboardConfig.arraySize + 1) *
       (this.gameboardConfig.arraySize + 1);
-    if (this.emptyTiles() < tilesNum - 4) {
-      var tiles = this.getTilesOrdered();
+    if (this.grid.emptyTiles() < tilesNum - 4) {
+      var tiles = this.grid.getOrdered();
       for (let x = 1; x < tiles.length; x++) {
         tiles[x].kill();
       }

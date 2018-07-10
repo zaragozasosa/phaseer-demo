@@ -25,7 +25,7 @@ var Grid = (function (_super) {
     Grid.prototype.update = function (cursor) {
         if (!this.animating) {
             if (cursor) {
-                this.animating = this.gridLogic.scanGrid(cursor);
+                this.animating = this.gridLogic.check(cursor);
                 this.buttonDisableMightChange();
             }
             cursor = null;
@@ -35,7 +35,7 @@ var Grid = (function (_super) {
         }
     };
     Grid.prototype.calculatePoints = function () {
-        return this.gridLogic.sumTiles();
+        return this.gridLogic.getPoints();
     };
     Grid.prototype.activatePower = function () {
         this.gridLogic.power();

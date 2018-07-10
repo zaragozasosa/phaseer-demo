@@ -1,6 +1,6 @@
 import Base from './../../Base';
 import Grid from './Grid';
-import GridFactory from './GridFactory';
+import GridFactory from './Factories/GridFactory';
 import GameboardConfig from './../../Config/GameboardConfig';
 import GameboardUI from './GameboardUI';
 import PlayerUI from './PlayerUI';
@@ -118,7 +118,7 @@ export default abstract class Gameboard extends Base {
     this.points = this.grid.calculatePoints();
     this.input = new InputManager(this.config);
     this.gameStarted = true;
-    this.debugWin();
+    // this.debugWin();
 
     this.createGameboardUI();
   }
@@ -172,7 +172,8 @@ export default abstract class Gameboard extends Base {
     this.gameOver = true;
     if (win) {
       this.wonGame = true;
-      this.gameboardUI.winScreen('Story');
+      let nextState = this.gameboardConfig.playStory ? 'Story' : 'MainMenu';
+      this.gameboardUI.winScreen(nextState);
     } else {
       this.gameboardUI.gameOverScreen();
     }
@@ -207,21 +208,21 @@ export default abstract class Gameboard extends Base {
     }
   }
 
-  private debugWin() {
-    let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
-    win.inputEnabled = true;
-    win.events.onInputDown.addOnce(
-      function () {
-        this.gameover(true);
-      }.bind(this)
-    );
+  // private debugWin() {
+  //   let win = this.tools.text.makeXBounded(1350, 'Click to win', 30, 'right');
+  //   win.inputEnabled = true;
+  //   win.events.onInputDown.addOnce(
+  //     function () {
+  //       this.gameover(true);
+  //     }.bind(this)
+  //   );
 
-    let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
-    lose.inputEnabled = true;
-    lose.events.onInputDown.addOnce(
-      function () {
-        this.gameover(false);
-      }.bind(this)
-    );
-  }
+  //   let lose = this.tools.text.makeXBounded(150, 'Click to lose ', 30, 'right');
+  //   lose.inputEnabled = true;
+  //   lose.events.onInputDown.addOnce(
+  //     function () {
+  //       this.gameover(false);
+  //     }.bind(this)
+  //   );
+  // }
 }

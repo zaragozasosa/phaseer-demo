@@ -3,6 +3,7 @@ import InputManager from './../InputManager';
 import TileModel from './../Models/TileModel';
 import CharacterMenu from './../Objects/CharacterMenu/CharacterMenu';
 import { Config, Singleton, ColorSettings, Tools } from './../Config/Config';
+import GameLoader from './../Loaders/GameLoader';
 
 export default class CharacterSelection extends Phaser.State {
   game: Phaser.Game;
@@ -11,10 +12,8 @@ export default class CharacterSelection extends Phaser.State {
   inputManager: InputManager;
   preloadBar: Phaser.Sprite;
   characterMenu: CharacterMenu;
-  playTrack: boolean;
 
-  init(gameboardConfig: GameboardConfig, playTrack = false) {
-    this.playTrack = playTrack;
+  init(gameboardConfig: GameboardConfig) {
     this.gameboardConfig = gameboardConfig;
   }
 
@@ -22,11 +21,7 @@ export default class CharacterSelection extends Phaser.State {
     let singleton = Singleton.get();
     let config = singleton.config;
     this.tools = singleton.tools;
-
-    if (this.playTrack) {
-      this.tools.audio.play('title-bgm', true);
-    }
-
+    this.tools.audio.playIfSilent('title-bgm', true);
     this.inputManager = new InputManager(config);
   }
 
@@ -38,7 +33,7 @@ export default class CharacterSelection extends Phaser.State {
       630,
       1275,
       ['start'],
-      function() {
+      function () {
         this.gameStart();
       }.bind(this),
       1.2
@@ -66,10 +61,20 @@ export default class CharacterSelection extends Phaser.State {
     this.gameboardConfig.mainTile = selected;
     this.tools.audio.playCharacterSound(selected);
 
-    this.tools.transition.toLoaderConfig(
-      'Story',
-      this.gameboardConfig,
-    );
+    let nextState = this.gameboardConfig.playStory ? 'Story' : 'GameboardLoader';
+
+    if (nextState === 'Story') {
+      this.tools.transition.toLoaderConfig(
+        nextState,
+        this.gameboardConfig,
+      );
+    } else {
+      this.tools.transition.toLoaderConfig(
+        nextState,
+        this.gameboardConfig,
+        new GameLoader()
+      );
+    }
   }
 
   returnToMainMenu() {

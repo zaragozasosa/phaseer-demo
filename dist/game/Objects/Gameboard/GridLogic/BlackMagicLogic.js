@@ -17,7 +17,7 @@ var BlackMagicLogic = (function (_super) {
         return _super.call(this, gameboardConfig) || this;
     }
     BlackMagicLogic.prototype.power = function () {
-        var tiles = this.getTilesOrdered(true);
+        var tiles = this.grid.getOrdered(true);
         if (this.canUsePower()) {
             var _loop_1 = function (x) {
                 var value = tiles[x].value;
@@ -34,7 +34,7 @@ var BlackMagicLogic = (function (_super) {
         }
     };
     BlackMagicLogic.prototype.canUsePower = function () {
-        var tiles = this.getTilesOrdered();
+        var tiles = this.grid.getOrdered();
         if (tiles.length > 5) {
             return true;
         }

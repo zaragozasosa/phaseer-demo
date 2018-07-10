@@ -31,15 +31,14 @@ var TimeTravelLogic = (function (_super) {
     TimeTravelLogic.prototype.getPowerInfo = function () {
         return new DiamondModel_1.default('bug', this.gameboardConfig.requiredBugs, true, 'And time resumes!', 2.5, -5, DiamondModel_1.default.TIME_TYPE);
     };
-    TimeTravelLogic.prototype.prepareNewTurn = function () {
-        this.playHighestMergeSFX();
+    TimeTravelLogic.prototype.newTurn = function () {
         this.cleanGrid();
         this.gameboardConfig.turnsSignal.dispatch();
         if (this.isTimeStopped) {
             this.checkTime();
         }
         else {
-            this.tryToAdd();
+            this.gameRules.newTurn(this, this.grid);
         }
     };
     TimeTravelLogic.prototype.checkTime = function () {
@@ -47,14 +46,14 @@ var TimeTravelLogic = (function (_super) {
             this.isTimeStopped = false;
             this.togglePauseTiles(false);
             this.gameboardConfig.cooldownSignal.dispatch();
-            this.tryToAdd();
+            this.gameRules.newTurn(this, this.grid);
         }
         else {
             this.turnsPassed++;
         }
     };
     TimeTravelLogic.prototype.togglePauseTiles = function (pause) {
-        for (var _i = 0, _a = this.getTilesOrdered(); _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.grid.getOrdered(); _i < _a.length; _i++) {
             var tile = _a[_i];
             if (pause) {
                 tile.startTimeStop();
@@ -63,12 +62,6 @@ var TimeTravelLogic = (function (_super) {
                 tile.stopTimeStop();
             }
         }
-    };
-    TimeTravelLogic.prototype.mergeTile = function (nextTile, previousTile) {
-        nextTile.value *= 2;
-        previousTile.value = 0;
-        previousTile.nextTile = nextTile;
-        this.gameboardConfig.mergeTileSignal.dispatch();
     };
     return TimeTravelLogic;
 }(LogicalGrid_1.default));

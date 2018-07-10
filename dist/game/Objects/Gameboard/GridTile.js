@@ -13,16 +13,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
 var GridTile = (function (_super) {
     __extends(GridTile, _super);
-    function GridTile(x, y, gameboardConfig, position, value, ghost, ghostCooldown) {
-        if (position === void 0) { position = 0; }
+    function GridTile(x, y, gameboardConfig, newTile, value) {
+        if (newTile === void 0) { newTile = true; }
         if (value === void 0) { value = 0; }
-        if (ghost === void 0) { ghost = false; }
-        if (ghostCooldown === void 0) { ghostCooldown = 0; }
         var _this = _super.call(this) || this;
+        var tween = _this.tools.tween;
         _this.gameboardConfig = gameboardConfig;
         _this.nextTile = null;
-        if (value === 0) {
-            _this.model = gameboardConfig.tiles[position];
+        if (newTile) {
+            _this.model = gameboardConfig.tiles[0];
         }
         else {
             _this.model = gameboardConfig.tiles.find(function (x) { return x.staticValue === value; });
@@ -39,28 +38,20 @@ var GridTile = (function (_super) {
         _this.group.addChild(_this.sprite);
         _this.group.addChild(_this.number);
         _this.group.addChild(_this.frame);
-        _this.group.alpha = 0;
         _this.group.angle = 0;
-        var tween = _this.tools.tween;
         var t1 = tween.to(_this.group, { alpha: 0.3 }, 150);
         var t2 = tween.to(_this.group, { alpha: 1 }, 350);
         _this.mergeTween = t1.chain(t2);
         _this.randomizeTween = _this.tools.tween.to(_this.sprite, { angle: 360 }, 500);
-        _this.ghostTween = tween.blink(_this.group);
-        if (ghost) {
-            _this.group.alpha = 1;
-            _this.ghostCooldown = ghostCooldown;
-            _this.ghostTurns = 0;
-            _this.ghostTween.start();
-        }
-        else {
-            tween.appear(_this.group, 750);
-        }
+        tween.appear(_this.group, 750);
         _this.sprite.inputEnabled = true;
         _this.sprite.events.onInputDown.add(function () {
             this.gameboardConfig.clickTileSignal.dispatch(this);
         }.bind(_this));
-        _this.prepareForAnimation();
+        _this.sprite.animations.add('hey', _this.model.animationFrames, _this.model.animationSpeed);
+        if (newTile && _this.tools.misc.randomBetween(0, 6) === 0) {
+            _this.sprite.play('hey');
+        }
         return _this;
     }
     Object.defineProperty(GridTile.prototype, "isAlive", {
@@ -174,26 +165,6 @@ var GridTile = (function (_super) {
         }
         this.randomizeTransform();
     };
-    GridTile.prototype.isGhost = function () {
-        return this.ghostCooldown !== undefined;
-    };
-    GridTile.prototype.stopGhost = function () {
-        if (this.ghostTween.isRunning) {
-            this.ghostTween.stop();
-        }
-        this.ghostCooldown = undefined;
-    };
-    GridTile.prototype.checkGhostTurns = function () {
-        if (this.ghostCooldown) {
-            this.ghostTurns++;
-            if (this.ghostCooldown === this.ghostTurns) {
-                this.kill();
-                this.ghostCooldown = null;
-                return true;
-            }
-        }
-        return false;
-    };
     GridTile.prototype.startTimeStop = function () {
         this.timeStopped = true;
         this.sprite.loadTexture(this.model.negativeId);
@@ -230,6 +201,7 @@ var GridTile = (function (_super) {
     GridTile.prototype.mergeTransform = function () {
         this.transform();
         this.mergeTween.start();
+        this.sprite.play('hey');
     };
     GridTile.prototype.randomizeTransform = function () {
         this.transform();
@@ -289,23 +261,11 @@ var GridTile = (function (_super) {
     GridTile.prototype.toString = function () {
         return this.sprite.key + "  " + this.value + " -  " + this.posX + ":" + this.posY;
     };
-    GridTile.prototype.prepareForAnimation = function () {
-        var _this = this;
-        var tile = this.model;
-        this.sprite.animations.add('hey', tile.animationFrames, tile.animationSpeed);
-        var animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
-        this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(); });
-    };
     GridTile.prototype.animateTile = function () {
-        var _this = this;
         if (!this.sprite.alive) {
             return;
         }
         var animation = this.sprite.animations.play('hey');
-        var animationLoopTime = this.tools.misc.randomBetween(2000, 5000);
-        if (animationLoopTime) {
-            this.tools.misc.runLater(animationLoopTime, function () { return _this.animateTile(); });
-        }
     };
     return GridTile;
 }(Base_1.default));

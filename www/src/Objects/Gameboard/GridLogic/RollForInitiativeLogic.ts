@@ -23,7 +23,7 @@ export default class RollForInitiativeLogic extends LogicalGrid {
   }
 
   canUsePower() {
-    var tiles = this.getTilesOrdered();
+    var tiles = this.grid.getOrdered();
     let unique = tiles
       .map(item => item.value)
       .filter((value, index, self) => self.indexOf(value) === index);

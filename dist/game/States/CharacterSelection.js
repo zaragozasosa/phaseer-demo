@@ -13,23 +13,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InputManager_1 = require("./../InputManager");
 var CharacterMenu_1 = require("./../Objects/CharacterMenu/CharacterMenu");
 var Config_1 = require("./../Config/Config");
+var GameLoader_1 = require("./../Loaders/GameLoader");
 var CharacterSelection = (function (_super) {
     __extends(CharacterSelection, _super);
     function CharacterSelection() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CharacterSelection.prototype.init = function (gameboardConfig, playTrack) {
-        if (playTrack === void 0) { playTrack = false; }
-        this.playTrack = playTrack;
+    CharacterSelection.prototype.init = function (gameboardConfig) {
         this.gameboardConfig = gameboardConfig;
     };
     CharacterSelection.prototype.preload = function () {
         var singleton = Config_1.Singleton.get();
         var config = singleton.config;
         this.tools = singleton.tools;
-        if (this.playTrack) {
-            this.tools.audio.play('title-bgm', true);
-        }
+        this.tools.audio.playIfSilent('title-bgm', true);
         this.inputManager = new InputManager_1.default(config);
     };
     CharacterSelection.prototype.create = function () {
@@ -55,7 +52,13 @@ var CharacterSelection = (function (_super) {
         var selected = this.gameboardConfig.getTileModel(this.characterMenu.selectedId);
         this.gameboardConfig.mainTile = selected;
         this.tools.audio.playCharacterSound(selected);
-        this.tools.transition.toLoaderConfig('Story', this.gameboardConfig);
+        var nextState = this.gameboardConfig.playStory ? 'Story' : 'GameboardLoader';
+        if (nextState === 'Story') {
+            this.tools.transition.toLoaderConfig(nextState, this.gameboardConfig);
+        }
+        else {
+            this.tools.transition.toLoaderConfig(nextState, this.gameboardConfig, new GameLoader_1.default());
+        }
     };
     CharacterSelection.prototype.returnToMainMenu = function () {
         this.tools.transition.smoothLoaderConfig('MainMenu', this.gameboardConfig, null);

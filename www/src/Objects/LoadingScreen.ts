@@ -6,23 +6,23 @@ export default class LoadingScreen extends Base {
     super();
     let tools = this.tools;
     for (let tile of gameboardConfig.tiles) {
-      let x = tools.misc.randomBetween(150, 800);
+      let x = tools.misc.randomBetween(150, 850);
       let y = tools.misc.randomBetween(150, 1400);
 
-      let x2 = tools.misc.randomBetween(150, 800);
+      let x2 = tools.misc.randomBetween(150, 850);
       let y2 = tools.misc.randomBetween(150, 1400);
 
       let time = tools.misc.randomBetween(500, 1200);
       let time2 = tools.misc.randomBetween(500, 1200);
 
-      let scale = tools.misc.randomBetween(5, 10);
-      let scale2 = tools.misc.randomBetween(5, 10);
+      let scale = tools.misc.randomBetween(6, 10);
+      let scale2 = tools.misc.randomBetween(6, 10);
 
       let sprite = tools.sprite.createFromSpriteSheet(x, y, tile.id, 1, scale/10);
       let sprite2 = tools.sprite.createFromSpriteSheet(x2, y2, tile.id, 2, scale2/10);
 
-      sprite.angle = tools.misc.randomBetween(0, 9) * 45;
-      sprite2.angle = tools.misc.randomBetween(0, 9) * 45;
+      sprite.angle = tools.misc.randomBetween(0, 4) * 90;
+      sprite2.angle = tools.misc.randomBetween(0, 4) * 90;
 
       tools.tween.blinkStart(sprite, 0, time);
       tools.tween.blinkStart(sprite2, 0, time2);

@@ -6,7 +6,6 @@ import GameboardConfig from './../../Config/GameboardConfig';
 
 export default abstract class Grid extends Base {
   protected gameboardConfig: GameboardConfig;
-
   protected gridLogic: LogicalGrid;
   protected wallsGroup: Phaser.Group;
   protected framesGroup: Phaser.Group;
@@ -24,7 +23,7 @@ export default abstract class Grid extends Base {
   update(cursor: number) {
     if (!this.animating) {
       if (cursor) {
-        this.animating = this.gridLogic.scanGrid(cursor);
+        this.animating = this.gridLogic.check(cursor);
         this.buttonDisableMightChange();
       }
       cursor = null;
@@ -34,7 +33,7 @@ export default abstract class Grid extends Base {
   }
 
   calculatePoints() {
-    return this.gridLogic.sumTiles();
+    return this.gridLogic.getPoints();
   }
 
   activatePower(): any {

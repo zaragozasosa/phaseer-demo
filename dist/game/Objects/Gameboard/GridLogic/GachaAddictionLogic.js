@@ -18,7 +18,7 @@ var GachaAddictionLogic = (function (_super) {
         return _super.call(this, gameboardConfig) || this;
     }
     GachaAddictionLogic.prototype.power = function () {
-        var tiles = this.getTilesOrdered();
+        var tiles = this.grid.getOrdered();
         if (this.canUsePower()) {
             var maxValue = tiles[0].value;
             var minValue = tiles[tiles.length - 1].value;
@@ -40,7 +40,7 @@ var GachaAddictionLogic = (function (_super) {
         }
     };
     GachaAddictionLogic.prototype.canUsePower = function () {
-        var tiles = this.getTilesOrdered();
+        var tiles = this.grid.getOrdered();
         var unique = tiles
             .map(function (item) { return item.value; })
             .filter(function (value, index, self) { return self.indexOf(value) === index; });
@@ -53,12 +53,6 @@ var GachaAddictionLogic = (function (_super) {
     };
     GachaAddictionLogic.prototype.getPowerInfo = function () {
         return new DiamondModel_1.default('diamond', this.gameboardConfig.requiredDiamonds);
-    };
-    GachaAddictionLogic.prototype.mergeTile = function (nextTile, previousTile) {
-        nextTile.value *= 2;
-        previousTile.value = 0;
-        previousTile.nextTile = nextTile;
-        this.gameboardConfig.mergeTileSignal.dispatch();
     };
     return GachaAddictionLogic;
 }(LogicalGrid_1.default));

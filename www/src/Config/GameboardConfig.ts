@@ -33,6 +33,9 @@ export default class GameboardConfig {
   turnsSignal: Phaser.Signal;
   gameOverSignal: Phaser.Signal;
 
+  playStory: boolean;
+  gameMode: number;
+
   detectiveInvestigationStory: Array<BaseAction>;
   detectiveInvestigationStory2: Array<BaseAction>;
 
@@ -40,11 +43,16 @@ export default class GameboardConfig {
   static readonly BUTTON_SLEEP = 2;
   static readonly BUTTON_SLEEP_DISABLED = 3;
 
+  static readonly GAME_MODE_SINGLE_PLAYER = 1;
+  static readonly GAME_MODE_BOSS_FIGHT = 2;
+
+
   constructor() {
     this.defaultArraySize = 3;
     this.bossArraySize = 4;    
     this.arraySize = 3;
     this.initialArray = [];
+    this.gameMode = GameboardConfig.GAME_MODE_SINGLE_PLAYER;
     for (let x = 0; x <= this.arraySize; x++) {
       for (let y = 0; y <= this.arraySize; y++) {
         this.initialArray.push(0);
@@ -59,6 +67,8 @@ export default class GameboardConfig {
     this.createPowers();
     this.createStories();
     this.createTiles();
+
+    this.playStory = true;
   }
 
   get fullList() {

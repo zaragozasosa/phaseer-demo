@@ -18,13 +18,13 @@ var ReportedForRPLogic = (function (_super) {
     }
     ReportedForRPLogic.prototype.sagePower = function () {
         var _this = this;
-        if (!this.isFull()) {
+        if (!this.grid.isFull()) {
             var tiles = this.grid.filter(function (x) { return x && x.value == 1 * _this.gameboardConfig.minimumValue; });
             for (var _i = 0, tiles_1 = tiles; _i < tiles_1.length; _i++) {
                 var tile = tiles_1[_i];
                 tile.duplicate();
             }
-            while (!this.isFull()) {
+            while (!this.grid.isFull()) {
                 this.add();
             }
             this.cleanGrid();
@@ -53,8 +53,8 @@ var ReportedForRPLogic = (function (_super) {
     ReportedForRPLogic.prototype.bannedPower = function () {
         var tilesNum = (this.gameboardConfig.arraySize + 1) *
             (this.gameboardConfig.arraySize + 1);
-        if (this.emptyTiles() < tilesNum - 4) {
-            var tiles = this.getTilesOrdered();
+        if (this.grid.emptyTiles() < tilesNum - 4) {
+            var tiles = this.grid.getOrdered();
             for (var x = 1; x < tiles.length; x++) {
                 tiles[x].kill();
             }
