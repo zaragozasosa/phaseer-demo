@@ -21,8 +21,8 @@ var TransitionFactory = (function (_super) {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        var _a;
         (_a = this.game.state).start.apply(_a, [state, true, false].concat(args));
+        var _a;
     };
     TransitionFactory.prototype.toState = function (state, gameboardConfig) {
         var _this = this;
@@ -70,8 +70,8 @@ var TransitionFactory = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        var _a;
         (_a = this.game.state).restart.apply(_a, [true, false].concat(args));
+        var _a;
     };
     return TransitionFactory;
 }(Factory_1.default));

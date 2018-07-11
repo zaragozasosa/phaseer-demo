@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import GachaAddictionLogic from './../GridLogic/GachaAddictionLogic';
+import GachaAddictionLogic from './../Logic/GachaAddictionLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import DiamondModel from './../../../Models/DiamondModel';
 

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var GachaAddictionLogic_1 = require("./../GridLogic/GachaAddictionLogic");
+var GachaAddictionLogic_1 = require("./../Logic/GachaAddictionLogic");
 var GachaAddiction = (function (_super) {
     __extends(GachaAddiction, _super);
     function GachaAddiction(config) {

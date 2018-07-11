@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import CincoDeMayoLogic from './../GridLogic/CincoDeMayoLogic';
+import CincoDeMayoLogic from './../Logic/CincoDeMayoLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import AmmoModel from './../../../Models/AmmoModel';
 

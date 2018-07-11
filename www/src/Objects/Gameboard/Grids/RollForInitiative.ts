@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import RollForInitiativeLogic from './../GridLogic/RollForInitiativeLogic';
+import RollForInitiativeLogic from './../Logic/RollForInitiativeLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import AmmoModel from './../../../Models/AmmoModel';
 

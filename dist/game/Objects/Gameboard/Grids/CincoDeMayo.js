@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var CincoDeMayoLogic_1 = require("./../GridLogic/CincoDeMayoLogic");
+var CincoDeMayoLogic_1 = require("./../Logic/CincoDeMayoLogic");
 var TimeTravel = (function (_super) {
     __extends(TimeTravel, _super);
     function TimeTravel(config) {

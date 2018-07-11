@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var BlackMagicLogic_1 = require("./../GridLogic/BlackMagicLogic");
+var BlackMagicLogic_1 = require("./../Logic/BlackMagicLogic");
 var BlackMagic = (function (_super) {
     __extends(BlackMagic, _super);
     function BlackMagic(config) {

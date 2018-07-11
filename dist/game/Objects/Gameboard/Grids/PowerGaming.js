@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var PowerGamingLogic_1 = require("./../GridLogic/PowerGamingLogic");
+var PowerGamingLogic_1 = require("./../Logic/PowerGamingLogic");
 var PowerGaming = (function (_super) {
     __extends(PowerGaming, _super);
     function PowerGaming(config) {

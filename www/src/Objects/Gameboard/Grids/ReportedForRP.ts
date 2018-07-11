@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import ReportedForRPLogic from './../GridLogic/ReportedForRPLogic';
+import ReportedForRPLogic from './../Logic/ReportedForRPLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import ChargeModel from './../../../Models/ChargeModel';
 

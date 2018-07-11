@@ -45,6 +45,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
 
 
   protected getTileNewPosition() {
+    debugger;
     let maxPosition = this.gameboardConfig.arraySize;
     if (!this.direction) {
       return super.getTileNewPosition();
@@ -95,7 +96,7 @@ export default class ReportedForRPLogic extends LogicalGrid {
   }
 
   add() {
-    if (!this.grid.isFull()) {
+    if (this.grid.isFull()) {
       return;
     }
 

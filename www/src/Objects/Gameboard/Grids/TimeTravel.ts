@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import TimeTravelLogic from './../GridLogic/TimeTravelLogic';
+import TimeTravelLogic from './../Logic/TimeTravelLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import DiamondModel from './../../../Models/DiamondModel';
 

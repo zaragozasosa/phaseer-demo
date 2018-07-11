@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import DetectiveWorkLogic from './../GridLogic/DetectiveWorkLogic';
+import DetectiveWorkLogic from './../Logic/DetectiveWorkLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 
 export default class DetectiveWork extends Grid {
@@ -19,12 +19,12 @@ export default class DetectiveWork extends Grid {
     let group = this.tools.misc.addGroup();
     group.inputEnableChildren = true;
 
-    group.add(this.tools.text.make(50, 1200, 'UP', 50));
-    group.add(this.tools.text.make(200, 1200, 'DOWN', 50));
-    group.add(this.tools.text.make(475, 1200, 'LEFT', 50));
-    group.add(this.tools.text.make(700, 1200, 'RIGHT', 50));
+    group.add(this.tools.text.make(50, 1195, 'UP', 45));
+    group.add(this.tools.text.make(200, 1195, 'DOWN', 45));
+    group.add(this.tools.text.make(475, 1195, 'LEFT', 45));
+    group.add(this.tools.text.make(700, 1195, 'RIGHT', 45));
 
-    let btn = this.tools.text.makeXBounded(1280, 'Catch the culprit!', 50, 'center');
+    let btn = this.tools.text.makeXBounded(1240, 'SEARCH', 60, 'center');
     btn.tint = Phaser.Color.GRAY;
     group.add(btn);
     btn.inputEnabled = false;

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var DetectiveWorkLogic_1 = require("./../GridLogic/DetectiveWorkLogic");
+var DetectiveWorkLogic_1 = require("./../Logic/DetectiveWorkLogic");
 var DetectiveWork = (function (_super) {
     __extends(DetectiveWork, _super);
     function DetectiveWork(config) {
@@ -26,11 +26,11 @@ var DetectiveWork = (function (_super) {
     DetectiveWork.prototype.getPowerConfiguration = function () {
         var group = this.tools.misc.addGroup();
         group.inputEnableChildren = true;
-        group.add(this.tools.text.make(50, 1200, 'UP', 50));
-        group.add(this.tools.text.make(200, 1200, 'DOWN', 50));
-        group.add(this.tools.text.make(475, 1200, 'LEFT', 50));
-        group.add(this.tools.text.make(700, 1200, 'RIGHT', 50));
-        var btn = this.tools.text.makeXBounded(1280, 'Catch the culprit!', 50, 'center');
+        group.add(this.tools.text.make(50, 1195, 'UP', 45));
+        group.add(this.tools.text.make(200, 1195, 'DOWN', 45));
+        group.add(this.tools.text.make(475, 1195, 'LEFT', 45));
+        group.add(this.tools.text.make(700, 1195, 'RIGHT', 45));
+        var btn = this.tools.text.makeXBounded(1240, 'SEARCH', 60, 'center');
         btn.tint = Phaser.Color.GRAY;
         group.add(btn);
         btn.inputEnabled = false;

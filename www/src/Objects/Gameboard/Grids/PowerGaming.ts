@@ -1,5 +1,5 @@
 import Grid from './../Grid';
-import PowerGamingLogic from './../GridLogic/PowerGamingLogic';
+import PowerGamingLogic from './../Logic/PowerGamingLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 
 export default class PowerGaming extends Grid {
