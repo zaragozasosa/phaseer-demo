@@ -18,6 +18,22 @@ var BossGameUI = (function (_super) {
         _this.gameboardConfig.arraySize = _this.gameboardConfig.bossArraySize;
         return _this;
     }
+    BossGameUI.prototype.create = function (timer, pauseCallback) {
+        this.addHeader();
+        this.addMenuButton(pauseCallback);
+    };
+    BossGameUI.prototype.addHeader = function () {
+        this.header = this.tools.text.make(20, 20, '', 50);
+        this.tools.tween.appear(this.header);
+        this.updateHeader();
+    };
+    BossGameUI.prototype.updateHeader = function () {
+        this.header.setText("Score: " + this.points);
+    };
+    BossGameUI.prototype.update = function (points) {
+        this.points = points;
+        this.updateHeader();
+    };
     return BossGameUI;
 }(GameboardUI_1.default));
 exports.default = BossGameUI;

@@ -18,8 +18,8 @@ export default abstract class GameboardUI extends Base {
     this.gameboardConfig = gameboardConfig;
   }
 
-  create(points: number, timer: Phaser.Timer, pauseCallback: any) {
-    this.points = points;
+  create(timer: Phaser.Timer, pauseCallback: any) {
+    this.points = 0;
     this.timer = timer;
     this.addHeader();
     this.addMenuButton(pauseCallback);
@@ -27,7 +27,9 @@ export default abstract class GameboardUI extends Base {
   }
 
   changeTimerColor(color) {
-    this.timerMessage.tint = color;
+    if (this.timerMessage) {
+      this.timerMessage.tint = color;
+    }
   }
 
   showMessage(
@@ -88,12 +90,6 @@ export default abstract class GameboardUI extends Base {
     );
   }
 
-  public update(points) {
-    this.points = points;
-    this.updateHeader();
-    this.updateTimer();
-  }
-
   protected addMenuButton(callbackFunction: any) {
     let menu = this.tools.sprite.createSprite(840, 30, 'menu', 0.8);
     menu.inputEnabled = true;
@@ -134,4 +130,6 @@ export default abstract class GameboardUI extends Base {
   private num(n) {
     return n > 9 ? '' + n : '0' + n;
   }
+
+  abstract update(...args);
 }

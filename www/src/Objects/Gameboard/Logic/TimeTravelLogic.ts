@@ -29,8 +29,8 @@ export default class TimeTravelLogic extends LogicalGrid {
       this.gameboardConfig.requiredBugs,
       true,
       'And time resumes!',
-      2.5,
-      -5,
+      1,
+      0,
       DiamondModel.TIME_TYPE
     );
   }

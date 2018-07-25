@@ -22,15 +22,17 @@ var GameboardUI = (function (_super) {
         _this.gameboardConfig = gameboardConfig;
         return _this;
     }
-    GameboardUI.prototype.create = function (points, timer, pauseCallback) {
-        this.points = points;
+    GameboardUI.prototype.create = function (timer, pauseCallback) {
+        this.points = 0;
         this.timer = timer;
         this.addHeader();
         this.addMenuButton(pauseCallback);
         this.addTimer();
     };
     GameboardUI.prototype.changeTimerColor = function (color) {
-        this.timerMessage.tint = color;
+        if (this.timerMessage) {
+            this.timerMessage.tint = color;
+        }
     };
     GameboardUI.prototype.showMessage = function (message, size, color, delay) {
         if (color === void 0) { color = Config_1.ColorSettings.TEXT; }
@@ -57,11 +59,6 @@ var GameboardUI = (function (_super) {
         new GameOverWindow_1.default(this.gameboardConfig.mainTile, function () { return _this.tools.transition.restartState(_this.gameboardConfig); }, function () {
             return _this.tools.transition.toLoaderConfig('MainMenu', _this.gameboardConfig);
         });
-    };
-    GameboardUI.prototype.update = function (points) {
-        this.points = points;
-        this.updateHeader();
-        this.updateTimer();
     };
     GameboardUI.prototype.addMenuButton = function (callbackFunction) {
         var menu = this.tools.sprite.createSprite(840, 30, 'menu', 0.8);

@@ -128,7 +128,7 @@ export default class GameboardConfig {
         'detectiveWork',
         'Detective Work',
         'Control the flow of new tiles. Changing this flow will require you to wait a few turns.\n\n' +
-          'You can also investigate to create a ghost tile. Be careful, the higher your tiles are, the hardest it will be to merge.'
+          'You can also investigate to create a ghost tile of high value. Be careful, the higher your tiles are, the hardest it will be to merge.'
       )
     );
 
@@ -136,7 +136,7 @@ export default class GameboardConfig {
       new PowerModel(
         'timeTravel',
         'Hello World: Time stops',
-        'Collect bugs! Use this power to stop the new tile from appearing for a few turns. Then, the new tiles will appear all together!',
+        'Collect bugs! Use this power to stop the new tiles from appearing for a few turns. Use that chance to merge the tiles in your board!',
         `Have ${this.requiredDiamonds} bugs.`
       )
     );

@@ -46,21 +46,21 @@ export default abstract class Gameboard extends Base {
     this.wonGame = false;
     let updateScoreSignal = new Phaser.Signal();
     updateScoreSignal.add(
-      function (addToMovement) {
+      function(addToMovement) {
         this.updateScore(addToMovement);
       }.bind(this)
     );
 
     let toggleButtonSignal = new Phaser.Signal();
     toggleButtonSignal.add(
-      function (status) {
+      function(status) {
         this.toggleButton(status);
       }.bind(this)
     );
 
     let gameoverSignal = new Phaser.Signal();
     gameoverSignal.add(
-      function (win) {
+      function(win) {
         this.gameover(win);
       }.bind(this)
     );
@@ -87,14 +87,13 @@ export default abstract class Gameboard extends Base {
 
   start() {
     this.createGrid();
-    this.createPlayerUI();  
+    this.createPlayerUI();
   }
 
   protected createGameboardUI() {
     this.gameboardUI.create(
-      this.points,
       this.timer,
-      function () {
+      function() {
         if (!this.isPaused) {
           this.pausetoggle();
         }
@@ -104,7 +103,7 @@ export default abstract class Gameboard extends Base {
 
   protected createPlayerUI() {
     this.playerUI.create(
-      function () {
+      function() {
         if (!this.isPaused) {
           this.activatePower();
         }

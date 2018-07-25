@@ -66,7 +66,7 @@ var Gameboard = (function (_super) {
         this.createPlayerUI();
     };
     Gameboard.prototype.createGameboardUI = function () {
-        this.gameboardUI.create(this.points, this.timer, function () {
+        this.gameboardUI.create(this.timer, function () {
             if (!this.isPaused) {
                 this.pausetoggle();
             }

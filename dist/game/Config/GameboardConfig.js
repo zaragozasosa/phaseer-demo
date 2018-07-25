@@ -61,8 +61,8 @@ var GameboardConfig = (function () {
         powers.push(new PowerModel_1.default('gachaAddiction', 'Gacha Addiction', 'Collect diamonds! Use them to fully randomize your board!', "Have at least 3 different kind of tiles and " + this
             .requiredDiamonds + " diamonds."));
         powers.push(new PowerModel_1.default('detectiveWork', 'Detective Work', 'Control the flow of new tiles. Changing this flow will require you to wait a few turns.\n\n' +
-            'You can also investigate to create a ghost tile. Be careful, the higher your tiles are, the hardest it will be to merge.'));
-        powers.push(new PowerModel_1.default('timeTravel', 'Hello World: Time stops', 'Collect bugs! Use this power to stop the new tile from appearing for a few turns. Then, the new tiles will appear all together!', "Have " + this.requiredDiamonds + " bugs."));
+            'You can also investigate to create a ghost tile of high value. Be careful, the higher your tiles are, the hardest it will be to merge.'));
+        powers.push(new PowerModel_1.default('timeTravel', 'Hello World: Time stops', 'Collect bugs! Use this power to stop the new tiles from appearing for a few turns. Use that chance to merge the tiles in your board!', "Have " + this.requiredDiamonds + " bugs."));
         powers.push(new PowerModel_1.default('reportedForRP', 'Reported for RP', '3 charges, 3 different powers! Use them at any time you want.\n\n' +
             '* Sage: Will fill your grid with low value tiles if you have space.\n' +
             '* Report: Will remove low value tiles, if you have any.\n' +

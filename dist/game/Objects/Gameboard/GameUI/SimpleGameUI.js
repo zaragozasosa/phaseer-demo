@@ -18,6 +18,11 @@ var SimpleGameUI = (function (_super) {
         _this.gameboardConfig.arraySize = _this.gameboardConfig.defaultArraySize;
         return _this;
     }
+    SimpleGameUI.prototype.update = function (points) {
+        this.points = points;
+        this.updateHeader();
+        this.updateTimer();
+    };
     return SimpleGameUI;
 }(GameboardUI_1.default));
 exports.default = SimpleGameUI;
