@@ -43,6 +43,15 @@ var LogicalGrid = (function (_super) {
         }
         return this.tilesStopped();
     };
+    LogicalGrid.prototype.add = function () {
+        if (this.grid.isFull()) {
+            return;
+        }
+        var pos = this.getTileNewPosition();
+        var tile = new GridTile_1.default(pos.x, pos.y, this.gameboardConfig);
+        this.grid.set(pos.x, pos.y, tile);
+        this.tilesGroup.add(tile.getGroup);
+    };
     LogicalGrid.prototype.randomizeTile = function (tile) {
         if (tile === void 0) { tile = null; }
         var tiles = this.grid.getOrdered();
@@ -115,15 +124,6 @@ var LogicalGrid = (function (_super) {
             var ranY = this.tools.misc.randomBetween(0, maxPosition);
         } while (this.grid.get(ranX, ranY));
         return new Phaser.Point(ranX, ranY);
-    };
-    LogicalGrid.prototype.add = function () {
-        if (this.grid.isFull()) {
-            return;
-        }
-        var pos = this.getTileNewPosition();
-        var tile = new GridTile_1.default(pos.x, pos.y, this.gameboardConfig);
-        this.grid.set(pos.x, pos.y, tile);
-        this.tilesGroup.add(tile.getGroup);
     };
     LogicalGrid.prototype.reorderTileList = function () {
         var list = this.gameboardConfig.tiles;

@@ -45,7 +45,20 @@ export default abstract class LogicalGrid extends Base {
     return this.tilesStopped();
   }
 
-  randomizeTile(tile: GridTile = null) {
+
+
+  add() {
+    if (this.grid.isFull()) {
+      return;
+    }
+
+    let pos = this.getTileNewPosition();
+    let tile = new GridTile(pos.x, pos.y, this.gameboardConfig);
+    this.grid.set(pos.x, pos.y, tile);
+    this.tilesGroup.add(tile.getGroup);
+  }
+
+  protected randomizeTile(tile: GridTile = null) {
     var tiles = this.grid.getOrdered();
     let maxValue = tiles[0].value;
     let minValue = tiles[tiles.length - 1].value;
@@ -130,17 +143,6 @@ export default abstract class LogicalGrid extends Base {
     } while (this.grid.get(ranX, ranY));
 
     return new Phaser.Point(ranX, ranY);
-  }
-
-  add() {
-    if (this.grid.isFull()) {
-      return;
-    }
-
-    let pos = this.getTileNewPosition();
-    let tile = new GridTile(pos.x, pos.y, this.gameboardConfig);
-    this.grid.set(pos.x, pos.y, tile);
-    this.tilesGroup.add(tile.getGroup);
   }
 
   private reorderTileList() {
