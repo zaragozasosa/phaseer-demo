@@ -1,23 +1,33 @@
 import Grid from './../Grid';
-import CincoDeMayoLogic from './../Logic/CincoDeMayoLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import AmmoModel from './../../../Models/AmmoModel';
-
+import GridTile from './../GridTile';
 
 export default class TimeTravel extends Grid {
-  protected gridLogic: CincoDeMayoLogic;
   protected ammo: AmmoModel;
 
   constructor(config: GameboardConfig) {
-    let gridLogic = new CincoDeMayoLogic(config);
-    super(config, gridLogic);
+    super(config);
   }
 
   getPowerConfiguration() {
-    this.ammo = this.gridLogic.getAmmo();
-    this.gameboardConfig.clickTileSignal.add(function(tile: any) {
-      this.gridLogic.power(tile);
-    }.bind(this));
+    this.ammo = new AmmoModel('bullet', this.gameboardConfig.bulletAmmo, 175);
+
+    this.gameboardConfig.clickTileSignal.add(
+      function(tile: any) {
+        this.power(tile);
+      }.bind(this)
+    );
     return this.ammo;
+  }
+
+  power(tile: GridTile) {
+    if (this.grid.filter(x => x).length > 1) {
+      tile.kill();
+      this.cleanGrid();
+      this.tools.audio.playSound('nacho-sfx', false);
+      this.gameboardConfig.updateAmmoSignal.dispatch(tile);
+      this.gameboardConfig.updateScoreSignal.dispatch(false);
+    }
   }
 }

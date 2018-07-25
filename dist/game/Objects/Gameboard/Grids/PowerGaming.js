@@ -11,15 +11,32 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var PowerGamingLogic_1 = require("./../Logic/PowerGamingLogic");
 var PowerGaming = (function (_super) {
     __extends(PowerGaming, _super);
     function PowerGaming(config) {
-        var _this = this;
-        var gridLogic = new PowerGamingLogic_1.default(config);
-        _this = _super.call(this, config, gridLogic) || this;
-        return _this;
+        return _super.call(this, config) || this;
     }
+    PowerGaming.prototype.power = function () {
+        var tiles = this.grid.getOrdered();
+        if (this.canUsePower()) {
+            for (var x = 0; x < tiles.length; x++) {
+                if (tiles[x].value < this.gameboardConfig.minimumValue * 32) {
+                    tiles[x].duplicate();
+                }
+            }
+            this.cleanGrid();
+        }
+    };
+    PowerGaming.prototype.canUsePower = function () {
+        var tiles = this.grid.getOrdered();
+        if (tiles.length > 0 &&
+            tiles[tiles.length - 1].value < this.gameboardConfig.minimumValue * 32) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     return PowerGaming;
 }(Grid_1.default));
 exports.default = PowerGaming;

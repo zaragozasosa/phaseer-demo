@@ -2,7 +2,7 @@ import GameboardConfig from './../../Config/GameboardConfig';
 import GridTile from './GridTile';
 import GridStructure from './GridStructure';
 import GhostTile from './Tiles/GhostTile';
-import LogicalGrid from './LogicalGrid';
+import Grid from './Grid';
 import Base from './../../Base';
 
 export default abstract class GameRules extends Base {
@@ -14,10 +14,10 @@ export default abstract class GameRules extends Base {
     this.gameboardConfig = gameboardConfig;
   }
 
-  newTurn(gridLogic: LogicalGrid, grid: GridStructure) {
+  newTurn(grid: Grid, structure: GridStructure) {
     this.playHighestMergeSFX();
-    gridLogic.add();
-    this.checkGameOver(grid);
+    grid.add();
+    this.checkGameOver(structure);
   }
 
   scanGrid(grid: GridStructure, keyboardInput: number) {

@@ -19,10 +19,10 @@ var GameRules = (function (_super) {
         _this.gameboardConfig = gameboardConfig;
         return _this;
     }
-    GameRules.prototype.newTurn = function (gridLogic, grid) {
+    GameRules.prototype.newTurn = function (grid, structure) {
         this.playHighestMergeSFX();
-        gridLogic.add();
-        this.checkGameOver(grid);
+        grid.add();
+        this.checkGameOver(structure);
     };
     GameRules.prototype.scanGrid = function (grid, keyboardInput) {
         var animating = false;

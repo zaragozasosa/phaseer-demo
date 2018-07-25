@@ -11,15 +11,37 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var BlackMagicLogic_1 = require("./../Logic/BlackMagicLogic");
 var BlackMagic = (function (_super) {
     __extends(BlackMagic, _super);
     function BlackMagic(config) {
-        var _this = this;
-        var gridLogic = new BlackMagicLogic_1.default(config);
-        _this = _super.call(this, config, gridLogic) || this;
-        return _this;
+        return _super.call(this, config) || this;
     }
+    BlackMagic.prototype.power = function () {
+        var tiles = this.grid.getOrdered(true);
+        if (this.canUsePower()) {
+            var _loop_1 = function (x) {
+                var value = tiles[x].value;
+                var equalTiles = tiles.filter(function (x) { return x.value === value && x.isAlive; });
+                if (equalTiles.length > 1) {
+                    equalTiles[0].duplicate();
+                    equalTiles[1].kill();
+                }
+            };
+            for (var x = 0; x < tiles.length; x++) {
+                _loop_1(x);
+            }
+            this.cleanGrid();
+        }
+    };
+    BlackMagic.prototype.canUsePower = function () {
+        var tiles = this.grid.getOrdered();
+        if (tiles.length > 5) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     return BlackMagic;
 }(Grid_1.default));
 exports.default = BlackMagic;

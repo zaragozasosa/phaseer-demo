@@ -11,21 +11,39 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var RollForInitiativeLogic_1 = require("./../Logic/RollForInitiativeLogic");
+var AmmoModel_1 = require("./../../../Models/AmmoModel");
 var TimeTravel = (function (_super) {
     __extends(TimeTravel, _super);
     function TimeTravel(config) {
-        var _this = this;
-        var gridLogic = new RollForInitiativeLogic_1.default(config);
-        _this = _super.call(this, config, gridLogic) || this;
-        return _this;
+        return _super.call(this, config) || this;
     }
-    TimeTravel.prototype.activatePower = function () {
-        this.ammo = this.gridLogic.power();
+    TimeTravel.prototype.getPowerConfiguration = function () {
+        this.ammo = new AmmoModel_1.default('dice', this.gameboardConfig.diceAmmo, 140);
         this.gameboardConfig.clickTileSignal.add(function (tile) {
-            this.gridLogic.useAmmo(tile);
+            this.power(tile);
         }.bind(this));
         return this.ammo;
+    };
+    TimeTravel.prototype.power = function (tile) {
+        if (this.canUsePower) {
+            this.randomizeTile(tile);
+            this.cleanGrid();
+            this.tools.audio.playSound('magil-sfx', false);
+            this.gameboardConfig.updateAmmoSignal.dispatch(tile);
+            this.gameboardConfig.updateScoreSignal.dispatch(false);
+        }
+    };
+    TimeTravel.prototype.canUsePower = function () {
+        var tiles = this.grid.getOrdered();
+        var unique = tiles
+            .map(function (item) { return item.value; })
+            .filter(function (value, index, self) { return self.indexOf(value) === index; });
+        if (unique.length > 2) {
+            return true;
+        }
+        else {
+            return false;
+        }
     };
     return TimeTravel;
 }(Grid_1.default));

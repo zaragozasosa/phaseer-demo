@@ -11,21 +11,27 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Grid_1 = require("./../Grid");
-var CincoDeMayoLogic_1 = require("./../Logic/CincoDeMayoLogic");
+var AmmoModel_1 = require("./../../../Models/AmmoModel");
 var TimeTravel = (function (_super) {
     __extends(TimeTravel, _super);
     function TimeTravel(config) {
-        var _this = this;
-        var gridLogic = new CincoDeMayoLogic_1.default(config);
-        _this = _super.call(this, config, gridLogic) || this;
-        return _this;
+        return _super.call(this, config) || this;
     }
     TimeTravel.prototype.getPowerConfiguration = function () {
-        this.ammo = this.gridLogic.getAmmo();
+        this.ammo = new AmmoModel_1.default('bullet', this.gameboardConfig.bulletAmmo, 175);
         this.gameboardConfig.clickTileSignal.add(function (tile) {
-            this.gridLogic.power(tile);
+            this.power(tile);
         }.bind(this));
         return this.ammo;
+    };
+    TimeTravel.prototype.power = function (tile) {
+        if (this.grid.filter(function (x) { return x; }).length > 1) {
+            tile.kill();
+            this.cleanGrid();
+            this.tools.audio.playSound('nacho-sfx', false);
+            this.gameboardConfig.updateAmmoSignal.dispatch(tile);
+            this.gameboardConfig.updateScoreSignal.dispatch(false);
+        }
     };
     return TimeTravel;
 }(Grid_1.default));

@@ -1,12 +1,33 @@
 import Grid from './../Grid';
-import PowerGamingLogic from './../Logic/PowerGamingLogic';
 import GameboardConfig from './../../../Config/GameboardConfig';
 
 export default class PowerGaming extends Grid {
-  protected gridLogic: PowerGamingLogic;
 
   constructor(config: GameboardConfig) {
-    let gridLogic = new PowerGamingLogic(config);
-    super(config, gridLogic);
+    super(config);
+  }
+
+  power() {
+    var tiles = this.grid.getOrdered();
+    if (this.canUsePower()) {
+      for (let x = 0; x < tiles.length; x++) {
+        if (tiles[x].value < this.gameboardConfig.minimumValue * 32) {
+          tiles[x].duplicate();
+        }
+      }
+      this.cleanGrid();
+    }
+  }
+
+  canUsePower() {
+    var tiles = this.grid.getOrdered();
+    if (
+      tiles.length > 0 &&
+      tiles[tiles.length - 1].value < this.gameboardConfig.minimumValue * 32
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
