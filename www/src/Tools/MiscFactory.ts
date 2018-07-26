@@ -54,4 +54,8 @@ export default class MiscFactory extends Factory {
   cacheAddImage(key: string, data: any) {
     this.game.cache.addImage(key, '', data);
   }
+
+  cacheAddSpritesheet(key: string, data: any) {
+    this.game.cache.addSpriteSheet(key, '', data, 180, 180);
+  }
 }

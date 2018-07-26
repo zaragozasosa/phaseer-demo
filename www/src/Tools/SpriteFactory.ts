@@ -18,13 +18,13 @@ export default class SpriteFactory extends Factory {
     return frame;
   }
 
-  makeTile(x: number, y: number, id: string, modeScale = 1) {
+  makeTile(x: number, y: number, id: string, modeScale = 1, frame = 0) {
     let grid = this.config.grid;
     let size = this.config.grid.tileSize * modeScale;
     let scale = this.config.grid.tileScale * modeScale;
     let padX = grid.gridPaddingX;
     let padY = grid.gridPaddingY;
-    let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
+    let sprite = this.createSprite(x * size, y * size, id, scale, padX, padY, frame);
     this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
     return sprite;
@@ -91,7 +91,8 @@ export default class SpriteFactory extends Factory {
     id: string,
     scale = 1,
     padX = 0,
-    padY = 0
+    padY = 0,
+    frame = 0
   ) {
     let x = posX * this.config.scaleFactor;
     let y = posY * this.config.scaleFactor;
@@ -99,7 +100,7 @@ export default class SpriteFactory extends Factory {
     let config = this.config;
     let xPad = config.safeZone.paddingX + padX;
     let yPad = config.safeZone.paddingY + padY;
-    let sprite = this.game.add.sprite(x + xPad, y + yPad, id);
+    let sprite = this.game.add.sprite(x + xPad, y + yPad, id, frame);
     sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
 
     return sprite;

@@ -18,10 +18,10 @@ var LoadingScreen = (function (_super) {
         var tools = _this.tools;
         for (var _i = 0, _a = gameboardConfig.tiles; _i < _a.length; _i++) {
             var tile = _a[_i];
-            var x = tools.misc.randomBetween(150, 850);
+            var x = tools.misc.randomBetween(150, 800);
             var y = tools.misc.randomBetween(150, 1400);
-            var x2 = tools.misc.randomBetween(150, 850);
-            var y2 = tools.misc.randomBetween(150, 1400);
+            var x2 = tools.misc.randomBetween(100, 800);
+            var y2 = tools.misc.randomBetween(100, 1400);
             var time = tools.misc.randomBetween(500, 1200);
             var time2 = tools.misc.randomBetween(500, 1200);
             var scale = tools.misc.randomBetween(6, 10);

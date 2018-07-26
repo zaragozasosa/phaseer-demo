@@ -55,6 +55,9 @@ var MiscFactory = (function (_super) {
     MiscFactory.prototype.cacheAddImage = function (key, data) {
         this.game.cache.addImage(key, '', data);
     };
+    MiscFactory.prototype.cacheAddSpritesheet = function (key, data) {
+        this.game.cache.addSpriteSheet(key, '', data, 180, 180);
+    };
     return MiscFactory;
 }(Factory_1.default));
 exports.default = MiscFactory;

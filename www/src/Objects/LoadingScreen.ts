@@ -6,11 +6,11 @@ export default class LoadingScreen extends Base {
     super();
     let tools = this.tools;
     for (let tile of gameboardConfig.tiles) {
-      let x = tools.misc.randomBetween(150, 850);
+      let x = tools.misc.randomBetween(150, 800);
       let y = tools.misc.randomBetween(150, 1400);
 
-      let x2 = tools.misc.randomBetween(150, 850);
-      let y2 = tools.misc.randomBetween(150, 1400);
+      let x2 = tools.misc.randomBetween(100, 800);
+      let y2 = tools.misc.randomBetween(100, 1400);
 
       let time = tools.misc.randomBetween(500, 1200);
       let time2 = tools.misc.randomBetween(500, 1200);

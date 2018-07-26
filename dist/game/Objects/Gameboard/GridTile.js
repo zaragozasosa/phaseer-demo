@@ -48,7 +48,6 @@ var GridTile = (function (_super) {
         _this.sprite.events.onInputDown.add(function () {
             this.gameboardConfig.clickTileSignal.dispatch(this);
         }.bind(_this));
-        _this.sprite.animations.add('hey', _this.model.animationFrames, _this.model.animationSpeed);
         if (newTile && _this.tools.misc.randomBetween(0, 6) === 0) {
             _this.sprite.play('hey');
         }
@@ -167,11 +166,12 @@ var GridTile = (function (_super) {
     };
     GridTile.prototype.startTimeStop = function () {
         this.timeStopped = true;
-        this.sprite.loadTexture(this.model.negativeId);
+        debugger;
+        this.sprite.loadTexture(this.model.negativeId, this.spriteFrame);
     };
     GridTile.prototype.stopTimeStop = function () {
         this.timeStopped = false;
-        this.sprite.loadTexture(this.model.id);
+        this.sprite.loadTexture(this.model.id, this.spriteFrame);
     };
     GridTile.prototype.update = function () {
         for (var _i = 0, _a = this.group.getAll(); _i < _a.length; _i++) {
@@ -219,17 +219,18 @@ var GridTile = (function (_super) {
         var tile = this.gameboardConfig.tiles.find(function (x) { return x.staticValue === _this.value; });
         this.model = tile;
         if (this.timeStopped) {
-            this.sprite.loadTexture(tile.negativeId);
+            this.sprite.loadTexture(tile.negativeId, this.spriteFrame);
         }
         else {
-            this.sprite.loadTexture(tile.id);
+            this.sprite.loadTexture(tile.id, this.spriteFrame);
         }
         this.number.setText(this.value + '');
     };
     GridTile.prototype.createSprite = function () {
         var tile = this.model;
         var sca = this.gameboardConfig.gameModeTileScale;
-        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca);
+        this.spriteFrame = this.tools.misc.randomBetween(0, 3);
+        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca, this.spriteFrame);
         sprite.body.collideWorldBounds = true;
         return sprite;
     };
@@ -260,12 +261,6 @@ var GridTile = (function (_super) {
     };
     GridTile.prototype.toString = function () {
         return this.sprite.key + "  " + this.value + " -  " + this.posX + ":" + this.posY;
-    };
-    GridTile.prototype.animateTile = function () {
-        if (!this.sprite.alive) {
-            return;
-        }
-        var animation = this.sprite.animations.play('hey');
     };
     return GridTile;
 }(Base_1.default));

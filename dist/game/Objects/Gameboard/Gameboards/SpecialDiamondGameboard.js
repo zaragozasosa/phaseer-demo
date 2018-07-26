@@ -32,7 +32,7 @@ var SpecialDiamondGameboard = (function (_super) {
         }
         for (var _i = 0, _a = this.gameboardConfig.tiles; _i < _a.length; _i++) {
             var sprite = _a[_i];
-            this.tools.misc.cacheAddImage(sprite.negativeId, this.tools.sprite.makeReverseTexture(sprite.id));
+            this.tools.misc.cacheAddSpritesheet(sprite.negativeId, this.tools.sprite.makeReverseTexture(sprite.id));
         }
         this.tools.misc.cacheAddImage('negative-bg', this.tools.sprite.makeReverseTexture(this.background.key.toString()));
     };

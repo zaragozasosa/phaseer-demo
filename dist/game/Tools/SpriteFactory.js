@@ -26,14 +26,15 @@ var SpriteFactory = (function (_super) {
         this.game.physics.enable(frame, Phaser.Physics.ARCADE);
         return frame;
     };
-    SpriteFactory.prototype.makeTile = function (x, y, id, modeScale) {
+    SpriteFactory.prototype.makeTile = function (x, y, id, modeScale, frame) {
         if (modeScale === void 0) { modeScale = 1; }
+        if (frame === void 0) { frame = 0; }
         var grid = this.config.grid;
         var size = this.config.grid.tileSize * modeScale;
         var scale = this.config.grid.tileScale * modeScale;
         var padX = grid.gridPaddingX;
         var padY = grid.gridPaddingY;
-        var sprite = this.createSprite(x * size, y * size, id, scale, padX, padY);
+        var sprite = this.createSprite(x * size, y * size, id, scale, padX, padY, frame);
         this.game.physics.enable(sprite, Phaser.Physics.ARCADE);
         return sprite;
     };
@@ -73,16 +74,17 @@ var SpriteFactory = (function (_super) {
         sprite.x = config.safeZone.paddingX + x;
         return sprite;
     };
-    SpriteFactory.prototype.createSprite = function (posX, posY, id, scale, padX, padY) {
+    SpriteFactory.prototype.createSprite = function (posX, posY, id, scale, padX, padY, frame) {
         if (scale === void 0) { scale = 1; }
         if (padX === void 0) { padX = 0; }
         if (padY === void 0) { padY = 0; }
+        if (frame === void 0) { frame = 0; }
         var x = posX * this.config.scaleFactor;
         var y = posY * this.config.scaleFactor;
         var config = this.config;
         var xPad = config.safeZone.paddingX + padX;
         var yPad = config.safeZone.paddingY + padY;
-        var sprite = this.game.add.sprite(x + xPad, y + yPad, id);
+        var sprite = this.game.add.sprite(x + xPad, y + yPad, id, frame);
         sprite.scale.setTo(config.scaleFactor * scale, config.scaleFactor * scale);
         return sprite;
     };

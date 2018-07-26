@@ -8,6 +8,8 @@ export default class GridTile extends Base {
   posX: number;
   posY: number;
   value: number;
+  spriteFrame: number;
+
   protected frame: Phaser.Sprite;
   protected sprite: Phaser.Sprite;
   protected number: Phaser.Text;
@@ -32,8 +34,7 @@ export default class GridTile extends Base {
 
     if (newTile) {
       this.model = gameboardConfig.tiles[0];
-    }
-    else {
+    } else {
       this.model = gameboardConfig.tiles.find(x => x.staticValue === value);
     }
     this.value = this.model.staticValue;
@@ -65,14 +66,12 @@ export default class GridTile extends Base {
     this.sprite.inputEnabled = true;
 
     this.sprite.events.onInputDown.add(
-      function () {
+      function() {
         this.gameboardConfig.clickTileSignal.dispatch(this);
       }.bind(this)
     );
 
-    this.sprite.animations.add('hey', this.model.animationFrames, this.model.animationSpeed);
-
-    if(newTile && this.tools.misc.randomBetween(0,6) === 0) {
+    if (newTile && this.tools.misc.randomBetween(0, 6) === 0) {
       this.sprite.play('hey');
     }
   }
@@ -115,7 +114,7 @@ export default class GridTile extends Base {
       this.tools.misc.overlap(
         this.sprite,
         groupItem.getBottom(),
-        function (s: Phaser.Sprite, g: Phaser.Sprite) {
+        function(s: Phaser.Sprite, g: Phaser.Sprite) {
           if (s && g) {
             if (s.key === g.key) {
               return false;
@@ -136,7 +135,7 @@ export default class GridTile extends Base {
     this.tools.misc.overlap(
       this.sprite,
       wallsGroup,
-      function (a: any, b: any) {
+      function(a: any, b: any) {
         if (a && b) {
           let velocity = this.sprite.body.velocity;
           if (velocity.x || velocity.y) {
@@ -201,12 +200,13 @@ export default class GridTile extends Base {
 
   startTimeStop() {
     this.timeStopped = true;
-    this.sprite.loadTexture(this.model.negativeId);
+    debugger;
+    this.sprite.loadTexture(this.model.negativeId, this.spriteFrame);
   }
 
   stopTimeStop() {
     this.timeStopped = false;
-    this.sprite.loadTexture(this.model.id);
+    this.sprite.loadTexture(this.model.id, this.spriteFrame);
   }
 
   private update() {
@@ -250,7 +250,7 @@ export default class GridTile extends Base {
     this.sprite.position.y += this.sprite.height / 2;
 
     this.randomizeTween.start().onComplete.add(
-      function () {
+      function() {
         let scale = this.gameboardConfig.gameModeTileScale;
         this.sprite.anchor.setTo(0, 0);
         this.tools.sprite.updateTile(this.posX, this.posY, this.sprite, scale);
@@ -264,9 +264,9 @@ export default class GridTile extends Base {
     );
     this.model = tile;
     if (this.timeStopped) {
-      this.sprite.loadTexture(tile.negativeId);
+      this.sprite.loadTexture(tile.negativeId, this.spriteFrame);
     } else {
-      this.sprite.loadTexture(tile.id);
+      this.sprite.loadTexture(tile.id, this.spriteFrame);
     }
     this.number.setText(this.value + '');
   }
@@ -274,7 +274,14 @@ export default class GridTile extends Base {
   private createSprite() {
     let tile = this.model;
     let sca = this.gameboardConfig.gameModeTileScale;
-    let sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca);
+    this.spriteFrame = this.tools.misc.randomBetween(0, 3);
+    let sprite = this.tools.sprite.makeTile(
+      this.posX,
+      this.posY,
+      tile.id,
+      sca,
+      this.spriteFrame
+    );
     sprite.body.collideWorldBounds = true;
 
     return sprite;
@@ -313,13 +320,5 @@ export default class GridTile extends Base {
 
   toString() {
     return `${this.sprite.key}  ${this.value} -  ${this.posX}:${this.posY}`;
-  }
-
-  animateTile() {
-    if (!this.sprite.alive) {
-      return;
-    }
-
-    let animation = this.sprite.animations.play('hey');
   }
 }

@@ -23,7 +23,7 @@ export default class SpecialDiamondGameboard extends DiamondGameboard {
     }
 
     for (let sprite of this.gameboardConfig.tiles) {
-      this.tools.misc.cacheAddImage(
+      this.tools.misc.cacheAddSpritesheet(
         sprite.negativeId,
         this.tools.sprite.makeReverseTexture(sprite.id)
       );
