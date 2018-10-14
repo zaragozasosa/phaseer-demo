@@ -11,6 +11,12 @@ export default class BossGameUI extends GameboardUI {
     this.bossId = 'mira';
   }
 
+  drawBackground() {
+    this.tools.graphic.addBackground();
+    let boss = this.gameboardConfig.tiles.filter(x => x.id === this.bossId);
+    return this.tools.sprite.createBackground(boss[0].power.backgroundId);
+  }
+
   create(timer: Phaser.Timer, pauseCallback: any) {
     this.addHeader();
     this.addMenuButton(pauseCallback);

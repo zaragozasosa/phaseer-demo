@@ -14,7 +14,7 @@ var CharacterSelectionLoader = (function () {
         loader.image('nationalism_bg', 'assets/images/backgrounds/nationalism.png');
         loader.image('reported_bg', 'assets/images/backgrounds/reported.png');
         loader.image('mexican_beagle_bg', 'assets/images/backgrounds/mexican_beagle.png');
-        loader.image('nerd_code', 'assets/images/backgrounds/nerd_code.png');
+        loader.image('nerd_code_bg', 'assets/images/backgrounds/nerd_code.png');
         loader.image('menu', 'assets/images/menu.png');
         loader.image('bug', 'assets/images/bug.png');
         loader.image('bullet', 'assets/images/bullet.png');

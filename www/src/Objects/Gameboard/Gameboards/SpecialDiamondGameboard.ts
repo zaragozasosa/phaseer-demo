@@ -38,7 +38,6 @@ export default class SpecialDiamondGameboard extends DiamondGameboard {
 
   activatePower() {
     if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-      debugger;
       this.background.loadTexture('negative-bg');
       this.toggleTimer(true);
     }

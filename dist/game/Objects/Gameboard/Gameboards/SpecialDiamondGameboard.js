@@ -38,7 +38,6 @@ var SpecialDiamondGameboard = (function (_super) {
     };
     SpecialDiamondGameboard.prototype.activatePower = function () {
         if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-            debugger;
             this.background.loadTexture('negative-bg');
             this.toggleTimer(true);
         }

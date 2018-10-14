@@ -22,6 +22,12 @@ var GameboardUI = (function (_super) {
         _this.gameboardConfig = gameboardConfig;
         return _this;
     }
+    GameboardUI.prototype.drawBackground = function () {
+        this.tools.graphic.addBackground();
+        var backId = this.gameboardConfig.mainTile.power.backgroundId;
+        debugger;
+        return this.tools.sprite.createBackground(backId);
+    };
     GameboardUI.prototype.create = function (timer, pauseCallback) {
         this.points = 0;
         this.timer = timer;

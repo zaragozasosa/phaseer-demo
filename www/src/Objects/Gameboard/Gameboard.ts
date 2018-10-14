@@ -38,9 +38,7 @@ export default abstract class Gameboard extends Base {
     this.movements = 0;
     this.showOnce = true;
     this.gameboardConfig = gameboardConfig;
-    this.tools.graphic.addBackground();
-    let backId = this.gameboardConfig.mainTile.power.backgroundId;
-    this.background = this.tools.sprite.createBackground(backId);
+    this.background = this.gameboardUI.drawBackground();
 
     this.gameOver = false;
     this.wonGame = false;

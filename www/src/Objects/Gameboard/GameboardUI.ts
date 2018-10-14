@@ -19,6 +19,13 @@ export default abstract class GameboardUI extends Base {
     this.gameboardConfig = gameboardConfig;
   }
 
+  drawBackground() {
+    this.tools.graphic.addBackground();
+    let backId = this.gameboardConfig.mainTile.power.backgroundId;
+    debugger;
+    return this.tools.sprite.createBackground(backId);
+  }
+
   create(timer: Phaser.Timer, pauseCallback: any) {
     this.points = 0;
     this.timer = timer;

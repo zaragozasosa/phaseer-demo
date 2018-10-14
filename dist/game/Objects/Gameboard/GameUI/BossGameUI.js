@@ -19,6 +19,12 @@ var BossGameUI = (function (_super) {
         _this.bossId = 'mira';
         return _this;
     }
+    BossGameUI.prototype.drawBackground = function () {
+        var _this = this;
+        this.tools.graphic.addBackground();
+        var boss = this.gameboardConfig.tiles.filter(function (x) { return x.id === _this.bossId; });
+        return this.tools.sprite.createBackground(boss[0].power.backgroundId);
+    };
     BossGameUI.prototype.create = function (timer, pauseCallback) {
         this.addHeader();
         this.addMenuButton(pauseCallback);

@@ -25,9 +25,7 @@ var Gameboard = (function (_super) {
         _this.movements = 0;
         _this.showOnce = true;
         _this.gameboardConfig = gameboardConfig;
-        _this.tools.graphic.addBackground();
-        var backId = _this.gameboardConfig.mainTile.power.backgroundId;
-        _this.background = _this.tools.sprite.createBackground(backId);
+        _this.background = _this.gameboardUI.drawBackground();
         _this.gameOver = false;
         _this.wonGame = false;
         var updateMovementsSignal = new Phaser.Signal();
