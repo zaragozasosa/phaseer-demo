@@ -24,7 +24,6 @@ export default class TimeTravel extends Grid {
       this.cleanGrid();
       this.tools.audio.playSound('magil-sfx', false);
       this.gameboardConfig.updateAmmoSignal.dispatch(tile);
-      this.gameboardConfig.updateScoreSignal.dispatch(false);
     }
   }
 

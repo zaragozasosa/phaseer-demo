@@ -200,7 +200,6 @@ export default class GridTile extends Base {
 
   startTimeStop() {
     this.timeStopped = true;
-    debugger;
     this.sprite.loadTexture(this.model.negativeId, this.spriteFrame);
   }
 

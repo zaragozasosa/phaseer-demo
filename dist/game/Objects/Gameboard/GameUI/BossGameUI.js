@@ -16,23 +16,26 @@ var BossGameUI = (function (_super) {
     function BossGameUI(gameboardConfig) {
         var _this = _super.call(this, gameboardConfig) || this;
         _this.gameboardConfig.arraySize = _this.gameboardConfig.bossArraySize;
+        _this.bossId = 'mira';
         return _this;
     }
     BossGameUI.prototype.create = function (timer, pauseCallback) {
         this.addHeader();
         this.addMenuButton(pauseCallback);
     };
+    BossGameUI.prototype.update = function (grid) {
+        this.points = grid.points;
+        this.updateHeader();
+    };
     BossGameUI.prototype.addHeader = function () {
-        this.header = this.tools.text.make(20, 20, '', 50);
+        this.bossPortrait = this.tools.sprite.createFromSpriteSheet(20, 0, this.bossId, 0, 1.4);
+        this.header = this.tools.text.make(300, 40, '', 45);
         this.tools.tween.appear(this.header);
+        this.tools.tween.appear(this.bossPortrait);
         this.updateHeader();
     };
     BossGameUI.prototype.updateHeader = function () {
-        this.header.setText("Score: " + this.points);
-    };
-    BossGameUI.prototype.update = function (points) {
-        this.points = points;
-        this.updateHeader();
+        this.header.setText("Score: 2\nBoss score: " + this.points + "\nNext attack: 3 turns");
     };
     return BossGameUI;
 }(GameboardUI_1.default));

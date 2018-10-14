@@ -67,7 +67,7 @@ var GameboardUI = (function (_super) {
         this.tools.tween.appear(menu);
     };
     GameboardUI.prototype.addHeader = function () {
-        this.header = this.tools.text.make(20, 20, '', 50);
+        this.header = this.tools.text.make(20, 40, '', 50);
         this.tools.tween.appear(this.header);
         this.updateHeader();
     };
@@ -75,7 +75,7 @@ var GameboardUI = (function (_super) {
         this.header.setText("Score: " + this.points);
     };
     GameboardUI.prototype.addTimer = function () {
-        this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
+        this.timerMessage = this.tools.text.make(20, 100, 'Time: 00:00', 50);
         this.tools.tween.appear(this.timerMessage).onComplete.addOnce(function () {
             this.timer.start();
         }.bind(this));
@@ -89,6 +89,11 @@ var GameboardUI = (function (_super) {
     };
     GameboardUI.prototype.num = function (n) {
         return n > 9 ? '' + n : '0' + n;
+    };
+    GameboardUI.prototype.update = function (grid) {
+        this.points = grid.points;
+        this.updateHeader();
+        this.updateTimer();
     };
     return GameboardUI;
 }(Base_1.default));

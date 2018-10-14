@@ -36,8 +36,8 @@ var ChargeUI = (function (_super) {
             button.inputEnabled = false;
             button.tint = Phaser.Color.GRAY;
         }
-        var label = this.tools.text.make(20, 1350, 'Charges: ', 50);
-        this.chargesText = this.tools.text.make(280, 1350, "" + this.charges, 50);
+        var label = this.tools.text.make(20, 1370, 'Charges: ', 40);
+        this.chargesText = this.tools.text.make(280, 1370, "" + this.charges, 40);
         this.tools.tween.appear(label);
         this.tools.tween.appear(this.chargesText);
     };

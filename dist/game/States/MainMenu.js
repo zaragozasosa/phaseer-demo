@@ -12,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var InputManager_1 = require("./../InputManager");
 var Config_1 = require("./../Config/Config");
+var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var CharacterSelectionLoader_1 = require("./../Loaders/CharacterSelectionLoader");
 var MenuList_1 = require("./../Objects/Menu/MenuList");
 var MenuObject_1 = require("./../Objects/Menu/MenuObject");
@@ -36,12 +37,20 @@ var MainMenu = (function (_super) {
         var menuList = new MenuList_1.default('Menu');
         menuList.addChild(new MenuObject_1.default('Free mode', function () {
             this.gameboardConfig.playStory = false;
+            this.gameboardConfig.gameMode = GameboardConfig_1.default.GAME_MODE_SINGLE_PLAYER;
             this.menu.destroy();
             tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader, 'Unranked');
         }.bind(this)));
         menuList.addChild(new MenuObject_1.default('Story mode', function () {
+            this.gameboardConfig.gameMode = GameboardConfig_1.default.GAME_MODE_SINGLE_PLAYER;
             this.menu.destroy();
             tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader, 'Story');
+        }.bind(this)));
+        menuList.addChild(new MenuObject_1.default('Special mode', function () {
+            this.gameboardConfig.playStory = false;
+            this.gameboardConfig.gameMode = GameboardConfig_1.default.GAME_MODE_BOSS_FIGHT;
+            this.menu.destroy();
+            tools.transition.smoothLoaderConfig('CharacterSelection', this.gameboardConfig, loader, 'BossFight');
         }.bind(this)));
         menuList.addChild(new MenuObject_1.default('Project site', function () {
             window.location.href = 'https://github.com/zaragozasosa/phaseer-demo';

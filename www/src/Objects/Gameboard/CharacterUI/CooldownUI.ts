@@ -8,7 +8,7 @@ export default class AmmoUI extends PlayerUI {
   create(group: Phaser.Group) {
     this.elements = group;
     this.tools.tween.appear(group);
-    this.cooldownText = this.tools.text.makeStroked(20, 1350, 'Status: Select a direction', 45);
+    this.cooldownText = this.tools.text.makeStroked(20, 1370, 'Status: Select a direction', 40);
     this.tools.tween.appear(this.cooldownText);
   }
 

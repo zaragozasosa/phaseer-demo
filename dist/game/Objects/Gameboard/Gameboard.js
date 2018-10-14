@@ -30,9 +30,9 @@ var Gameboard = (function (_super) {
         _this.background = _this.tools.sprite.createBackground(backId);
         _this.gameOver = false;
         _this.wonGame = false;
-        var updateScoreSignal = new Phaser.Signal();
-        updateScoreSignal.add(function (addToMovement) {
-            this.updateScore(addToMovement);
+        var updateMovementsSignal = new Phaser.Signal();
+        updateMovementsSignal.add(function () {
+            this.updateMovements();
         }.bind(_this));
         var toggleButtonSignal = new Phaser.Signal();
         toggleButtonSignal.add(function (status) {
@@ -43,7 +43,7 @@ var Gameboard = (function (_super) {
             this.gameover(win);
         }.bind(_this));
         _this.gameboardConfig.toggleButtonSignal = toggleButtonSignal;
-        _this.gameboardConfig.updateScoreSignal = updateScoreSignal;
+        _this.gameboardConfig.updateMovementsSignal = updateMovementsSignal;
         _this.gameboardConfig.gameOverSignal = gameoverSignal;
         _this.gameboardConfig.clickTileSignal = new Phaser.Signal();
         _this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
@@ -54,12 +54,8 @@ var Gameboard = (function (_super) {
         _this.config.storyboard.optionClickSignal = new Phaser.Signal();
         return _this;
     }
-    Gameboard.prototype.updateScore = function (addToMovement) {
-        if (addToMovement === void 0) { addToMovement = true; }
-        if (addToMovement) {
-            this.movements++;
-        }
-        this.points = this.grid.calculatePoints();
+    Gameboard.prototype.updateMovements = function () {
+        this.movements++;
     };
     Gameboard.prototype.start = function () {
         this.createGrid();
@@ -82,7 +78,7 @@ var Gameboard = (function (_super) {
     Gameboard.prototype.createGrid = function () {
         this.grid = GridFactory_1.default.create(this.gameboardConfig);
         this.timer = this.tools.misc.createTimer();
-        this.points = this.grid.calculatePoints();
+        this.points = this.grid.points;
         this.input = new InputManager_1.default(this.config);
         this.gameStarted = true;
         this.createGameboardUI();
@@ -93,7 +89,7 @@ var Gameboard = (function (_super) {
         }
         var cursor;
         if (!this.gameOver) {
-            this.gameboardUI.update(this.points);
+            this.gameboardUI.update(this.grid);
             if (this.input.checkEscape()) {
                 this.pausetoggle();
                 return;

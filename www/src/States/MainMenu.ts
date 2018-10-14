@@ -37,6 +37,7 @@ export default class MainMenu extends Phaser.State {
         'Free mode',
         function () {
           this.gameboardConfig.playStory = false;
+          this.gameboardConfig.gameMode = GameboardConfig.GAME_MODE_SINGLE_PLAYER;
           this.menu.destroy();
           tools.transition.smoothLoaderConfig(
             'CharacterSelection',
@@ -52,12 +53,30 @@ export default class MainMenu extends Phaser.State {
       new MenuObject(
         'Story mode',
         function () {
+          this.gameboardConfig.gameMode = GameboardConfig.GAME_MODE_SINGLE_PLAYER;
           this.menu.destroy();
           tools.transition.smoothLoaderConfig(
             'CharacterSelection',
             this.gameboardConfig,
             loader,
             'Story'
+          );
+        }.bind(this)
+      )
+    );
+
+    menuList.addChild(
+      new MenuObject(
+        'Special mode',
+        function () {
+          this.gameboardConfig.playStory = false;
+          this.gameboardConfig.gameMode = GameboardConfig.GAME_MODE_BOSS_FIGHT;
+          this.menu.destroy();
+          tools.transition.smoothLoaderConfig(
+            'CharacterSelection',
+            this.gameboardConfig,
+            loader,
+            'BossFight'
           );
         }.bind(this)
       )

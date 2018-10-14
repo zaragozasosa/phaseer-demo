@@ -20,7 +20,7 @@ var AmmoUI = (function (_super) {
     AmmoUI.prototype.create = function (group) {
         this.elements = group;
         this.tools.tween.appear(group);
-        this.cooldownText = this.tools.text.makeStroked(20, 1350, 'Status: Select a direction', 45);
+        this.cooldownText = this.tools.text.makeStroked(20, 1370, 'Status: Select a direction', 40);
         this.tools.tween.appear(this.cooldownText);
     };
     AmmoUI.prototype.updateSpecialElements = function (text) {

@@ -166,7 +166,6 @@ var GridTile = (function (_super) {
     };
     GridTile.prototype.startTimeStop = function () {
         this.timeStopped = true;
-        debugger;
         this.sprite.loadTexture(this.model.negativeId, this.spriteFrame);
     };
     GridTile.prototype.stopTimeStop = function () {

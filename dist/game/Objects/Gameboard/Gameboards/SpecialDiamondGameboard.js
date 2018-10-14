@@ -34,15 +34,16 @@ var SpecialDiamondGameboard = (function (_super) {
             var sprite = _a[_i];
             this.tools.misc.cacheAddSpritesheet(sprite.negativeId, this.tools.sprite.makeReverseTexture(sprite.id));
         }
-        this.tools.misc.cacheAddImage('negative-bg', this.tools.sprite.makeReverseTexture(this.background.key.toString()));
+        this.tools.misc.cacheAddImage('negative-bg', this.tools.sprite.makeReverseTexture(this.gameboardConfig.mainTile.power.backgroundId));
     };
     SpecialDiamondGameboard.prototype.activatePower = function () {
-        if (_super.prototype.activatePower.call(this)) {
-            return true;
-        }
         if (this.diamonds >= this.diamondModel.requiredDiamonds) {
+            debugger;
             this.background.loadTexture('negative-bg');
             this.toggleTimer(true);
+        }
+        if (_super.prototype.activatePower.call(this)) {
+            return true;
         }
     };
     SpecialDiamondGameboard.prototype.toggleTimer = function (paused) {

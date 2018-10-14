@@ -103,7 +103,7 @@ export default class ConfigSetup {
     grid.lineColor = config.color.primary;
     grid.activeLineColor = config.color.selected;
     grid.gridPaddingX = 25 * scaleFactor;
-    grid.gridPaddingY = 250 * scaleFactor;
+    grid.gridPaddingY = 270 * scaleFactor;
     grid.tileScale = grid.tileSize / (grid.physicalTileSize + 10);
     grid.font = 'Verdana,Geneva,sans-serif';
     grid.tileNumberPadX = 15;

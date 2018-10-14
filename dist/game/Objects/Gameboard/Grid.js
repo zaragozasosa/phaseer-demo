@@ -36,6 +36,13 @@ var Grid = (function (_super) {
         _this.add();
         return _this;
     }
+    Object.defineProperty(Grid.prototype, "points", {
+        get: function () {
+            return this.grid.sumTiles();
+        },
+        enumerable: true,
+        configurable: true
+    });
     Grid.prototype.update = function (cursor) {
         if (!this.animating) {
             if (cursor) {
@@ -48,12 +55,8 @@ var Grid = (function (_super) {
             this.manageCollisions();
         }
     };
-    Grid.prototype.calculatePoints = function () {
-        return this.grid.sumTiles();
-    };
     Grid.prototype.activatePower = function () {
         this.power();
-        this.gameboardConfig.updateScoreSignal.dispatch(false);
     };
     Grid.prototype.add = function () {
         if (this.grid.isFull()) {
@@ -188,7 +191,7 @@ var Grid = (function (_super) {
         if (this.tilesStopped()) {
             this.animating = false;
             this.buttonDisableMightChange();
-            this.gameboardConfig.updateScoreSignal.dispatch();
+            this.gameboardConfig.updateMovementsSignal.dispatch();
         }
     };
     Grid.prototype.canUsePower = function () {

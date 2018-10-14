@@ -24,12 +24,12 @@ export default class DetectiveWork extends Grid {
     let group = this.tools.misc.addGroup();
     group.inputEnableChildren = true;
 
-    group.add(this.tools.text.make(50, 1195, 'UP', 45));
-    group.add(this.tools.text.make(200, 1195, 'DOWN', 45));
-    group.add(this.tools.text.make(475, 1195, 'LEFT', 45));
-    group.add(this.tools.text.make(700, 1195, 'RIGHT', 45));
+    group.add(this.tools.text.make(50, 1215, 'UP', 45));
+    group.add(this.tools.text.make(200, 1215, 'DOWN', 45));
+    group.add(this.tools.text.make(475, 1215, 'LEFT', 45));
+    group.add(this.tools.text.make(700, 1215, 'RIGHT', 45));
 
-    let btn = this.tools.text.makeXBounded(1240, 'SEARCH', 60, 'center');
+    let btn = this.tools.text.makeXBounded(1260, 'SEARCH', 55, 'center');
     btn.tint = Phaser.Color.GRAY;
     group.add(btn);
     btn.inputEnabled = false;
@@ -91,7 +91,6 @@ export default class DetectiveWork extends Grid {
   }
 
   protected getTileNewPosition() {
-    debugger;
     let maxPosition = this.gameboardConfig.arraySize;
     if (!this.direction) {
       return super.getTileNewPosition();

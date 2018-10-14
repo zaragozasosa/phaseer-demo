@@ -40,6 +40,10 @@ export default abstract class Grid extends Base {
     this.add();
   }
 
+  get points() {
+    return this.grid.sumTiles();    
+  }
+
   update(cursor: number) {
     if (!this.animating) {
       if (cursor) {
@@ -52,13 +56,8 @@ export default abstract class Grid extends Base {
     }
   }
 
-  calculatePoints() {
-    return this.grid.sumTiles();
-  }
-
   activatePower(): any {
     this.power();
-    this.gameboardConfig.updateScoreSignal.dispatch(false);
   }
 
   add() {
@@ -229,7 +228,7 @@ export default abstract class Grid extends Base {
     if (this.tilesStopped()) {
       this.animating = false;
       this.buttonDisableMightChange();
-      this.gameboardConfig.updateScoreSignal.dispatch();
+      this.gameboardConfig.updateMovementsSignal.dispatch();
     }
   }
 

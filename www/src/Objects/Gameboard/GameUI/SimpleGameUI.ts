@@ -7,10 +7,4 @@ export default class SimpleGameUI extends GameboardUI {
     super(gameboardConfig);
     this.gameboardConfig.arraySize = this.gameboardConfig.defaultArraySize;
   }
-
-  update(points) {
-    this.points = points;
-    this.updateHeader();
-    this.updateTimer();
-  }
 }

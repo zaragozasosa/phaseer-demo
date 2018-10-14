@@ -23,7 +23,7 @@ export default class GameboardConfig {
   requiredDiamonds: number;
   requiredBugs: number;
 
-  updateScoreSignal: Phaser.Signal;
+  updateMovementsSignal: Phaser.Signal;
   toggleButtonSignal: Phaser.Signal;
   clickTileSignal: Phaser.Signal;
   updateAmmoSignal: Phaser.Signal;
@@ -100,15 +100,7 @@ export default class GameboardConfig {
         'powerGaming',
         'Power Gaming',
         'Duplicate the value of every tile in the board below 32.',
-        'Have at least one tile below 32'
-      )
-    );
-
-    powers.push(
-      new PowerModel(
-        'powerGaming',
-        'Power Gaming',
-        'Duplicate the value of every tile in the board below 32.',
+        'nerd_code_bg',
         'Have at least one tile below 32'
       )
     );
@@ -118,6 +110,7 @@ export default class GameboardConfig {
         'gachaAddiction',
         'Gacha Addiction',
         'Collect diamonds! Use them to fully randomize your board!',
+        'gacha_pull_bg',
         `Have at least 3 different kind of tiles and ${this
           .requiredDiamonds} diamonds.`
       )
@@ -128,7 +121,8 @@ export default class GameboardConfig {
         'detectiveWork',
         'Detective Work',
         'Control the flow of new tiles. Changing this flow will require you to wait a few turns.\n\n' +
-          'You can also investigate to create a ghost tile of high value. Be careful, the higher your tiles are, the hardest it will be to merge.'
+          'You can also investigate to create a ghost tile of high value. Be careful, the higher your tiles are, the hardest it will be to merge.',
+        'mystery_bg'
       )
     );
 
@@ -137,6 +131,7 @@ export default class GameboardConfig {
         'timeTravel',
         'Hello World: Time stops',
         'Collect bugs! Use this power to stop the new tiles from appearing for a few turns. Use that chance to merge the tiles in your board!',
+        'nationalism_bg',
         `Have ${this.requiredDiamonds} bugs.`
       )
     );
@@ -148,7 +143,8 @@ export default class GameboardConfig {
         '3 charges, 3 different powers! Use them at any time you want.\n\n' +
           '* Sage: Will fill your grid with low value tiles if you have space.\n' +
           '* Report: Will remove low value tiles, if you have any.\n' +
-          '* Ban: Will remove every tile except your highest.'
+          '* Ban: Will remove every tile except your highest.',
+        'reported_bg'
       )
     );
 
@@ -157,6 +153,7 @@ export default class GameboardConfig {
         'rollForInitiative',
         'Roll for Initiative',
         'Randomize any tile you want by clicking on it! Can be used 5 times.',
+        'space_dungeons_bg',
         'Have at least 3 different kind of tiles.'
       )
     );
@@ -166,6 +163,7 @@ export default class GameboardConfig {
         'blackMagic',
         'Black Magic',
         'Merge all your tiles, from the lowest to the highest!',
+        'halloween_bg',
         'Have at least 6 tiles on the grid.'
       )
     );
@@ -176,6 +174,7 @@ export default class GameboardConfig {
         'Cinco de Mayo',
         `Destroy any tile you want by clicking on it! Can be used ${this
           .bulletAmmo} times.`,
+        'mexican_beagle_bg',
         'Have at least more than one tile on the grid.'
       )
     );

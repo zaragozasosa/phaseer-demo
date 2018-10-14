@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config_1 = require("./../Config/Config");
+var GameboardConfig_1 = require("./../Config/GameboardConfig");
 var InfoWindow_1 = require("./../Objects/Windows/InfoWindow");
 var InputManager_1 = require("./../InputManager");
 var GameboardLoader = (function (_super) {
@@ -25,7 +26,12 @@ var GameboardLoader = (function (_super) {
         var singleton = Config_1.Singleton.get();
         this.tools = singleton.tools;
         this.cursor = new InputManager_1.default(Config_1.Singleton.get().config);
-        this.tools.audio.play('game-bgm', true);
+        if (this.gameboardConfig.gameMode === GameboardConfig_1.default.GAME_MODE_SINGLE_PLAYER) {
+            this.tools.audio.play('game-bgm', true);
+        }
+        else {
+            this.tools.audio.play('boss-bgm', true);
+        }
         var window = new InfoWindow_1.default(this.gameboardConfig.mainTile);
         window.show();
         var press = this.tools.text.makeXBounded(850, 'Press any key to continue.', 50, 'center', Config_1.ColorSettings.PRIMARY);
@@ -33,7 +39,13 @@ var GameboardLoader = (function (_super) {
     };
     GameboardLoader.prototype.update = function () {
         if (this.cursor.checkClick() || this.cursor.checkKeys()) {
-            this.tools.transition.changeState('Unranked', this.gameboardConfig);
+            if (this.gameboardConfig.gameMode ===
+                GameboardConfig_1.default.GAME_MODE_SINGLE_PLAYER) {
+                this.tools.transition.changeState('Unranked', this.gameboardConfig);
+            }
+            else {
+                this.tools.transition.changeState('BossFight', this.gameboardConfig);
+            }
         }
     };
     return GameboardLoader;

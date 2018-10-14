@@ -30,7 +30,6 @@ var TimeTravel = (function (_super) {
             this.cleanGrid();
             this.tools.audio.playSound('magil-sfx', false);
             this.gameboardConfig.updateAmmoSignal.dispatch(tile);
-            this.gameboardConfig.updateScoreSignal.dispatch(false);
         }
     };
     TimeTravel.prototype.canUsePower = function () {

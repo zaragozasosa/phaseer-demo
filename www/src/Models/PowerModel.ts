@@ -9,8 +9,8 @@ export default class PowerModel {
     id: string,
     name: string,
     description: string,
+    backgroundId: string,
     requeriments = null,
-    backgroundId = 'witch'
   ) {
     this.id = id;
     this.name = name;

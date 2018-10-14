@@ -144,7 +144,7 @@ export default class SpriteFactory extends Factory {
     let config = this.config;
 
     let x = 0;
-    let y = safeZone.bgPaddingY;
+    let y = safeZone.bgPaddingY + 20;
 
     let sprite = this.createSprite(x, y, key);
 

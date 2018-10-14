@@ -30,7 +30,6 @@ var TimeTravel = (function (_super) {
             this.cleanGrid();
             this.tools.audio.playSound('nacho-sfx', false);
             this.gameboardConfig.updateAmmoSignal.dispatch(tile);
-            this.gameboardConfig.updateScoreSignal.dispatch(false);
         }
     };
     return TimeTravel;

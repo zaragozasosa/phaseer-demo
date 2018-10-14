@@ -4,6 +4,7 @@ import GameOverWindow from './../Windows/GameOverWindow';
 import WinWindow from './../Windows/WinWindow';
 import PauseWindow from './../Windows/PauseWindow';
 import { ColorSettings } from './../../Config/Config';
+import Grid from './Grid';
 
 export default abstract class GameboardUI extends Base {
   protected gameboardConfig: GameboardConfig;
@@ -100,7 +101,7 @@ export default abstract class GameboardUI extends Base {
   }
 
   protected addHeader() {
-    this.header = this.tools.text.make(20, 20, '', 50);
+    this.header = this.tools.text.make(20, 40, '', 50);
     this.tools.tween.appear(this.header);
 
     this.updateHeader();
@@ -111,7 +112,7 @@ export default abstract class GameboardUI extends Base {
   }
 
   protected addTimer() {
-    this.timerMessage = this.tools.text.make(20, 80, 'Time: 00:00', 50);
+    this.timerMessage = this.tools.text.make(20, 100, 'Time: 00:00', 50);
     this.tools.tween.appear(this.timerMessage).onComplete.addOnce(
       function() {
         this.timer.start();
@@ -131,5 +132,8 @@ export default abstract class GameboardUI extends Base {
     return n > 9 ? '' + n : '0' + n;
   }
 
-  abstract update(...args);
-}
+  update(grid: Grid) {
+    this.points = grid.points;
+    this.updateHeader();
+    this.updateTimer();
+  }}

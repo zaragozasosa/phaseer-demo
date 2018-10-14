@@ -117,7 +117,7 @@ var SpriteFactory = (function (_super) {
         var safeZone = this.config.safeZone;
         var config = this.config;
         var x = 0;
-        var y = safeZone.bgPaddingY;
+        var y = safeZone.bgPaddingY + 20;
         var sprite = this.createSprite(x, y, key);
         return sprite;
     };

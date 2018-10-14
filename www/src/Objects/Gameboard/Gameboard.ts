@@ -44,10 +44,10 @@ export default abstract class Gameboard extends Base {
 
     this.gameOver = false;
     this.wonGame = false;
-    let updateScoreSignal = new Phaser.Signal();
-    updateScoreSignal.add(
-      function(addToMovement) {
-        this.updateScore(addToMovement);
+    let updateMovementsSignal = new Phaser.Signal();
+    updateMovementsSignal.add(
+      function() {
+        this.updateMovements();
       }.bind(this)
     );
 
@@ -66,7 +66,7 @@ export default abstract class Gameboard extends Base {
     );
 
     this.gameboardConfig.toggleButtonSignal = toggleButtonSignal;
-    this.gameboardConfig.updateScoreSignal = updateScoreSignal;
+    this.gameboardConfig.updateMovementsSignal = updateMovementsSignal;
     this.gameboardConfig.gameOverSignal = gameoverSignal;
     this.gameboardConfig.clickTileSignal = new Phaser.Signal();
     this.gameboardConfig.mergeTileSignal = new Phaser.Signal();
@@ -77,12 +77,8 @@ export default abstract class Gameboard extends Base {
     this.config.storyboard.optionClickSignal = new Phaser.Signal();
   }
 
-  private updateScore(addToMovement = true) {
-    if (addToMovement) {
-      this.movements++;
-    }
-
-    this.points = this.grid.calculatePoints();
+  private updateMovements() {
+    this.movements++;
   }
 
   start() {
@@ -114,11 +110,9 @@ export default abstract class Gameboard extends Base {
   protected createGrid() {
     this.grid = GridFactory.create(this.gameboardConfig);
     this.timer = this.tools.misc.createTimer();
-    this.points = this.grid.calculatePoints();
+    this.points = this.grid.points;
     this.input = new InputManager(this.config);
     this.gameStarted = true;
-    // this.debugWin();
-
     this.createGameboardUI();
   }
 
@@ -129,7 +123,7 @@ export default abstract class Gameboard extends Base {
 
     let cursor;
     if (!this.gameOver) {
-      this.gameboardUI.update(this.points);
+      this.gameboardUI.update(this.grid);
 
       if (this.input.checkEscape()) {
         this.pausetoggle();

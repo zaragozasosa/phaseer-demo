@@ -2,13 +2,12 @@ import DiamondGameboard from './DiamondGameboard';
 import DiamondModel from './../../../Models/DiamondModel';
 
 export default class SpecialDiamondGameboard extends DiamondGameboard {
-
   start() {
     super.start();
 
     if (this.diamondModel.cooldown) {
       this.gameboardConfig.cooldownSignal.add(
-        function () {
+        function() {
           this.showMessage(this.diamondModel.endText, 65);
 
           if (this.diamondModel.type === DiamondModel.TIME_TYPE) {
@@ -31,18 +30,21 @@ export default class SpecialDiamondGameboard extends DiamondGameboard {
 
     this.tools.misc.cacheAddImage(
       'negative-bg',
-      this.tools.sprite.makeReverseTexture(this.background.key.toString())
+      this.tools.sprite.makeReverseTexture(
+        this.gameboardConfig.mainTile.power.backgroundId
+      )
     );
   }
 
   activatePower() {
-    if(super.activatePower()){
-      return true;
+    if (this.diamonds >= this.diamondModel.requiredDiamonds) {
+      debugger;
+      this.background.loadTexture('negative-bg');
+      this.toggleTimer(true);
     }
 
-    if (this.diamonds >= this.diamondModel.requiredDiamonds) {
-        this.background.loadTexture('negative-bg');
-        this.toggleTimer(true);
+    if (super.activatePower()) {
+      return true;
     }
   }
 
