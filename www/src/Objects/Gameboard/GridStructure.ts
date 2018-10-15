@@ -64,4 +64,8 @@ export default class GridStructure {
     return points;
   }
 
+  count() {
+    return this.grid.filter(x => x).length;
+  }
+
 }

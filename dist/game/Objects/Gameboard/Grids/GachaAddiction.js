@@ -21,7 +21,7 @@ var GachaAddiction = (function (_super) {
         this.power();
     };
     GachaAddiction.prototype.getPowerConfiguration = function () {
-        this.diamondInfo = new DiamondModel_1.default('diamond', this.gameboardConfig.requiredDiamonds);
+        this.diamondInfo = new DiamondModel_1.default('diamond', this.gameboardConfig.requiredDiamonds, 0);
         return this.diamondInfo;
     };
     GachaAddiction.prototype.power = function () {

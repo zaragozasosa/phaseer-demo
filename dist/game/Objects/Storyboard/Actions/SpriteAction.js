@@ -30,7 +30,7 @@ var SpriteAction = (function (_super) {
         return _this;
     }
     SpriteAction.prototype.play = function () {
-        this.config.storyboard.storyboardSignal.dispatch(Reader_1.default.SPRITE_ACTION, new SpriteActionModel_1.default(this.id, this.frame, this.position, this.tint));
+        this.config.storyboard.storyboardSignal.dispatch(Reader_1.default.SPRITE_ACTION, new SpriteActionModel_1.default(this.id + '_sprite', this.frame, this.position, this.tint));
         this.actionIsOverSignal.dispatch();
     };
     return SpriteAction;

@@ -57,11 +57,11 @@ export default class CharacterMenu extends Base {
     let spritePosition = this.findSpritePosition(char);
 
     if (spritePosition === Phaser.RIGHT) {
-      this.rightSprite.loadTexture(char.id);
+      this.rightSprite.loadTexture(char.spriteId);
       this.rightSprite.tint = Phaser.Color.WHITE;
       this.rightSprite.events.destroy();
 
-      this.leftSprite.loadTexture(char.getMenuFriendId);
+      this.leftSprite.loadTexture(char.getMenuFriendSpriteId);
       this.leftSprite.events.destroy();
       this.leftSprite.events.onInputDown.addOnce(
         function() {
@@ -72,11 +72,11 @@ export default class CharacterMenu extends Base {
       );
       this.leftSprite.tint = Phaser.Color.GRAY;
     } else {
-      this.leftSprite.loadTexture(char.id);
+      this.leftSprite.loadTexture(char.spriteId);
       this.leftSprite.tint = Phaser.Color.WHITE;
       this.leftSprite.events.destroy();
 
-      this.rightSprite.loadTexture(char.getMenuFriendId);
+      this.rightSprite.loadTexture(char.getMenuFriendSpriteId);
       this.rightSprite.tint = Phaser.Color.GRAY;
       this.rightSprite.events.destroy();
       this.rightSprite.events.onInputDown.addOnce(

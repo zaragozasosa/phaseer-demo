@@ -58,6 +58,9 @@ var GridStructure = (function () {
         }
         return points;
     };
+    GridStructure.prototype.count = function () {
+        return this.grid.filter(function (x) { return x; }).length;
+    };
     return GridStructure;
 }());
 exports.default = GridStructure;

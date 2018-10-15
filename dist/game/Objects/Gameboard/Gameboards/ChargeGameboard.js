@@ -33,7 +33,7 @@ var ChargeGameboard = (function (_super) {
         }
     };
     ChargeGameboard.prototype.toggleButton = function (buttonStatus) {
-        if (this.gameOver) {
+        if (this.gameState.gameOver) {
             return true;
         }
         this.playerUI.toggleButton(buttonStatus);

@@ -16,6 +16,7 @@ export default class TimeTravel extends Grid {
     this.bugInfo = new DiamondModel(
       'bug',
       this.gameboardConfig.requiredBugs,
+      this.gameboardConfig.requiredBugs,
       true,
       'And time resumes!',
       1.4,
@@ -43,7 +44,7 @@ export default class TimeTravel extends Grid {
     if (this.isTimeStopped) {
       this.checkTime();
     } else {
-      this.gameRules.newTurn(this, this.grid);
+      this.gameRules.newTurn();
     }
   }
 
@@ -52,7 +53,7 @@ export default class TimeTravel extends Grid {
       this.isTimeStopped = false;
       this.togglePauseTiles(false);
       this.gameboardConfig.cooldownSignal.dispatch();
-      this.gameRules.newTurn(this, this.grid);
+      this.gameRules.newTurn();
     } else {
       this.turnsPassed++;
     }

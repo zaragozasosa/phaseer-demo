@@ -1,20 +1,25 @@
 import GameboardUI from './../GameboardUI';
 import GameboardConfig from './../../../Config/GameboardConfig';
 import Grid from './../Grid';
+import GameboardState from './../../../Models/GameboardState';
+import GameOverWindow from './../../Windows/GameOverWindow';
+import PowerWindow from './../../Windows/PowerWindow';
+import TileModel from './../../../Models/TileModel';
 
 export default class BossGameUI extends GameboardUI {
-  private bossId: string;
+  private boss: TileModel;
   private bossPortrait: Phaser.Sprite;
+
   constructor(gameboardConfig: GameboardConfig) {
     super(gameboardConfig);
+    var bossId = 'mira-boss';
     this.gameboardConfig.arraySize = this.gameboardConfig.bossArraySize;
-    this.bossId = 'mira';
+    this.boss = this.gameboardConfig.fullList.filter(x => x.id === bossId)[0];
   }
 
   drawBackground() {
     this.tools.graphic.addBackground();
-    let boss = this.gameboardConfig.tiles.filter(x => x.id === this.bossId);
-    return this.tools.sprite.createBackground(boss[0].power.backgroundId);
+    return this.tools.sprite.createBackground(this.boss.power.backgroundId);
   }
 
   create(timer: Phaser.Timer, pauseCallback: any) {
@@ -23,7 +28,7 @@ export default class BossGameUI extends GameboardUI {
   }
 
   update(grid: Grid) {
-    this.points = grid.points;
+    this.points = grid.alternativeScore;
     this.updateHeader();
   }
 
@@ -31,7 +36,7 @@ export default class BossGameUI extends GameboardUI {
     this.bossPortrait = this.tools.sprite.createFromSpriteSheet(
       20,
       0,
-      this.bossId,
+      this.boss.spriteId,
       0,
       1.4
     );
@@ -39,12 +44,34 @@ export default class BossGameUI extends GameboardUI {
     this.header = this.tools.text.make(300, 40, '', 45);
     this.tools.tween.appear(this.header);
     this.tools.tween.appear(this.bossPortrait);
-    
+
     this.updateHeader();
   }
 
   protected updateHeader() {
-    this.header.setText(`Score: 2\nBoss score: ${this.points}\nNext attack: 3 turns`);
+    this.header.setText(`Boss score: ${this.points}`);
+  }
 
+  gameOverScreen(gameState: GameboardState) {
+    gameState.userControl = false;
+    debugger;
+    this.tools.audio.playCharacterSound(this.boss);
+    new PowerWindow(this.boss);
+
+    setTimeout(
+      function() {
+        gameState.userControl = true;
+        new GameOverWindow(
+          this.gameboardConfig.mainTile,
+          () => this.tools.transition.restartState(this.gameboardConfig),
+          () =>
+            this.tools.transition.toLoaderConfig(
+              'MainMenu',
+              this.gameboardConfig
+            )
+        );
+      }.bind(this),
+      2250
+    );
   }
 }

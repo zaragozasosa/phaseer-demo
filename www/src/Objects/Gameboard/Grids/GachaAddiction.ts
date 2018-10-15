@@ -14,7 +14,7 @@ export default class GachaAddiction extends Grid {
   }
 
   getPowerConfiguration() {
-    this.diamondInfo = new DiamondModel('diamond', this.gameboardConfig.requiredDiamonds);
+    this.diamondInfo = new DiamondModel('diamond', this.gameboardConfig.requiredDiamonds, 0);
     return this.diamondInfo;
   }
 

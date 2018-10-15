@@ -24,7 +24,7 @@ var AmmoGameboard = (function (_super) {
         }.bind(this));
     };
     AmmoGameboard.prototype.activatePower = function () {
-        if (this.gameOver) {
+        if (this.gameState.gameOver) {
             return true;
         }
         var response = this.grid.getPowerConfiguration();

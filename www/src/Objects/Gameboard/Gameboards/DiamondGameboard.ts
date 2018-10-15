@@ -17,11 +17,11 @@ export default class DiamondGameboard extends Gameboard {
 
     this.diamondModel = this.grid.getPowerConfiguration();
     this.playerUI.create(() => this.activatePower(), this.diamondModel)
-    this.diamonds = this.diamondModel.requiredDiamonds;
+    this.diamonds = this.diamondModel.initialAmount;
   }
 
   activatePower() {
-    if(this.gameOver) {
+    if(this.gameState.gameOver) {
       return true;
     }
 
@@ -40,7 +40,7 @@ export default class DiamondGameboard extends Gameboard {
   }
 
   protected toggleButton(buttonStatus: number) {
-    if(this.gameOver) {
+    if(this.gameState.gameOver) {
       return true;
     }
 

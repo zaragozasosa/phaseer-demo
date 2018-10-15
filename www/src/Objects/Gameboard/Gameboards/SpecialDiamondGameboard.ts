@@ -4,7 +4,6 @@ import DiamondModel from './../../../Models/DiamondModel';
 export default class SpecialDiamondGameboard extends DiamondGameboard {
   start() {
     super.start();
-
     if (this.diamondModel.cooldown) {
       this.gameboardConfig.cooldownSignal.add(
         function() {

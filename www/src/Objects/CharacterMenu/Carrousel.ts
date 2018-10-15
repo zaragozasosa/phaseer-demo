@@ -63,7 +63,7 @@ export default class Carrousel extends Base {
 
     for (let char of this.visibleArray) {
       let sprite: Phaser.Sprite;
-      sprite = this.tools.sprite.makeMenuTile(column - 2, 0, char.id, 20, 35, 4 / 6);
+      sprite = this.tools.sprite.makeMenuTile(column - 2, 0, char.spriteId, 20, 35, 4 / 6);
       this.spriteArray.push(sprite);
       sprite.inputEnabled = true;
 

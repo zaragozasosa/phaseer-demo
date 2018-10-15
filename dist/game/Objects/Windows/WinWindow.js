@@ -20,7 +20,7 @@ var WinWindow = (function (_super) {
         var elements = _this.tools.misc.addGroup();
         var sprites = _this.tools.misc.addGroup();
         var text;
-        sprites.add(_this.tools.sprite.makeCenteredFromSpriteSheet(y + 120, character.id, character.specialSpriteFrame, 2));
+        sprites.add(_this.tools.sprite.makeCenteredFromSpriteSheet(y + 120, character.spriteId, character.specialSpriteFrame, 2));
         text = 'You win!';
         _this.config.storyboard.windowActionSignal = new Phaser.Signal();
         _this.tools.misc.runLater(500, function () {

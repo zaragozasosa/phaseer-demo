@@ -20,7 +20,7 @@ var TimeTravel = (function (_super) {
         return _this;
     }
     TimeTravel.prototype.getPowerConfiguration = function () {
-        this.bugInfo = new DiamondModel_1.default('bug', this.gameboardConfig.requiredBugs, true, 'And time resumes!', 1.4, -5, DiamondModel_1.default.TIME_TYPE);
+        this.bugInfo = new DiamondModel_1.default('bug', this.gameboardConfig.requiredBugs, this.gameboardConfig.requiredBugs, true, 'And time resumes!', 1.4, -5, DiamondModel_1.default.TIME_TYPE);
         return this.bugInfo;
     };
     TimeTravel.prototype.power = function () {
@@ -39,7 +39,7 @@ var TimeTravel = (function (_super) {
             this.checkTime();
         }
         else {
-            this.gameRules.newTurn(this, this.grid);
+            this.gameRules.newTurn();
         }
     };
     TimeTravel.prototype.checkTime = function () {
@@ -47,7 +47,7 @@ var TimeTravel = (function (_super) {
             this.isTimeStopped = false;
             this.togglePauseTiles(false);
             this.gameboardConfig.cooldownSignal.dispatch();
-            this.gameRules.newTurn(this, this.grid);
+            this.gameRules.newTurn();
         }
         else {
             this.turnsPassed++;

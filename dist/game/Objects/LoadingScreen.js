@@ -26,8 +26,8 @@ var LoadingScreen = (function (_super) {
             var time2 = tools.misc.randomBetween(500, 1200);
             var scale = tools.misc.randomBetween(6, 10);
             var scale2 = tools.misc.randomBetween(6, 10);
-            var sprite = tools.sprite.createFromSpriteSheet(x, y, tile.id, 1, scale / 10);
-            var sprite2 = tools.sprite.createFromSpriteSheet(x2, y2, tile.id, 2, scale2 / 10);
+            var sprite = tools.sprite.createFromSpriteSheet(x, y, tile.spriteId, 1, scale / 10);
+            var sprite2 = tools.sprite.createFromSpriteSheet(x2, y2, tile.spriteId, 2, scale2 / 10);
             sprite.angle = tools.misc.randomBetween(0, 4) * 90;
             sprite2.angle = tools.misc.randomBetween(0, 4) * 90;
             tools.tween.blinkStart(sprite, 0, time);

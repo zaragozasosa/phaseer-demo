@@ -23,7 +23,7 @@ var DiamondUI = (function (_super) {
         this.diamondModel = diamondModel;
         this.diamonds = this.diamondModel.requiredDiamonds;
         this.diamondSprite = this.tools.sprite.createSprite(20, 1345, this.diamondModel.id, this.diamondModel.scale, this.diamondModel.paddingX);
-        this.diamondText = this.tools.text.make(100, 1350, ": " + this.diamonds, 50);
+        this.diamondText = this.tools.text.make(100, 1350, ": " + diamondModel.initialAmount, 50);
         this.tools.tween.appear(this.diamondSprite);
         this.tools.tween.appear(this.diamondText);
     };

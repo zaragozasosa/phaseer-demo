@@ -57,7 +57,7 @@ var Carrousel = (function (_super) {
         this.spriteArray = [];
         var _loop_1 = function (char) {
             var sprite = void 0;
-            sprite = this_1.tools.sprite.makeMenuTile(column - 2, 0, char.id, 20, 35, 4 / 6);
+            sprite = this_1.tools.sprite.makeMenuTile(column - 2, 0, char.spriteId, 20, 35, 4 / 6);
             this_1.spriteArray.push(sprite);
             sprite.inputEnabled = true;
             this_1.spritesGroup.add(sprite);

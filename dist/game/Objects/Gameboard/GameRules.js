@@ -19,22 +19,22 @@ var GameRules = (function (_super) {
         _this.gameboardConfig = gameboardConfig;
         return _this;
     }
-    GameRules.prototype.newTurn = function (grid, structure) {
-        this.playHighestMergeSFX();
-        grid.add();
-        this.checkGameOver(structure);
+    GameRules.prototype.init = function (grid, structure) {
+        this.grid = grid;
+        this.structure = structure;
     };
-    GameRules.prototype.scanGrid = function (grid, keyboardInput) {
+    GameRules.prototype.newTurn = function () {
+        this.playHighestMergeSFX();
+        this.grid.add();
+        this.checkGameOver();
+    };
+    GameRules.prototype.scanGrid = function (keyboardInput) {
         var animating = false;
         var arraySize = this.gameboardConfig.arraySize;
         var minX = keyboardInput === Phaser.KeyCode.LEFT ? 1 : 0;
         var minY = keyboardInput === Phaser.KeyCode.UP ? 1 : 0;
-        var maxX = keyboardInput === Phaser.KeyCode.RIGHT
-            ? arraySize - 1
-            : arraySize;
-        var maxY = keyboardInput === Phaser.KeyCode.DOWN
-            ? arraySize - 1
-            : arraySize;
+        var maxX = keyboardInput === Phaser.KeyCode.RIGHT ? arraySize - 1 : arraySize;
+        var maxY = keyboardInput === Phaser.KeyCode.DOWN ? arraySize - 1 : arraySize;
         var startY = keyboardInput === Phaser.KeyCode.DOWN ? maxY : minY;
         var stopY = keyboardInput === Phaser.KeyCode.DOWN ? minY : maxY;
         var yIncrement = keyboardInput === Phaser.KeyCode.DOWN ? -1 : 1;
@@ -48,7 +48,7 @@ var GameRules = (function (_super) {
             startX -= xIncrement;
             do {
                 startX += xIncrement;
-                if (this.pushTile(grid, startX, startY, keyboardInput)) {
+                if (this.pushTile(startX, startY, keyboardInput)) {
                     animating = true;
                 }
             } while (startX !== stopX);
@@ -68,9 +68,9 @@ var GameRules = (function (_super) {
             this.gameboardConfig.cooldownSignal.dispatch(false, false, true);
         }
     };
-    GameRules.prototype.pushTile = function (grid, x, y, keyboardInput) {
+    GameRules.prototype.pushTile = function (x, y, keyboardInput) {
         var arraySize = this.gameboardConfig.arraySize;
-        var tile = grid.get(x, y);
+        var tile = this.structure.get(x, y);
         if (!tile) {
             return false;
         }
@@ -85,16 +85,13 @@ var GameRules = (function (_super) {
         var actualY = tile.posY;
         var newX = actualX + pushX;
         var newY = actualY + pushY;
-        while (newX >= 0 &&
-            newX <= arraySize &&
-            newY >= 0 &&
-            newY <= arraySize) {
-            var nextTile = grid.get(newX, newY);
+        while (newX >= 0 && newX <= arraySize && newY >= 0 && newY <= arraySize) {
+            var nextTile = this.structure.get(newX, newY);
             if (!nextTile || !nextTile.value) {
                 tile.posX = newX;
                 tile.posY = newY;
-                grid.set(newX, newY, tile);
-                grid.set(actualX, actualY, null);
+                this.structure.set(newX, newY, tile);
+                this.structure.set(actualX, actualY, null);
                 actualX = newX;
                 actualY = newY;
                 isDirty = true;
@@ -106,7 +103,7 @@ var GameRules = (function (_super) {
                 this.lastMergedTile =
                     this.lastMergedTile && this.lastMergedTile.value >= newValue
                         ? this.lastMergedTile
-                        : grid.get(newX, newY);
+                        : this.structure.get(newX, newY);
                 break;
             }
             else {
@@ -120,11 +117,11 @@ var GameRules = (function (_super) {
         }
         return isDirty;
     };
-    GameRules.prototype.checkGameOver = function (grid) {
-        if (grid.getOrdered()[0].value === this.gameboardConfig.winningTile) {
+    GameRules.prototype.checkGameOver = function () {
+        if (this.structure.getOrdered()[0].value === this.gameboardConfig.winningTile) {
             this.gameboardConfig.gameOverSignal.dispatch(true);
         }
-        else if (!this.canKeepPlaying(grid)) {
+        else if (!this.canKeepPlaying()) {
             this.gameboardConfig.gameOverSignal.dispatch(false);
         }
     };
@@ -144,12 +141,12 @@ var GameRules = (function (_super) {
             this.lastMergedTile = null;
         }
     };
-    GameRules.prototype.canKeepPlaying = function (grid) {
-        if (grid.isFull()) {
+    GameRules.prototype.canKeepPlaying = function () {
+        if (this.structure.isFull()) {
             for (var x = 0; x < this.gameboardConfig.arraySize; x++) {
                 for (var y = 0; y < this.gameboardConfig.arraySize; y++) {
-                    var tile = grid.get(x, y);
-                    if (tile && this.canBeMerged(grid, tile)) {
+                    var tile = this.structure.get(x, y);
+                    if (tile && this.canBeMerged(tile)) {
                         return true;
                     }
                 }
@@ -160,25 +157,25 @@ var GameRules = (function (_super) {
         }
         return false;
     };
-    GameRules.prototype.canBeMerged = function (grid, tile) {
+    GameRules.prototype.canBeMerged = function (tile) {
         if (tile.posX > 0 &&
-            grid.get(tile.posX - 1, tile.posY) &&
-            tile.value === grid.get(tile.posX - 1, tile.posY).value) {
+            this.structure.get(tile.posX - 1, tile.posY) &&
+            tile.value === this.structure.get(tile.posX - 1, tile.posY).value) {
             return true;
         }
         if (tile.posX < this.gameboardConfig.arraySize &&
-            grid.get(tile.posX + 1, tile.posY) &&
-            tile.value === grid.get(tile.posX + 1, tile.posY).value) {
+            this.structure.get(tile.posX + 1, tile.posY) &&
+            tile.value === this.structure.get(tile.posX + 1, tile.posY).value) {
             return true;
         }
         if (tile.posY > 0 &&
-            grid.get(tile.posX, tile.posY - 1) &&
-            tile.value === grid.get(tile.posX, tile.posY - 1).value) {
+            this.structure.get(tile.posX, tile.posY - 1) &&
+            tile.value === this.structure.get(tile.posX, tile.posY - 1).value) {
             return true;
         }
         if (tile.posY < this.gameboardConfig.arraySize &&
-            grid.get(tile.posX, tile.posY + 1) &&
-            tile.value === grid.get(tile.posX, tile.posY + 1).value) {
+            this.structure.get(tile.posX, tile.posY + 1) &&
+            tile.value === this.structure.get(tile.posX, tile.posY + 1).value) {
             return true;
         }
         return false;

@@ -221,7 +221,7 @@ var GridTile = (function (_super) {
             this.sprite.loadTexture(tile.negativeId, this.spriteFrame);
         }
         else {
-            this.sprite.loadTexture(tile.id, this.spriteFrame);
+            this.sprite.loadTexture(tile.spriteId, this.spriteFrame);
         }
         this.number.setText(this.value + '');
     };
@@ -229,7 +229,7 @@ var GridTile = (function (_super) {
         var tile = this.model;
         var sca = this.gameboardConfig.gameModeTileScale;
         this.spriteFrame = this.tools.misc.randomBetween(0, 3);
-        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.id, sca, this.spriteFrame);
+        var sprite = this.tools.sprite.makeTile(this.posX, this.posY, tile.spriteId, sca, this.spriteFrame);
         sprite.body.collideWorldBounds = true;
         return sprite;
     };

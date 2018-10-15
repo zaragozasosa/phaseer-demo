@@ -1,6 +1,7 @@
 export default class DiamondModel {
   id: string;
   requiredDiamonds: number;
+  initialAmount: number;
   cooldown: boolean;
   endText: string;
   scale: number;
@@ -13,6 +14,7 @@ export default class DiamondModel {
   constructor(
     id: string,
     requiredDiamonds: number,
+    initialAmount: number,
     cooldown = false,
     endText = '',
     scale = 1,
@@ -21,6 +23,7 @@ export default class DiamondModel {
   ) {
     this.id = id;
     this.requiredDiamonds = requiredDiamonds;
+    this.initialAmount = initialAmount;
     this.cooldown = cooldown;
     this.endText = endText;
     this.scale = scale;

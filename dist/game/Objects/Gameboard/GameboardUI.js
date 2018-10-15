@@ -25,7 +25,6 @@ var GameboardUI = (function (_super) {
     GameboardUI.prototype.drawBackground = function () {
         this.tools.graphic.addBackground();
         var backId = this.gameboardConfig.mainTile.power.backgroundId;
-        debugger;
         return this.tools.sprite.createBackground(backId);
     };
     GameboardUI.prototype.create = function (timer, pauseCallback) {
@@ -60,7 +59,7 @@ var GameboardUI = (function (_super) {
             return _this.tools.transition.toLoaderConfig(nextState, _this.gameboardConfig, null, false);
         });
     };
-    GameboardUI.prototype.gameOverScreen = function () {
+    GameboardUI.prototype.gameOverScreen = function (gameState) {
         var _this = this;
         new GameOverWindow_1.default(this.gameboardConfig.mainTile, function () { return _this.tools.transition.restartState(_this.gameboardConfig); }, function () {
             return _this.tools.transition.toLoaderConfig('MainMenu', _this.gameboardConfig);

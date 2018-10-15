@@ -12,7 +12,7 @@ export default class AmmoGameboard extends Gameboard {
   }
 
   activatePower() {
-    if (this.gameOver) {
+    if (this.gameState.gameOver) {
       return true;
     }
     let response = this.grid.getPowerConfiguration();

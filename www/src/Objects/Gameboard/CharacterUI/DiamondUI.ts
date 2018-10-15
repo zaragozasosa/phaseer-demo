@@ -23,7 +23,12 @@ export default class DiamondUI extends PlayerUI {
       this.diamondModel.scale,
       this.diamondModel.paddingX
     );
-    this.diamondText = this.tools.text.make(100, 1350, `: ${this.diamonds}`, 50);
+    this.diamondText = this.tools.text.make(
+      100,
+      1350,
+      `: ${diamondModel.initialAmount}`,
+      50
+    );
     this.tools.tween.appear(this.diamondSprite);
     this.tools.tween.appear(this.diamondText);
   }

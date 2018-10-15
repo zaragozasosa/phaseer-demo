@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = require("./../../Base");
 var GridFactory_1 = require("./Factories/GridFactory");
 var InputManager_1 = require("./../../InputManager");
+var GameboardState_1 = require("./../../Models/GameboardState");
 var Config_1 = require("./../../Config/Config");
 var Gameboard = (function (_super) {
     __extends(Gameboard, _super);
@@ -20,14 +21,11 @@ var Gameboard = (function (_super) {
         var _this = _super.call(this) || this;
         _this.gameboardUI = gameboardUI;
         _this.playerUI = playerUI;
-        _this.gameStarted = false;
-        _this.isPaused = false;
+        _this.gameState = new GameboardState_1.default();
         _this.movements = 0;
         _this.showOnce = true;
         _this.gameboardConfig = gameboardConfig;
         _this.background = _this.gameboardUI.drawBackground();
-        _this.gameOver = false;
-        _this.wonGame = false;
         var updateMovementsSignal = new Phaser.Signal();
         updateMovementsSignal.add(function () {
             this.updateMovements();
@@ -52,12 +50,19 @@ var Gameboard = (function (_super) {
         _this.config.storyboard.optionClickSignal = new Phaser.Signal();
         return _this;
     }
+    ;
+    Object.defineProperty(Gameboard.prototype, "isPaused", {
+        get: function () {
+            return this.grid.isPaused;
+        },
+        set: function (value) {
+            this.grid.isPaused = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Gameboard.prototype.updateMovements = function () {
         this.movements++;
-    };
-    Gameboard.prototype.start = function () {
-        this.createGrid();
-        this.createPlayerUI();
     };
     Gameboard.prototype.createGameboardUI = function () {
         this.gameboardUI.create(this.timer, function () {
@@ -78,15 +83,19 @@ var Gameboard = (function (_super) {
         this.timer = this.tools.misc.createTimer();
         this.points = this.grid.points;
         this.input = new InputManager_1.default(this.config);
-        this.gameStarted = true;
+        this.gameState.userControl = true;
         this.createGameboardUI();
     };
+    Gameboard.prototype.start = function () {
+        this.createGrid();
+        this.createPlayerUI();
+    };
     Gameboard.prototype.update = function () {
-        if (!this.gameStarted) {
+        if (!this.gameState.userControl) {
             return;
         }
         var cursor;
-        if (!this.gameOver) {
+        if (!this.gameState.gameOver) {
             this.gameboardUI.update(this.grid);
             if (this.input.checkEscape()) {
                 this.pausetoggle();
@@ -99,7 +108,7 @@ var Gameboard = (function (_super) {
             }
         }
         var enter = this.input.checkEnter();
-        if (this.wonGame) {
+        if (this.gameState.wonGame) {
             if (enter || this.input.checkClick()) {
                 if (this.config.storyboard.windowActionSignal) {
                     this.config.storyboard.windowActionSignal.dispatch();
@@ -116,21 +125,21 @@ var Gameboard = (function (_super) {
         }
     };
     Gameboard.prototype.activatePower = function () {
-        if (this.gameOver) {
+        if (this.gameState.gameOver) {
             return;
         }
         this.playerUI.activatePower();
         this.grid.activatePower();
     };
     Gameboard.prototype.gameover = function (win) {
-        this.gameOver = true;
+        this.gameState.gameOver = true;
         if (win) {
-            this.wonGame = true;
+            this.gameState.wonGame = true;
             var nextState = this.gameboardConfig.playStory ? 'Story' : 'MainMenu';
             this.gameboardUI.winScreen(nextState);
         }
         else {
-            this.gameboardUI.gameOverScreen();
+            this.gameboardUI.gameOverScreen(this.gameState);
         }
     };
     Gameboard.prototype.showMessage = function (message, size, color, delay) {
@@ -139,7 +148,7 @@ var Gameboard = (function (_super) {
         this.gameboardUI.showMessage(message, size, color, delay);
     };
     Gameboard.prototype.toggleButton = function (buttonStatus) {
-        if (this.gameOver) {
+        if (this.gameState.gameOver) {
             return;
         }
         this.playerUI.toggleButton(buttonStatus);

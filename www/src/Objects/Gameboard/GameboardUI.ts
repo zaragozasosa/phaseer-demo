@@ -3,6 +3,7 @@ import GameboardConfig from './../../Config/GameboardConfig';
 import GameOverWindow from './../Windows/GameOverWindow';
 import WinWindow from './../Windows/WinWindow';
 import PauseWindow from './../Windows/PauseWindow';
+import GameboardState from './../../Models/GameboardState';
 import { ColorSettings } from './../../Config/Config';
 import Grid from './Grid';
 
@@ -22,7 +23,6 @@ export default abstract class GameboardUI extends Base {
   drawBackground() {
     this.tools.graphic.addBackground();
     let backId = this.gameboardConfig.mainTile.power.backgroundId;
-    debugger;
     return this.tools.sprite.createBackground(backId);
   }
 
@@ -89,7 +89,7 @@ export default abstract class GameboardUI extends Base {
     );
   }
 
-  gameOverScreen() {
+  gameOverScreen(gameState: GameboardState) {
     new GameOverWindow(
       this.gameboardConfig.mainTile,
       () => this.tools.transition.restartState(this.gameboardConfig),

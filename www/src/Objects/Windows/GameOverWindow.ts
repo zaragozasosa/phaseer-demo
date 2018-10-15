@@ -17,7 +17,7 @@ export default class GameOverWindow extends Window {
     let elements = this.tools.misc.addGroup();
     let sprites = this.tools.misc.addGroup();
 
-    sprites.add(this.tools.sprite.makeCentered(y + 120, character.id, 2));
+    sprites.add(this.tools.sprite.makeCentered(y + 120, character.spriteId, 2));
 
     elements.add(
       this.tools.text.makeXBounded(

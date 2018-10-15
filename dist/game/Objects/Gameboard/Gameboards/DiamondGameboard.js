@@ -25,10 +25,10 @@ var DiamondGameboard = (function (_super) {
         }.bind(this));
         this.diamondModel = this.grid.getPowerConfiguration();
         this.playerUI.create(function () { return _this.activatePower(); }, this.diamondModel);
-        this.diamonds = this.diamondModel.requiredDiamonds;
+        this.diamonds = this.diamondModel.initialAmount;
     };
     DiamondGameboard.prototype.activatePower = function () {
-        if (this.gameOver) {
+        if (this.gameState.gameOver) {
             return true;
         }
         if (this.diamonds >= this.diamondModel.requiredDiamonds) {
@@ -44,7 +44,7 @@ var DiamondGameboard = (function (_super) {
         }
     };
     DiamondGameboard.prototype.toggleButton = function (buttonStatus) {
-        if (this.gameOver) {
+        if (this.gameState.gameOver) {
             return true;
         }
         this.playerUI.toggleButton(buttonStatus);

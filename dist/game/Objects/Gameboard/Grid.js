@@ -20,7 +20,9 @@ var Grid = (function (_super) {
     function Grid(gameboardConfig) {
         var _this = _super.call(this) || this;
         _this.gameboardConfig = gameboardConfig;
+        _this.isPaused = false;
         _this.animating = false;
+        _this.alternativeScore = 0;
         _this.wallsGroup = _this.makeWalls();
         _this.arraySize = gameboardConfig.arraySize;
         _this.tilesGroup = _this.tools.misc.addGroup();
@@ -34,6 +36,7 @@ var Grid = (function (_super) {
         _this.reorderTileList();
         _this.add();
         _this.add();
+        _this.gameRules.init(_this, _this.grid);
         return _this;
     }
     Object.defineProperty(Grid.prototype, "points", {
@@ -68,7 +71,7 @@ var Grid = (function (_super) {
         this.tilesGroup.add(tile.getGroup);
     };
     Grid.prototype.check = function (keyboardInput) {
-        return this.gameRules.scanGrid(this.grid, keyboardInput);
+        return this.gameRules.scanGrid(keyboardInput);
     };
     Grid.prototype.randomizeTile = function (tile) {
         if (tile === void 0) { tile = null; }
@@ -133,7 +136,7 @@ var Grid = (function (_super) {
     Grid.prototype.newTurn = function () {
         this.cleanGrid();
         this.gameboardConfig.turnsSignal.dispatch();
-        this.gameRules.newTurn(this, this.grid);
+        this.gameRules.newTurn();
     };
     Grid.prototype.getTileNewPosition = function () {
         var maxPosition = this.gameboardConfig.arraySize;

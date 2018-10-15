@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TileModel = (function () {
-    function TileModel(id, name, fullName, friendId, sfxId, sfxVolume, powerId, power, animationFrames, firstStory, secondStory, summary, isMenuVisible, menuFriendId, isRealTile) {
+    function TileModel(id, name, fullName, friendId, sfxId, sfxVolume, powerId, power, animationFrames, firstStory, secondStory, summary, isMenuVisible, menuFriendId, isRealTile, baseModelId) {
         if (isMenuVisible === void 0) { isMenuVisible = true; }
         if (menuFriendId === void 0) { menuFriendId = null; }
         if (isRealTile === void 0) { isRealTile = true; }
+        if (baseModelId === void 0) { baseModelId = null; }
         this.id = id;
         this.name = name;
         this.fullName = fullName;
@@ -19,9 +20,32 @@ var TileModel = (function () {
         this.getSecondStory = secondStory;
         this.menuFriendId = menuFriendId;
         this.isRealTile = isRealTile;
+        this.baseModelId = baseModelId;
         this.animationFrames = animationFrames;
         this.animationSpeed = 1.5;
     }
+    Object.defineProperty(TileModel.prototype, "spriteId", {
+        get: function () {
+            var id = this.baseModelId ? this.baseModelId : this.id;
+            return id + '_sprite';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "menuFriendSpriteId", {
+        get: function () {
+            return this.menuFriendId ? this.menuFriendId + '_sprite' : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TileModel.prototype, "friendSpriteId", {
+        get: function () {
+            return this.friendId ? this.friendId + '_sprite' : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TileModel.prototype, "specialSpriteFrame", {
         get: function () {
             return 4;
@@ -36,6 +60,15 @@ var TileModel = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TileModel.prototype, "getMenuFriendSpriteId", {
+        get: function () {
+            return this.menuFriendSpriteId
+                ? this.menuFriendSpriteId
+                : this.friendSpriteId;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TileModel.prototype, "sfxRoute", {
         get: function () {
             return this.id + '-' + this.sfxId;
@@ -45,14 +78,15 @@ var TileModel = (function () {
     });
     Object.defineProperty(TileModel.prototype, "negativeId", {
         get: function () {
-            return this.id + '-negative';
+            return this.spriteId + '-negative';
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(TileModel.prototype, "sfxLabel", {
         get: function () {
-            return this.id + '-sfx';
+            var id = this.baseModelId ? this.baseModelId : this.id;
+            return id + '-sfx';
         },
         enumerable: true,
         configurable: true

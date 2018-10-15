@@ -265,7 +265,7 @@ export default class GridTile extends Base {
     if (this.timeStopped) {
       this.sprite.loadTexture(tile.negativeId, this.spriteFrame);
     } else {
-      this.sprite.loadTexture(tile.id, this.spriteFrame);
+      this.sprite.loadTexture(tile.spriteId, this.spriteFrame);
     }
     this.number.setText(this.value + '');
   }
@@ -277,7 +277,7 @@ export default class GridTile extends Base {
     let sprite = this.tools.sprite.makeTile(
       this.posX,
       this.posY,
-      tile.id,
+      tile.spriteId,
       sca,
       this.spriteFrame
     );

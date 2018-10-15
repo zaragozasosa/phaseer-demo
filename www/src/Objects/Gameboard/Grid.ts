@@ -15,12 +15,16 @@ export default abstract class Grid extends Base {
   protected arraySize: number;
   protected tilesGroup: Phaser.Group;
   protected gameRules: GameRules;
+  isPaused: boolean;
+  alternativeScore: number;
 
   constructor(gameboardConfig: GameboardConfig) {
     super();
     this.gameboardConfig = gameboardConfig;
 
+    this.isPaused = false;
     this.animating = false;
+    this.alternativeScore = 0;
     this.wallsGroup = this.makeWalls();
 
     this.arraySize = gameboardConfig.arraySize;
@@ -35,9 +39,9 @@ export default abstract class Grid extends Base {
     }
 
     this.reorderTileList();
-
     this.add();
     this.add();
+    this.gameRules.init(this, this.grid);
   }
 
   get points() {
@@ -72,7 +76,7 @@ export default abstract class Grid extends Base {
   }
 
   protected check(keyboardInput: number) {
-    return this.gameRules.scanGrid(this.grid, keyboardInput);
+    return this.gameRules.scanGrid(keyboardInput);
   }
 
   protected randomizeTile(tile: GridTile = null) {
@@ -156,7 +160,7 @@ export default abstract class Grid extends Base {
   protected newTurn() {
     this.cleanGrid();
     this.gameboardConfig.turnsSignal.dispatch();
-    this.gameRules.newTurn(this, this.grid);
+    this.gameRules.newTurn();
   }
 
   protected getTileNewPosition() {

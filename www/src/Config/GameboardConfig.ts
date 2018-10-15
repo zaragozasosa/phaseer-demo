@@ -13,6 +13,7 @@ export default class GameboardConfig {
   defaultArraySize: number;
   bossArraySize: number;
   winningTile: number;
+  bossWinningTile: number;
   initialArray: Array<number>;
   minimumValue: number;
   tiles: Array<TileModel>;
@@ -60,6 +61,7 @@ export default class GameboardConfig {
     }
     this.minimumValue = 1;
     this.winningTile = 512;
+    this.bossWinningTile = 256;
     this.bulletAmmo = 5;
     this.diceAmmo = 6;
     this.requiredDiamonds = 50;
@@ -396,7 +398,7 @@ export default class GameboardConfig {
         'Black Witch Mira',
         'fancy',
         'ahaha.wav',
-        0.3,
+        0.4,
         'blackMagic',
         this.powers.find(x => x.id === 'blackMagic'),
         [2, 3, 2, 5, 1, 0],
@@ -457,6 +459,27 @@ export default class GameboardConfig {
         null,
         "Hey, you shouldn't be able to read this!",
         false
+      )
+    );
+
+    list.push(
+      new TileModel(
+        'mira-boss',
+        'Mira',
+        'Black Witch Mira',
+        null,
+        'ahaha.wav',
+        1,
+        'blackMagic',
+        this.powers.find(x => x.id === 'blackMagic'),
+        [0],
+        null,
+        null,
+        "The boss of the game. Hey, you shouldn't be able to read this!",
+        false,
+        null,
+        false,
+        'mira'
       )
     );
 

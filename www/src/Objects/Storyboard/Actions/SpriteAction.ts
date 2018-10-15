@@ -26,7 +26,12 @@ export default class SpriteAction extends BaseAction {
   play() {
     this.config.storyboard.storyboardSignal.dispatch(
       Reader.SPRITE_ACTION,
-      new SpriteActionModel(this.id, this.frame, this.position, this.tint)
+      new SpriteActionModel(
+        this.id + '_sprite',
+        this.frame,
+        this.position,
+        this.tint
+      )
     );
     this.actionIsOverSignal.dispatch();
   }

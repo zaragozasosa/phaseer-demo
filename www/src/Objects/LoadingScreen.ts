@@ -18,8 +18,8 @@ export default class LoadingScreen extends Base {
       let scale = tools.misc.randomBetween(6, 10);
       let scale2 = tools.misc.randomBetween(6, 10);
 
-      let sprite = tools.sprite.createFromSpriteSheet(x, y, tile.id, 1, scale/10);
-      let sprite2 = tools.sprite.createFromSpriteSheet(x2, y2, tile.id, 2, scale2/10);
+      let sprite = tools.sprite.createFromSpriteSheet(x, y, tile.spriteId, 1, scale/10);
+      let sprite2 = tools.sprite.createFromSpriteSheet(x2, y2, tile.spriteId, 2, scale2/10);
 
       sprite.angle = tools.misc.randomBetween(0, 4) * 90;
       sprite2.angle = tools.misc.randomBetween(0, 4) * 90;

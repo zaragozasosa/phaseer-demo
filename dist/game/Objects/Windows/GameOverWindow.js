@@ -22,7 +22,7 @@ var GameOverWindow = (function (_super) {
         var y = 150;
         var elements = _this.tools.misc.addGroup();
         var sprites = _this.tools.misc.addGroup();
-        sprites.add(_this.tools.sprite.makeCentered(y + 120, character.id, 2));
+        sprites.add(_this.tools.sprite.makeCentered(y + 120, character.spriteId, 2));
         elements.add(_this.tools.text.makeXBounded(y + 470, 'Game Over...', 70, 'center', Config_1.ColorSettings.PRIMARY));
         var menuList = new MenuList_1.default('Menu');
         menuList.addChild(new MenuObject_1.default('Try again!', function () {

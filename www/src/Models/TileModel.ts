@@ -1,5 +1,5 @@
 import PowerModel from './PowerModel';
-import BaseAction from './../Objects/Storyboard/Actions/BaseAction'
+import BaseAction from './../Objects/Storyboard/Actions/BaseAction';
 
 export default class TileModel {
   id: string;
@@ -11,26 +11,47 @@ export default class TileModel {
   sfxVolume: number;
   summary: string;
   powerId: string;
-  
+
+  baseModelId: string;
+
   power: PowerModel;
 
   staticValue: number;
   frame: Phaser.Sprite;
   isRealTile: boolean;
   isMenuVisible: boolean;
-  
+
   getFirstStory: any;
   getSecondStory: any;
 
   animationFrames: Array<number>;
   animationSpeed: number;
 
+  get spriteId() {
+    var id = this.baseModelId ? this.baseModelId : this.id;
+    return id + '_sprite';
+  }
+
+  get menuFriendSpriteId() {
+    return this.menuFriendId ? this.menuFriendId + '_sprite' : null;
+  }
+
+  get friendSpriteId() {
+    return this.friendId ? this.friendId + '_sprite' : null;
+  }
+
   get specialSpriteFrame() {
     return 4;
   }
-  
+
   get getMenuFriendId(): string {
     return this.menuFriendId ? this.menuFriendId : this.friendId;
+  }
+
+  get getMenuFriendSpriteId(): string {
+    return this.menuFriendSpriteId
+      ? this.menuFriendSpriteId
+      : this.friendSpriteId;
   }
 
   get sfxRoute(): string {
@@ -38,11 +59,12 @@ export default class TileModel {
   }
 
   get negativeId(): string {
-    return this.id + '-negative';
+    return this.spriteId + '-negative';
   }
 
   get sfxLabel(): string {
-    return this.id + '-sfx';
+    var id = this.baseModelId ? this.baseModelId : this.id;
+    return id + '-sfx';
   }
 
   get friendSfxLabel(): string {
@@ -64,11 +86,12 @@ export default class TileModel {
     power: PowerModel,
     animationFrames: Array<number>,
     firstStory: any,
-    secondStory: any,    
+    secondStory: any,
     summary: string,
     isMenuVisible = true,
     menuFriendId = null,
-    isRealTile = true
+    isRealTile = true,
+    baseModelId = null
   ) {
     this.id = id;
     this.name = name;
@@ -84,7 +107,7 @@ export default class TileModel {
     this.getSecondStory = secondStory;
     this.menuFriendId = menuFriendId;
     this.isRealTile = isRealTile;
-
+    this.baseModelId = baseModelId;
     this.animationFrames = animationFrames;
     this.animationSpeed = 1.5;
   }

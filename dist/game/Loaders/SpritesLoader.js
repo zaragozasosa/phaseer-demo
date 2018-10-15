@@ -7,7 +7,7 @@ var SpritesLoader = (function () {
         for (var _i = 0, _a = config.baseList; _i < _a.length; _i++) {
             var sprite = _a[_i];
             var path = "assets/images/" + sprite.imagePath;
-            loader.spritesheet(sprite.id, path, 180, 180);
+            loader.spritesheet(sprite.spriteId, path, 180, 180);
         }
     };
     return SpritesLoader;
